@@ -1,0 +1,27 @@
+/**
+ * Шрифты проекта
+ * - Inter: подключается через @fontsource/inter в main.jsx (400, 500, 600, 700, 900, latin + cyrillic).
+ * - Декоративные шрифты (Figma 16-195, 16-207): положите файлы в public/fonts/ (см. public/fonts/README.md).
+ */
+
+/* Figma 16-195 — Agatha Modern Regular (вариант «Исследования», 20px, #ef0) */
+@font-face {
+  font-family: 'Agatha Modern';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/agatha-modern-regular.woff2') format('woff2'),
+       url('/fonts/agatha-modern-regular.woff') format('woff'),
+       url('/fonts/agatha-modern-regular.ttf') format('truetype');
+}
+
+/* Figma 16-207 — Ice Kingdom (Frozen) Cyrillic Bold («In progres», 14px, black) */
+@font-face {
+  font-family: 'Ice Kingdom';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/ice-kingdom-frozen-cyrillic-bold.woff2') format('woff2'),
+       url('/fonts/ice-kingdom-frozen-cyrillic-bold.woff') format('woff'),
+       url('/fonts/ice-kingdom-frozen-cyrillic-bold.ttf') format('truetype');
+}

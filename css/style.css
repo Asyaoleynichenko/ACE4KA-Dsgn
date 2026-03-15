@@ -1,0 +1,2051 @@
+@import 'fonts.css';
+@import 'design-tokens.css';
+
+/* Variables — override if needed */
+:root {
+    --color-bg: #000000;
+    --color-surface: rgba(38, 38, 38, 0.4);
+    --color-surface-light: rgba(255, 255, 255, 0.05);
+    --color-text: #fafafa;
+    --color-text-muted: rgba(250, 250, 250, 0.6);
+    --color-text-extra-muted: rgba(250, 250, 250, 0.4);
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius: 8px;
+    --transition: 0.25s ease;
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Scrollbar — цвет ползунка #F0A */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #f0a var(--color-bg);
+}
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+*::-webkit-scrollbar-track {
+    background: var(--color-bg);
+}
+*::-webkit-scrollbar-thumb {
+    background: #f0a;
+    border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+    background: #ff22bb;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Flex layout: main grows, footer always at bottom (fixes footer on projects/about) */
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+/* UX: Skip to main content (показывается при фокусе с клавиатуры) */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 24px;
+    z-index: 1000;
+    padding: 12px 20px;
+    background: #fafafa;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: top 0.2s ease;
+}
+.skip-link:focus {
+    top: 24px;
+    outline: 2px solid #f0a;
+    outline-offset: 2px;
+}
+
+/* UX: Фокус для клавиатурной навигации (не переопределять для мыши) */
+a:focus-visible,
+button:focus-visible,
+[href]:focus-visible {
+    outline: 2px solid rgba(250, 250, 250, 0.8);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+.nav-link:focus-visible {
+    outline-offset: 3px;
+}
+.filter-pill:focus-visible,
+.btn-show-all:focus-visible {
+    outline: 2px solid rgba(250, 250, 250, 0.9);
+    outline-offset: 2px;
+}
+.preview-card__link:focus-visible {
+    outline: 2px solid rgba(250, 250, 250, 0.6);
+    outline-offset: 4px;
+    border-radius: 16px;
+}
+.back-link:focus-visible {
+    outline-offset: 4px;
+}
+.contact-item a:focus-visible,
+.footer-links-row a:focus-visible,
+.footer-note a:focus-visible {
+    outline-offset: 2px;
+}
+
+/* Footer ACE4KA — только на главной */
+/* Блок ACE4KA в футере отключён */
+.footer-ace4ka {
+    display: none !important;
+}
+
+/* Figma 1-230 — Header: sticky, padding 21px, min-height 88px, max-width 1358px */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: transparent;
+    transition: background 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+/* При скролле — liquid glass на всю шапку (blur 50px) */
+.header--scrolled {
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+}
+
+/* Figma 1-230 — Nav container: max-width 1358px, padding 21px, min-height 88px */
+.nav {
+    width: 100%;
+    max-width: 1358px;
+    margin: 0 auto;
+    padding: 21px;
+    min-height: 88px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    background: transparent;
+}
+
+/* Figma 1-230 — Logo: 24px, 32px line-height, -1px, #fafafa, mix-blend-mode exclusion */
+.logo {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    display: inline-block;
+    color: #fafafa;
+    mix-blend-mode: var(--mix-blend-exclusion, exclusion);
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.logo .blend-text,
+.lang-switch .blend-text {
+    color: inherit;
+    mix-blend-mode: exclusion;
+}
+
+/* Liquid glass: размытие фона 50px + полупрозрачный слой (muted/25) */
+.bg-liquid-glass {
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+@supports not (hanging-punctuation: first) {
+    .bg-liquid-glass {
+        backdrop-filter: url(#displacementFilter) blur(2px);
+        -webkit-backdrop-filter: url(#displacementFilter) blur(2px);
+    }
+}
+
+/* Figma 1-230 — Navigation pill: 332px, bg rgba(255,255,255,0.11), padding 4px, gap 8px, blur 12px */
+.nav-list {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+    margin: 0;
+    padding: 4px;
+    width: 332px;
+    max-width: 100%;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border-radius: 9999px;
+    background: var(--effect-nav-pill-bg);
+    backdrop-filter: blur(var(--blur-nav));
+    -webkit-backdrop-filter: blur(var(--blur-nav));
+}
+
+.nav-list li {
+    display: flex;
+    flex-shrink: 0;
+}
+
+/* Figma 1-230 — Nav links: 14px, 20px line-height, -1px, uppercase; mix-blend exclusion */
+.nav-link {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    color: #fafafa;
+    padding: 8px 21px;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease, letter-spacing 0.2s ease;
+    mix-blend-mode: var(--mix-blend-exclusion, exclusion);
+}
+
+/* Figma 1-230 — Active pill: border rgba(255,255,255,0.48), bg rgba(0,0,0,0.55), inset shadow, blur 12px */
+.nav-link.active {
+    letter-spacing: 1px;
+    border-radius: 9999px;
+    border: 1px solid var(--effect-nav-active-border);
+    background: var(--effect-nav-active-bg);
+    box-shadow: var(--shadow-nav-active);
+    backdrop-filter: blur(var(--blur-nav));
+    -webkit-backdrop-filter: blur(var(--blur-nav));
+}
+
+.nav-link:hover:not(.active) {
+    background: var(--effect-nav-link-hover);
+    border-color: transparent;
+}
+
+/* UX: минимальная область нажатия 44×44px, центрирование текста */
+.nav-link {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Figma 1-230 — Lang: 24px, 32px line-height, -1px, #fafafa, min-width 228px, mix-blend exclusion */
+.lang-switch {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    display: inline-block;
+    color: #fafafa;
+    mix-blend-mode: var(--mix-blend-exclusion, exclusion);
+    min-width: 228px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.nav-toggle span {
+    width: 24px;
+    height: 2px;
+    background: var(--color-text);
+}
+
+/* Main — flex: 1 so footer stays at bottom; под шапкой (header z-index: 100) */
+.main {
+    flex: 1;
+    max-width: 1290px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+    width: 100%;
+    position: relative;
+    z-index: 0;
+    box-sizing: border-box;
+}
+
+
+/* Hero - Figma 1-202: row = content (896px) + card, gap 12px; section gap 64 below */
+.hero {
+    padding: 48px 24px 24px;
+    max-width: 1290px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.hero__row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--hero-row-gap);
+    margin-top: var(--hero-row-gap);
+}
+
+.hero__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: var(--hero-content-max);
+    display: flex;
+    flex-direction: column;
+    gap: var(--hero-row-gap);
+    text-align: center;
+    align-items: center;
+}
+
+.hero__card {
+    width: var(--hero-card-width);
+    max-width: 100%;
+}
+
+/* Обёртка вектора + карточка поверх (первый экран, 1-202) */
+.page-home .hero__top {
+    position: relative;
+    width: 100%;
+    max-width: 1275px;
+    margin: 0 auto 2rem;
+}
+
+/* Preview-card поверх /images/main title vector.svg */
+.page-home .hero__top .hero__card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+/* Figma 1:203 Group (Group 20) — вектор на главной, первый экран; inner перелив -6.2% -1.33% */
+.page-home .hero-vector {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 1275px;
+    margin: 0 auto 1.5rem;
+    overflow: visible;
+    /* Высота под пропорции ~1275×274 */
+    min-height: 0;
+    aspect-ratio: 1275 / 274;
+}
+.page-home .hero-vector__inner {
+    position: absolute;
+    top: -6.2%;
+    right: -1.33%;
+    bottom: -6.2%;
+    left: -1.33%;
+}
+.page-home .hero-vector__inner img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+    object-position: center;
+}
+
+/* Hero content block — выравнивание по центру (Figma 1-202) */
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--hero-row-gap);
+    max-width: 100%;
+    margin: 0;
+}
+
+/* Figma 1:235–236: role 14px, 20px line-height, 1px tracking, uppercase, opacity 60% */
+.hero-role {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fafafa;
+    opacity: 0.6;
+    margin: 0;
+}
+
+/* Figma 1:237–238: H1 96px, semibold, 96px line-height, -6px tracking */
+.hero-title {
+    font-size: 96px;
+    font-weight: 600;
+    line-height: 96px;
+    margin: 0;
+    letter-spacing: -6px;
+    color: #fafafa;
+}
+
+@media (max-width: 768px) {
+    .hero-title { font-size: clamp(48px, 12vw, 72px); line-height: 1.1; letter-spacing: -0.02em; }
+}
+
+/* Figma 1:239–240: text 24px, line-height 1.2, -1px tracking, max 661px */
+.hero-text {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    color: #fafafa;
+    max-width: var(--hero-lead-max);
+    margin: 0;
+}
+
+/* Figma 1:241–242: more 24px, 1.2 line-height, -1px tracking, underline */
+.hero-more {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    color: #fafafa;
+    margin: 0;
+    display: inline-block;
+}
+
+.hero-more:hover {
+    text-decoration: underline;
+}
+
+/* Info grid - Figma 1-245: gap 32, cols 148 147 148 254 184 */
+.info-grid {
+    display: grid;
+    grid-template-columns: 148px 147px 148px 254px 184px;
+    gap: 32px 1rem;
+    margin: 0;
+    max-width: 100%;
+}
+
+.info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+}
+
+.info-card--wide {
+    min-width: 0;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.info-card--wide .info-value {
+    overflow-wrap: break-word;
+}
+
+/* Figma 1:247–248: label 12px, 16px line-height, 1px tracking, uppercase, opacity 40% */
+.info-label {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fafafa;
+    opacity: 0.4;
+}
+
+/* Figma 1:249–250: value 18px, 28px line-height, -1px tracking */
+.info-value {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: -1px;
+    color: #fafafa;
+}
+
+@media (max-width: 900px) {
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero__row { flex-direction: column; align-items: center; }
+    .hero__content { text-align: center; align-items: center; }
+    .hero-content { align-items: center; }
+    .hero-links { justify-content: center; }
+}
+
+/* Hero links - Figma 1:274: gap 16px, 14px, 20px line-height, 1px tracking, uppercase */
+.hero-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.hero-links a {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-text);
+}
+
+.hero-links a:hover {
+    text-decoration: underline;
+}
+
+/* Figma 1-206 — Header Items: навигация по разделам (Опыт, Связь, Команда, Образование и т.д.), folder 99×90, image-well 44×44 */
+.section-nav {
+    margin-bottom: 2.5rem;
+}
+
+.header-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 24px 32px;
+}
+
+/* Один пункт: колонка, иконка + подпись */
+.header-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 auto;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+}
+
+.header-item:hover {
+    opacity: 0.9;
+}
+
+/* Вариант «Folder» — иконка ~99×90px (Figma 1:206, 1:209, 1:224, 1:227) */
+.header-item--folder {
+    gap: 0;
+}
+
+.header-item__icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 99px;
+    height: 90px;
+    flex-shrink: 0;
+}
+
+.header-item__icon-wrap img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Вариант «Image Well» — 44×44px, рамка и внутренняя тень (Figma 1:212, 1:215, 1:218, 1:221) */
+.header-item--image-well {
+    gap: 4px;
+}
+
+.header-item__well {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 2px;
+    border: 2.2px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: inset 0.73px 0 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.header-item__well img {
+    position: absolute;
+    inset: 10%;
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Подпись: 13.22px, по центру, тень (Figma 1:208, 1:211 и др.) */
+.header-item__label {
+    font-family: var(--font-body);
+    font-size: 13.22px;
+    font-weight: 400;
+    line-height: normal;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 0.88px 8.9px rgba(0, 0, 0, 0.25);
+    min-width: 0;
+}
+
+/* Figma 1:231 — Image Preview: 369×280, два слоя overlay, titlebar 38px absolute top, image area absolute inset 38px 5px */
+.preview-card-block {
+    display: block;
+    position: relative;
+    margin-bottom: 2.5rem;
+    width: 369px;
+    max-width: 100%;
+    height: 280px;
+    min-height: 280px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow-preview-card);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    background: #262626;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.preview-card-block:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-preview-card-hover);
+}
+
+/* Слой 1: #262626 (Figma mix-blend-plus-lighter — в CSS опускаем) */
+.preview-card-block__overlay--base {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: #262626;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Слой 2: blur 20px + rgba(240,240,240,0.54) */
+.preview-card-block__overlay--blur {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: var(--effect-preview-overlay);
+    backdrop-filter: blur(var(--blur-preview-card));
+    -webkit-backdrop-filter: blur(var(--blur-preview-card));
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Titlebar: absolute top, 38px, padding 0 12px */
+.preview-card-block__titlebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+.preview-card-block__leading {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: 0;
+    flex: 1 1 0;
+}
+
+.preview-card-block__spacer--12 {
+    width: 12px;
+    flex-shrink: 0;
+}
+.preview-card-block__spacer--8 {
+    width: 8px;
+    flex-shrink: 0;
+}
+
+.preview-card-block__btn-close,
+.preview-card-block__btn-resize {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    color: rgba(0, 0, 0, 0.5);
+}
+.preview-card-block__btn-close img,
+.preview-card-block__btn-resize img {
+    display: block;
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+}
+.preview-card-block__btn-resize img {
+    transform: rotate(180deg);
+}
+
+/* Figma 1:231 — Headline/Regular: SF Pro 700, 0.8125rem, 1rem line-height, Text-Secondary */
+.preview-card-block__title {
+    flex: 1 1 0;
+    min-width: 0;
+    color: var(--Text-Secondary, rgba(0, 0, 0, 0.5));
+    font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+    font-size: 0.8125rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preview-card-block__trailing {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Figma 1-231 — CTA: border-radius 0.375rem, border 1px solid #F5F5F5, mix-blend-mode plus-darker */
+.preview-card-block__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    padding: 3px 7px;
+    border-radius: var(--preview-cta-radius);
+    border: var(--preview-cta-border);
+    mix-blend-mode: var(--preview-cta-mix-blend);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', var(--font-body), sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--preview-cta-color);
+    background: transparent;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.preview-card-block__cta:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border: var(--preview-cta-border);
+    color: var(--preview-cta-color);
+}
+
+/* Figma 1:231 Image area: absolute inset 38px 5px 5px 5px, border rgba(0,0,0,0.1), radius 6px */
+.preview-card-block__image {
+    position: absolute;
+    top: 38px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 1;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-card-block__image img {
+    width: 100%;
+    max-width: 359px;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.hero__card .preview-card-block {
+    margin-bottom: 0;
+}
+
+/* Адаптив: на узких экранах CTA может обрезаться с ellipsis */
+@media (max-width: 420px) {
+    .preview-card-block__cta {
+        font-size: 11px;
+        padding: 5px 10px;
+        max-width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+@media (max-width: 360px) {
+    .preview-card-block__cta {
+        font-size: 10px;
+        padding: 4px 8px;
+        max-width: 120px;
+    }
+}
+
+/* Section */
+.section {
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.section-projects {
+    font-size: 60px;
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 0;
+}
+
+.section-projects-sub {
+    display: block;
+    font-weight: 500;
+    font-size: 60px;
+}
+
+.section-projects-main {
+    display: block;
+}
+
+/* Figma 1-202 / 1-232: section gap 64px between hero and projects */
+.section-projects {
+    padding-top: var(--hero-section-gap);
+    padding-bottom: 0;
+}
+
+/* Figma 1-399 «Все проекты»: section top 152px, gap 48px to grid */
+.page-projects .main {
+    padding-top: 152px;
+}
+.page-projects .logo-section {
+    align-items: center;
+    margin-bottom: var(--space-48);
+}
+.page-projects .logo-section .projects-title-main {
+    text-align: center;
+}
+.page-projects .filter-pills {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Figma 1-286 — Logo Section: gap 12px (заголовок–пилюли), отступ до сетки 48px */
+.logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-12);
+    margin-bottom: var(--space-48);
+}
+
+/* Figma 1:289 — заголовок «Проекты»: 60px, semibold, -2px, uppercase */
+.projects-header .projects-title-main,
+.projects-title-main {
+    font-size: 60px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .projects-title-main { font-size: 40px; }
+}
+
+/* Figma 1-290 — табы фильтра: gap 8px (как в карточке 1-361) */
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--card-gap);
+    width: fit-content;
+}
+
+/* Figma 16-185 … 16-209 — единый стиль табов: один размер, обводка, pill */
+.filter-pill {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+    color: #ffffff;
+    padding: 8px 20px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    text-transform: uppercase;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.filter-pill:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Первый таб (UX/UI) — выделен как активный: лёгкая заливка */
+.filter-pill:first-child {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.filter-pill:first-child:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* Класс активного таба (если будет состояние выбора) */
+.filter-pill--active {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+}
+
+/* Project Card - Figma 1-361: max 639px, gap 8px, вся карточка кликабельна (один Link) */
+.preview-card {
+    flex: 0 0 calc(50% - var(--grid-column-gap) / 2);
+    max-width: 639px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border-radius: 16px;
+    background: transparent;
+    overflow: visible;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.preview-card__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    text-decoration: none;
+    color: inherit;
+    border-radius: 16px;
+    min-height: 0;
+}
+
+.preview-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+}
+
+/* Figma 1:362 — Container: rgba(38,38,38,0.4), border transparent, radius 16px */
+.preview-image {
+    display: flex;
+    align-self: stretch;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    padding: 1px;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 16px;
+    background: rgba(38, 38, 38, 0.4);
+    overflow: clip;
+}
+
+.preview-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 15px;
+    transition: transform var(--transition-slow);
+}
+
+.preview-card:hover .preview-image img {
+    transform: scale(1.03);
+}
+
+.preview-card .preview-image {
+    flex-shrink: 0;
+}
+
+.preview-card--demo .preview-image {
+    background: #007fff;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.demo-label {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.demo-meta {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.8);
+}
+
+/* Figma 1-361 — контент карточки: единый gap между title, meta, desc */
+.preview-content,
+.preview-card__body {
+    display: flex;
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--card-gap);
+    padding: 0;
+    width: 100%;
+}
+
+/* Figma 1-361: title 24px/500, #FAFAFA, line-height 32px, letter-spacing -0.53px */
+.preview-content h3,
+.preview-card__title {
+    font-size: 24px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    line-height: 32px;
+    letter-spacing: -0.53px;
+    color: #fafafa;
+    margin: 0;
+}
+
+.preview-card__link:hover .preview-content h3,
+.preview-card__link:hover .preview-card__title {
+    text-decoration: underline;
+}
+
+/* Figma 1-361: meta 12px/400, line-height 16px, letter-spacing 0.6px, opacity 40% */
+.preview-content .meta,
+.preview-card__meta {
+    font-size: 12px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0.6px;
+    color: #fafafa;
+    opacity: 0.4;
+    margin: 0;
+}
+
+/* Figma 1-361: desc 14px/400, line-height 22.75px, letter-spacing -0.15px, opacity 60% */
+.preview-content .desc,
+.preview-card__desc {
+    font-size: 14px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 22.75px;
+    letter-spacing: -0.15px;
+    color: #fafafa;
+    opacity: 0.6;
+    margin: 0;
+}
+
+.preview-content .card-link {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(250, 250, 250, 0.8);
+    margin-top: 0.25rem;
+}
+
+.preview-card__link:hover .card-link {
+    color: #fafafa;
+    text-decoration: underline;
+}
+
+/* Figma 1:398 — блок «Смотреть все проекты»: 376×57, glass pill */
+.show-all-wrap {
+    text-align: center;
+    margin-top: var(--grid-row-gap);
+}
+
+.btn-show-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 21.78px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: #ffffff;
+    padding: 12px 32px;
+    min-width: 280px;
+    width: 376px;
+    max-width: 100%;
+    min-height: 57px;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 9999px;
+    border: 1.556px solid var(--effect-btn-show-all-border);
+    background: var(--effect-nav-active-bg);
+    backdrop-filter: blur(var(--blur-nav));
+    -webkit-backdrop-filter: blur(var(--blur-nav));
+    box-shadow: var(--shadow-btn-show-all);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    text-decoration: none;
+}
+
+.btn-show-all:hover {
+    background: rgba(0, 0, 0, 0.65);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Education cards */
+.edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.edu-card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid var(--color-surface-light);
+}
+
+.edu-card h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.edu-card .year {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.edu-card p {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+.edu-card .gpa {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.edu-card .gpa-num {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+/* Filters */
+.filter-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-btns {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: var(--color-surface);
+    border: 1px solid var(--color-surface-light);
+    border-radius: var(--radius);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--color-surface-light);
+    color: var(--color-text);
+}
+
+.scroll-hint {
+    font-size: 1rem;
+    margin-top: 2rem;
+}
+
+.scroll-hint a {
+    color: var(--color-text-muted);
+}
+
+.scroll-hint a:hover {
+    color: var(--color-text);
+}
+
+/* Блок с проектами — Figma 1-297: 1290px, row-gap 24px, column-gap 8px (как в макете 1-361) */
+.preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    row-gap: var(--grid-row-gap);
+    column-gap: var(--grid-column-gap);
+    max-width: 1290px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    padding: 0;
+}
+
+/* Project detail page - Figma 1-525 «Страница проекта» */
+.main--project {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+    background: #0a0a0a;
+}
+
+/* Figma 1-525 — Страница проекта: контейнер, отступы, сетка */
+.project-page-wrap {
+    max-width: var(--project-page-max-width);
+    margin: 0 auto;
+    padding: var(--project-page-padding-y) var(--project-page-padding-x) var(--project-page-padding-bottom);
+    display: flex;
+    flex-direction: column;
+    gap: var(--project-page-gap);
+}
+
+.project-page-wrap .project-detail {
+    padding-top: var(--project-detail-pt);
+}
+
+.project-back-wrap {
+    padding: 0;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--project-back-gap);
+    font-size: var(--project-back-font-size);
+    font-weight: 400;
+    letter-spacing: var(--project-back-letter-spacing);
+    text-transform: uppercase;
+    color: var(--project-title-color);
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.back-link {
+    padding: 10px 0;
+    min-height: 44px;
+    align-items: center;
+}
+
+.back-link__icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.project-hero {
+    width: 100%;
+    max-width: var(--project-hero-max-width);
+    margin: 0 auto;
+    aspect-ratio: var(--project-hero-aspect-w) / var(--project-hero-aspect-h);
+    max-height: var(--project-hero-aspect-h);
+    border-radius: var(--project-hero-radius);
+    overflow: hidden;
+    background: var(--project-hero-bg);
+}
+
+.project-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.project-hero--gradient {
+    min-height: 300px;
+    background: var(--project-hero-gradient);
+}
+
+.project-hero--placeholder {
+    background: var(--project-hero-placeholder-bg);
+}
+
+.project-detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--project-detail-gap);
+    max-width: var(--project-page-max-width);
+    margin: 0 auto;
+    width: 100%;
+}
+
+.project-detail__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--project-detail-top-gap);
+}
+
+.project-detail__heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--project-heading-gap);
+    flex: 1 1 400px;
+    max-width: var(--project-heading-max-width);
+}
+
+.project-detail__heading h1,
+.project-detail h1 {
+    font-size: var(--project-title-font-size);
+    font-weight: 500;
+    line-height: var(--project-title-line-height);
+    letter-spacing: var(--project-title-letter-spacing);
+    color: var(--project-title-color);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .project-detail__heading h1,
+    .project-detail h1 {
+        font-size: clamp(2rem, 8vw, var(--project-title-font-size));
+    }
+}
+
+.project-detail__heading .lead,
+.project-detail .lead {
+    font-size: var(--project-lead-font-size);
+    font-weight: 400;
+    line-height: var(--project-lead-line-height);
+    letter-spacing: var(--project-lead-letter-spacing);
+    color: var(--project-lead-color);
+    margin: 0;
+}
+
+.project-meta--card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--project-meta-card-gap);
+    background: var(--project-meta-card-bg);
+    border-radius: var(--project-meta-card-radius);
+    padding: var(--project-meta-card-padding);
+    width: 100%;
+    max-width: var(--project-meta-card-max-width);
+    flex-shrink: 0;
+}
+
+.project-meta--card .project-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--project-meta-item-gap);
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+}
+
+.project-meta--card .project-meta-item .label {
+    font-size: var(--project-meta-label-font-size);
+    font-weight: 400;
+    line-height: var(--project-meta-label-line-height);
+    letter-spacing: var(--project-meta-label-letter-spacing);
+    text-transform: uppercase;
+    color: var(--project-title-color);
+    opacity: var(--project-meta-label-opacity);
+    margin: 0;
+}
+
+.project-meta--card .project-meta-item .value {
+    font-size: var(--project-meta-value-font-size);
+    font-weight: 400;
+    line-height: var(--project-meta-value-line-height);
+    letter-spacing: var(--project-meta-value-letter-spacing);
+    color: var(--project-title-color);
+    opacity: var(--project-meta-value-opacity);
+    margin: 0;
+}
+
+/* Legacy grid meta (other project pages) */
+.project-meta:not(.project-meta--card) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.project-meta:not(.project-meta--card) .project-meta-item {
+    background: #0f0f0f;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.project-meta:not(.project-meta--card) .project-meta-item .label {
+    margin-bottom: 0;
+}
+
+.project-meta:not(.project-meta--card) .project-meta-item .value {
+    font-size: 1rem;
+    opacity: 1;
+}
+
+/* Figma 1-556 — Карточка блока Задача/Решение: #0f0f0f, 16px radius, 33px padding, 2 cols gap 24px */
+.project-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--project-grid-gap);
+}
+
+/* Figma 1-556: карточка — label 12px 0.6px uppercase 40%, body 18px 29.25px -0.44px 80% */
+.project-detail-card {
+    background: var(--project-card-bg);
+    border-radius: var(--project-card-radius);
+    padding: var(--project-card-padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--project-card-gap);
+}
+
+.project-detail-card--full {
+    grid-column: 1 / -1;
+}
+
+.project-detail-card__title {
+    font-size: var(--project-card-title-font-size);
+    font-weight: 400;
+    line-height: var(--project-card-title-line-height);
+    letter-spacing: var(--project-card-title-letter-spacing);
+    text-transform: uppercase;
+    color: var(--project-card-text-color, var(--project-title-color));
+    opacity: var(--project-card-title-opacity);
+    margin: 0;
+}
+
+.project-detail-card__text {
+    font-size: var(--project-card-text-font-size);
+    font-weight: 400;
+    line-height: var(--project-card-text-line-height);
+    letter-spacing: var(--project-card-text-letter-spacing);
+    color: var(--project-title-color);
+    opacity: var(--project-card-text-opacity);
+    margin: 0;
+}
+
+.project-detail-footer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--project-footer-gap);
+    padding-top: var(--project-footer-pt);
+    border-top: var(--project-footer-border);
+}
+
+.project-detail-footer__label {
+    font-size: var(--project-footer-label-font-size);
+    font-weight: 500;
+    line-height: var(--project-footer-label-line-height);
+    letter-spacing: var(--project-footer-label-letter-spacing);
+    text-transform: uppercase;
+    color: var(--project-title-color);
+    opacity: var(--project-footer-label-opacity);
+    margin: 0 0 var(--project-footer-label-mb);
+}
+
+/* Figma 1-525 — инструменты: пилюли 12px, border #262626 */
+.tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--project-tools-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.tools-list li {
+    list-style: none;
+}
+
+.tools-list__pill {
+    display: inline-block;
+    padding: var(--project-tools-pill-padding);
+    font-size: var(--project-tools-pill-font-size);
+    font-weight: 400;
+    line-height: var(--project-tools-pill-line-height);
+    color: var(--project-ext-link-color);
+    border: var(--project-tools-pill-border);
+    border-radius: 0;
+    height: var(--project-tools-pill-height);
+    box-sizing: border-box;
+}
+
+.tools-list span:not(.tools-list__pill) {
+    padding: var(--project-tools-pill-padding);
+    font-size: var(--project-tools-pill-font-size);
+    border: var(--project-tools-pill-border);
+    color: var(--project-ext-link-color);
+    height: var(--project-tools-pill-height);
+    box-sizing: border-box;
+}
+
+.project-detail .ext-link {
+    font-size: var(--project-ext-link-font-size);
+    font-weight: 400;
+    line-height: var(--project-ext-link-line-height);
+    letter-spacing: var(--project-ext-link-letter-spacing);
+    color: var(--project-ext-link-color);
+    text-decoration: underline;
+}
+
+.project-detail .ext-link:hover {
+    text-decoration: none;
+}
+
+/* Legacy project-detail h2/h3/description for pages without cards */
+.project-detail h2:not(.project-detail-card__title) {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fafafa;
+    margin: 0 0 1rem;
+}
+
+.project-detail h3:not(.project-detail-footer__label) {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #fafafa;
+    margin: 0 0 0.5rem;
+}
+
+.project-detail .description {
+    color: rgba(250, 250, 250, 0.85);
+    line-height: 1.7;
+    margin: 0 0 1rem;
+}
+
+@media (max-width: 900px) {
+    .project-detail__top {
+        flex-direction: column;
+    }
+    .project-meta--card {
+        max-width: 100%;
+    }
+    .project-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    .project-detail-footer {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-projects .main {
+        padding-top: 64px;
+    }
+}
+
+/* Page header — design system: section gap 64, typography tokens */
+.page-header {
+    margin-bottom: var(--space-64);
+}
+
+.page-header h1 {
+    font-size: clamp(2rem, 4vw, 3.75rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: var(--space-8);
+    color: var(--color-text);
+}
+
+.page-header p {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-18);
+    line-height: 1.35;
+}
+
+/* Страница контактов: выравнивание по центру */
+.page-contact .main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.page-contact .page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-contact .page-header p {
+    max-width: 480px;
+}
+
+/* About page — секции под header-items (Figma 1-206) */
+.about-content {
+    margin-bottom: var(--space-48);
+}
+.about-content__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--space-8);
+    color: var(--color-text);
+}
+.about-content .description {
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+}
+.about-content .description:last-child {
+    margin-bottom: 0;
+}
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.timeline-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 2rem;
+}
+
+.timeline-item .period {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+}
+
+.timeline-item h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.timeline-item .org {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.skills-category h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skills-list span {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+/* Contact page — Figma design system: tokens, выравнивание по центру */
+.contact-grid {
+    display: grid;
+    gap: var(--space-12);
+    max-width: 560px;
+    width: 100%;
+}
+
+.page-contact .contact-grid {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-20);
+    padding: var(--space-16) var(--space-20);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-surface-border);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.page-contact .contact-item {
+    flex-direction: column;
+    text-align: center;
+}
+
+.page-contact .contact-item > div {
+    align-items: center;
+}
+
+.contact-item:hover {
+    background: rgba(38, 38, 38, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.contact-item > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.contact-item strong {
+    font-size: var(--font-size-14);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.5px;
+    color: var(--color-text);
+}
+
+.contact-item a {
+    font-size: var(--font-size-16);
+    line-height: 1.35;
+    letter-spacing: -0.15px;
+    color: var(--color-text-muted);
+    text-underline-offset: 3px;
+}
+
+.contact-item a:hover {
+    color: var(--color-text);
+}
+
+/* Footer - Figma 16:170: 1358px, ACE4KA 330px, block #101010, row status + links, then note */
+.footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Figma 16:171 — ACE4KA: outline text, 20.625rem, semibold, stroke #101010, заливка белая */
+.footer-ace4ka {
+    align-self: stretch;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    text-align: center;
+    -webkit-text-stroke-width: 78px;
+    -webkit-text-stroke-color: #101010;
+    font-family: var(--font-body), Inter, sans-serif;
+    font-size: 20.625rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.0625rem;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0 41px;
+    box-sizing: border-box;
+}
+
+/* Figma 16:172 — Dark block: #101010, padding 16px */
+.footer-inner {
+    width: 100%;
+    background: #101010;
+    padding: 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-inner > * {
+    max-width: 1310px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+/* Figma 16:173 — Top: row (status + links) align-end, then note on next row, row-gap 16px */
+.footer-top {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-top__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+/* Figma 16:174–176 — Status: gap 12px, px 12px, dot ~19px, text 24px 1.2 -1px */
+.footer-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    color: #ffffff;
+    margin: 0;
+}
+
+.footer-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: #b6ff00;
+    vertical-align: middle;
+}
+
+/* Figma 16:177 — Links row: gap 14px; 16:185–16:209 — отдельные ссылки (9 шт.) */
+.footer-links-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    margin: 0;
+}
+
+.footer-link,
+.footer-links-row a {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.footer-link:hover,
+.footer-links-row a:hover {
+    text-decoration: underline;
+}
+
+/* Figma 16:183 — Note: 24px, -1px tracking, 1.2 line-height, max 661px; "расскажите мне об этом" underlined */
+.footer-note {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    color: #ffffff;
+    max-width: 661px;
+    margin: 0;
+}
+
+.footer-note a {
+    color: #ffffff;
+    text-decoration: underline;
+    text-decoration-skip-ink: none;
+}
+
+.footer-note a:hover {
+    text-decoration: none;
+}
+
+.footer-credits {
+    text-align: right;
+}
+
+.footer-credits p {
+    font-size: 0.85rem;
+    color: #ffffff;
+}
+
+.footer p {
+    font-size: 0.9rem;
+    color: #ffffff;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-links a {
+    font-size: 0.95rem;
+    color: #ffffff;
+}
+
+.footer-links a:hover {
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .nav {
+        padding: 21px 1.5rem;
+    }
+
+    .section-projects,
+    .section-projects-sub {
+        font-size: clamp(36px, 10vw, 48px);
+    }
+
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 400px;
+    }
+
+    .hero-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .filter-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .timeline-item {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-ace4ka {
+        padding: 0 1.5rem;
+    }
+
+    .footer-inner {
+        padding: 16px 1.5rem;
+    }
+
+    .footer-top__row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .footer-links-row {
+        justify-content: center;
+    }
+
+    .footer-note {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-list {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 280px;
+        background: #1a1a1a;
+        border-radius: 0;
+        flex-direction: column;
+        padding: 5rem 2rem 2rem;
+        gap: 0.5rem;
+        transition: right var(--transition);
+        box-shadow: var(--shadow-nav-drawer);
+    }
+
+    .nav-list.open {
+        right: 0;
+    }
+
+    .nav-toggle {
+        display: flex;
+        z-index: 101;
+    }
+
+    .nav-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .nav-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .nav-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .nav-toggle span {
+        transition: var(--transition);
+    }
+
+    .preview-grid {
+        flex-direction: column;
+    }
+
+    .preview-card {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .section-projects-title {
+        font-size: 2rem;
+    }
+
+    .filter-pills {
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 0.5rem;
+    }
+}
+
+/* UX: Уважение настройки «Уменьшить движение» */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .preview-card:hover,
+    .preview-card-block:hover {
+        transform: none;
+    }
+
+    .preview-card:hover .preview-image img {
+        transform: none;
+    }
+}
