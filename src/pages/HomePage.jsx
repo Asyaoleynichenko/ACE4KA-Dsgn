@@ -3,6 +3,11 @@ import PreviewCardBlock from '../components/PreviewCardBlock';
 import ProjectCard from '../components/ProjectCard';
 import FilterPills from '../components/FilterPills';
 import { projects } from '../data/projects';
+import {
+  SECTION_HEADER_IMAGES,
+  headerItemsFolder,
+  headerItemsWell,
+} from '../data/sectionHeaderItems';
 
 const heroLinks = [
   { href: 'https://t.me/pnkprty', label: 'Telegram' },
@@ -73,6 +78,37 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+
+        <nav className="section-nav section-nav--home section-nav--overlay" aria-label="Разделы">
+          <div className="header-items">
+            {headerItemsFolder.map(({ nodeId, label, iconKey, to }) => (
+              <Link
+                key={nodeId}
+                to={to}
+                className="header-item header-item--folder"
+                data-node-id={nodeId}
+              >
+                <div className="header-item__icon-wrap">
+                  <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} />
+                </div>
+                <span className="header-item__label">{label}</span>
+              </Link>
+            ))}
+            {headerItemsWell.map(({ nodeId, label, iconKey, to }) => (
+              <Link
+                key={nodeId}
+                to={to}
+                className="header-item header-item--image-well"
+                data-node-id={nodeId}
+              >
+                <div className="header-item__well">
+                  <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" />
+                </div>
+                <span className="header-item__label">{label}</span>
+              </Link>
+            ))}
+          </div>
+        </nav>
       </section>
 
       <section className="section section-projects" data-figma-node="1-232">
