@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { projects } from '../data/projects';
+import { publicUrl } from '../utils/publicUrl.js';
 
 function CaseStudyProjectNav({ slug }) {
   const i = projects.findIndex((p) => p.slug === slug);
@@ -55,7 +56,7 @@ export default function ProjectDetailPage() {
         <div className="container container--case-study">
           <section className="hero">
             {project.image ? (
-              <img src={project.image} alt={project.title} />
+              <img src={publicUrl(project.image)} alt={project.title} />
             ) : (
               <div className="hero-placeholder">Превью проекта</div>
             )}
@@ -120,7 +121,7 @@ export default function ProjectDetailPage() {
               <section className={`section${section.mediaOnly ? ' section--media-only' : ''}`}>
                 {section.galleryAboveTitle ? (
                   <div className="gallery">
-                    <img src={section.galleryAboveTitle} alt="" />
+                    <img src={publicUrl(section.galleryAboveTitle)} alt="" />
                   </div>
                 ) : null}
                 {!section.hideTitle && section.title ? <h2>{section.title}</h2> : null}
@@ -149,7 +150,7 @@ export default function ProjectDetailPage() {
                 )}
                 {section.galleryBeforeHypotheses ? (
                   <div className="gallery gallery--before-hypotheses">
-                    <img src={section.galleryBeforeHypotheses} alt="" />
+                    <img src={publicUrl(section.galleryBeforeHypotheses)} alt="" />
                   </div>
                 ) : null}
                 {section.hypotheses?.length > 0 && (
@@ -169,13 +170,13 @@ export default function ProjectDetailPage() {
                 )}
                 {section.galleryImage ? (
                   <div className="gallery">
-                    <img src={section.galleryImage} alt="" />
+                    <img src={publicUrl(section.galleryImage)} alt="" />
                   </div>
                 ) : null}
                 {section.galleryImages?.length > 0
                   ? section.galleryImages.map((src, gi) => (
                       <div key={gi} className="gallery">
-                        <img src={src} alt="" />
+                        <img src={publicUrl(src)} alt="" />
                       </div>
                     ))
                   : null}
@@ -214,8 +215,8 @@ export default function ProjectDetailPage() {
               </section>
               {i === 0 && (caseImages.before || caseImages.after) && (
                 <section className="images">
-                  {caseImages.before && <img src={caseImages.before} alt="До" />}
-                  {caseImages.after && <img src={caseImages.after} alt="После" />}
+                  {caseImages.before && <img src={publicUrl(caseImages.before)} alt="До" />}
+                  {caseImages.after && <img src={publicUrl(caseImages.after)} alt="После" />}
                 </section>
               )}
             </Fragment>
@@ -236,7 +237,7 @@ export default function ProjectDetailPage() {
       </div>
       {hasHero && (
         <div className="project-hero">
-          <img src={project.image} alt={project.title} />
+          <img src={publicUrl(project.image)} alt={project.title} />
         </div>
       )}
       <div className="page-contact__wrap page-contact__wrap--project" data-node-id="89-756">

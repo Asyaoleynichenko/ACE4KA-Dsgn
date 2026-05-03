@@ -1,3 +1,5 @@
+import { publicUrl } from '../utils/publicUrl.js';
+
 /** Figma 1:231 — Image Preview: 369×280, titlebar (leading: spacer, close, spacer, resize, spacer, title; trailing: spacer, CTA), image area */
 export default function PreviewCardBlock() {
   return (
@@ -14,11 +16,11 @@ export default function PreviewCardBlock() {
         <div className="preview-card-block__leading" data-node-id="I1:231;103:8916">
           <span className="preview-card-block__spacer preview-card-block__spacer--12" aria-hidden="true" />
           <span className="preview-card-block__btn-close" aria-hidden="true" title="Закрыть">
-            <img src="/images/preview-card-close.svg" alt="" width="12" height="12" />
+            <img src={publicUrl('/images/preview-card-close.svg')} alt="" width="12" height="12" />
           </span>
           <span className="preview-card-block__spacer preview-card-block__spacer--8" aria-hidden="true" />
           <span className="preview-card-block__btn-resize" aria-hidden="true" title="Развернуть">
-            <img src="/images/preview-card-resize.svg" alt="" width="12" height="12" />
+            <img src={publicUrl('/images/preview-card-resize.svg')} alt="" width="12" height="12" />
           </span>
           <span className="preview-card-block__spacer preview-card-block__spacer--8" aria-hidden="true" />
           <span className="preview-card-block__title" data-node-id="I1:231;153:9332">Привет!</span>

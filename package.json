@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
+    "preview": "vite preview",
+    "build:root": "VITE_BASE=root vite build && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\""
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",

@@ -14,9 +14,12 @@ import Page89_915 from './pages/Page89_915';
 import Page89_920 from './pages/Page89_920';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 
+const routerBasename =
+  import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '') || undefined;
+
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={routerBasename}>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
