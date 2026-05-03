@@ -1,7 +1,103 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { projects } from '../data/projects';
 import { publicUrl } from '../utils/publicUrl.js';
+
+function HorizontalGallery({ images }) {
+  const scrollerRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  useEffect(() => {
+    const node = scrollerRef.current;
+    if (!node) return undefined;
+
+    const updateActiveSlide = () => {
+      const children = Array.from(node.querySelectorAll('.gallery--horizontal__item'));
+      if (!children.length) return;
+      const center = node.scrollLeft + node.clientWidth / 2;
+      let closestIndex = 0;
+      let minDistance = Number.POSITIVE_INFINITY;
+
+      children.forEach((child, index) => {
+        const childCenter = child.offsetLeft + child.clientWidth / 2;
+        const distance = Math.abs(center - childCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setActiveIndex(closestIndex);
+    };
+
+    updateActiveSlide();
+    let rafId = null;
+    const onScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateActiveSlide);
+    };
+
+    node.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', updateActiveSlide);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      node.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', updateActiveSlide);
+    };
+  }, [images]);
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setLightboxIndex(null);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  return (
+    <>
+      <div className="gallery gallery--horizontal" role="region" aria-label="Галерея проекта" ref={scrollerRef}>
+        {images.map((src, index) => (
+          <button
+            key={src}
+            type="button"
+            className={`gallery--horizontal__item${index === activeIndex ? ' is-active' : ''}`}
+            onClick={() => setLightboxIndex(index)}
+            aria-label={`Открыть изображение ${index + 1}`}
+          >
+            <img src={publicUrl(src)} alt="" />
+          </button>
+        ))}
+      </div>
+
+      <div className="gallery--horizontal__indicator" aria-hidden="true">
+        {images.map((src, index) => (
+          <span key={src} className={`gallery--horizontal__dot${index === activeIndex ? ' is-active' : ''}`} />
+        ))}
+      </div>
+
+      {lightboxIndex !== null ? (
+        <div className="gallery-lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxIndex(null)}>
+          <button
+            type="button"
+            className="gallery-lightbox__close"
+            onClick={() => setLightboxIndex(null)}
+            aria-label="Закрыть изображение"
+          >
+            ×
+          </button>
+          <img
+            src={publicUrl(images[lightboxIndex])}
+            alt=""
+            className="gallery-lightbox__image"
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      ) : null}
+    </>
+  );
+}
 
 function CaseStudyProjectNav({ slug }) {
   const i = projects.findIndex((p) => p.slug === slug);
@@ -43,6 +139,15 @@ export default function ProjectDetailPage() {
   const metaItems = project.metaItems ?? [{ label: 'Категория', value: project.meta }];
   const isCaseStudy = project.layout === 'case-study';
   const hasHero = Boolean(project.image);
+  const topCards = [
+    { title: 'Контекст', value: project.context ?? lead },
+    { title: 'Проблема', value: project.problem ?? 'Ключевой барьер и ограничения раскрыты в задаче проекта.' },
+    { title: 'Задача', value: project.task },
+    { title: 'Решение', value: project.solution },
+    { title: 'Результат', value: project.influence },
+    { title: 'Метрики', value: project.metrics },
+  ];
+  const topCardsClassName = `cards${topCards.length >= 6 ? ' cards--bento' : ''}`;
 
   if (isCaseStudy) {
     const caseImages = project.caseStudyImages || {};
@@ -89,31 +194,13 @@ export default function ProjectDetailPage() {
             </div>
           </section>
 
-          <section className="cards">
-            {project.task && (
-              <div className="card">
-                <h3>Задача</h3>
-                <p>{project.task}</p>
+          <section className={topCardsClassName}>
+            {topCards.map((item) => (
+              <div key={item.title} className="card">
+                <h3>{item.title}</h3>
+                <p>{item.value}</p>
               </div>
-            )}
-            {project.solution && (
-              <div className="card">
-                <h3>Решение</h3>
-                <p>{project.solution}</p>
-              </div>
-            )}
-            {project.influence && (
-              <div className="card">
-                <h3>Результат</h3>
-                <p>{project.influence}</p>
-              </div>
-            )}
-            {project.metrics && (
-              <div className="card">
-                <h3>Метрики</h3>
-                <p>{project.metrics}</p>
-              </div>
-            )}
+            ))}
           </section>
 
           {project.caseSections?.map((section, i) => (
@@ -173,44 +260,39 @@ export default function ProjectDetailPage() {
                     <img src={publicUrl(section.galleryImage)} alt="" />
                   </div>
                 ) : null}
-                {section.galleryImages?.length > 0
-                  ? section.galleryImages.map((src, gi) => (
+                {section.galleryImages?.length > 0 ? (
+                  section.horizontalGallery ? (
+                    <HorizontalGallery images={section.galleryImages} />
+                  ) : (
+                    section.galleryImages.map((src, gi) => (
                       <div key={gi} className="gallery">
                         <img src={publicUrl(src)} alt="" />
                       </div>
                     ))
-                  : null}
-                {section.blockCards &&
-                (section.blockCards.task ||
-                  section.blockCards.solution ||
-                  section.blockCards.influence ||
-                  section.blockCards.metrics) ? (
-                  <div className="cards">
-                    {section.blockCards.task ? (
-                      <div className="card">
-                        <h3>Задача</h3>
-                        <p>{section.blockCards.task}</p>
+                  )
+                ) : null}
+                {section.blockCards ? (
+                  (() => {
+                    const sectionCards = [
+                      { title: 'Контекст', value: section.blockCards.context },
+                      { title: 'Проблема', value: section.blockCards.problem },
+                      { title: 'Задача', value: section.blockCards.task },
+                      { title: 'Решение', value: section.blockCards.solution },
+                      { title: 'Результат', value: section.blockCards.influence },
+                      { title: 'Метрики', value: section.blockCards.metrics },
+                    ].filter((item) => item.value);
+                    const sectionCardsClassName = `cards${sectionCards.length >= 6 ? ' cards--bento' : ''}`;
+                    return (
+                      <div className={sectionCardsClassName}>
+                        {sectionCards.map((item) => (
+                        <div key={item.title} className="card">
+                          <h3>{item.title}</h3>
+                          <p>{item.value}</p>
+                        </div>
+                        ))}
                       </div>
-                    ) : null}
-                    {section.blockCards.solution ? (
-                      <div className="card">
-                        <h3>Решение</h3>
-                        <p>{section.blockCards.solution}</p>
-                      </div>
-                    ) : null}
-                    {section.blockCards.influence ? (
-                      <div className="card">
-                        <h3>Результат</h3>
-                        <p>{section.blockCards.influence}</p>
-                      </div>
-                    ) : null}
-                    {section.blockCards.metrics ? (
-                      <div className="card">
-                        <h3>Метрики</h3>
-                        <p>{section.blockCards.metrics}</p>
-                      </div>
-                    ) : null}
-                  </div>
+                    );
+                  })()
                 ) : null}
               </section>
               {i === 0 && (caseImages.before || caseImages.after) && (
@@ -255,42 +337,15 @@ export default function ProjectDetailPage() {
               </div>
             </div>
           ))}
-          {project.task ? (
-            <div className="contact-item contact-item--text">
+          {topCards.map((item) => (
+            <div key={item.title} className="contact-item contact-item--text">
               <span className="contact-item__icon" aria-hidden="true">•</span>
               <div>
-                <strong>Задача</strong>
-                <p>{project.task}</p>
+                <strong>{item.title}</strong>
+                <p>{item.value}</p>
               </div>
             </div>
-          ) : null}
-          {project.solution ? (
-            <div className="contact-item contact-item--text">
-              <span className="contact-item__icon" aria-hidden="true">•</span>
-              <div>
-                <strong>Решение</strong>
-                <p>{project.solution}</p>
-              </div>
-            </div>
-          ) : null}
-          {project.influence ? (
-            <div className="contact-item contact-item--text">
-              <span className="contact-item__icon" aria-hidden="true">•</span>
-              <div>
-                <strong>Результат</strong>
-                <p>{project.influence}</p>
-              </div>
-            </div>
-          ) : null}
-          {project.metrics ? (
-            <div className="contact-item contact-item--text">
-              <span className="contact-item__icon" aria-hidden="true">•</span>
-              <div>
-                <strong>Метрики</strong>
-                <p>{project.metrics}</p>
-              </div>
-            </div>
-          ) : null}
+          ))}
         </div>
         {(project.tools?.length || project.extLink) ? (
           <footer className="project-detail-footer project-detail-footer--centered">

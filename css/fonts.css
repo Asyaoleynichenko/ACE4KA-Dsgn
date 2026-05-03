@@ -10,9 +10,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/agatha-modern-regular.woff2') format('woff2'),
-       url('/fonts/agatha-modern-regular.woff') format('woff'),
-       url('/fonts/agatha-modern-regular.ttf') format('truetype');
+  src: url('/fonts/agatha-modern-regular.woff') format('woff');
 }
 
 /* Figma 16-207 — Ice Kingdom (Frozen) Cyrillic Bold («In progres», 14px, black) */
@@ -21,7 +19,5 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/ice-kingdom-frozen-cyrillic-bold.woff2') format('woff2'),
-       url('/fonts/ice-kingdom-frozen-cyrillic-bold.woff') format('woff'),
-       url('/fonts/ice-kingdom-frozen-cyrillic-bold.ttf') format('truetype');
+  src: url('/fonts/ice-kingdom-frozen-cyrillic-bold.woff') format('woff');
 }
