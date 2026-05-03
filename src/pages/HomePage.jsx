@@ -5,9 +5,19 @@ import FilterPills from '../components/FilterPills';
 import { projects } from '../data/projects';
 import {
   SECTION_HEADER_IMAGES,
+  HEADER_FIRST_SCREEN,
   headerItemsFolder,
   headerItemsWell,
 } from '../data/sectionHeaderItems';
+import { publicUrl } from '../utils/publicUrl.js';
+
+function headerItemPlacementStyle(placement) {
+  if (!placement) return undefined;
+  return {
+    '--hi-left': `${(placement.x / HEADER_FIRST_SCREEN.w) * 100}%`,
+    '--hi-top': `${(placement.y / HEADER_FIRST_SCREEN.h) * 100}%`,
+  };
+}
 
 const heroLinks = [
   { href: 'https://t.me/pnkprty', label: 'Telegram' },
@@ -39,7 +49,7 @@ export default function HomePage() {
           <div className="hero__top">
             <div className="hero-vector" aria-hidden="true" data-node-id="1:203">
               <div className="hero-vector__inner">
-                <img src="/images/main%20title%20vector.svg" alt="" />
+                <img src={publicUrl('/images/main%20title%20vector.svg')} alt="" />
               </div>
             </div>
             <div className="hero__card">
@@ -47,13 +57,14 @@ export default function HomePage() {
             </div>
           </div>
           <nav className="section-nav section-nav--home section-nav--overlay" aria-label="Разделы">
-            <div className="header-items">
-              {headerItemsFolder.map(({ nodeId, label, iconKey, to }) => (
+            <div className="header-items header-items--figma">
+              {headerItemsFolder.map(({ nodeId, label, iconKey, to, placement }) => (
                 <Link
                   key={nodeId}
                   to={to}
                   className="header-item header-item--folder"
                   data-node-id={nodeId}
+                  style={headerItemPlacementStyle(placement)}
                 >
                   <div className="header-item__icon-wrap">
                     <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} />
@@ -61,12 +72,13 @@ export default function HomePage() {
                   <span className="header-item__label">{label}</span>
                 </Link>
               ))}
-              {headerItemsWell.map(({ nodeId, label, iconKey, to }) => (
+              {headerItemsWell.map(({ nodeId, label, iconKey, to, placement }) => (
                 <Link
                   key={nodeId}
                   to={to}
                   className="header-item header-item--image-well"
                   data-node-id={nodeId}
+                  style={headerItemPlacementStyle(placement)}
                 >
                   <div className="header-item__well">
                     <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" />
@@ -87,8 +99,9 @@ export default function HomePage() {
                 5 лет запускаю и развиваю цифровые продукты. Знаю, как выстраиваются процессы, как работает продукт и
                 как просто делать хорошо
               </p>
-              <Link to="/about" className="hero-more">
-                Больше обо мне →
+              <Link to="/about" className="hero-more hero-more--with-icon">
+                <span className="hero-more__text">Больше обо мне</span>
+                <span className="hero-more__chevron" aria-hidden="true" />
               </Link>
             </div>
             <div className="info-grid">

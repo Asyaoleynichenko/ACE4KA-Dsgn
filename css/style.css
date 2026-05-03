@@ -202,8 +202,8 @@ button:focus-visible,
     justify-content: flex-start;
     align-items: center;
     isolation: isolate;
-    backdrop-filter: blur(var(--blur-nav-list)) saturate(1.7);
-    -webkit-backdrop-filter: blur(var(--blur-nav-list)) saturate(1.7);
+    backdrop-filter: blur(var(--blur-nav-list)) saturate(1.85);
+    -webkit-backdrop-filter: blur(var(--blur-nav-list)) saturate(1.85);
 }
 
 .nav-list li {
@@ -320,6 +320,9 @@ button:focus-visible,
 .page-home .hero {
     min-height: 0;
     padding-bottom: var(--space-64);
+    display: flex;
+    flex-direction: column;
+    gap: var(--hero-section-gap); /* Figma 89:347 — 64px между 70:343 и 1:232 */
 }
 
 .hero__row {
@@ -330,6 +333,10 @@ button:focus-visible,
     justify-content: center;
     gap: var(--hero-row-gap);
     margin-top: var(--hero-row-gap);
+}
+
+.page-home .hero__row {
+    margin-top: 0;
 }
 
 .hero__content {
@@ -348,16 +355,22 @@ button:focus-visible,
     max-width: 100%;
 }
 
-/* Figma 70:343 — First screen: вектор + превью + папки внутри одной области */
+/* Figma 70:343 — First screen: 1275.452×312.784, вектор + превью + абсолютные плашки */
 .page-home .hero-first-screen {
     position: relative;
     width: 100%;
     max-width: 1275px;
-    margin: 0 auto var(--space-32);
-    min-height: min(312px, 42vw);
+    margin: 0 auto;
+    aspect-ratio: 1275.452 / 312.784;
+    min-height: 0;
 }
 
-/* Обёртка вектора + карточка поверх (первый экран, 1-202) */
+/* Обёртка вектора + карточка поверх (первый экран, 1-202) — высота как у фрейма 70:343 */
+.page-home .hero-first-screen .hero__top {
+    height: 100%;
+    min-height: 100%;
+}
+
 .page-home .hero__top {
     position: relative;
     width: 100%;
@@ -464,6 +477,34 @@ button:focus-visible,
     text-decoration: underline;
 }
 
+/* Figma 1:241 — gap 10px, иконка 20×24 (здесь — chevron) */
+.hero-more--with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.hero-more--with-icon:hover {
+    text-decoration: none;
+}
+
+.hero-more--with-icon:hover .hero-more__text {
+    text-decoration: underline;
+}
+
+.hero-more__chevron {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg) translate(-2px, -2px);
+    opacity: 0.9;
+}
+
 /* Info grid - Figma 1-245: gap 32, cols 148 147 148 254 184 */
 .info-grid {
     display: grid;
@@ -545,17 +586,15 @@ button:focus-visible,
 .section-nav {
     margin-bottom: 2.5rem;
 }
-/* Папки поверх первого экрана (Figma 89:347 — внутри .hero-first-screen) */
+/* Папки поверх первого экрана (Figma 89:347 — координаты от верха фрейма 70:343) */
 .page-home .hero-first-screen .section-nav--overlay {
     position: absolute;
-    bottom: 24px;
-    left: 0;
-    right: 0;
+    inset: 0;
     z-index: 2;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 0 24px;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
+    pointer-events: none;
 }
 
 .page-home .hero-first-screen .section-nav {
@@ -577,11 +616,66 @@ button:focus-visible,
     max-width: 1290px;
     margin: 0 auto;
 }
+
+/* Figma 89:347 — плашки по координатам dev mode (см. --hi-left / --hi-top из JS) */
+.page-home .hero-first-screen .header-items--figma {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    pointer-events: none;
+}
+
+.page-home .hero-first-screen .header-items--figma .header-item {
+    position: absolute;
+    left: var(--hi-left, 0);
+    top: var(--hi-top, 0);
+    width: 93.94px;
+    max-width: min(93.94px, 19vw);
+    box-sizing: border-box;
+    z-index: 3;
+    pointer-events: auto;
+}
+
 @media (max-width: 900px) {
+    .page-home .hero-first-screen {
+        aspect-ratio: auto;
+        min-height: min(320px, 70vw);
+    }
+
+    .page-home .hero-first-screen .header-items--figma {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        position: relative;
+        height: auto;
+        min-height: 0;
+        padding: 16px 12px 0;
+        pointer-events: auto;
+    }
+
+    .page-home .hero-first-screen .header-items--figma .header-item {
+        position: relative;
+        left: auto !important;
+        top: auto !important;
+        width: auto;
+        max-width: 100%;
+        justify-self: center;
+    }
+
+    .page-home .hero-first-screen .section-nav--overlay {
+        position: relative;
+        inset: auto;
+        pointer-events: auto;
+    }
+
     .header-items {
         grid-template-columns: repeat(2, auto);
     }
 }
+
 @media (max-width: 480px) {
     .header-items {
         grid-template-columns: 1fr;
