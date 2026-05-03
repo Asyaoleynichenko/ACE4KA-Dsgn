@@ -104,7 +104,7 @@ export default function ProjectDetailPage() {
             )}
             {project.influence && (
               <div className="card">
-                <h3>Влияние</h3>
+                <h3>Результат</h3>
                 <p>{project.influence}</p>
               </div>
             )}
@@ -200,7 +200,7 @@ export default function ProjectDetailPage() {
                     ) : null}
                     {section.blockCards.influence ? (
                       <div className="card">
-                        <h3>Влияние</h3>
+                        <h3>Результат</h3>
                         <p>{section.blockCards.influence}</p>
                       </div>
                     ) : null}
@@ -273,37 +273,25 @@ export default function ProjectDetailPage() {
               </div>
             </div>
           ) : null}
-        </div>
-        {slug === 'marginals' && (
-          <section className="project-problem-solution-impact">
-            <div className="project-case-grid">
-              {project.task && (
-                <div className="project-case-card">
-                  <h2 className="project-case-card__title">Задача</h2>
-                  <p className="project-case-card__text">{project.task}</p>
-                </div>
-              )}
-              {project.solution && (
-                <div className="project-case-card">
-                  <h2 className="project-case-card__title">Решение</h2>
-                  <p className="project-case-card__text">{project.solution}</p>
-                </div>
-              )}
-              <div className="project-case-card">
-                <h2 className="project-case-card__title">Влияние</h2>
-                <p className="project-case-card__text">
-                  {project.lead}
-                </p>
-              </div>
-              <div className="project-case-card">
-                <h2 className="project-case-card__title">Метрики</h2>
-                <p className="project-case-card__text">
-                  {project.lead}
-                </p>
+          {project.influence ? (
+            <div className="contact-item contact-item--text">
+              <span className="contact-item__icon" aria-hidden="true">•</span>
+              <div>
+                <strong>Результат</strong>
+                <p>{project.influence}</p>
               </div>
             </div>
-          </section>
-        )}
+          ) : null}
+          {project.metrics ? (
+            <div className="contact-item contact-item--text">
+              <span className="contact-item__icon" aria-hidden="true">•</span>
+              <div>
+                <strong>Метрики</strong>
+                <p>{project.metrics}</p>
+              </div>
+            </div>
+          ) : null}
+        </div>
         {(project.tools?.length || project.extLink) ? (
           <footer className="project-detail-footer project-detail-footer--centered">
             {project.tools?.length ? (
