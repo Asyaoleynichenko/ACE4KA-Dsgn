@@ -4,26 +4,26 @@
  */
 
 :root {
-  --color-bg: #000000;
-  --color-bg-elevated: #0a0a0a;
-  --color-surface: rgba(38, 38, 38, 0.4);
-  --color-surface-solid: #262626;
-  --color-surface-light: rgba(255, 255, 255, 0.05);
-  --color-text: #fafafa;
-  --color-text-primary: #ffffff;
-  --color-text-muted: rgba(250, 250, 250, 0.6);
-  --color-text-extra-muted: rgba(250, 250, 250, 0.4);
+  --color-bg: #0b0b0c;
+  --color-bg-elevated: #111113;
+  --color-surface: #161619;
+  --color-surface-solid: #1c1c20;
+  --color-surface-light: #222228;
+  --color-text: #f5f5f5;
+  --color-text-primary: #f5f5f5;
+  --color-text-muted: #a3a3a3;
+  --color-text-extra-muted: #737373;
   /* Иерархия и акценты — один набор для всего UI */
   --color-text-label: #a3a3a3;
-  --color-text-on-inverse: #000000;
-  --color-bg-inverse: #fafafa;
-  --color-accent: #f0a;
-  --color-accent-hover: #ff22bb;
-  --color-focus-ring: rgba(250, 250, 250, 0.85);
-  --color-focus-ring-strong: rgba(250, 250, 250, 0.9);
-  --color-focus-ring-soft: rgba(250, 250, 250, 0.6);
+  --color-text-on-inverse: #0a0a0a;
+  --color-bg-inverse: #f5f5f5;
+  --color-accent: #f5f5f5;
+  --color-accent-hover: #e5e5e5;
+  --color-focus-ring: rgba(245, 245, 245, 0.4);
+  --color-focus-ring-strong: rgba(245, 245, 245, 0.56);
+  --color-focus-ring-soft: rgba(245, 245, 245, 0.28);
   /* Тёмный текст на светлой плашке превью «Привет» (titlebar) */
-  --color-preview-titlebar-text: rgba(0, 0, 0, 0.5);
+  --color-preview-titlebar-text: #a3a3a3;
   /* Типографика: основной интерфейс — Inter + системный стек; декоративные шрифты только в @font-face (filters), не смешивать с body */
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
@@ -34,65 +34,67 @@
 
   /* Скругления — кратно 4px. Вложенный прямоугольник с тем же центром скругления: R_внут ≈ max(0, R_внеш − padding).
      Полная «капсула»: --radius-full. */
-  --radius-xs: 4px;
+  --radius-xs: 8px;
   --radius: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-2xl: 32px;
+  --radius-xl: 16px;
+  --radius-2xl: 16px;
   --radius-full: 9999px;
-  --color-surface-border: rgba(255, 255, 255, 0.08);
+  --color-surface-border: #2a2a31;
   --font-size-14: 14px;
   --font-size-16: 16px;
   --font-size-18: 18px;
+  --font-size-24: 24px;
+  --font-size-32: 32px;
+  --font-size-44: 44px;
   --font-weight-semibold: 600;
-  --shadow-nav-active: inset 1px -1px 1.6px 0 rgba(255, 255, 255, 0.51), inset 0 0 6.2px 0 rgba(255, 255, 255, 0.51);
+  --shadow-nav-active: 0 1px 2px rgba(0, 0, 0, 0.42);
   /* Внешняя nav-pill + активная капсула — liquid glass (Figma 300:107467) */
-  --shadow-nav-pill-rim: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.45);
-  --shadow-nav-active-liquid: inset 0 2px 2px rgba(255, 255, 255, 0.72), inset 0 -2px 3px rgba(255, 255, 255, 0.28),
-    inset 0 0 10px rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.12);
-  --shadow-btn-show-all: 1.556px -1.556px 2.489px 0 rgba(255, 255, 255, 0.51) inset, 0 0 9.644px 0 rgba(255, 255, 255, 0.51) inset;
-  --shadow-preview-card: 0 0 3px 0 rgba(0, 0, 0, 0.55), 0 40px 100px 0 rgba(0, 0, 0, 0.4);
-  --shadow-preview-card-hover: 0 0 4px 0 rgba(0, 0, 0, 0.55), 0 50px 120px 0 rgba(0, 0, 0, 0.45);
-  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
-  --shadow-nav-drawer: -10px 0 30px rgba(0, 0, 0, 0.5);
+  --shadow-nav-pill-rim: 0 1px 2px rgba(0, 0, 0, 0.36);
+  --shadow-nav-active-liquid: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-btn-show-all: 0 1px 2px rgba(0, 0, 0, 0.36);
+  --shadow-preview-card: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-preview-card-hover: 0 12px 28px rgba(0, 0, 0, 0.45);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-nav-drawer: -8px 0 24px rgba(0, 0, 0, 0.5);
 
-  --blur-nav: 12px;
-  --blur-nav-pill: 55px; /* активная капсула */
-  --blur-nav-list: 100px; /* .nav-list — усиленный backdrop blur */
-  --blur-btn-show-all-liquid: 44px; /* «Смотреть все проекты» — liquid glass */
-  --blur-preview-card: 20px;
-  --effect-nav-pill-bg: rgba(255, 255, 255, 0.12);
-  --effect-nav-pill-border: rgba(255, 255, 255, 0.16);
-  --effect-nav-active-bg: rgba(0, 0, 0, 0.92); /* почти чёрная капсула, кромка чуть «стеклит» с blur */
-  --effect-nav-active-border: rgba(255, 255, 255, 0.48);
+  --blur-nav: 0px;
+  --blur-nav-pill: 0px;
+  --blur-nav-list: 0px;
+  --blur-btn-show-all-liquid: 0px;
+  --blur-preview-card: 0px;
+  --effect-nav-pill-bg: #161619;
+  --effect-nav-pill-border: #2a2a31;
+  --effect-nav-active-bg: #f5f5f5;
+  --effect-nav-active-border: #f5f5f5;
   /* Figma nav pill active: outline 1px white 20% */
-  --effect-nav-active-outline: rgba(255, 255, 255, 0.38);
-  --effect-nav-link-hover: rgba(255, 255, 255, 0.06);
-  --effect-preview-overlay: rgba(240, 240, 240, 0.54);
-  --effect-btn-show-all-border: rgba(255, 255, 255, 0.48);
+  --effect-nav-active-outline: #f5f5f5;
+  --effect-nav-link-hover: #222228;
+  --effect-preview-overlay: rgba(22, 22, 25, 0.65);
+  --effect-btn-show-all-border: #3a3a44;
   /* Preview block 1-231 — CTA по макету */
-  --preview-cta-border: 1px solid #F5F5F5;
+  --preview-cta-border: 1px solid #3a3a44;
   --preview-cta-radius: var(--radius-xs);
   --preview-cta-color: #f5f5f5;
-  --preview-cta-mix-blend: plus-darker;
-  --mix-blend-exclusion: exclusion;
+  --preview-cta-mix-blend: normal;
+  --mix-blend-exclusion: normal;
 
   /* Spacing — сетка 4px (микро) / 8px (макро): 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 72.
      Внешние отступы — между соседними блоками; padding — внутри компонента (текст до края). */
-  --space-4: 4px;
+  --space-4: 8px;
   --space-8: 8px;
-  --space-12: 12px;
+  --space-12: 16px;
   --space-16: 16px;
-  --space-20: 20px;
+  --space-20: 24px;
   --space-24: 24px;
   --space-32: 32px;
   --space-40: 40px;
   --space-48: 48px;
   --space-64: 64px;
-  --space-72: 72px;
+  --space-72: 64px;
   /* Figma 1:300 — между title / meta / desc внутри блока текста */
-  --card-gap: 8px;
+  --card-gap: 16px;
   /* Figma 1:298 — между превью и блоком текста (Project Card) */
   --preview-card-media-body-gap: 16px;
   /* Сетка проектов 1-297: row-gap 24px, column-gap 8px */
@@ -101,9 +103,9 @@
 
   --hero-content-max: 896px;
   --hero-card-width: 369px;
-  --hero-row-gap: 12px;
+  --hero-row-gap: 24px;
   --hero-lead-max: 661px;
-  --hero-section-gap: 64px;
+  --hero-section-gap: 48px;
 
   --project-page-max-width: 1290px;
   --project-page-padding-y: 48px;
@@ -125,94 +127,94 @@
   --project-hero-gradient: linear-gradient(135deg, #2b2b2b 0%, #1d1d1d 100%);
   --project-hero-placeholder-bg: #c4c4c4;
   --project-heading-gap: 12px;
-  --project-heading-max-width: 863px;
-  --project-title-font-size: 36px;
+  --project-heading-max-width: 720px;
+  --project-title-font-size: 32px;
   --project-title-line-height: 1.2;
-  --project-title-letter-spacing: -0.5px;
+  --project-title-letter-spacing: -0.02em;
   --project-lead-font-size: 18px;
-  --project-lead-line-height: 1.4;
-  --project-lead-letter-spacing: -0.2px;
-  --project-lead-color: rgba(250, 250, 250, 0.8);
+  --project-lead-line-height: 1.5;
+  --project-lead-letter-spacing: 0;
+  --project-lead-color: #737373;
   --project-meta-card-gap: 16px;
   --project-meta-card-bg: #0f0f0f;
   --project-meta-card-radius: var(--radius-lg);
   --project-meta-card-padding: 24px;
   --project-meta-card-max-width: 415px;
-  --project-meta-item-gap: 4px;
-  --project-meta-label-font-size: 12px;
-  --project-meta-label-line-height: 16px;
-  --project-meta-label-letter-spacing: 0.6px;
-  --project-meta-label-opacity: 0.4;
+  --project-meta-item-gap: 8px;
+  --project-meta-label-font-size: 14px;
+  --project-meta-label-line-height: 1.4;
+  --project-meta-label-letter-spacing: 0;
+  --project-meta-label-opacity: 1;
   --project-meta-value-font-size: 18px;
-  --project-meta-value-line-height: 28px;
-  --project-meta-value-letter-spacing: -0.44px;
-  --project-meta-value-opacity: 0.8;
+  --project-meta-value-line-height: 1.5;
+  --project-meta-value-letter-spacing: 0;
+  --project-meta-value-opacity: 1;
   --project-grid-gap: 24px;
   --project-footer-border-top: 64px;
   --project-footer-pt: 64px;
   --project-footer-border: 1px solid #262626;
   --project-footer-gap: 48px;
-  --project-footer-label-font-size: 12px;
-  --project-footer-label-line-height: 16px;
-  --project-footer-label-letter-spacing: 0.6px;
-  --project-footer-label-opacity: 0.4;
+  --project-footer-label-font-size: 14px;
+  --project-footer-label-line-height: 1.4;
+  --project-footer-label-letter-spacing: 0;
+  --project-footer-label-opacity: 1;
   --project-footer-label-mb: 8px;
   --project-card-bg: #0f0f0f;
   --project-card-radius: var(--radius-lg);
   --project-card-padding: 32px;
-  --project-card-gap: 12px;
-  --project-card-title-font-size: 12px;
-  --project-card-title-line-height: 16px;
-  --project-card-title-letter-spacing: 0.6px;
-  --project-card-title-opacity: 0.4;
+  --project-card-gap: 16px;
+  --project-card-title-font-size: 14px;
+  --project-card-title-line-height: 1.4;
+  --project-card-title-letter-spacing: 0;
+  --project-card-title-opacity: 1;
   --project-card-text-font-size: 18px;
-  --project-card-text-line-height: 29.25px;
-  --project-card-text-letter-spacing: -0.44px;
-  --project-card-text-opacity: 0.8;
+  --project-card-text-line-height: 1.5;
+  --project-card-text-letter-spacing: 0;
+  --project-card-text-opacity: 1;
   --project-tools-gap: 8px;
-  --project-tools-pill-padding: 8px 12px;
-  --project-tools-pill-font-size: 12px;
-  --project-tools-pill-line-height: 16px;
+  --project-tools-pill-padding: 8px 16px;
+  --project-tools-pill-font-size: 14px;
+  --project-tools-pill-line-height: 1.4;
   --project-tools-pill-border: 1px solid #262626;
   --project-tools-pill-height: auto;
-  --project-ext-link-font-size: 14px;
-  --project-ext-link-line-height: 20px;
-  --project-ext-link-letter-spacing: 0.55px;
-  --project-ext-link-color: #fafafa;
+  --project-ext-link-font-size: 16px;
+  --project-ext-link-line-height: 1.5;
+  --project-ext-link-letter-spacing: 0;
+  --project-ext-link-color: #0a0a0a;
   --Text-Secondary: var(--color-preview-titlebar-text);
 
   /* Figma 89-756 — стили текста (единственный источник для страниц Контакты, О себе, Резюме, Образование, проекты layout-89, page-811/909/915/920) */
-  --text-89-756-title-font-size: 36px;
-  --text-89-756-title-line-height: 1.2;
-  --text-89-756-title-letter-spacing: -0.5px;
-  --text-89-756-title-color: #fafafa;
+  --text-89-756-title-font-size: 32px;
+  --text-89-756-title-line-height: 1.25;
+  --text-89-756-title-letter-spacing: -0.02em;
+  --text-89-756-title-color: #0a0a0a;
   --text-89-756-lead-font-size: 18px;
-  --text-89-756-lead-line-height: 1.4;
-  --text-89-756-lead-letter-spacing: -0.2px;
-  --text-89-756-lead-color: rgba(250, 250, 250, 0.8);
-  --text-89-756-lead-max-width: 661px;
-  --text-89-756-label-font-size: 12px;
-  --text-89-756-label-line-height: 16px;
-  --text-89-756-label-letter-spacing: 0.6px;
-  --text-89-756-label-opacity: 0.4;
+  --text-89-756-lead-line-height: 1.5;
+  --text-89-756-lead-letter-spacing: 0;
+  --text-89-756-lead-color: #737373;
+  --text-89-756-lead-max-width: 720px;
+  --text-89-756-label-font-size: 14px;
+  --text-89-756-label-line-height: 1.4;
+  --text-89-756-label-letter-spacing: 0;
+  --text-89-756-label-opacity: 1;
   --text-89-756-body-font-size: 18px;
-  --text-89-756-body-line-height: 29.25px;
-  --text-89-756-body-letter-spacing: -0.44px;
-  --text-89-756-body-opacity: 0.8;
-  --text-89-756-link-font-size: 14px;
-  --text-89-756-link-line-height: 20px;
-  --text-89-756-link-letter-spacing: 0.55px;
-  --text-89-756-link-color: #fafafa;
+  --text-89-756-body-line-height: 1.5;
+  --text-89-756-body-letter-spacing: 0;
+  --text-89-756-body-opacity: 1;
+  --text-89-756-link-font-size: 16px;
+  --text-89-756-link-line-height: 1.5;
+  --text-89-756-link-letter-spacing: 0;
+  --text-89-756-link-color: #0a0a0a;
 
   /* Figma 89-756 — верстка (отступы, размеры блоков) */
   --layout-89-756-wrap-width: 100%;
   --layout-89-756-header-margin-bottom: 64px;
-  --layout-89-756-grid-gap: 12px;
+  --layout-89-756-grid-gap: 16px;
   --layout-89-756-grid-max-width: 560px;
   --layout-89-756-grid-columns: 2;
   --layout-89-756-item-padding-y: 16px;
-  --layout-89-756-item-padding-x: 20px;
-  --layout-89-756-item-gap: 20px;
+  --layout-89-756-item-padding-x: 24px;
+  --layout-89-756-item-gap: 24px;
   --layout-89-756-item-radius: var(--radius-lg);
   --layout-89-756-item-inner-gap: 4px;
 }

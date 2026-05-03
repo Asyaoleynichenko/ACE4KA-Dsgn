@@ -2,6 +2,8 @@ import { publicUrl } from '../utils/publicUrl.js';
 
 /** Figma 1:231 — Image Preview: 369×280, titlebar (leading: spacer, close, spacer, resize, spacer, title; trailing: spacer, CTA), image area */
 export default function PreviewCardBlock() {
+  const previewImageSrc = publicUrl('/images/figma-89-347/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.png');
+
   return (
     <a
       href="https://t.me/pnkprty"
@@ -27,11 +29,11 @@ export default function PreviewCardBlock() {
         </div>
         <div className="preview-card-block__trailing" data-node-id="I1:231;103:8929">
           <span className="preview-card-block__spacer preview-card-block__spacer--8" aria-hidden="true" />
-          <span className="preview-card-block__cta" data-node-id="I1:231;153:9369">Написать в Telegram</span>
+          <span className="preview-card-block__cta" data-node-id="I1:231;153:9369">Написать мне @pnkprty</span>
         </div>
       </div>
       <div className="preview-card-block__image" data-node-id="I1:231;103:8833">
-        {/* Изображение по макету: inset 38px 5px 5px 5px */}
+        <img src={previewImageSrc} alt="" />
       </div>
     </a>
   );

@@ -14,7 +14,7 @@ export default function Header() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="header" data-node-id="300:107467" data-name="Header">
+    <header className="header" data-node-id="300:104227" data-name="Header">
       <nav className="nav">
         <Link to="/" className="logo" data-node-id="300:107467-logo">
           <span className="blend-text">{'Ася\u00a0Олейниченко'}</span>
@@ -27,7 +27,7 @@ export default function Header() {
                 className={`nav-link${location.pathname === to || (to === '/projects' && location.pathname.startsWith('/project')) ? ' active' : ''}`}
                 onClick={closeMenu}
               >
-                {label}
+                <span className="blend-text">{label}</span>
               </Link>
             </li>
           ))}

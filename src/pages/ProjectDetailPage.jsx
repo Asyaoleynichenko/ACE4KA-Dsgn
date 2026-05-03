@@ -203,9 +203,36 @@ export default function ProjectDetailPage() {
             ))}
           </section>
 
-          {project.caseSections?.map((section, i) => (
+          {project.caseSections?.map((section, i) => {
+            const isTitleInfoSection = section.layout === 'title-info' && section.galleryImage;
+            return (
             <Fragment key={i}>
-              <section className={`section${section.mediaOnly ? ' section--media-only' : ''}`}>
+              <section className={`section${section.mediaOnly ? ' section--media-only' : ''}${isTitleInfoSection ? ' section--title-info' : ''}`}>
+                {isTitleInfoSection ? (
+                  <article className="title-info-card" data-node-id={section.nodeId ?? '300:107826'} data-name="Title info">
+                    <div className="title-info-card__content" data-node-id="300:107827">
+                      <div className="title-info-card__text-group" data-node-id="300:107828">
+                        <h2 data-node-id="300:107830">{section.title}</h2>
+                        {section.description ? <p data-node-id="300:107832">{section.description}</p> : null}
+                      </div>
+                      {section.ctaLabel ? (
+                        <a
+                          href={publicUrl(section.galleryImage)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="title-info-card__cta"
+                          data-node-id="300:107833"
+                        >
+                          {section.ctaLabel}
+                        </a>
+                      ) : null}
+                    </div>
+                    <div className="title-info-card__media" data-node-id="300:107834">
+                      <img src={publicUrl(section.galleryImage)} alt={section.title} />
+                    </div>
+                  </article>
+                ) : (
+                  <>
                 {section.galleryAboveTitle ? (
                   <div className="gallery">
                     <img src={publicUrl(section.galleryAboveTitle)} alt="" />
@@ -294,6 +321,8 @@ export default function ProjectDetailPage() {
                     );
                   })()
                 ) : null}
+                  </>
+                )}
               </section>
               {i === 0 && (caseImages.before || caseImages.after) && (
                 <section className="images">
@@ -302,7 +331,8 @@ export default function ProjectDetailPage() {
                 </section>
               )}
             </Fragment>
-          ))}
+          );
+          })}
           <CaseStudyProjectNav slug={slug} />
         </div>
       </div>
