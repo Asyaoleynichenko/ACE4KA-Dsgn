@@ -28,7 +28,7 @@ export default function ResumePage() {
         <div className="contact-item">
           <div>
             <strong>Скачать</strong>
-            <a href="#" target="_blank" rel="noopener noreferrer">Резюме (PDF)</a>
+            <a href="#">Резюме (PDF)</a>
           </div>
         </div>
       </div>

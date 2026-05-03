@@ -1,7 +1,7 @@
 /**
  * Шрифты проекта
- * - Inter: подключается через @fontsource/inter в main.jsx (400, 500, 600, 700, 900, latin + cyrillic).
- * - Декоративные шрифты (Figma 16-195, 16-207): положите файлы в public/fonts/ (см. public/fonts/README.md).
+ * - Inter: основной UI (@fontsource/inter в main.jsx).
+ * - Agatha / Ice Kingdom: опциональные декоративные начертания (фильтры Figma); в интерфейсе по умолчанию — один гарнитурный ряд (--font-body) для консистентности.
  */
 
 /* Figma 16-195 — Agatha Modern Regular (вариант «Исследования», 20px, #ef0) */
