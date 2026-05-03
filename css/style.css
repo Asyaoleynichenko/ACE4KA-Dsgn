@@ -202,8 +202,8 @@ button:focus-visible,
     justify-content: flex-start;
     align-items: center;
     isolation: isolate;
-    backdrop-filter: blur(var(--blur-nav-list)) saturate(1.6);
-    -webkit-backdrop-filter: blur(var(--blur-nav-list)) saturate(1.6);
+    backdrop-filter: blur(var(--blur-nav-list)) saturate(1.7);
+    -webkit-backdrop-filter: blur(var(--blur-nav-list)) saturate(1.7);
 }
 
 .nav-list li {
@@ -239,8 +239,8 @@ button:focus-visible,
     outline: none;
     background: var(--effect-nav-active-bg);
     box-shadow: var(--shadow-nav-active-liquid), var(--shadow-nav-active);
-    backdrop-filter: blur(var(--blur-nav-pill)) saturate(1.5);
-    -webkit-backdrop-filter: blur(var(--blur-nav-pill)) saturate(1.5);
+    backdrop-filter: blur(var(--blur-nav-pill)) saturate(1.65);
+    -webkit-backdrop-filter: blur(var(--blur-nav-pill)) saturate(1.65);
 }
 
 .nav-link:hover:not(.active) {

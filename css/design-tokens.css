@@ -39,8 +39,8 @@
   --shadow-nav-drawer: -10px 0 30px rgba(0, 0, 0, 0.5);
 
   --blur-nav: 12px;
-  --blur-nav-pill: 56px; /* активная капсула — сильный blur под чёрной кнопкой */
-  --blur-nav-list: 100px; /* .nav-list — сильный background blur (liquid glass) */
+  --blur-nav-pill: 55px; /* активная капсула */
+  --blur-nav-list: 55px; /* .nav-list backdrop blur */
   --blur-btn-show-all-liquid: 44px; /* «Смотреть все проекты» — liquid glass */
   --blur-preview-card: 20px;
   --effect-nav-pill-bg: rgba(255, 255, 255, 0.12);
