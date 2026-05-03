@@ -11,7 +11,7 @@ export default function ProjectsPage() {
         <FilterPills />
       </div>
 
-      <div className="preview-grid">
+      <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">
         {projects.map((p) => (
           <ProjectCard
             key={p.slug}

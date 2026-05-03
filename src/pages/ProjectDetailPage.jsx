@@ -2,6 +2,29 @@ import { Fragment } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { projects } from '../data/projects';
 
+function CaseStudyProjectNav({ slug }) {
+  const i = projects.findIndex((p) => p.slug === slug);
+  const next = i >= 0 && i < projects.length - 1 ? projects[i + 1] : null;
+  return (
+    <nav className="case-study-nav" aria-label="Навигация по проектам" data-node-id="300:104228">
+      <div className="case-study-nav__inner">
+        <Link to="/projects" className="case-study-nav__link case-study-nav__link--back">
+          <span className="case-study-nav__icon" aria-hidden="true">←</span>
+          Назад к&nbsp;портфолио
+        </Link>
+        {next ? (
+          <Link to={`/project/${next.slug}`} className="case-study-nav__link case-study-nav__link--next">
+            Следующий проект
+            <span className="case-study-nav__icon case-study-nav__icon--flip" aria-hidden="true">←</span>
+          </Link>
+        ) : (
+          <span className="case-study-nav__spacer" aria-hidden="true" />
+        )}
+      </div>
+    </nav>
+  );
+}
+
 export default function ProjectDetailPage() {
   const { slug } = useParams();
   const project = projects.find((p) => p.slug === slug);
@@ -23,12 +46,13 @@ export default function ProjectDetailPage() {
   if (isCaseStudy) {
     const caseImages = project.caseStudyImages || {};
     return (
-      <div className="project-page-wrap project-page-wrap--case-study project-case-study-mail">
+      <div
+        className="project-page-wrap project-page-wrap--case-study project-case-study-mail"
+        data-node-id={project.figmaNodeId}
+        data-figma-url={project.figmaUrl}
+      >
+        <CaseStudyProjectNav slug={slug} />
         <div className="container container--case-study">
-          <Link to="/projects" className="back">
-            ← НАЗАД К ПОРТФОЛИО
-          </Link>
-
           <section className="hero">
             {project.image ? (
               <img src={project.image} alt={project.title} />
@@ -40,16 +64,27 @@ export default function ProjectDetailPage() {
           <section className="project-intro">
             <div className="title">
               <h1>{project.title}</h1>
-              <p>
-                {project.intro?.[0] ?? project.lead}
-              </p>
+              {(project.intro?.length ? project.intro : [project.lead]).map((para, idx) => (
+                <p key={idx}>{para}</p>
+              ))}
             </div>
             <div className="project-info">
               {metaItems.map((item) => (
-                <div key={item.label}>
-                  {item.label}<br /><b>{item.value}</b>
+                <div key={item.label} className="project-info__row">
+                  <span className="project-info__label">{item.label}</span>
+                  <span className="project-info__value">{item.value}</span>
                 </div>
               ))}
+              {project.extLink ? (
+                <a
+                  href={project.extLink.href}
+                  className="project-info__cta"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {project.extLink.label}
+                </a>
+              ) : null}
             </div>
           </section>
 
@@ -82,35 +117,100 @@ export default function ProjectDetailPage() {
 
           {project.caseSections?.map((section, i) => (
             <Fragment key={i}>
-              <section className="section">
-                <h2>{section.title}</h2>
+              <section className={`section${section.mediaOnly ? ' section--media-only' : ''}`}>
+                {section.galleryAboveTitle ? (
+                  <div className="gallery">
+                    <img src={section.galleryAboveTitle} alt="" />
+                  </div>
+                ) : null}
+                {!section.hideTitle && section.title ? <h2>{section.title}</h2> : null}
                 {section.description && (
                   <p className={section.hypotheses?.length ? 'section-desc' : ''}>
                     {section.description}
                   </p>
                 )}
+                {section.tasksHeading ? (
+                  <p className="section__tasks-heading">{section.tasksHeading}</p>
+                ) : null}
+                {section.tasks?.length > 0 && (
+                  section.taskLayout === 'pills' ? (
+                    <ul className="section__pills" aria-label={section.pillsLabel ?? 'Ключевые пункты'}>
+                      {section.tasks.map((t, j) => (
+                        <li key={j}>{t}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <ul>
+                      {section.tasks.map((t, j) => (
+                        <li key={j}>{t}</li>
+                      ))}
+                    </ul>
+                  )
+                )}
+                {section.galleryBeforeHypotheses ? (
+                  <div className="gallery gallery--before-hypotheses">
+                    <img src={section.galleryBeforeHypotheses} alt="" />
+                  </div>
+                ) : null}
                 {section.hypotheses?.length > 0 && (
                   <div className="hypothesis">
                     {section.hypotheses.map((h, j) => (
                       <div key={j} className="hyp-card">
                         <h4>{h.title ?? `Гипотеза ${j + 1}`}</h4>
                         <p>{h.text}</p>
+                        {h.outcome ? (
+                          <div className="hyp-card__outcome">
+                            <span>{h.outcome}</span>
+                          </div>
+                        ) : null}
                       </div>
                     ))}
                   </div>
                 )}
-                {section.galleryImage && (
+                {section.galleryImage ? (
                   <div className="gallery">
                     <img src={section.galleryImage} alt="" />
                   </div>
-                )}
-                {section.tasks?.length > 0 && (
-                  <ul>
-                    {section.tasks.map((t, j) => (
-                      <li key={j}>{t}</li>
-                    ))}
-                  </ul>
-                )}
+                ) : null}
+                {section.galleryImages?.length > 0
+                  ? section.galleryImages.map((src, gi) => (
+                      <div key={gi} className="gallery">
+                        <img src={src} alt="" />
+                      </div>
+                    ))
+                  : null}
+                {section.blockCards &&
+                (section.blockCards.task ||
+                  section.blockCards.solution ||
+                  section.blockCards.influence ||
+                  section.blockCards.metrics) ? (
+                  <div className="cards">
+                    {section.blockCards.task ? (
+                      <div className="card">
+                        <h3>Задача</h3>
+                        <p>{section.blockCards.task}</p>
+                      </div>
+                    ) : null}
+                    {section.blockCards.solution ? (
+                      <div className="card">
+                        <h3>Решение</h3>
+                        <p>{section.blockCards.solution}</p>
+                      </div>
+                    ) : null}
+                    {section.blockCards.influence ? (
+                      <div className="card">
+                        <h3>Влияние</h3>
+                        <p>{section.blockCards.influence}</p>
+                      </div>
+                    ) : null}
+                    {section.blockCards.metrics ? (
+                      <div className="card">
+                        <h3>Метрики</h3>
+                        <p>{section.blockCards.metrics}</p>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
               </section>
               {i === 0 && (caseImages.before || caseImages.after) && (
                 <section className="images">
@@ -120,6 +220,7 @@ export default function ProjectDetailPage() {
               )}
             </Fragment>
           ))}
+          <CaseStudyProjectNav slug={slug} />
         </div>
       </div>
     );

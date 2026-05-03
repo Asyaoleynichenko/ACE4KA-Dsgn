@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 export default function ProjectCard({ slug, title, meta, desc, image, isDemo }) {
   const href = slug ? `/project/${slug}` : '/projects';
   return (
-    <article className="preview-card" data-node-id="1-361">
+    <article className="preview-card">
       <Link to={href} className="preview-card__link">
-        <div className="preview-image" data-node-id="1-362">
+        <div className="preview-image">
           {image ? (
             <img src={image} alt="" />
           ) : (

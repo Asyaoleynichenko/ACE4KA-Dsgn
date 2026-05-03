@@ -28,6 +28,10 @@
   --font-size-18: 18px;
   --font-weight-semibold: 600;
   --shadow-nav-active: inset 1px -1px 1.6px 0 rgba(255, 255, 255, 0.51), inset 0 0 6.2px 0 rgba(255, 255, 255, 0.51);
+  /* Внешняя nav-pill + активная капсула — liquid glass (Figma 300:107467) */
+  --shadow-nav-pill-rim: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.45);
+  --shadow-nav-active-liquid: inset 0 2px 2px rgba(255, 255, 255, 0.72), inset 0 -2px 3px rgba(255, 255, 255, 0.28),
+    inset 0 0 10px rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.12);
   --shadow-btn-show-all: 1.556px -1.556px 2.489px 0 rgba(255, 255, 255, 0.51) inset, 0 0 9.644px 0 rgba(255, 255, 255, 0.51) inset;
   --shadow-preview-card: 0 0 3px 0 rgba(0, 0, 0, 0.55), 0 40px 100px 0 rgba(0, 0, 0, 0.4);
   --shadow-preview-card-hover: 0 0 4px 0 rgba(0, 0, 0, 0.55), 0 50px 120px 0 rgba(0, 0, 0, 0.45);
@@ -35,12 +39,16 @@
   --shadow-nav-drawer: -10px 0 30px rgba(0, 0, 0, 0.5);
 
   --blur-nav: 12px;
-  --blur-nav-pill: 16px;
+  --blur-nav-pill: 56px; /* активная капсула — сильный blur под чёрной кнопкой */
+  --blur-nav-list: 100px; /* .nav-list — сильный background blur (liquid glass) */
+  --blur-btn-show-all-liquid: 44px; /* «Смотреть все проекты» — liquid glass */
   --blur-preview-card: 20px;
-  --effect-nav-pill-bg: rgba(255, 255, 255, 0.11);
-  --effect-nav-pill-border: rgba(255, 255, 255, 0.08);
-  --effect-nav-active-bg: rgba(0, 0, 0, 0.55);
+  --effect-nav-pill-bg: rgba(255, 255, 255, 0.12);
+  --effect-nav-pill-border: rgba(255, 255, 255, 0.16);
+  --effect-nav-active-bg: rgba(0, 0, 0, 0.92); /* почти чёрная капсула, кромка чуть «стеклит» с blur */
   --effect-nav-active-border: rgba(255, 255, 255, 0.48);
+  /* Figma nav pill active: outline 1px white 20% */
+  --effect-nav-active-outline: rgba(255, 255, 255, 0.38);
   --effect-nav-link-hover: rgba(255, 255, 255, 0.06);
   --effect-preview-overlay: rgba(240, 240, 240, 0.54);
   --effect-btn-show-all-border: rgba(255, 255, 255, 0.48);
@@ -61,8 +69,10 @@
   --space-32: 32px;
   --space-48: 48px;
   --space-64: 64px;
-  /* Карточка 1-361: gap между изображением и блоком текста, между title/meta/desc */
+  /* Figma 1:300 — между title / meta / desc внутри блока текста */
   --card-gap: 8px;
+  /* Figma 1:298 — между превью и блоком текста (Project Card) */
+  --preview-card-media-body-gap: 16px;
   /* Сетка проектов 1-297: row-gap 24px, column-gap 8px */
   --grid-row-gap: 24px;
   --grid-column-gap: 8px;

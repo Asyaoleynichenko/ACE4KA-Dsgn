@@ -29,7 +29,7 @@ npm run build
 - `src/App.jsx` — маршруты (главная, проекты, о себе, контакты, страница проекта по slug).
 - `src/components/` — Header, Footer, Layout, PreviewCardBlock, ProjectCard, FilterPills.
 - `src/pages/` — HomePage, ProjectsPage, AboutPage, ContactPage, ProjectDetailPage.
-- `src/data/projects.js` — данные проектов (slug, title, meta, layout и т.д.).
+- `src/data/projects.js` — данные проектов (slug, title, meta, layout и т.д.); макеты всех страниц проектов в Figma: [фрейм 89-156](https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=89-156&m=dev) (`FIGMA_PROJECT_PAGES_FRAME_URL`).
 - Стили: в корне `css/style.css`, `css/design-tokens.css`, `css/fonts.css` (подключаются из `src/main.jsx`).
 
 ## Картинки и шрифты
