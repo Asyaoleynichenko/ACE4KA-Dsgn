@@ -3,46 +3,41 @@ export default function AboutPage() {
     <div className="page-about__wrap layout-89-765" data-node-id="89-765">
       <header className="page-header">
         <h1>О себе</h1>
-        <p>
-          Продуктовый дизайнер: монетизация и подписка в Mail, медиаплатформы, спецпроекты и 0→1 кейсы с
-          полевыми проверками.
-        </p>
+        <p>Продуктовый дизайнер в Mail: монетизация, медиа, спецпроекты, 0→1.</p>
       </header>
 
       <div className="contact-grid">
         <div className="contact-item contact-item--text">
           <div>
             <strong>Опыт</strong>
-            <p>
-              Веду интерфейсы и эксперименты там, где дизайн напрямую бьёт в выручку и удержание: почта, облако,
-              тарифы, freemium-фичи. Параллельно — медиа, бренд-форматы и лидерство в направлении спецпроектов.
-            </p>
+            <p>Почта, облако, тарифы, A/B; медиа и лидерство спецпроектов.</p>
           </div>
         </div>
         <div className="contact-item contact-item--text">
           <div>
             <strong>Образование</strong>
-            <p>ВШЭ, программа «Дизайн и программирование» — продуктовый цикл от исследований до релиза.</p>
+            <p>ВШЭ, «Дизайн и программирование».</p>
           </div>
         </div>
         <div className="contact-item contact-item--text">
           <div>
             <strong>Команда</strong>
-            <p>Работаю с продактами, аналитикой, разработкой и редакцией; привыкла защищать решения данными и
-              доводить до продакшена.</p>
+            <p>Кросс-функциональные команды: от гипотезы до релиза с метриками.</p>
           </div>
         </div>
         <div className="contact-item contact-item--text">
           <div>
-            <strong>Я в естественной среде обитания</strong>
-            <p>Слежу за инструментами и AI в дизайне, разбираю поведенческие модели и эволюцию дизайн-систем.</p>
+            <strong>Интересы</strong>
+            <p>AI в дизайне, поведение пользователей, дизайн-системы.</p>
           </div>
         </div>
         <div className="contact-item">
           <div>
-            <strong>Связь</strong>
+            <strong>Контакты</strong>
             <p>
-              Напишите мне в <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">Telegram</a> или на <a href="mailto:hello@example.com">email</a>.
+              <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+              {' '}или{' '}
+              <a href="mailto:hello@example.com">на почту</a>
             </p>
           </div>
         </div>

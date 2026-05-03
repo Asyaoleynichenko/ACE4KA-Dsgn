@@ -4,10 +4,12 @@ export default function ContactPage() {
       <header className="page-header">
         <h1>Контакты</h1>
         <p>
-          Написать мне{' '}
           <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">
-            @pnkprty
+            Написать в Telegram
           </a>
+          {' '}
+          или{' '}
+          <a href="mailto:hello@example.com">на почту</a>
         </p>
       </header>
 

@@ -27,7 +27,7 @@ export default function PreviewCardBlock() {
         </div>
         <div className="preview-card-block__trailing" data-node-id="I1:231;103:8929">
           <span className="preview-card-block__spacer preview-card-block__spacer--8" aria-hidden="true" />
-          <span className="preview-card-block__cta" data-node-id="I1:231;153:9369">Написать мне @pnkprty</span>
+          <span className="preview-card-block__cta" data-node-id="I1:231;153:9369">Написать в Telegram</span>
         </div>
       </div>
       <div className="preview-card-block__image" data-node-id="I1:231;103:8833">

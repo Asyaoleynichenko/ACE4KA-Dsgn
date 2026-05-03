@@ -22,7 +22,7 @@ function headerItemPlacementStyle(placement) {
 const heroLinks = [
   { href: 'https://t.me/pnkprty', label: 'Telegram' },
   { href: 'https://behance.net/', label: 'Behance' },
-  { href: '#', label: 'Resume' },
+  { href: '/resume', label: 'Резюме' },
   { href: 'mailto:hello@example.com', label: 'Mail' },
   { href: 'https://pinterest.com/', label: 'Pinterest' },
 ];
@@ -97,10 +97,10 @@ export default function HomePage() {
               <h1 className="hero-title">Ася Олейниченко</h1>
               <p className="hero-text">
                 5 лет запускаю и развиваю цифровые продукты. Знаю, как выстраиваются процессы, как работает продукт и
-                как просто делать хорошо
+                как делать продукт проще и лучше.
               </p>
               <Link to="/about" className="hero-more hero-more--with-icon">
-                <span className="hero-more__text">Больше обо мне</span>
+                <span className="hero-more__text">О себе</span>
                 <span className="hero-more__chevron" aria-hidden="true" />
               </Link>
             </div>
@@ -131,11 +131,17 @@ export default function HomePage() {
               </div>
             </div>
             <div className="hero-links">
-              {heroLinks.map(({ href, label }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer">
-                  {label}
-                </a>
-              ))}
+              {heroLinks.map(({ href, label }) =>
+                href.startsWith('/') ? (
+                  <Link key={label} to={href}>
+                    {label}
+                  </Link>
+                ) : (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer">
+                    {label}
+                  </a>
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -160,7 +166,7 @@ export default function HomePage() {
           ))}
         </div>
         <div className="show-all-wrap" data-node-id="1:397" data-figma-node="1-397">
-          <Link to="/projects" className="btn-show-all">Смотреть все проекты</Link>
+          <Link to="/projects" className="btn-show-all">Все проекты</Link>
         </div>
       </section>
     </div>

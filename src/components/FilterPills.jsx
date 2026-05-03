@@ -4,8 +4,8 @@ const pills = [
   { to: '/projects', filter: 'uxui', label: 'UX/UI', variant: 'uxui' },
   { to: '/projects', filter: 'grafika', label: 'Графика', variant: 'grafika' },
   { to: '/projects', filter: 'issledovaniya', label: 'Исследования', variant: 'research' },
-  { to: '/projects', filter: 'inprogress', label: 'In progress', variant: 'inprogress' },
-  { to: '/projects', filter: 'shtuki', label: 'Things', variant: 'things' },
+  { to: '/projects', filter: 'inprogress', label: 'В работе', variant: 'inprogress' },
+  { to: '/projects', filter: 'shtuki', label: 'Разное', variant: 'things' },
   { to: '/projects', filter: 'vsyo', label: 'Всё', variant: 'all' },
 ];
 

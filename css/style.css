@@ -1,18 +1,7 @@
 @import 'fonts.css';
 @import 'design-tokens.css';
 
-/* Variables — override if needed */
-:root {
-    --color-bg: #000000;
-    --color-surface: rgba(38, 38, 38, 0.4);
-    --color-surface-light: rgba(255, 255, 255, 0.05);
-    --color-text: #fafafa;
-    --color-text-muted: rgba(250, 250, 250, 0.6);
-    --color-text-extra-muted: rgba(250, 250, 250, 0.4);
-    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --radius: 8px;
-    --transition: 0.25s ease;
-}
+/* Цвета и типографика — только design-tokens.css (визуальная консистентность). */
 
 /* Reset */
 *, *::before, *::after {
@@ -28,7 +17,7 @@ html {
 /* Scrollbar — цвет ползунка #F0A */
 * {
     scrollbar-width: thin;
-    scrollbar-color: #f0a var(--color-bg);
+    scrollbar-color: var(--color-accent) var(--color-bg);
 }
 *::-webkit-scrollbar {
     width: 8px;
@@ -38,11 +27,11 @@ html {
     background: var(--color-bg);
 }
 *::-webkit-scrollbar-thumb {
-    background: #f0a;
-    border-radius: 4px;
+    background: var(--color-accent);
+    border-radius: var(--radius-xs);
 }
 *::-webkit-scrollbar-thumb:hover {
-    background: #ff22bb;
+    background: var(--color-accent-hover);
 }
 
 body {
@@ -76,16 +65,16 @@ a {
     left: 24px;
     z-index: 1000;
     padding: 12px 20px;
-    background: #fafafa;
-    color: #000;
+    background: var(--color-bg-inverse);
+    color: var(--color-text-on-inverse);
     font-size: 14px;
     font-weight: 500;
-    border-radius: 8px;
+    border-radius: var(--radius);
     transition: top 0.2s ease;
 }
 .skip-link:focus {
     top: 24px;
-    outline: 2px solid #f0a;
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }
 
@@ -93,22 +82,22 @@ a {
 a:focus-visible,
 button:focus-visible,
 [href]:focus-visible {
-    outline: 2px solid rgba(250, 250, 250, 0.8);
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: var(--radius-xs);
 }
 .nav-link:focus-visible {
     outline-offset: 3px;
 }
 .filter-pill:focus-visible,
 .btn-show-all:focus-visible {
-    outline: 2px solid rgba(250, 250, 250, 0.9);
+    outline: 2px solid var(--color-focus-ring-strong);
     outline-offset: 2px;
 }
 .preview-card__link:focus-visible {
-    outline: 2px solid rgba(250, 250, 250, 0.6);
+    outline: 2px solid var(--color-focus-ring-soft);
     outline-offset: 4px;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
 }
 .back-link:focus-visible {
     outline-offset: 4px;
@@ -125,7 +114,7 @@ button:focus-visible,
     display: none !important;
 }
 
-/* Figma 300:107467 (Header instance в кейсах) = спеки 1-230: sticky, padding 21px, min-height 88px, max-width 1358px */
+/* Figma 300:107467 — sticky; горизонтальный padding по сетке 8px (--space-24) */
 .header {
     position: sticky;
     top: 0;
@@ -134,12 +123,12 @@ button:focus-visible,
     transition: background 0.25s ease;
 }
 
-/* Figma 300:107467 — Nav container: max-width 1358px, padding 21px, min-height 88px */
+/* Figma 300:107467 — Nav container: max-width 1358px, min-height 88px */
 .nav {
     width: 100%;
     max-width: 1358px;
     margin: 0 auto;
-    padding: 21px;
+    padding: var(--space-24);
     min-height: 88px;
     box-sizing: border-box;
     display: flex;
@@ -150,7 +139,7 @@ button:focus-visible,
     background: transparent;
 }
 
-/* Figma 300:107467 — Logo: 24px, 32px line-height, -1px, #fafafa, mix-blend-mode exclusion */
+/* Figma 300:107467 — Logo: 24px, 32px line-height, -1px, основной текст, mix-blend-mode exclusion */
 .logo {
     font-size: 24px;
     font-weight: 400;
@@ -158,7 +147,7 @@ button:focus-visible,
     letter-spacing: -1px;
     text-transform: uppercase;
     display: inline-block;
-    color: #fafafa;
+    color: var(--color-text);
     mix-blend-mode: var(--mix-blend-exclusion, exclusion);
     flex-shrink: 0;
     text-decoration: none;
@@ -195,7 +184,7 @@ button:focus-visible,
     max-width: 100%;
     flex-shrink: 0;
     box-sizing: border-box;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     background: var(--effect-nav-pill-bg);
     border: 1px solid var(--effect-nav-pill-border);
     box-shadow: var(--shadow-nav-pill-rim);
@@ -218,9 +207,9 @@ button:focus-visible,
     line-height: 20px;
     letter-spacing: -1px;
     text-transform: uppercase;
-    color: #fafafa;
-    padding: 8px 21px;
-    border-radius: 9999px;
+    color: var(--color-text);
+    padding: var(--space-8) var(--space-24);
+    border-radius: var(--radius-full);
     border: 1px solid transparent;
     transition: background 0.2s ease, border-color 0.2s ease, letter-spacing 0.2s ease;
     mix-blend-mode: var(--mix-blend-exclusion, exclusion);
@@ -234,7 +223,7 @@ button:focus-visible,
 /* Активная капсула — тёмное стекло + яркий верх/низ rim + Figma inset glow */
 .nav-link.active {
     letter-spacing: 1px;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     border: 1px solid var(--effect-nav-active-outline);
     outline: none;
     background: var(--effect-nav-active-bg);
@@ -257,7 +246,7 @@ button:focus-visible,
     justify-content: center;
 }
 
-/* Figma 300:107467 — Lang: 24px, 32px line-height, -1px, #fafafa, min-width 228px, mix-blend exclusion */
+/* Figma 300:107467 — Lang: 24px, 32px line-height, -1px, min-width 228px, mix-blend exclusion */
 .lang-switch {
     font-size: 24px;
     font-weight: 400;
@@ -265,7 +254,7 @@ button:focus-visible,
     letter-spacing: -1px;
     text-transform: uppercase;
     display: inline-block;
-    color: #fafafa;
+    color: var(--color-text);
     mix-blend-mode: var(--mix-blend-exclusion, exclusion);
     min-width: 228px;
     text-align: right;
@@ -275,7 +264,7 @@ button:focus-visible,
 .nav-toggle {
     display: none;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--space-8);
     background: none;
     border: none;
     cursor: pointer;
@@ -393,7 +382,7 @@ button:focus-visible,
     display: block;
     width: 100%;
     max-width: 1275px;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto var(--space-24);
     overflow: visible;
     /* Высота под пропорции ~1275×274 */
     min-height: 0;
@@ -432,7 +421,7 @@ button:focus-visible,
     line-height: 20px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #fafafa;
+    color: var(--color-text);
     opacity: 0.6;
     margin: 0;
 }
@@ -444,7 +433,7 @@ button:focus-visible,
     line-height: 96px;
     margin: 0;
     letter-spacing: -6px;
-    color: #fafafa;
+    color: var(--color-text);
 }
 
 @media (max-width: 768px) {
@@ -457,7 +446,7 @@ button:focus-visible,
     font-weight: 400;
     line-height: 1.2;
     letter-spacing: -1px;
-    color: #fafafa;
+    color: var(--color-text);
     max-width: var(--hero-lead-max);
     margin: 0;
 }
@@ -468,7 +457,7 @@ button:focus-visible,
     font-weight: 400;
     line-height: 1.2;
     letter-spacing: -1px;
-    color: #fafafa;
+    color: var(--color-text);
     margin: 0;
     display: inline-block;
 }
@@ -477,11 +466,11 @@ button:focus-visible,
     text-decoration: underline;
 }
 
-/* Figma 1:241 — gap 10px, иконка 20×24 (здесь — chevron) */
+/* Figma 1:241 — gap 8px (сетка), иконка 20×24 (chevron) */
 .hero-more--with-icon {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-8);
     text-decoration: none;
 }
 
@@ -524,7 +513,7 @@ button:focus-visible,
 
 .info-card--wide {
     min-width: 0;
-    gap: 10px;
+    gap: var(--space-8);
     align-items: center;
     text-align: center;
 }
@@ -540,7 +529,7 @@ button:focus-visible,
     line-height: 16px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #a3a3a3;
+    color: var(--color-text-label);
     opacity: 1;
 }
 
@@ -550,7 +539,7 @@ button:focus-visible,
     font-weight: 400;
     line-height: 28px;
     letter-spacing: -1px;
-    color: #fafafa;
+    color: var(--color-text);
 }
 
 @media (max-width: 900px) {
@@ -601,10 +590,10 @@ button:focus-visible,
     margin-bottom: 0;
 }
 
-/* Figma 89:347 — Header: горизонтальные отступы 34px на главной */
+/* Figma 89:347 — Header: горизонтальные отступы по сетке 8px */
 .page-home .header .nav {
-    padding-left: 34px;
-    padding-right: 34px;
+    padding-left: var(--space-32);
+    padding-right: var(--space-32);
 }
 
 .header-items {
@@ -730,7 +719,7 @@ button:focus-visible,
     width: 44px;
     height: 44px;
     flex-shrink: 0;
-    border-radius: 2px;
+    border-radius: var(--radius-xs);
     border: 2.2px solid rgba(0, 0, 0, 0.05);
     background: rgba(255, 255, 255, 0.02);
     box-shadow: inset 0.73px 0 0 rgba(0, 0, 0, 0.05);
@@ -752,7 +741,7 @@ button:focus-visible,
     font-size: 13.22px;
     font-weight: 400;
     line-height: normal;
-    color: #ffffff;
+    color: var(--color-text-primary);
     text-align: center;
     text-shadow: 0 0.88px 8.9px rgba(0, 0, 0, 0.25);
     min-width: 0;
@@ -768,7 +757,8 @@ button:focus-visible,
     height: 280px;
     min-height: 280px;
     box-sizing: border-box;
-    border-radius: 10px;
+    /* R_внут картинки = var(--radius-lg) − var(--space-8) = var(--radius) */
+    border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-preview-card);
     transition: transform var(--transition-base), box-shadow var(--transition-base);
@@ -785,7 +775,7 @@ button:focus-visible,
 .preview-card-block__overlay--base {
     position: absolute;
     inset: 0;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     background: #262626;
     pointer-events: none;
     z-index: 0;
@@ -795,7 +785,7 @@ button:focus-visible,
 .preview-card-block__overlay--blur {
     position: absolute;
     inset: 0;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     background: var(--effect-preview-overlay);
     backdrop-filter: blur(var(--blur-preview-card));
     -webkit-backdrop-filter: blur(var(--blur-preview-card));
@@ -803,17 +793,17 @@ button:focus-visible,
     z-index: 0;
 }
 
-/* Titlebar: absolute top, 38px, padding 0 12px */
+/* Titlebar: absolute top, высота по сетке 8px */
 .preview-card-block__titlebar {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 38px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px;
+    padding: 0 var(--space-12);
     z-index: 1;
     box-sizing: border-box;
 }
@@ -856,12 +846,12 @@ button:focus-visible,
     transform: rotate(180deg);
 }
 
-/* Figma 1:231 — Headline/Regular: SF Pro 700, 0.8125rem, 1rem line-height, Text-Secondary */
+/* Figma 1:231 — titlebar: тот же шрифт, что и весь UI (--font-body) */
 .preview-card-block__title {
     flex: 1 1 0;
     min-width: 0;
-    color: var(--Text-Secondary, rgba(0, 0, 0, 0.5));
-    font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+    color: var(--color-preview-titlebar-text);
+    font-family: var(--font-body);
     font-size: 0.8125rem;
     font-style: normal;
     font-weight: 700;
@@ -878,18 +868,18 @@ button:focus-visible,
     flex-shrink: 0;
 }
 
-/* Figma 1-231 — CTA: border-radius 0.375rem, border 1px solid #F5F5F5, mix-blend-mode plus-darker */
+/* Figma 1-231 — CTA: --preview-cta-radius (= --radius-xs), border 1px #F5F5F5 */
 .preview-card-block__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     box-sizing: border-box;
-    padding: 3px 7px;
+    padding: var(--space-4) var(--space-8);
     border-radius: var(--preview-cta-radius);
     border: var(--preview-cta-border);
     mix-blend-mode: var(--preview-cta-mix-blend);
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', var(--font-body), sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 400;
     line-height: 16px;
@@ -904,15 +894,15 @@ button:focus-visible,
     color: var(--preview-cta-color);
 }
 
-/* Figma 1:231 Image area: absolute inset 38px 5px 5px 5px, border rgba(0,0,0,0.1), radius 6px */
+/* Figma 1:231 Image area: inset от titlebar 40px, поля по сетке 8px */
 .preview-card-block__image {
     position: absolute;
-    top: 38px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
+    top: 40px;
+    left: var(--space-8);
+    right: var(--space-8);
+    bottom: var(--space-8);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
+    border-radius: var(--radius);
     overflow: hidden;
     z-index: 1;
     box-sizing: border-box;
@@ -924,12 +914,12 @@ button:focus-visible,
 
 .preview-card-block__image img {
     width: 100%;
-    max-width: 359px;
+    max-width: 353px;
     height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    border-radius: 6px;
+    border-radius: var(--radius);
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
 }
@@ -942,7 +932,7 @@ button:focus-visible,
 @media (max-width: 420px) {
     .preview-card-block__cta {
         font-size: 11px;
-        padding: 5px 10px;
+        padding: var(--space-4) var(--space-8);
         max-width: 140px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1044,7 +1034,7 @@ button:focus-visible,
     line-height: 1;
     letter-spacing: -2px;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--color-text-primary);
     margin: 0;
 }
 
@@ -1065,7 +1055,7 @@ button:focus-visible,
 .page-home .logo-section .filter-pills,
 .page-projects .logo-section .filter-pills {
     padding: 4px;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     backdrop-filter: blur(27.5px) saturate(1.2);
     -webkit-backdrop-filter: blur(27.5px) saturate(1.2);
 }
@@ -1076,13 +1066,13 @@ button:focus-visible,
     font-weight: 400;
     line-height: 20px;
     letter-spacing: 0.2px;
-    color: #ffffff;
+    color: var(--color-text-primary);
     min-height: 36px;
-    padding: 8px 21px;
+    padding: var(--space-8) var(--space-24);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.25);
     text-transform: uppercase;
@@ -1096,11 +1086,11 @@ button:focus-visible,
 .filter-pill.filter-pill--uxui {
     position: relative;
     min-width: 117px;
-    padding: 8px 18px;
+    padding: var(--space-8) var(--space-20);
     border: 0.893px solid #0965e3;
-    border-radius: 23.8px;
+    border-radius: var(--radius-xl);
     background: url('/images/figma-1-285/1b21070caee8db926d63650b57656b65ba0ba3c7.svg') center / cover no-repeat;
-    color: #ffffff;
+    color: var(--color-text-primary);
     font-size: 14.282px;
     line-height: 1;
     font-weight: 400;
@@ -1136,7 +1126,7 @@ button:focus-visible,
 /* Figma research — «Исследования» */
 .filter-pill.filter-pill--research {
     border: none;
-    border-radius: 100px;
+    border-radius: var(--radius-full);
     background-color: #0d0d0d;
     background-image: url('/images/figma-1-285/a57f2ea88d76c6565a1d93e776ba3ddd05937ae6.png'),
         url('/images/figma-1-285/a084ce0a25feba75d097bbb9748bc00927146c5c.png'),
@@ -1159,9 +1149,9 @@ button:focus-visible,
 /* Figma Variant13 (border) — In progress */
 .filter-pill.filter-pill--inprogress {
     border: 1px solid #383838;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     background: transparent;
-    color: #ffffff;
+    color: var(--color-text-primary);
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.2px;
@@ -1177,9 +1167,9 @@ button:focus-visible,
 /* Figma Variant13 (inner) — Things */
 .filter-pill.filter-pill--things {
     border: none;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     background: radial-gradient(ellipse 120% 100% at 50% 0%, #2e2e2e 0%, #1a1a1a 32%, #0d0d0d 66%, #000000 100%);
-    color: #ffffff;
+    color: var(--color-text-primary);
     font-size: 18px;
     font-weight: 300;
     line-height: normal;
@@ -1194,10 +1184,10 @@ button:focus-visible,
 
 /* Figma all — «Всё» */
 .filter-pill.filter-pill--all {
-    border: 4px solid #ffffff;
-    border-radius: 100px;
+    border: 4px solid var(--color-text-primary);
+    border-radius: var(--radius-full);
     background: #ff85f7;
-    color: #ffffff;
+    color: var(--color-text-primary);
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.2px;
@@ -1207,7 +1197,7 @@ button:focus-visible,
 
 .filter-pill.filter-pill--all:hover {
     filter: brightness(1.05);
-    border-color: #ffffff;
+    border-color: var(--color-text-primary);
 }
 
 /* Класс активного таба (если будет состояние выбора) */
@@ -1225,7 +1215,7 @@ button:focus-visible,
     justify-self: center;
     display: block;
     padding: 0;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     background: transparent;
     overflow: visible;
     transition: transform var(--transition-base), box-shadow var(--transition-base);
@@ -1241,7 +1231,7 @@ button:focus-visible,
     gap: var(--preview-card-media-body-gap);
     text-decoration: none;
     color: inherit;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     box-sizing: border-box;
 }
 
@@ -1258,7 +1248,7 @@ button:focus-visible,
     aspect-ratio: 639 / 358;
     padding: 1px;
     border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     background: rgba(38, 38, 38, 0.4);
     overflow: hidden;
     box-sizing: border-box;
@@ -1271,14 +1261,14 @@ button:focus-visible,
     height: 100%;
     object-fit: cover;
     display: block;
-    border-radius: 15px;
+    border-radius: var(--radius-lg);
     transition: transform var(--transition-slow);
 }
 
 .preview-image__placeholder {
     position: absolute;
     inset: 0;
-    border-radius: 15px;
+    border-radius: var(--radius-lg);
     background: rgba(60, 60, 60, 0.5);
 }
 
@@ -1288,7 +1278,7 @@ button:focus-visible,
 
 .preview-card--demo .preview-image {
     background: #007fff;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1329,7 +1319,7 @@ button:focus-visible,
     font-weight: 500;
     line-height: 32px;
     letter-spacing: -0.5297px;
-    color: #fafafa;
+    color: var(--color-text);
     margin: 0;
     width: 100%;
     max-width: 100%;
@@ -1352,7 +1342,7 @@ button:focus-visible,
     line-height: 16px;
     letter-spacing: 0.6px;
     text-transform: uppercase;
-    color: #fafafa;
+    color: var(--color-text);
     opacity: 0.4;
     margin: 0;
     width: 100%;
@@ -1369,7 +1359,7 @@ button:focus-visible,
     font-weight: 400;
     line-height: 22.75px;
     letter-spacing: -0.1504px;
-    color: #fafafa;
+    color: var(--color-text);
     opacity: 0.6;
     margin: 0;
     width: 100%;
@@ -1388,7 +1378,7 @@ button:focus-visible,
 }
 
 .preview-card__link:hover .card-link {
-    color: #fafafa;
+    color: var(--color-text);
     text-decoration: underline;
 }
 
@@ -1407,18 +1397,18 @@ button:focus-visible,
     font-family: var(--font-body);
     font-size: 21.78px;
     font-weight: 400;
-    line-height: 31.111px;
+    line-height: 32px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #ffffff;
-    padding: 12.444px 32.667px;
+    color: var(--color-text-primary);
+    padding: var(--space-12) var(--space-32);
     min-width: 280px;
     width: auto;
     max-width: 100%;
-    min-height: 57px;
+    min-height: 56px;
     box-sizing: border-box;
     text-align: center;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     overflow: hidden;
     border: 1.556px solid var(--effect-btn-show-all-border);
     background-color: rgba(18, 18, 20, 0.38);
@@ -1628,7 +1618,7 @@ button:focus-visible,
     line-height: 20px;
     letter-spacing: -1px;
     text-transform: uppercase;
-    color: #fafafa;
+    color: var(--color-text);
     text-decoration: none;
 }
 .case-study-nav__link:hover {
@@ -1661,7 +1651,7 @@ button:focus-visible,
     padding: 0 var(--project-page-padding-x) var(--space-64);
     display: flex;
     flex-direction: column;
-    gap: 4.5rem; /* 72px между крупными блоками, Figma Main info */
+    gap: var(--space-72);
     box-sizing: border-box;
 }
 .project-case-study-mail .hero {
@@ -1672,14 +1662,14 @@ button:focus-visible,
     width: 100%;
     max-height: min(721px, 85vh);
     object-fit: cover;
-    border-radius: 2rem; /* 32px */
+    border-radius: var(--radius-2xl);
     display: block;
 }
 .project-case-study-mail .hero-placeholder {
     width: 100%;
     aspect-ratio: 1310 / 721;
     background: #c4c4c4;
-    border-radius: 2rem;
+    border-radius: var(--radius-2xl);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1704,7 +1694,7 @@ button:focus-visible,
     font-weight: 500;
     line-height: 0.9;
     letter-spacing: -2px;
-    color: #fafafa;
+    color: var(--color-text);
     white-space: pre-line;
 }
 .project-case-study-mail .project-intro .title p {
@@ -1729,7 +1719,7 @@ button:focus-visible,
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-16);
-    border-radius: 1.875rem; /* 30px */
+    border-radius: var(--radius-2xl);
     background: #161616;
     box-sizing: border-box;
 }
@@ -1744,14 +1734,14 @@ button:focus-visible,
     line-height: 16px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #fafafa;
+    color: var(--color-text);
     opacity: 0.4;
 }
 .project-case-study-mail .project-info__value {
     font-size: 16px;
     line-height: 20px;
     letter-spacing: -1px;
-    color: #fafafa;
+    color: var(--color-text);
     font-weight: 400;
 }
 .project-case-study-mail .project-info__cta {
@@ -1759,8 +1749,8 @@ button:focus-visible,
     align-items: center;
     justify-content: center;
     margin-top: var(--space-8);
-    padding: 8px 21px;
-    border-radius: 100px;
+    padding: var(--space-8) var(--space-24);
+    border-radius: var(--radius-full);
     border: 1px solid rgba(255, 255, 255, 0.48);
     background: rgba(0, 0, 0, 0.55);
     box-shadow: var(--shadow-nav-active);
@@ -1784,7 +1774,7 @@ button:focus-visible,
 .project-case-study-mail .card {
     background: #161616;
     padding: var(--space-32);
-    border-radius: 1.875rem; /* 30px */
+    border-radius: var(--radius-2xl);
     border: 1px solid transparent;
     box-sizing: border-box;
     min-height: 0;
@@ -1795,7 +1785,7 @@ button:focus-visible,
     line-height: 16px;
     text-transform: uppercase;
     letter-spacing: 0.6px;
-    color: #fafafa;
+    color: var(--color-text);
     opacity: 0.4;
     margin: 0 0 var(--space-16);
 }
@@ -1803,7 +1793,7 @@ button:focus-visible,
     font-size: 21px;
     line-height: 1.2;
     letter-spacing: -1px;
-    color: #fafafa;
+    color: var(--color-text);
     margin: 0;
     white-space: pre-line;
 }
@@ -1820,18 +1810,18 @@ button:focus-visible,
 }
 .project-case-study-mail .section h2 {
     font-size: clamp(1.75rem, 3.5vw, 3.75rem); /* до 60px */
-    margin: 0 0 21px;
+    margin: 0 0 var(--space-24);
     font-weight: 500;
     line-height: 0.9;
     letter-spacing: -2px;
-    color: #fafafa;
+    color: var(--color-text);
     max-width: 100%;
     white-space: pre-line;
 }
 .project-case-study-mail .section__tasks-heading {
     max-width: 53.916rem;
-    color: #fafafa;
-    margin: 0 0 16px;
+    color: var(--color-text);
+    margin: 0 0 var(--space-16);
     font-size: 20px;
     line-height: 1.2;
     letter-spacing: -1px;
@@ -1839,12 +1829,12 @@ button:focus-visible,
     white-space: pre-line;
 }
 .project-case-study-mail .section .cards {
-    margin-top: 4.5rem;
+    margin-top: var(--space-72);
 }
 .project-case-study-mail .section p,
 .project-case-study-mail .section-desc {
     max-width: 53.916rem;
-    color: #fafafa;
+    color: var(--color-text);
     margin: 0 0 var(--space-24);
     font-size: 20px;
     line-height: 1.2;
@@ -1865,17 +1855,17 @@ button:focus-visible,
 .project-case-study-mail .section ul.section__pills {
     list-style: none;
     padding: 0;
-    margin: 0 0 28px;
+    margin: 0 0 var(--space-32);
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: var(--space-12);
     max-width: 100%;
 }
 .project-case-study-mail .section ul.section__pills li {
     list-style: none;
     margin: 0;
-    padding: 10px 18px;
-    border-radius: 100px;
+    padding: var(--space-8) var(--space-20);
+    border-radius: var(--radius-full);
     background: #161616;
     font-size: 20px;
     line-height: normal;
@@ -1883,21 +1873,21 @@ button:focus-visible,
     color: #87898f;
 }
 .project-case-study-mail .section__pills + .hypothesis {
-    margin-top: 4.5rem; /* 72px после пилюль, Figma 300:105976 */
+    margin-top: var(--space-72);
 }
 .project-case-study-mail .section__pills + .gallery--before-hypotheses {
-    margin-top: 4.5rem;
+    margin-top: var(--space-72);
 }
 .project-case-study-mail .section__pills + .gallery--before-hypotheses + .hypothesis {
-    margin-top: 4.5rem;
+    margin-top: var(--space-72);
 }
 .project-case-study-mail .hypothesis + .gallery {
-    margin-top: 4.5rem;
+    margin-top: var(--space-72);
 }
 .project-case-study-mail .hypothesis {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    gap: var(--space-20);
     margin-top: 0;
     align-items: stretch;
 }
@@ -1915,25 +1905,25 @@ button:focus-visible,
     font-weight: 500;
     line-height: 0.9;
     letter-spacing: -2px;
-    color: #fafafa;
-    margin: 0 0 10px;
+    color: var(--color-text);
+    margin: 0 0 var(--space-8);
 }
 .project-case-study-mail .hyp-card p {
     font-size: 20px;
     line-height: 1.2;
     letter-spacing: -1px;
-    color: #fafafa;
+    color: var(--color-text);
     margin: 0;
     white-space: pre-line;
 }
 .project-case-study-mail .hyp-card__outcome {
     margin-top: auto;
-    padding-top: 21px;
+    padding-top: var(--space-24);
 }
 .project-case-study-mail .hyp-card__outcome span {
     display: inline-block;
-    padding: 10px 18px;
-    border-radius: 100px;
+    padding: var(--space-8) var(--space-20);
+    border-radius: var(--radius-full);
     background: #161616;
     font-size: 20px;
     line-height: 1.2;
@@ -1948,7 +1938,7 @@ button:focus-visible,
 }
 .project-case-study-mail .images img {
     width: 100%;
-    border-radius: 2rem;
+    border-radius: var(--radius-2xl);
 }
 .project-case-study-mail .gallery {
     margin-top: var(--space-32);
@@ -1959,7 +1949,7 @@ button:focus-visible,
 }
 .project-case-study-mail .gallery img {
     width: 100%;
-    border-radius: 2rem;
+    border-radius: var(--radius-2xl);
     display: block;
 }
 
@@ -2206,6 +2196,8 @@ button:focus-visible,
     display: inline-flex;
     align-items: center;
     gap: var(--project-back-gap);
+    padding: var(--space-8) 0;
+    min-height: 44px;
     font-size: var(--project-back-font-size);
     font-weight: 400;
     letter-spacing: var(--project-back-letter-spacing);
@@ -2216,12 +2208,6 @@ button:focus-visible,
 
 .back-link:hover {
     text-decoration: underline;
-}
-
-.back-link {
-    padding: 10px 0;
-    min-height: 44px;
-    align-items: center;
 }
 
 .back-link__icon {
@@ -2361,7 +2347,7 @@ button:focus-visible,
 
 .project-meta:not(.project-meta--card) .project-meta-item {
     background: #0f0f0f;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     padding: 16px;
 }
 
@@ -2374,7 +2360,7 @@ button:focus-visible,
     opacity: 1;
 }
 
-/* Figma 1-556 — Карточка блока Задача/Решение: #0f0f0f, 16px radius, 33px padding, 2 cols gap 24px */
+/* Figma 1-556 — Карточка Задача/Решение: #0f0f0f, 16px radius, padding 32px, gap 24px */
 .project-detail-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -2498,14 +2484,14 @@ button:focus-visible,
 .project-detail h2:not(.project-detail-card__title) {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #fafafa;
+    color: var(--color-text);
     margin: 0 0 1rem;
 }
 
 .project-detail h3:not(.project-detail-footer__label) {
     font-size: 1.125rem;
     font-weight: 600;
-    color: #fafafa;
+    color: var(--color-text);
     margin: 0 0 0.5rem;
 }
 
@@ -3064,8 +3050,8 @@ button:focus-visible,
 /* Figma 16:171 — ACE4KA: outline text, 20.625rem, semibold, stroke #101010, заливка белая */
 .footer-ace4ka {
     align-self: stretch;
-    color: #ffffff;
-    -webkit-text-fill-color: #ffffff;
+    color: var(--color-text-primary);
+    -webkit-text-fill-color: var(--color-text-primary);
     text-align: center;
     -webkit-text-stroke-width: 78px;
     -webkit-text-stroke-color: #101010;
@@ -3077,7 +3063,7 @@ button:focus-visible,
     letter-spacing: -0.0625rem;
     text-transform: uppercase;
     margin: 0;
-    padding: 0 41px;
+    padding: 0 var(--space-40);
     box-sizing: border-box;
 }
 
@@ -3085,7 +3071,7 @@ button:focus-visible,
 .footer-inner {
     width: 100%;
     background: #101010;
-    padding: 16px;
+    padding: var(--space-16);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -3102,7 +3088,7 @@ button:focus-visible,
 .footer-top {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--space-16);
     padding: 0;
     margin: 0;
 }
@@ -3112,20 +3098,20 @@ button:focus-visible,
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
-    gap: 16px;
+    gap: var(--space-16);
 }
 
 /* Figma 16:174–176 — Status: gap 12px, px 12px, dot ~19px, text 24px 1.2 -1px */
 .footer-status {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 0 12px;
+    gap: var(--space-12);
+    padding: 0 var(--space-12);
     font-size: 24px;
     font-weight: 400;
     line-height: 1.2;
     letter-spacing: -1px;
-    color: #ffffff;
+    color: var(--color-text-primary);
     margin: 0;
 }
 
@@ -3139,13 +3125,13 @@ button:focus-visible,
     vertical-align: middle;
 }
 
-/* Figma 16:177 — Links row: gap 14px; 16:185–16:209 — отдельные ссылки (9 шт.) */
+/* Figma 16:177 — Links row; 16:185–16:209 — отдельные ссылки (9 шт.) */
 .footer-links-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    gap: 14px;
+    gap: var(--space-16);
     margin: 0;
 }
 
@@ -3156,7 +3142,7 @@ button:focus-visible,
     line-height: 20px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--color-text-primary);
     text-decoration: none;
 }
 
@@ -3171,13 +3157,13 @@ button:focus-visible,
     font-weight: 400;
     line-height: 1.2;
     letter-spacing: -1px;
-    color: #ffffff;
+    color: var(--color-text-primary);
     max-width: 661px;
     margin: 0;
 }
 
 .footer-note a {
-    color: #ffffff;
+    color: var(--color-text-primary);
     text-decoration: underline;
     text-decoration-skip-ink: none;
 }
@@ -3192,12 +3178,12 @@ button:focus-visible,
 
 .footer-credits p {
     font-size: 0.85rem;
-    color: #ffffff;
+    color: var(--color-text-primary);
 }
 
 .footer p {
     font-size: 0.9rem;
-    color: #ffffff;
+    color: var(--color-text-primary);
 }
 
 .footer-links {
@@ -3207,18 +3193,18 @@ button:focus-visible,
 
 .footer-links a {
     font-size: 0.95rem;
-    color: #ffffff;
+    color: var(--color-text-primary);
 }
 
 .footer-links a:hover {
-    color: #ffffff;
+    color: var(--color-text-primary);
     opacity: 0.9;
 }
 
 /* Mobile */
 @media (max-width: 768px) {
     .nav {
-        padding: 21px 1.5rem;
+        padding: var(--space-24);
     }
 
     .info-grid {

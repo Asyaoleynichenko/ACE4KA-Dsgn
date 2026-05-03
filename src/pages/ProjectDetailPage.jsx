@@ -11,7 +11,7 @@ function CaseStudyProjectNav({ slug }) {
       <div className="case-study-nav__inner">
         <Link to="/projects" className="case-study-nav__link case-study-nav__link--back">
           <span className="case-study-nav__icon" aria-hidden="true">←</span>
-          Назад к&nbsp;портфолио
+          К&nbsp;проектам
         </Link>
         {next ? (
           <Link to={`/project/${next.slug}`} className="case-study-nav__link case-study-nav__link--next">
@@ -34,7 +34,7 @@ export default function ProjectDetailPage() {
     return (
       <div className="project-page-wrap">
         <p>Проект не найден.</p>
-        <Link to="/projects">Назад к проектам</Link>
+        <Link to="/projects">К проектам</Link>
       </div>
     );
   }
@@ -232,7 +232,7 @@ export default function ProjectDetailPage() {
       <div className="project-back-wrap">
         <Link to="/projects" className="back-link">
           <span className="back-link__icon" aria-hidden="true">←</span>
-          Назад к портфолио
+          К проектам
         </Link>
       </div>
       {hasHero && (
