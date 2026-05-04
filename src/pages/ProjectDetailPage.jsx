@@ -139,15 +139,22 @@ export default function ProjectDetailPage() {
   const metaItems = project.metaItems ?? [{ label: 'Категория', value: project.meta }];
   const isCaseStudy = project.layout === 'case-study';
   const hasHero = Boolean(project.image);
-  const topCards = [
-    { title: 'Контекст', value: project.context ?? lead },
-    { title: 'Проблема', value: project.problem ?? 'Ключевой барьер и ограничения раскрыты в задаче проекта.' },
-    { title: 'Задача', value: project.task },
-    { title: 'Решение', value: project.solution },
-    { title: 'Результат', value: project.influence },
-    { title: 'Метрики', value: project.metrics },
-  ];
-  const topCardsClassName = `cards${topCards.length >= 6 ? ' cards--bento' : ''}`;
+  const topCards = (isCaseStudy
+    ? [
+        { title: 'Задача', value: project.task },
+        { title: 'Решение', value: project.solution },
+        { title: 'Влияние', value: project.influence },
+        { title: 'Метрики', value: project.metrics },
+      ]
+    : [
+        { title: 'Контекст', value: project.context ?? lead },
+        { title: 'Проблема', value: project.problem ?? 'Ключевой барьер и ограничения раскрыты в задаче проекта.' },
+        { title: 'Задача', value: project.task },
+        { title: 'Решение', value: project.solution },
+        { title: 'Результат', value: project.influence },
+        { title: 'Метрики', value: project.metrics },
+      ]).filter((item) => item.value);
+  const topCardsClassName = `cards${!isCaseStudy && topCards.length >= 6 ? ' cards--bento' : ''}`;
 
   if (isCaseStudy) {
     const caseImages = project.caseStudyImages || {};
@@ -193,6 +200,13 @@ export default function ProjectDetailPage() {
               ) : null}
             </div>
           </section>
+
+          {(project.context || project.problem) ? (
+            <section className="case-study-narrative">
+              {project.context ? <p className="case-study-narrative__p">{project.context}</p> : null}
+              {project.problem ? <p className="case-study-narrative__p">{project.problem}</p> : null}
+            </section>
+          ) : null}
 
           <section className={topCardsClassName}>
             {topCards.map((item) => (
@@ -305,7 +319,7 @@ export default function ProjectDetailPage() {
                       { title: 'Проблема', value: section.blockCards.problem },
                       { title: 'Задача', value: section.blockCards.task },
                       { title: 'Решение', value: section.blockCards.solution },
-                      { title: 'Результат', value: section.blockCards.influence },
+                      { title: 'Влияние', value: section.blockCards.influence },
                       { title: 'Метрики', value: section.blockCards.metrics },
                     ].filter((item) => item.value);
                     const sectionCardsClassName = `cards${sectionCards.length >= 6 ? ' cards--bento' : ''}`;
