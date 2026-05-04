@@ -1841,6 +1841,20 @@ button:focus-visible,
     opacity: 0.95;
     color: #fff;
 }
+.project-case-study-mail .case-study-narrative {
+    max-width: 53.916rem;
+    margin: 0;
+}
+.project-case-study-mail .case-study-narrative__p {
+    margin: 0 0 var(--space-16);
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    color: rgba(250, 250, 250, 0.95);
+}
+.project-case-study-mail .case-study-narrative__p:last-child {
+    margin-bottom: 0;
+}
 .project-case-study-mail .cards {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2147,6 +2161,8 @@ button:focus-visible,
 }
 .project-case-study-mail .gallery img {
     width: 100%;
+    aspect-ratio: 1310 / 721;
+    object-fit: cover;
     border-radius: var(--radius-2xl);
     display: block;
 }
@@ -4007,6 +4023,7 @@ p,
     padding: 21px;
     min-height: auto;
     align-items: center;
+    flex-wrap: nowrap;
     gap: 20px;
 }
 
@@ -4029,12 +4046,13 @@ p,
     gap: 0;
     border-radius: 100px;
     width: 332px;
-    background: rgba(255, 255, 255, 0.14) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.11) !important;
+    border: 0;
     box-shadow: none;
     isolation: auto !important;
     position: relative;
     overflow: hidden;
+    justify-content: space-between;
     backdrop-filter: blur(50px) saturate(1.85) !important;
     -webkit-backdrop-filter: blur(50px) saturate(1.85) !important;
 }

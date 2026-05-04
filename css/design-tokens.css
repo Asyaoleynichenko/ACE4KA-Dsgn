@@ -41,6 +41,8 @@
   --radius-xl: 16px;
   --radius-2xl: 16px;
   --radius-full: 9999px;
+  /* Главная: main подтягивается под sticky-шапку (один flex-стек с z-index) */
+  --page-home-header-overlap: 96px;
   --color-surface-border: #2a2a31;
   --font-size-14: 14px;
   --font-size-16: 16px;
@@ -59,9 +61,9 @@
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.32);
   --shadow-nav-drawer: -8px 0 24px rgba(0, 0, 0, 0.5);
 
-  --blur-nav: 0px;
-  --blur-nav-pill: 0px;
-  --blur-nav-list: 0px;
+  --blur-nav: 50px;
+  --blur-nav-pill: 50px;
+  --blur-nav-list: 50px;
   --blur-btn-show-all-liquid: 0px;
   --blur-preview-card: 0px;
   --effect-nav-pill-bg: #161619;

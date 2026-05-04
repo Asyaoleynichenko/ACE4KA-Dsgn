@@ -1,37 +1,26 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { Navigation } from './Navigation';
 
-const navItems = [
-  { to: '/', label: 'Главная' },
-  { to: '/projects', label: 'Проекты' },
-  { to: '/about', label: 'О\u00a0себе' },
-];
-
-export default function Header() {
-  const location = useLocation();
+export default function Header({ mode = 'default' }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
 
+  const headerClass =
+    mode === 'in-hero' ? 'header header--in-hero' : 'header';
+
   return (
-    <header className="header" data-node-id="300:104227" data-name="Header">
+    <header
+      className={headerClass}
+      data-node-id="300:104227"
+      data-name="Header"
+    >
       <nav className="nav">
         <Link to="/" className="logo" data-node-id="300:107467-logo">
           <span className="blend-text">{'Ася\u00a0Олейниченко'}</span>
         </Link>
-        <ul className={`nav-list${menuOpen ? ' open' : ''}`} data-node-id="300:107467-nav">
-          {navItems.map(({ to, label }) => (
-            <li key={to}>
-              <Link
-                to={to}
-                className={`nav-link${location.pathname === to || (to === '/projects' && location.pathname.startsWith('/project')) ? ' active' : ''}`}
-                onClick={closeMenu}
-              >
-                <span className="blend-text">{label}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <Navigation menuOpen={menuOpen} onItemClick={closeMenu} />
         <span className="lang-switch" data-node-id="300:107467-lang">
           <span className="blend-text">[Eng / rus]</span>
         </span>

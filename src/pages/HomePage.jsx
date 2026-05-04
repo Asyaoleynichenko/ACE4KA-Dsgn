@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Header from '../components/Header';
 import PreviewCardBlock from '../components/PreviewCardBlock';
 import ProjectCard from '../components/ProjectCard';
 import FilterPills from '../components/FilterPills';
@@ -43,8 +44,10 @@ const homeProjects = HOME_PROJECT_SLUGS.map((slug) => projects.find((p) => p.slu
 
 export default function HomePage() {
   return (
-    <div className="home-page" data-node-id="89:347" data-name="Главная">
-      <section className="hero" data-node-id="1-202" data-figma-node="1-202">
+    <div className="home-page home-page--chrome" data-node-id="89:347" data-name="Главная">
+      <Header mode="in-hero" />
+      <div className="home-page__scroll">
+        <section className="hero" data-node-id="1-202" data-figma-node="1-202">
         <div className="hero-first-screen" data-node-id="70:343" data-name="First screen">
           <div className="hero__top">
             <div className="hero-vector" aria-hidden="true" data-node-id="1:203">
@@ -168,7 +171,8 @@ export default function HomePage() {
         <div className="show-all-wrap" data-node-id="1:397" data-figma-node="1-397">
           <Link to="/projects" className="btn-show-all">Все проекты</Link>
         </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
