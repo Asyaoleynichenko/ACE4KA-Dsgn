@@ -139,13 +139,14 @@ export default function ProjectDetailPage() {
   const metaItems = project.metaItems ?? [{ label: 'Категория', value: project.meta }];
   const isCaseStudy = project.layout === 'case-study';
   const hasHero = Boolean(project.image);
+  const caseStudyTopCards = project.topCards ?? [
+    { title: 'Задача', value: project.task },
+    { title: 'Решение', value: project.solution },
+    { title: 'Влияние', value: project.influence },
+    { title: 'Метрики', value: project.metrics },
+  ];
   const topCards = (isCaseStudy
-    ? [
-        { title: 'Задача', value: project.task },
-        { title: 'Решение', value: project.solution },
-        { title: 'Влияние', value: project.influence },
-        { title: 'Метрики', value: project.metrics },
-      ]
+    ? caseStudyTopCards
     : [
         { title: 'Контекст', value: project.context ?? lead },
         { title: 'Проблема', value: project.problem ?? 'Ключевой барьер и ограничения раскрыты в задаче проекта.' },
@@ -158,6 +159,7 @@ export default function ProjectDetailPage() {
 
   if (isCaseStudy) {
     const caseImages = project.caseStudyImages || {};
+    const heroImages = project.heroImages?.length ? project.heroImages : project.image ? [project.image] : [];
     return (
       <div
         className="project-page-wrap project-page-wrap--case-study project-case-study-mail"
@@ -167,8 +169,17 @@ export default function ProjectDetailPage() {
         <CaseStudyProjectNav slug={slug} />
         <div className="container container--case-study">
           <section className="hero">
-            {project.image ? (
-              <img src={publicUrl(project.image)} alt={project.title} />
+            {heroImages.length ? (
+              <div className="hero__media" aria-label={project.title}>
+                {heroImages.map((src, index) => (
+                  <img
+                    key={src}
+                    src={publicUrl(src)}
+                    alt={index === heroImages.length - 1 ? project.title : ''}
+                    aria-hidden={index === heroImages.length - 1 ? undefined : 'true'}
+                  />
+                ))}
+              </div>
             ) : (
               <div className="hero-placeholder">Превью проекта</div>
             )}
@@ -201,13 +212,6 @@ export default function ProjectDetailPage() {
             </div>
           </section>
 
-          {(project.context || project.problem) ? (
-            <section className="case-study-narrative">
-              {project.context ? <p className="case-study-narrative__p">{project.context}</p> : null}
-              {project.problem ? <p className="case-study-narrative__p">{project.problem}</p> : null}
-            </section>
-          ) : null}
-
           <section className={topCardsClassName}>
             {topCards.map((item) => (
               <div key={item.title} className="card">
@@ -216,6 +220,13 @@ export default function ProjectDetailPage() {
               </div>
             ))}
           </section>
+
+          {project.showNarrative && (project.context || project.problem) ? (
+            <section className="case-study-narrative">
+              {project.context ? <p className="case-study-narrative__p">{project.context}</p> : null}
+              {project.problem ? <p className="case-study-narrative__p">{project.problem}</p> : null}
+            </section>
+          ) : null}
 
           {project.caseSections?.map((section, i) => {
             const isTitleInfoSection = section.layout === 'title-info' && section.galleryImage;
