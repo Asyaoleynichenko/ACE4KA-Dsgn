@@ -4001,6 +4001,16 @@ p,
 }
 
 /* Project pages own their 24px gutter inside .project-page-wrap / case-study containers. */
+.page-home__main {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.page-home .section-projects {
+    padding-left: var(--space-24);
+    padding-right: var(--space-24);
+}
+
 .main--project {
     padding-left: 0;
     padding-right: 0;
