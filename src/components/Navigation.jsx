@@ -18,12 +18,17 @@ function itemIsActive(pathname, to) {
  */
 export function Navigation({ menuOpen, onItemClick }) {
   const { pathname } = useLocation();
+  const navListBlur = {
+    backdropFilter: 'blur(50px) saturate(1.85)',
+    WebkitBackdropFilter: 'blur(50px) saturate(1.85)',
+  };
 
   return (
     <ul
       className={`nav-list${menuOpen ? ' open' : ''}`}
       data-node-id="I300:104227;10:1530"
       aria-label="Основное меню"
+      style={navListBlur}
     >
       {NAV_ITEMS.map(({ to, label }) => {
         const active = itemIsActive(pathname, to);
