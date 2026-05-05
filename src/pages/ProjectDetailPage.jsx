@@ -368,12 +368,32 @@ export default function ProjectDetailPage() {
 
           {project.caseSections?.map((section, i) => {
             const isTitleInfoSection = section.layout === 'title-info' && section.galleryImage;
+            const isDualOutcomes = section.layout === 'dual-outcomes' && section.columns?.length;
             return (
             <Fragment key={i}>
               <section
-                className={`section${section.mediaOnly ? ' section--media-only' : ''}${isTitleInfoSection ? ' section--title-info' : ''}${section.mvpSlides?.length ? ' section--mvp-horizontal' : ''}`}
+                className={`section${section.mediaOnly ? ' section--media-only' : ''}${isTitleInfoSection ? ' section--title-info' : ''}${isDualOutcomes ? ' section--dual-outcomes' : ''}${section.mvpSlides?.length ? ' section--mvp-horizontal' : ''}`}
               >
-                {isTitleInfoSection ? (
+                {isDualOutcomes ? (
+                  <div className="dual-outcomes" data-node-id="328:24122">
+                    {section.columns.map((col, ci) => (
+                      <div
+                        key={col.title ?? ci}
+                        className={`dual-outcomes__col${col.titleSize === 'medium' ? ' dual-outcomes__col--title-md' : ''}`}
+                      >
+                        <h2 className="dual-outcomes__title">{col.title}</h2>
+                        {col.tasks?.length ? (
+                          <ul className="section__pills dual-outcomes__pills" aria-label={col.title}>
+                            {col.tasks.map((t, j) => (
+                              <li key={j}>{t}</li>
+                            ))}
+                          </ul>
+                        ) : null}
+                        {col.footnote ? <p className="dual-outcomes__footnote">{col.footnote}</p> : null}
+                      </div>
+                    ))}
+                  </div>
+                ) : isTitleInfoSection ? (
                   <article className="title-info-card" data-node-id={section.nodeId ?? '300:107826'} data-name="Title info">
                     <div className="title-info-card__content" data-node-id="300:107827">
                       <div className="title-info-card__text-group" data-node-id="300:107828">
@@ -382,7 +402,7 @@ export default function ProjectDetailPage() {
                       </div>
                       {section.ctaLabel ? (
                         <a
-                          href={publicUrl(section.galleryImage)}
+                          href={section.ctaHref ?? publicUrl(section.galleryImage)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="title-info-card__cta"
@@ -411,6 +431,16 @@ export default function ProjectDetailPage() {
                     {section.description}
                   </p>
                 )}
+                {section.ctaLink?.href ? (
+                  <a
+                    href={section.ctaLink.href}
+                    className="project-info__cta project-info__cta--section"
+                    target={section.ctaLink.external === false ? undefined : '_blank'}
+                    rel={section.ctaLink.external === false ? undefined : 'noopener noreferrer'}
+                  >
+                    {section.ctaLink.label}
+                  </a>
+                ) : null}
                 {section.tasksHeading ? (
                   <p className="section__tasks-heading">{section.tasksHeading}</p>
                 ) : null}
@@ -429,6 +459,40 @@ export default function ProjectDetailPage() {
                     </ul>
                   )
                 )}
+                {section.pillsFootnote ? (
+                  <p className="section-footnote">{section.pillsFootnote}</p>
+                ) : null}
+                {section.nestedAfterPills ? (
+                  <div className="section__nested-after-pills">
+                    {section.nestedAfterPills.subtitle ? (
+                      <h3 className="section__subheading">{section.nestedAfterPills.subtitle}</h3>
+                    ) : null}
+                    {section.nestedAfterPills.description ? (
+                      <p>{section.nestedAfterPills.description}</p>
+                    ) : null}
+                    {section.nestedAfterPills.tasks?.length > 0 ? (
+                      section.nestedAfterPills.taskLayout === 'pills' ? (
+                      <ul
+                        className="section__pills section__pills--nested"
+                        aria-label={section.nestedAfterPills.subtitle ?? 'Дополнительно'}
+                      >
+                        {section.nestedAfterPills.tasks.map((t, j) => (
+                          <li key={j}>{t}</li>
+                        ))}
+                      </ul>
+                      ) : (
+                      <ul>
+                        {section.nestedAfterPills.tasks.map((t, j) => (
+                          <li key={j}>{t}</li>
+                        ))}
+                      </ul>
+                      )
+                    ) : null}
+                  </div>
+                ) : null}
+                {section.descriptionFooter ? (
+                  <p className="section-desc section-desc--footer">{section.descriptionFooter}</p>
+                ) : null}
                 {section.galleryBeforeHypotheses ? (
                   <div className="gallery gallery--before-hypotheses">
                     <img src={publicUrl(section.galleryBeforeHypotheses)} alt="" />
