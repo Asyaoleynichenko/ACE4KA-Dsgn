@@ -554,17 +554,7 @@ export const projects = [
         galleryImages: [
           '/images/figma-sync-20260205-drop-1777996703808/e587644a3f1be6cab03d4e4a32d3b8150b8b9edb.png',
           '/images/figma-sync-20260205-drop-1777996703808/8e544dde5b1f114d376d6232d1f2dea287e0f785.png',
-          '/images/figma-sync-20260205-drop-1777996703808/532caee4fba44f1a624b24543022549afd6301c0.png',
-          '/images/figma-sync-20260205-drop-1777996703808/f139448621e3b030cfb45315ed595803c45ed65e.png',
           '/images/figma-sync-20260205-drop-1777996703808/9f2b5289e97c420743a9d5c568c2128320feb018.png',
-        ],
-      },
-      {
-        hideTitle: true,
-        mediaOnly: true,
-        galleryImages: [
-          '/images/figma-sync-20260205-drop-1777996703808/c9c37a848c0ba33beeebf21f0c8b05c607f2152d.png',
-          '/images/figma-sync-20260205-drop-1777996703808/e44b4c9f8fadaa9b1b0b086566a44f50e795ae63.png',
         ],
       },
       {
@@ -601,6 +591,13 @@ export const projects = [
             text:
               'Запуск Telegram-MVP позволил подтвердить жизнеспособность ключевой гипотезы проекта: люди готовы участвовать в альтернативных форматах знакомства и общения, если интерфейс и механика взаимодействия создают безопасное и ненавязчивое пространство для коммуникации. Этот этап также помог выявить основные сценарии использования сервиса и сформировать основу для дальнейшего развития полноценного продукта',
           },
+        ],
+      },
+      {
+        hideTitle: true,
+        mediaOnly: true,
+        galleryImages: [
+          '/images/figma-sync-20260205-drop-1777996703808/c9c37a848c0ba33beeebf21f0c8b05c607f2152d.png',
         ],
       },
     ],

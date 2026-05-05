@@ -1,52 +1,26 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { projects } from '../data/projects';
 import { publicUrl } from '../utils/publicUrl.js';
 
-/** Figma 363:145168 — горизонтальная лента MVP: слайды с изображением + текст, gap 79px */
+/** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
 function HorizontalMvpGallery({ slides }) {
-  const scrollerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const helpId = useId();
+  const touchStartX = useRef(null);
 
-  useEffect(() => {
-    const node = scrollerRef.current;
-    if (!node) return undefined;
+  const total = slides.length;
+  const slide = slides[activeIndex];
+  const canPrev = activeIndex > 0;
+  const canNext = activeIndex < total - 1;
 
-    const updateActiveSlide = () => {
-      const children = Array.from(node.querySelectorAll('.mvp-horizontal__slide'));
-      if (!children.length) return;
-      const center = node.scrollLeft + node.clientWidth / 2;
-      let closestIndex = 0;
-      let minDistance = Number.POSITIVE_INFINITY;
-
-      children.forEach((child, index) => {
-        const childCenter = child.offsetLeft + child.clientWidth / 2;
-        const distance = Math.abs(center - childCenter);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestIndex = index;
-        }
-      });
-
-      setActiveIndex(closestIndex);
-    };
-
-    updateActiveSlide();
-    let rafId = null;
-    const onScroll = () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(updateActiveSlide);
-    };
-
-    node.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', updateActiveSlide);
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      node.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', updateActiveSlide);
-    };
-  }, [slides.length]);
+  const goTo = useCallback(
+    (index) => {
+      setActiveIndex(Math.max(0, Math.min(total - 1, index)));
+    },
+    [total],
+  );
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -56,44 +30,115 @@ function HorizontalMvpGallery({ slides }) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
+  const onViewportKeyDown = (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      goTo(activeIndex + 1);
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      goTo(activeIndex - 1);
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      goTo(0);
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      goTo(total - 1);
+    }
+  };
+
+  const onTouchStart = (event) => {
+    const t = event.touches[0];
+    if (!t) return;
+    touchStartX.current = t.clientX;
+  };
+
+  const onTouchEnd = (event) => {
+    const start = touchStartX.current;
+    touchStartX.current = null;
+    if (start == null) return;
+    const t = event.changedTouches[0];
+    if (!t) return;
+    const dx = t.clientX - start;
+    if (Math.abs(dx) < 48) return;
+    setActiveIndex((i) => {
+      if (dx < 0) return Math.min(total - 1, i + 1);
+      return Math.max(0, i - 1);
+    });
+  };
+
+  if (!slide) return null;
+
   return (
-    <>
+    <div className="mvp-slider" data-component="HorizontalMvpGallery">
+      <p id={helpId} className="mvp-slider__sr-only">
+        Стрелки по бокам картинки, точки внизу или клавиши влево и вправо переключают слайды. На телефоне
+        можно смахнуть влево или вправо.
+      </p>
+
       <div
-        className="mvp-horizontal"
+        className="mvp-slider__viewport"
         role="region"
-        aria-label="Запуск Telegram MVP"
-        ref={scrollerRef}
+        aria-roledescription="слайдер"
+        aria-label="MVP: слайды"
+        aria-describedby={helpId}
+        aria-live="polite"
+        tabIndex={0}
+        onKeyDown={onViewportKeyDown}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
         data-node-id="363:145168"
       >
-        {slides.map((slide, index) => (
-          <article
-            key={slide.nodeId ?? `${slide.image}-${index}`}
-            className={`mvp-horizontal__slide${index === activeIndex ? ' is-active' : ''}`}
-            data-node-id={slide.nodeId}
-          >
-            <div className="mvp-horizontal__media">
+        <article className="mvp-slider__slide" data-node-id={slide.nodeId}>
+          <div className="mvp-slider__media-row">
+            <button
+              type="button"
+              className="mvp-slider__chev mvp-slider__chev--prev"
+              disabled={!canPrev}
+              onClick={() => goTo(activeIndex - 1)}
+              aria-label="Предыдущий слайд"
+            >
+              <span aria-hidden="true">‹</span>
+            </button>
+            <button
+              type="button"
+              className="mvp-slider__chev mvp-slider__chev--next"
+              disabled={!canNext}
+              onClick={() => goTo(activeIndex + 1)}
+              aria-label="Следующий слайд"
+            >
+              <span aria-hidden="true">›</span>
+            </button>
+            <div className="mvp-slider__media">
               <button
                 type="button"
-                className="mvp-horizontal__media-btn"
-                onClick={() => setLightboxIndex(index)}
-                aria-label={`Открыть слайд ${index + 1}`}
+                className="mvp-slider__media-btn"
+                onClick={() => setLightboxIndex(activeIndex)}
+                aria-label="Открыть изображение в полный экран"
               >
                 <img src={publicUrl(slide.image)} alt="" />
               </button>
             </div>
-            <div className="mvp-horizontal__copy">
-              {slide.heading ? <h3 className="mvp-horizontal__heading">{slide.heading}</h3> : null}
-              <p className="mvp-horizontal__text">{slide.text}</p>
-            </div>
-          </article>
-        ))}
+          </div>
+          <div className="mvp-slider__copy">
+            {slide.heading ? <h3 className="mvp-slider__heading">{slide.heading}</h3> : null}
+            <p className="mvp-slider__text">{slide.text}</p>
+          </div>
+        </article>
       </div>
 
-      <div className="mvp-horizontal__indicator" aria-hidden="true">
-        {slides.map((slide, index) => (
-          <span
-            key={slide.nodeId ?? `${slide.image}-${index}`}
-            className={`mvp-horizontal__dot${index === activeIndex ? ' is-active' : ''}`}
+      <div className="mvp-slider__dots" role="group" aria-label="Выбор слайда">
+        {slides.map((dotSlide, index) => (
+          <button
+            key={dotSlide.nodeId ?? `${dotSlide.image}-${index}`}
+            type="button"
+            aria-current={index === activeIndex ? 'true' : undefined}
+            aria-label={
+              dotSlide.heading
+                ? `Слайд ${index + 1}: ${dotSlide.heading}`
+                : `Слайд ${index + 1} из ${total}`
+            }
+            className={`mvp-slider__dot${index === activeIndex ? ' is-active' : ''}`}
+            onClick={() => goTo(index)}
           />
         ))}
       </div>
@@ -116,7 +161,7 @@ function HorizontalMvpGallery({ slides }) {
           />
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -216,29 +261,6 @@ function HorizontalGallery({ images }) {
   );
 }
 
-function CaseStudyProjectNav({ slug }) {
-  const i = projects.findIndex((p) => p.slug === slug);
-  const next = i >= 0 && i < projects.length - 1 ? projects[i + 1] : null;
-  return (
-    <nav className="case-study-nav" aria-label="Навигация по проектам" data-node-id="300:104228">
-      <div className="case-study-nav__inner">
-        <Link to="/projects" className="case-study-nav__link case-study-nav__link--back">
-          <span className="case-study-nav__icon" aria-hidden="true">←</span>
-          К&nbsp;проектам
-        </Link>
-        {next ? (
-          <Link to={`/project/${next.slug}`} className="case-study-nav__link case-study-nav__link--next">
-            Следующий проект
-            <span className="case-study-nav__icon case-study-nav__icon--flip" aria-hidden="true">←</span>
-          </Link>
-        ) : (
-          <span className="case-study-nav__spacer" aria-hidden="true" />
-        )}
-      </div>
-    </nav>
-  );
-}
-
 export default function ProjectDetailPage() {
   const { slug } = useParams();
   const project = projects.find((p) => p.slug === slug);
@@ -283,7 +305,6 @@ export default function ProjectDetailPage() {
         data-node-id={project.figmaNodeId}
         data-figma-url={project.figmaUrl}
       >
-        <CaseStudyProjectNav slug={slug} />
         <div className="container container--case-study">
           <section className="hero">
             {heroImages.length ? (
@@ -479,7 +500,6 @@ export default function ProjectDetailPage() {
             </Fragment>
           );
           })}
-          <CaseStudyProjectNav slug={slug} />
         </div>
       </div>
     );
