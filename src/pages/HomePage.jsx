@@ -96,14 +96,14 @@ export default function HomePage() {
         <div className="hero__row" data-node-id="1:232">
           <div className="hero__content">
             <div className="hero-content">
-              <p className="hero-role">Продуктовый дизайнер · Mail Почта и Облако</p>
+              <p className="hero-role">Продуктовый дизайнер Mail Почта и Облако</p>
               <h1 className="hero-title">Ася Олейниченко</h1>
               <p className="hero-text">
                 5 лет запускаю и развиваю цифровые продукты. Знаю, как выстраиваются процессы, как работает продукт и
-                как делать продукт проще и лучше.
+                как просто делать хорошо.
               </p>
               <Link to="/about" className="hero-more hero-more--with-icon">
-                <span className="hero-more__text">О себе</span>
+                <span className="hero-more__text">Больше обо мне</span>
                 <span className="hero-more__chevron" aria-hidden="true" />
               </Link>
             </div>

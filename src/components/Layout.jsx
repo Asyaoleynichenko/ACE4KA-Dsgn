@@ -15,6 +15,7 @@ export default function Layout() {
   const isProjectDetail = pathname.startsWith('/project/');
   const mainClass = isProjectDetail ? 'main main--project' : 'main';
   const isHome = pathname === '/';
+  const isAbout = pathname === '/about';
 
   /* Главная: шапка рендерится внутри HomePage (один родитель с героем) — иначе blur/blend
      часто упираются в body по бокам из-за max-width у .main. */
@@ -35,7 +36,7 @@ export default function Layout() {
       <main className={mainClass}>
         <Outlet />
       </main>
-      <Footer />
+      {!isAbout && <Footer />}
     </div>
   );
 }

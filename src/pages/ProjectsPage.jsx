@@ -5,7 +5,7 @@ import { projects } from '../data/projects';
 
 export default function ProjectsPage() {
   return (
-    <div className="page-projects__wrap" data-node-id="1-399" data-figma-node="1-399">
+    <div className="page-projects__wrap" data-node-id="89-346" data-name="Все проекты" data-figma-node="89-346">
       <div className="logo-section" data-node-id="1:286">
         <h1 className="projects-title-main" data-node-id="1:289">Все проекты</h1>
         <FilterPills />

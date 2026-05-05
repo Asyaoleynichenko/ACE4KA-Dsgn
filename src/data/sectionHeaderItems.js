@@ -20,14 +20,14 @@ export const SECTION_HEADER_IMAGES = {
 
 export const headerItemsFolder = [
   { nodeId: '1-206', label: 'Опыт', iconKey: 'folder', to: '/about#experience', placement: { x: 1097.67, y: 30.11 } },
-  { nodeId: '1-209', label: 'Разное', iconKey: 'folder', to: '/about', placement: { x: 46.91, y: 179.79 } },
-  { nodeId: '1-224', label: 'Проекты', iconKey: 'projects', to: '/projects', placement: { x: 232.91, y: 4.11 } },
+  { nodeId: '1-209', label: 'Любимые мемы воображаемых людей', iconKey: 'folder', to: '/about#memes', placement: { x: 46.91, y: 179.79 } },
+  { nodeId: '1-224', label: 'Краткий обзор на проекты', iconKey: 'projects', to: '/projects', placement: { x: 232.91, y: 4.11 } },
   { nodeId: '1-227', label: 'Образование', iconKey: 'folder', to: '/about#education', placement: { x: 938.73, y: 129.03 } },
 ];
 
 export const headerItemsWell = [
-  { nodeId: '1-212', label: 'Контакты', iconKey: 'contact', to: '/contact', placement: { x: 290.76, y: 181.01 } },
-  { nodeId: '1-215', label: 'Контакты', iconKey: 'contact', to: '/contact', placement: { x: 96.41, y: 30.13 } },
+  { nodeId: '1-212', label: 'Связь', iconKey: 'contact', to: '/contact', placement: { x: 290.76, y: 181.01 } },
+  { nodeId: '1-215', label: 'Связь', iconKey: 'contact', to: '/contact', placement: { x: 96.41, y: 30.13 } },
   { nodeId: '1-218', label: 'Команда', iconKey: 'team', to: '/about#team', placement: { x: 891.76, y: 22.13 } },
-  { nodeId: '1-221', label: 'Интересы', iconKey: 'habitat', to: '/about#habitat', placement: { x: 1101.2, y: 200.81 } },
+  { nodeId: '1-221', label: 'Я в естественной среде обитания', iconKey: 'habitat', to: '/about#habitat', placement: { x: 1101.2, y: 200.81 } },
 ];

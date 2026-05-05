@@ -2,7 +2,7 @@ import { publicUrl } from '../utils/publicUrl.js';
 
 /** Figma 1:231 — Image Preview: 369×280, titlebar (leading: spacer, close, spacer, resize, spacer, title; trailing: spacer, CTA), image area */
 export default function PreviewCardBlock() {
-  const previewImageSrc = publicUrl('/images/figma-89-347/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.png');
+  const previewImageSrc = publicUrl('/images/figma-impl-89-347/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.png');
 
   return (
     <a

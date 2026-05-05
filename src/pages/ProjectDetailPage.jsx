@@ -3,6 +3,123 @@ import { Link, useParams } from 'react-router-dom';
 import { projects } from '../data/projects';
 import { publicUrl } from '../utils/publicUrl.js';
 
+/** Figma 363:145168 — горизонтальная лента MVP: слайды с изображением + текст, gap 79px */
+function HorizontalMvpGallery({ slides }) {
+  const scrollerRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  useEffect(() => {
+    const node = scrollerRef.current;
+    if (!node) return undefined;
+
+    const updateActiveSlide = () => {
+      const children = Array.from(node.querySelectorAll('.mvp-horizontal__slide'));
+      if (!children.length) return;
+      const center = node.scrollLeft + node.clientWidth / 2;
+      let closestIndex = 0;
+      let minDistance = Number.POSITIVE_INFINITY;
+
+      children.forEach((child, index) => {
+        const childCenter = child.offsetLeft + child.clientWidth / 2;
+        const distance = Math.abs(center - childCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setActiveIndex(closestIndex);
+    };
+
+    updateActiveSlide();
+    let rafId = null;
+    const onScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateActiveSlide);
+    };
+
+    node.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', updateActiveSlide);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      node.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', updateActiveSlide);
+    };
+  }, [slides.length]);
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setLightboxIndex(null);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  return (
+    <>
+      <div
+        className="mvp-horizontal"
+        role="region"
+        aria-label="Запуск Telegram MVP"
+        ref={scrollerRef}
+        data-node-id="363:145168"
+      >
+        {slides.map((slide, index) => (
+          <article
+            key={slide.nodeId ?? `${slide.image}-${index}`}
+            className={`mvp-horizontal__slide${index === activeIndex ? ' is-active' : ''}`}
+            data-node-id={slide.nodeId}
+          >
+            <div className="mvp-horizontal__media">
+              <button
+                type="button"
+                className="mvp-horizontal__media-btn"
+                onClick={() => setLightboxIndex(index)}
+                aria-label={`Открыть слайд ${index + 1}`}
+              >
+                <img src={publicUrl(slide.image)} alt="" />
+              </button>
+            </div>
+            <div className="mvp-horizontal__copy">
+              {slide.heading ? <h3 className="mvp-horizontal__heading">{slide.heading}</h3> : null}
+              <p className="mvp-horizontal__text">{slide.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="mvp-horizontal__indicator" aria-hidden="true">
+        {slides.map((slide, index) => (
+          <span
+            key={slide.nodeId ?? `${slide.image}-${index}`}
+            className={`mvp-horizontal__dot${index === activeIndex ? ' is-active' : ''}`}
+          />
+        ))}
+      </div>
+
+      {lightboxIndex !== null ? (
+        <div className="gallery-lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxIndex(null)}>
+          <button
+            type="button"
+            className="gallery-lightbox__close"
+            onClick={() => setLightboxIndex(null)}
+            aria-label="Закрыть изображение"
+          >
+            ×
+          </button>
+          <img
+            src={publicUrl(slides[lightboxIndex].image)}
+            alt=""
+            className="gallery-lightbox__image"
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      ) : null}
+    </>
+  );
+}
+
 function HorizontalGallery({ images }) {
   const scrollerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -232,7 +349,9 @@ export default function ProjectDetailPage() {
             const isTitleInfoSection = section.layout === 'title-info' && section.galleryImage;
             return (
             <Fragment key={i}>
-              <section className={`section${section.mediaOnly ? ' section--media-only' : ''}${isTitleInfoSection ? ' section--title-info' : ''}`}>
+              <section
+                className={`section${section.mediaOnly ? ' section--media-only' : ''}${isTitleInfoSection ? ' section--title-info' : ''}${section.mvpSlides?.length ? ' section--mvp-horizontal' : ''}`}
+              >
                 {isTitleInfoSection ? (
                   <article className="title-info-card" data-node-id={section.nodeId ?? '300:107826'} data-name="Title info">
                     <div className="title-info-card__content" data-node-id="300:107827">
@@ -256,6 +375,8 @@ export default function ProjectDetailPage() {
                       <img src={publicUrl(section.galleryImage)} alt={section.title} />
                     </div>
                   </article>
+                ) : section.mvpSlides?.length > 0 ? (
+                  <HorizontalMvpGallery slides={section.mvpSlides} />
                 ) : (
                   <>
                 {section.galleryAboveTitle ? (
