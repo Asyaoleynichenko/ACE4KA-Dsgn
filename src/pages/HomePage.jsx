@@ -28,7 +28,7 @@ const heroLinks = [
   { href: 'https://pinterest.com/', label: 'Pinterest' },
 ];
 
-/** Порядок и число карточек — Figma 1:285 (сетка 2×4, 1290px). */
+/** Порядок карточек на главной — Figma 1:285 (сетка превью, 1290px). */
 const HOME_PROJECT_SLUGS = [
   'mail-nauki',
   'mail-spetsproekty',
@@ -38,6 +38,7 @@ const HOME_PROJECT_SLUGS = [
   'neural',
   'retrash',
   'biohacking',
+  'racktables',
 ];
 
 const homeProjects = HOME_PROJECT_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(Boolean);
