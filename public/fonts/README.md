@@ -1,6 +1,12 @@
-# Шрифты для макетов Figma 16-195, 16-207
+# Шрифты проекта
 
-Положите сюда файлы декоративных шрифтов (см. корневой README):
+Положите сюда файлы основных и декоративных шрифтов:
+
+- **Suisse Intl** (основной UI):
+  - `suisse-intl-regular.woff2` + `.woff` (400)
+  - `suisse-intl-medium.woff2` + `.woff` (500)
+  - `suisse-intl-semibold.woff2` + `.woff` (600)
+  - `suisse-intl-bold.woff2` + `.woff` (700)
 
 - **Agatha Modern** (Regular): `agatha-modern-regular.woff2` или `.woff` / `.ttf`
 - **Ice Kingdom (Frozen) Cyrillic** (Bold): `ice-kingdom-frozen-cyrillic-bold.woff2` или `.woff` / `.ttf`

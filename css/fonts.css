@@ -1,8 +1,46 @@
 /**
  * Шрифты проекта
- * - Inter: основной UI (@fontsource/inter в main.jsx).
- * - Agatha / Ice Kingdom: опциональные декоративные начертания (фильтры Figma); в интерфейсе по умолчанию — один гарнитурный ряд (--font-body) для консистентности.
+ * - Suisse Intl: основной UI (локальные файлы в public/fonts).
+ * - Inter: fallback (@fontsource/inter в main.jsx).
+ * - Agatha / Ice Kingdom: опциональные декоративные начертания (фильтры Figma).
  */
+
+/* Основной UI-шрифт */
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/suisse-intl-regular.woff2') format('woff2'),
+       url('/fonts/suisse-intl-regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/suisse-intl-medium.woff2') format('woff2'),
+       url('/fonts/suisse-intl-medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/suisse-intl-semibold.woff2') format('woff2'),
+       url('/fonts/suisse-intl-semibold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/suisse-intl-bold.woff2') format('woff2'),
+       url('/fonts/suisse-intl-bold.woff') format('woff');
+}
 
 /* Figma 16-195 — Agatha Modern Regular (вариант «Исследования», 20px, #ef0) */
 @font-face {

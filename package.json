@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:host": "vite --host",
+    "start": "vite",
     "build": "vite build && node -e \"const fs=require('fs');fs.copyFileSync('dist/index.html','dist/404.html');fs.writeFileSync('dist/.nojekyll','')\"",
+    "build:local": "vite build --base / && node -e \"const fs=require('fs');fs.copyFileSync('dist/index.html','dist/404.html');fs.writeFileSync('dist/.nojekyll','')\"",
     "preview": "vite preview",
     "build:root": "VITE_BASE=root vite build && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\""
   },

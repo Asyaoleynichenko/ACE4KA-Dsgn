@@ -10,9 +10,12 @@ import '@fontsource/inter/700.css';
 import '@fontsource/inter/900.css';
 
 import '../css/style.css';
+import RootErrorBoundary from './RootErrorBoundary.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <RootErrorBoundary>
+      <App />
+    </RootErrorBoundary>
+  </React.StrictMode>,
 );
