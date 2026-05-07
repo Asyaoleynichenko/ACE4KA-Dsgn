@@ -1,3 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <path d="M2 5V2h3M10 5V2H7M10 7v3H7M2 7v3h3"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+  <g style="mix-blend-mode:plus-darker">
+    <path
+      d="M6 0C9.31371 0 12 2.68629 12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0ZM3.85352 5.26758C3.53857 4.95279 3.00015 5.17583 3 5.62109V8C3 8.55217 3.44788 8.99981 4 9H6.37793C6.82332 8.99993 7.04635 8.46146 6.73145 8.14648L3.85352 5.26758ZM5.62012 3C5.17499 3.00029 4.95197 3.53861 5.2666 3.85352L8.14648 6.73145C8.46147 7.0463 8.99993 6.82329 9 6.37793V4C8.99981 3.44788 8.55217 3 8 3H5.62012Z"
+      fill="#000000"
+      fill-opacity="0.5"
+    />
+  </g>
 </svg>
