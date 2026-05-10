@@ -48,7 +48,14 @@ export default defineConfig(({ command }) => {
   const base = command === 'serve' ? '/' : productionBase();
   const baseRoot = base === '/' ? '' : base.replace(/\/$/, '');
   return {
+    clearScreen: false,
     base,
     plugins: [react(), prefixPublicUrlsInCssPlugin(baseRoot)],
+    server: {
+      port: 5173,
+      strictPort: false,
+      /** 0.0.0.0 — если «не открывается» только localhost или нужен доступ из сети/WSL */
+      host: true,
+    },
   };
 });

@@ -131,7 +131,10 @@ button:focus-visible,
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: var(--space-24);
+    padding-top: max(var(--space-24), env(safe-area-inset-top, 0px));
+    padding-bottom: var(--space-24);
+    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
     min-height: 88px;
     box-sizing: border-box;
     display: flex;
@@ -259,7 +262,7 @@ button:focus-visible,
     display: inline-block;
     color: var(--color-text);
     mix-blend-mode: var(--mix-blend-exclusion, exclusion);
-    min-width: 228px;
+    min-width: min(228px, 42vw);
     text-align: right;
     flex-shrink: 0;
 }
@@ -285,7 +288,10 @@ button:focus-visible,
     flex: 1;
     max-width: none;
     margin: 0;
-    padding: 48px 24px 64px;
+    padding-top: 48px;
+    padding-bottom: 64px;
+    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
     width: 100%;
     position: relative;
     z-index: 0;
@@ -302,7 +308,11 @@ button:focus-visible,
 .hero {
     position: relative;
     min-height: 100vh;
-    padding: 48px 24px 120px;
+    min-height: 100dvh;
+    padding-top: max(48px, env(safe-area-inset-top, 0px));
+    padding-bottom: 120px;
+    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
     max-width: none;
     margin-left: 0;
     margin-right: 0;
@@ -429,18 +439,10 @@ button:focus-visible,
     margin: 0;
 }
 
-/* Figma 1:237–238: H1 96px, semibold, 96px line-height, -6px tracking */
+/* Главный заголовок героя — масштабируется по ширине экрана (конкретные размеры ниже, после :root type scale) */
 .hero-title {
-    font-size: 96px;
-    font-weight: 600;
-    line-height: 96px;
     margin: 0;
-    letter-spacing: -6px;
     color: var(--color-text);
-}
-
-@media (max-width: 768px) {
-    .hero-title { font-size: clamp(48px, 12vw, 72px); line-height: 1.1; letter-spacing: -0.02em; }
 }
 
 /* Figma 1:239–240: text 24px, line-height 1.2, -1px tracking, max 661px */
@@ -595,8 +597,8 @@ button:focus-visible,
 
 /* Figma 89:347 — Header: горизонтальные отступы по сетке 8px */
 .page-home .header .nav {
-    padding-left: var(--space-24);
-    padding-right: var(--space-24);
+    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
 }
 
 .header-items {
@@ -824,15 +826,16 @@ button:focus-visible,
     min-width: 0;
 }
 
-/* Figma 1:231 — Image Preview: 369×280, два слоя overlay, titlebar 38px absolute top, image area absolute inset 38px 5px */
+/* Figma 1:231 — Image Preview: 369×280; mac-window: фото на всю ширину под titlebar без тёмных полей */
 .preview-card-block {
     display: block;
     position: relative;
     margin-bottom: 2.5rem;
-    width: 369px;
-    max-width: 100%;
-    height: 280px;
-    min-height: 280px;
+    width: 100%;
+    max-width: 369px;
+    aspect-ratio: 369 / 280;
+    height: auto;
+    min-height: 0;
     box-sizing: border-box;
     /* R_внут картинки = var(--radius-lg) − var(--space-8) = var(--radius) */
     border-radius: var(--radius-lg);
@@ -885,25 +888,139 @@ button:focus-visible,
     box-sizing: border-box;
 }
 
-.preview-card-block__leading {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    min-width: 0;
-    flex: 1 1 0;
+.preview-card-block:focus {
+    outline: none;
 }
 
-.preview-card-block__chrome-controls {
+.preview-card-block:focus-visible {
+    outline: 2px solid rgba(10, 132, 255, 0.55);
+    outline-offset: 3px;
+}
+
+.preview-card-block__titlebar-start {
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    min-width: 0;
 }
 
-.preview-card-block__icon {
-    display: block;
+/* Классические traffic lights macOS */
+.preview-card-block__traffic {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.preview-card-block__traffic-dot {
     width: 12px;
     height: 12px;
+    border-radius: 50%;
     flex-shrink: 0;
+    position: relative;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.38),
+        inset 0 -0.5px 0 rgba(0, 0, 0, 0.12),
+        0 0 0 0.35px rgba(0, 0, 0, 0.08);
+}
+
+.preview-card-block__traffic-dot--close {
+    background: linear-gradient(180deg, #ff837a 0%, #ff5f57 96%);
+}
+
+.preview-card-block__traffic-dot--minimize {
+    background: linear-gradient(180deg, #ffda5c 0%, #ffbd2e 96%);
+}
+
+.preview-card-block__traffic-dot--zoom {
+    background: linear-gradient(180deg, #53d76f 0%, #28c840 96%);
+}
+
+/* Иконки внутри кружков при наведении на карточку */
+.preview-card-block__traffic-dot::after {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, 'SF Pro Text', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(70, 30, 30, 0.55);
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    pointer-events: none;
+}
+
+.preview-card-block__traffic-dot--minimize::after {
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.preview-card-block__traffic-dot--zoom::after {
+    font-size: 8px;
+    font-weight: 600;
+}
+
+.preview-card-block--mac-window:hover .preview-card-block__traffic-dot::after {
+    opacity: 1;
+}
+
+.preview-card-block__traffic-dot--close::after {
+    content: '×';
+}
+
+.preview-card-block__traffic-dot--minimize::after {
+    content: '−';
+    color: rgba(90, 60, 0, 0.55);
+}
+
+.preview-card-block__traffic-dot--zoom::after {
+    content: '+';
+    color: rgba(18, 60, 26, 0.55);
+}
+
+/* Titlebar macOS: слева «светофор + заголовок», справа CTA — заголовок не по центру полосы */
+.preview-card-block--mac-window .preview-card-block__titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    position: relative;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(0, 0, 0, 0.04) 100%),
+        linear-gradient(180deg, #ececec 0%, #d8d8d8 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 1px 0 rgba(255, 255, 255, 0.35);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.preview-card-block--mac-window .preview-card-block__title {
+    flex: 1 1 0;
+    min-width: 0;
+    position: static;
+    margin: 0;
+    text-align: left;
+    letter-spacing: -0.015em;
+    pointer-events: none;
+    max-width: none;
+    z-index: auto;
+}
+
+.preview-card-block--mac-window .preview-card-block__titlebar-start {
+    flex-shrink: 0;
+}
+
+.preview-card-block--mac-window .preview-card-block__trailing {
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 .preview-card-block__spacer--12 {
@@ -913,33 +1030,6 @@ button:focus-visible,
 .preview-card-block__spacer--8 {
     width: 8px;
     flex-shrink: 0;
-}
-
-.preview-card-block__btn-close,
-.preview-card-block__btn-resize {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 12px;
-    height: 12px;
-    flex-shrink: 0;
-    color: rgba(0, 0, 0, 0.5);
-}
-.preview-card-block__btn-close img,
-.preview-card-block__btn-resize img,
-.preview-card-block__btn-close svg,
-.preview-card-block__btn-resize svg {
-    display: block;
-    width: 12px;
-    height: 12px;
-}
-.preview-card-block__btn-close img,
-.preview-card-block__btn-resize img {
-    object-fit: contain;
-}
-.preview-card-block__btn-resize img,
-.preview-card-block__btn-resize svg {
-    transform: rotate(180deg);
 }
 
 /* Figma 1:231 — titlebar: тот же шрифт, что и весь UI (--font-body) */
@@ -990,7 +1080,7 @@ button:focus-visible,
     color: var(--preview-cta-color);
 }
 
-/* Figma 1:231 Image area: inset от titlebar 40px, поля по сетке 8px */
+/* Figma 1:231 Image area; у --mac-window без боковых/нижних полей — как контент окна macOS */
 .preview-card-block__image {
     position: absolute;
     top: 40px;
@@ -1008,6 +1098,16 @@ button:focus-visible,
     justify-content: center;
 }
 
+.preview-card-block--mac-window .preview-card-block__image {
+    top: 40px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    background: transparent;
+}
+
 .preview-card-block__image img {
     width: 100%;
     max-width: 353px;
@@ -1018,6 +1118,12 @@ button:focus-visible,
     border-radius: var(--radius);
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
+}
+
+.preview-card-block--mac-window .preview-card-block__image img {
+    max-width: none;
+    border: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
 .hero__card .preview-card-block {
@@ -1132,6 +1238,18 @@ button:focus-visible,
     text-transform: uppercase;
     color: var(--color-text-primary);
     margin: 0;
+}
+
+@media (max-width: 1024px) {
+    .projects-header .projects-title-main,
+    .projects-title-main {
+        font-size: clamp(36px, 6.5vw, 52px);
+        letter-spacing: -0.03em;
+    }
+
+    .page-projects .main {
+        padding-top: 96px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -3925,16 +4043,16 @@ button:focus-visible,
     gap: var(--layout-89-756-grid-gap);
     max-width: var(--layout-89-756-grid-max-width);
     width: 100%;
+    grid-template-columns: repeat(var(--layout-89-756-grid-columns), 1fr);
 }
 
 .page-contact .contact-grid {
     margin-left: auto;
     margin-right: auto;
-    grid-template-columns: repeat(var(--layout-89-756-grid-columns), 1fr);
 }
 
 @media (max-width: 600px) {
-    .page-contact .contact-grid {
+    .contact-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -4221,7 +4339,10 @@ button:focus-visible,
 /* Mobile */
 @media (max-width: 768px) {
     .nav {
-        padding: var(--space-24);
+        padding-top: max(var(--space-24), env(safe-area-inset-top, 0px));
+        padding-bottom: var(--space-24);
+        padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+        padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
     }
 
     .info-grid {
@@ -4267,18 +4388,24 @@ button:focus-visible,
     }
 }
 
-@media (max-width: 768px) {
+/* Навигация — drawer до ширины планшета (совпадает с колонкой hero / фильтрами) */
+@media (max-width: 900px) {
     .nav-list {
         position: fixed;
         top: 0;
         right: -100%;
         height: 100vh;
-        width: 280px;
+        height: 100dvh;
+        width: min(280px, calc(100vw - 48px));
         background: #1a1a1a;
         border-radius: 0;
         border: none;
         flex-direction: column;
-        padding: 5rem 2rem 2rem;
+        padding:
+            max(5rem, calc(env(safe-area-inset-top, 0px) + 3rem))
+            max(2rem, env(safe-area-inset-right, 0px))
+            max(2rem, env(safe-area-inset-bottom, 0px))
+            max(2rem, env(safe-area-inset-left, 0px));
         gap: 0.5rem;
         justify-content: flex-start;
         align-items: stretch;
@@ -4312,7 +4439,9 @@ button:focus-visible,
     .nav-toggle span {
         transition: var(--transition);
     }
+}
 
+@media (max-width: 768px) {
     .preview-grid {
         grid-template-columns: 1fr;
         justify-content: stretch;
@@ -4332,6 +4461,40 @@ button:focus-visible,
         overflow-x: auto;
         flex-wrap: nowrap;
         padding-bottom: 0.5rem;
+    }
+}
+
+/* Планшеты и «средние» ширины: вводный текст и герой не ломают вёрстку */
+@media (max-width: 1024px) {
+    .hero-text,
+    .hero-more {
+        font-size: clamp(18px, 1.2vw + 16px, 24px);
+    }
+
+    .logo {
+        font-size: clamp(18px, 1.5vw + 12px, 24px);
+        line-height: 1.25;
+    }
+
+    .lang-switch {
+        font-size: clamp(14px, 1.2vw + 12px, 24px);
+        line-height: 1.3;
+    }
+}
+
+/* Низкий экран в альбомной ориентации (телефон / маленький ноутбук) */
+@media (max-height: 520px) and (orientation: landscape) {
+    .page-home .hero {
+        gap: var(--space-24);
+    }
+
+    .hero {
+        min-height: 0;
+        padding-bottom: 48px;
+    }
+
+    .page-home .hero-first-screen {
+        min-height: min(240px, 48vh);
     }
 }
 
@@ -4386,12 +4549,19 @@ body {
     line-height: var(--type-body-line);
 }
 
-h1,
-.hero-title {
+h1:not(.hero-title) {
     font-size: var(--type-h1-size);
     line-height: var(--type-h1-line);
     font-weight: var(--type-h1-weight);
     letter-spacing: -0.02em;
+}
+
+/* Герой: крупный заголовок на всех ширинах (не «документный» h1 44px) */
+.hero-title {
+    font-size: clamp(2rem, 4.5vw + 1.25rem, 6rem);
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.06em;
 }
 
 h2,
@@ -4464,8 +4634,8 @@ p,
 .hero,
 .project-page,
 .footer-inner {
-    padding-left: var(--space-24);
-    padding-right: var(--space-24);
+    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
 }
 
 .hero,
@@ -4522,13 +4692,6 @@ p,
 .footer-links-row a:hover {
     color: var(--color-text);
     text-decoration: none;
-}
-
-@media (max-width: 768px) {
-    .nav-list {
-        background: var(--color-bg);
-        border-left: 1px solid var(--color-surface-border);
-    }
 }
 
 /* Dark hierarchy polish: calmer secondary text, stronger focal headings */
@@ -4622,8 +4785,8 @@ p,
     .main,
     .project-page,
     .footer-inner {
-        padding-left: var(--space-24);
-        padding-right: var(--space-24);
+        padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+        padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
     }
 
     .hero,
@@ -4642,9 +4805,9 @@ p,
     }
 
     .hero-title {
-        font-size: var(--type-h2-size);
-        line-height: var(--type-h2-line);
-        letter-spacing: -0.02em;
+        font-size: clamp(1.75rem, 3.5vw + 1rem, 3rem);
+        line-height: 1.12;
+        letter-spacing: -0.04em;
     }
 
     .projects-title-main,
@@ -4657,7 +4820,7 @@ p,
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .nav-list {
         background: var(--color-bg-elevated);
         border-left: 1px solid var(--color-surface-border);
@@ -4673,7 +4836,9 @@ p,
         backdrop-filter: blur(80px);
         -webkit-backdrop-filter: blur(80px);
     }
+}
 
+@media (max-width: 768px) {
     .preview-card,
     .preview-card-block,
     .project-card,
@@ -4706,9 +4871,9 @@ p,
 
 @media (max-width: 480px) {
     .hero-title {
-        font-size: var(--type-h3-size);
-        line-height: var(--type-h3-line);
-        letter-spacing: 0;
+        font-size: clamp(1.5rem, 7vw, 2.25rem);
+        line-height: 1.15;
+        letter-spacing: -0.03em;
     }
 
     .hero-text,
@@ -4731,7 +4896,10 @@ p,
 
 /* Figma parity: Header 300:104227 */
 .header .nav {
-    padding: var(--space-24);
+    padding-top: max(var(--space-24), env(safe-area-inset-top, 0px));
+    padding-bottom: var(--space-24);
+    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
     min-height: auto;
     align-items: center;
     flex-wrap: nowrap;
@@ -4761,7 +4929,8 @@ p,
     border-radius: 9999px;
     height: 46px;
     box-sizing: border-box;
-    width: 332px;
+    width: min(332px, calc(100vw - 320px));
+    max-width: 100%;
     /* tint + blur на ::before — стабильнее в Chrome, чем backdrop на самом flex-контейнере */
     background: transparent !important;
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -4839,13 +5008,16 @@ p,
     background: rgba(255, 255, 255, 0.06);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .header .nav {
-        padding: var(--space-24);
+        padding-top: max(var(--space-24), env(safe-area-inset-top, 0px));
+        padding-bottom: var(--space-24);
+        padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
+        padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
     }
 
     .header .nav-list[data-node-id="I300:104227;10:1530"] {
-        width: 280px;
+        width: min(280px, calc(100vw - 48px));
         border-radius: 0;
         background: transparent !important;
         border: 1px solid rgba(255, 255, 255, 0.16);
@@ -4865,21 +5037,26 @@ p,
     }
 }
 
-/* Figma parity: Image Preview 1:231 */
+/* Figma parity: Image Preview 1:231 — как референс: ~12px radius, обводка, тень */
 .hero__card .preview-card-block {
-    width: 369px;
-    height: 280px;
-    min-height: 280px;
+    width: 100%;
+    max-width: 369px;
+    aspect-ratio: 369 / 280;
+    height: auto;
+    min-height: 0;
     margin-bottom: 0;
-    border-radius: 10px;
-    border: 0;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.22);
     background: transparent;
-    box-shadow: 0 0 1.5px rgba(0, 0, 0, 0.55), 0 40px 50px rgba(0, 0, 0, 0.4);
+    box-shadow:
+        0 0 0 0.5px rgba(255, 255, 255, 0.06),
+        0 1px 2px rgba(0, 0, 0, 0.12),
+        0 28px 48px rgba(0, 0, 0, 0.28);
 }
 
 .hero__card .preview-card-block__overlay--base,
 .hero__card .preview-card-block__overlay--blur {
-    border-radius: 10px;
+    border-radius: 12px;
 }
 
 .hero__card .preview-card-block__overlay--base {
@@ -4895,25 +5072,16 @@ p,
 
 .hero__card .preview-card-block__titlebar {
     height: 38px;
-    padding: 0;
+    padding: 0 8px 0 10px;
 }
 
-.hero__card .preview-card-block__leading {
-    width: 81px;
+.hero__card .preview-card-block--mac-window .preview-card-block__titlebar {
+    border-radius: 12px 12px 0 0;
+}
+
+.hero__card .preview-card-block__titlebar-start {
     height: 100%;
-    flex: 0 0 81px;
-}
-
-.hero__card .preview-card-block__btn-close,
-.hero__card .preview-card-block__btn-resize {
-    height: 100%;
-}
-
-.hero__card .preview-card-block__btn-close img,
-.hero__card .preview-card-block__btn-resize img,
-.hero__card .preview-card-block__btn-close svg,
-.hero__card .preview-card-block__btn-resize svg {
-    margin-top: 14px;
+    gap: 0;
 }
 
 .hero__card .preview-card-block__title {
@@ -4921,40 +5089,107 @@ p,
     font-size: 13px;
     font-weight: 700;
     line-height: 16px;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.78);
 }
 
 .hero__card .preview-card-block__trailing {
     height: 100%;
     justify-content: flex-end;
-    padding-right: 12px;
+    padding-right: 0;
     gap: 0;
 }
 
 .hero__card .preview-card-block__cta {
-    border: 1px solid #f5f5f5;
+    border: 1px solid rgba(0, 0, 0, 0.32);
     border-radius: 6px;
     padding: 3px 7px;
     font-family: 'SF Pro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 13px;
     font-weight: 400;
     line-height: 16px;
-    color: rgba(0, 0, 0, 0.5);
-    background: transparent;
+    color: rgba(0, 0, 0, 0.62);
+    background: rgba(255, 255, 255, 0.35);
+    mix-blend-mode: normal;
 }
 
 .hero__card .preview-card-block__image {
     top: 38px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border-radius: 6px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0 0 12px 12px;
+    border: none;
     background: transparent;
 }
 
 .hero__card .preview-card-block__image img {
     max-width: none;
-    border-radius: 6px;
+    border-radius: 0 0 12px 12px;
     border: 0;
+}
+
+/* ---------- Респонсивы: все типичные экраны ---------- */
+
+html {
+    overflow-x: clip;
+}
+
+img,
+video,
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 1200px) {
+    .preview-grid {
+        justify-items: stretch;
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .page-header h1 {
+        font-size: clamp(1.5rem, 7vw, var(--text-89-756-title-font-size));
+    }
+
+    .section-projects-sub {
+        font-size: clamp(28px, 9vw, 48px);
+    }
+
+    .logo-section {
+        gap: var(--space-12);
+        margin-bottom: var(--space-32);
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: var(--space-8);
+    }
+
+    .timeline-item {
+        grid-template-columns: 1fr;
+        gap: var(--space-12);
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-24);
+    }
+}
+
+@media (max-width: 390px) {
+    .contact-item {
+        padding: 12px var(--space-16);
+        gap: var(--space-16);
+    }
+
+    .skip-link:focus {
+        left: max(16px, env(safe-area-inset-left, 0px));
+        top: max(16px, env(safe-area-inset-top, 0px));
+    }
 }
