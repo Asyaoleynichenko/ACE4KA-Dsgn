@@ -48,7 +48,18 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/agatha-modern-regular.woff') format('woff');
+  src: url('/fonts/agatha-modern-regular.woff2') format('woff2'),
+       url('/fonts/agatha-modern-regular.woff') format('woff');
+}
+
+/* То же начертание под именем из макетов / CDN (Agatha-Modern) */
+@font-face {
+  font-family: 'Agatha-Modern';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/agatha-modern-regular.woff2') format('woff2'),
+       url('/fonts/agatha-modern-regular.woff') format('woff');
 }
 
 /* Figma 16-207 — Ice Kingdom (Frozen) Cyrillic Bold («In progres», 14px, black) */
