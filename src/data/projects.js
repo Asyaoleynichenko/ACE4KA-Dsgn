@@ -8,7 +8,7 @@
  * Monetization Mail (300:107857), INKZ (300:107466), RackTables (376:587).
  */
 export const FIGMA_PROJECT_PAGES_FRAME_URL =
-  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%83?node-id=89-156&m=dev';
+  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=89-156&m=dev';
 
 /**
  * Порядок кейсов на сайте = порядок макетов в Figma (узлы 300-104226 … 376-587).
