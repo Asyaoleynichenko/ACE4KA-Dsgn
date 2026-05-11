@@ -82,7 +82,7 @@ const aboutFooterLinks = [
 export default function AboutPage() {
   return (
     <div className="about-page" data-node-id="140:12528" data-name="Background">
-      <header className="about-page__intro">
+      <header className="about-page__intro snap-screen">
         <h1 className="about-page__name">Ася Олейниченко</h1>
         <div className="about-page__lead">
           <p>
@@ -96,7 +96,7 @@ export default function AboutPage() {
         </div>
       </header>
 
-      <div className="about-page__grid" id="experience">
+      <div className="about-page__grid snap-screen" id="experience">
         <section className="about-page__panel about-page__panel--experience" aria-labelledby="about-exp-heading">
           <h2 className="about-page__panel-title" id="about-exp-heading">
             Опыт работы
@@ -127,7 +127,7 @@ export default function AboutPage() {
         </section>
       </div>
 
-      <section className="about-page__section" id="education" aria-labelledby="about-edu-heading">
+      <section className="about-page__section snap-screen" id="education" aria-labelledby="about-edu-heading">
         <h2 className="about-page__section-title" id="about-edu-heading">
           Образование
         </h2>
@@ -144,7 +144,7 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="about-page__section about-page__section--compact" id="team" aria-labelledby="about-team-heading">
+      <section className="about-page__section about-page__section--compact snap-screen" id="team" aria-labelledby="about-team-heading">
         <h2 className="about-page__section-title" id="about-team-heading">
           Команда
         </h2>
@@ -155,7 +155,7 @@ export default function AboutPage() {
       </section>
 
       <section
-        className="about-page__section about-page__section--compact"
+        className="about-page__section about-page__section--compact snap-screen"
         id="habitat"
         aria-labelledby="about-habitat-heading"
       >
@@ -168,7 +168,7 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className="about-page__section about-page__section--compact" id="memes" aria-labelledby="about-memes-heading">
+      <section className="about-page__section about-page__section--compact snap-screen" id="memes" aria-labelledby="about-memes-heading">
         <h2 className="about-page__section-title" id="about-memes-heading">
           Любимые мемы воображаемых людей
         </h2>
@@ -178,7 +178,7 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <footer className="about-page__strip" data-node-id="about-strip">
+      <footer className="about-page__strip snap-screen" data-node-id="about-strip">
         <div className="about-page__strip-row">
           <div className="about-page__status">
             <span className="about-page__status-dot" aria-hidden="true" />

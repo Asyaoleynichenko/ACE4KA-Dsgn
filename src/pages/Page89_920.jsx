@@ -1,6 +1,6 @@
 export default function Page89_920() {
   return (
-    <div className="page-89-920__wrap layout-89-920" data-node-id="89-920">
+    <div className="page-89-920__wrap layout-89-920 snap-screen" data-node-id="89-920">
       <header className="page-header">
         <h1>Страница 89-920</h1>
         <p>Контент по макету Figma 89-920.</p>

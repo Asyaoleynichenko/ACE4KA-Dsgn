@@ -13,9 +13,9 @@ const footerLinks = [
   { nodeId: '16-209', href: '/contact', label: 'Контакты' },
 ];
 
-export default function Footer() {
+export default function Footer({ snapScreen = false }) {
   return (
-    <footer className="footer" data-node-id="16-170">
+    <footer className={snapScreen ? 'footer snap-screen' : 'footer'} data-node-id="16-170">
       <div className="footer-inner" data-node-id="16-172">
         <div className="footer-top" data-node-id="16-173">
           <div className="footer-top__row">

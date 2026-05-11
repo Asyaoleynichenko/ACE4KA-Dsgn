@@ -1,6 +1,6 @@
 export default function EducationPage() {
   return (
-    <div className="page-89-788__wrap layout-89-788" data-node-id="89-788">
+    <div className="page-89-788__wrap layout-89-788 snap-screen" data-node-id="89-788">
       <header className="page-header">
         <h1>Образование</h1>
         <p>Учёба и профессиональное развитие.</p>

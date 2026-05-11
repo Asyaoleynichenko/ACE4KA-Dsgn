@@ -1,6 +1,6 @@
 export default function ResumePage() {
   return (
-    <div className="page-89-766__wrap layout-89-766" data-node-id="89-766">
+    <div className="page-89-766__wrap layout-89-766 snap-screen" data-node-id="89-766">
       <header className="page-header">
         <h1>Резюме</h1>
         <p>Опыт работы и ключевые компетенции.</p>

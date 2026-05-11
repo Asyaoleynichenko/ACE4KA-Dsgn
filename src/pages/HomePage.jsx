@@ -48,7 +48,7 @@ export default function HomePage() {
     <div className="home-page home-page--chrome" data-node-id="89:347" data-name="Главная">
       <Header mode="in-hero" />
       <div className="home-page__scroll">
-        <section className="hero" data-node-id="1-202" data-figma-node="1-202">
+        <section className="hero snap-screen" data-node-id="1-202" data-figma-node="1-202">
         <div className="hero-first-screen" data-node-id="70:343" data-name="First screen">
           <div className="hero__top">
             <div className="hero-vector" aria-hidden="true" data-node-id="1:203">
@@ -151,7 +151,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section-projects" data-node-id="1:285" data-figma-node="1-285">
+      <section className="section section-projects snap-screen" data-node-id="1:285" data-figma-node="1-285">
         <div className="logo-section" data-node-id="1:286">
           <h2 className="projects-title-main" data-node-id="1:289">Проекты</h2>
           <FilterPills />

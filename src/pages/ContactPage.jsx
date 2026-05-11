@@ -1,6 +1,6 @@
 export default function ContactPage() {
   return (
-    <div className="page-contact__wrap" data-node-id="89-756">
+    <div className="page-contact__wrap snap-screen" data-node-id="89-756">
       <header className="page-header">
         <h1>Контакты</h1>
         <p>
