@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 
 export const NAV_ITEMS = [
   { to: '/', label: 'Главная' },
@@ -27,15 +28,16 @@ export function Navigation({ menuOpen, onItemClick }) {
     >
       {NAV_ITEMS.map(({ to, label }) => {
         const active = itemIsActive(pathname, to);
+        const NavItem = to === '/projects' ? SeamlessProjectsLink : Link;
         return (
           <li key={to}>
-            <Link
+            <NavItem
               to={to}
               className={`nav-link${active ? ' active' : ''}`}
               onClick={onItemClick}
             >
               <span className="blend-text">{label}</span>
-            </Link>
+            </NavItem>
           </li>
         );
       })}

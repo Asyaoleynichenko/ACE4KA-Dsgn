@@ -1,7 +1,11 @@
 import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import { projects } from '../data/projects';
 import { publicUrl } from '../utils/publicUrl.js';
+import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
+import { useScrollSpy } from '../hooks/useScrollSpy.js';
+import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
 function HorizontalMvpGallery({ slides }) {
@@ -265,11 +269,15 @@ export default function ProjectDetailPage() {
   const { slug } = useParams();
   const project = projects.find((p) => p.slug === slug);
 
+  const spySections = project?.layout === 'case-study' ? buildCaseStudySpySections(project) : [];
+  const spySectionIds = spySections.map((s) => s.id);
+  const activeSpyId = useScrollSpy(spySectionIds);
+
   if (!project) {
     return (
       <div className="project-page-wrap">
         <p>Проект не найден.</p>
-        <Link to="/projects">К проектам</Link>
+        <SeamlessProjectsLink to="/projects">К проектам</SeamlessProjectsLink>
       </div>
     );
   }
@@ -306,7 +314,8 @@ export default function ProjectDetailPage() {
         data-figma-url={project.figmaUrl}
       >
         <div className="container container--case-study">
-          <section className="hero">
+          <ProjectCaseStudySpyNav sections={spySections} activeId={activeSpyId} />
+          <section className="hero" id={`case-${project.slug}-hero`}>
             {heroImages.length ? (
               <div className="hero__media" aria-label={project.title}>
                 {heroImages.map((src, index) => (
@@ -323,7 +332,7 @@ export default function ProjectDetailPage() {
             )}
           </section>
 
-          <section className="project-intro">
+          <section className="project-intro" id={`case-${project.slug}-intro`}>
             <div className="title">
               <h1>{project.title}</h1>
               {(project.intro?.length ? project.intro : [project.lead]).map((para, idx) => (
@@ -350,7 +359,7 @@ export default function ProjectDetailPage() {
             </div>
           </section>
 
-          <section className={topCardsClassName}>
+          <section className={topCardsClassName} id={`case-${project.slug}-overview`}>
             {topCards.map((item) => (
               <div key={item.title} className="card">
                 <h3>{item.title}</h3>
@@ -360,7 +369,7 @@ export default function ProjectDetailPage() {
           </section>
 
           {project.showNarrative && (project.context || project.problem) ? (
-            <section className="case-study-narrative">
+            <section className="case-study-narrative" id={`case-${project.slug}-narrative`}>
               {project.context ? <p className="case-study-narrative__p">{project.context}</p> : null}
               {project.problem ? <p className="case-study-narrative__p">{project.problem}</p> : null}
             </section>
@@ -372,6 +381,7 @@ export default function ProjectDetailPage() {
             return (
             <Fragment key={i}>
               <section
+                id={`case-${project.slug}-body-${i}`}
                 className={`section${section.mediaOnly ? ' section--media-only' : ''}${isTitleInfoSection ? ' section--title-info' : ''}${isDualOutcomes ? ' section--dual-outcomes' : ''}${section.mvpSlides?.length ? ' section--mvp-horizontal' : ''}`}
               >
                 {isDualOutcomes ? (
@@ -556,7 +566,7 @@ export default function ProjectDetailPage() {
                 )}
               </section>
               {i === 0 && (caseImages.before || caseImages.after) && (
-                <section className="images">
+                <section className="images" id={`case-${project.slug}-compare`}>
                   {caseImages.before && <img src={publicUrl(caseImages.before)} alt="До" />}
                   {caseImages.after && <img src={publicUrl(caseImages.after)} alt="После" />}
                 </section>
@@ -572,10 +582,10 @@ export default function ProjectDetailPage() {
   return (
     <div className={`project-page-wrap project-page-wrap--layout-89${!hasHero ? ' project-page-wrap--no-hero' : ''}`}>
       <div className="project-back-wrap">
-        <Link to="/projects" className="back-link">
+        <SeamlessProjectsLink to="/projects" className="back-link">
           <span className="back-link__icon" aria-hidden="true">←</span>
           К проектам
-        </Link>
+        </SeamlessProjectsLink>
       </div>
       {hasHero && (
         <div className="project-hero">

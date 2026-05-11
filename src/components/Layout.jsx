@@ -1,8 +1,9 @@
 import { useLayoutEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import ParallaxBackdrop from './ParallaxBackdrop';
+import PageTransition from './PageTransition';
 
 export default function Layout() {
   const { pathname } = useLocation();
@@ -50,7 +51,7 @@ export default function Layout() {
       <div className={`page page-home ${pageSnapClass}`.trim()}>
         <ParallaxBackdrop />
         <main className={`${mainClass} page-home__main`}>
-          <Outlet />
+          <PageTransition />
         </main>
         <Footer snapScreen={snapScreens} />
       </div>
@@ -62,7 +63,7 @@ export default function Layout() {
       <ParallaxBackdrop />
       <Header />
       <main className={mainClass}>
-        <Outlet />
+        <PageTransition />
       </main>
       {!isAbout && <Footer snapScreen={snapScreens} />}
     </div>

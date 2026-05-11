@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 
 /* Figma 16:185–16:209 — 9 footer link nodes */
 const footerLinks = [
@@ -27,6 +28,18 @@ export default function Footer({ snapScreen = false }) {
                 const isInternal = href.startsWith('/');
                 const isExternal = href.startsWith('http');
                 if (isInternal) {
+                  if (href === '/projects') {
+                    return (
+                      <SeamlessProjectsLink
+                        key={nodeId}
+                        to={href}
+                        className="footer-link"
+                        data-node-id={nodeId}
+                      >
+                        {label}
+                      </SeamlessProjectsLink>
+                    );
+                  }
                   return (
                     <Link
                       key={nodeId}

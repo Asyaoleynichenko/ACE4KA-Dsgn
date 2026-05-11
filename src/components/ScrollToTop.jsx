@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => {
+  /** До отрисовки новой страницы — без «вспышки» старого скролла */
+  useLayoutEffect(() => {
     window.scrollTo(0, 0);
     document.getElementById('root')?.scrollTo(0, 0);
   }, [pathname]);

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import PreviewCardBlock from '../components/PreviewCardBlock';
 import ProjectCard from '../components/ProjectCard';
 import FilterPills from '../components/FilterPills';
@@ -62,8 +63,10 @@ export default function HomePage() {
           </div>
           <nav className="section-nav section-nav--home section-nav--overlay" aria-label="Разделы">
             <div className="header-items header-items--figma">
-              {headerItemsFolder.map(({ nodeId, label, iconKey, to, placement }) => (
-                <Link
+              {headerItemsFolder.map(({ nodeId, label, iconKey, to, placement }) => {
+                const FolderLink = to === '/projects' ? SeamlessProjectsLink : Link;
+                return (
+                <FolderLink
                   key={nodeId}
                   to={to}
                   className="header-item header-item--folder"
@@ -74,8 +77,9 @@ export default function HomePage() {
                     <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} />
                   </div>
                   <span className="header-item__label">{label}</span>
-                </Link>
-              ))}
+                </FolderLink>
+              );
+              })}
               {headerItemsWell.map(({ nodeId, label, iconKey, to, placement }) => (
                 <Link
                   key={nodeId}
@@ -170,7 +174,7 @@ export default function HomePage() {
           ))}
         </div>
         <div className="show-all-wrap" data-node-id="1:397" data-figma-node="1-397">
-          <Link to="/projects" className="btn-show-all">Все проекты</Link>
+          <SeamlessProjectsLink to="/projects" className="btn-show-all">Все проекты</SeamlessProjectsLink>
         </div>
         </section>
       </div>

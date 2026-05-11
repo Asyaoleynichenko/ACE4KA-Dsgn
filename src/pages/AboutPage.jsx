@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 
 const skills = [
   'UX/UI',
@@ -190,6 +191,10 @@ export default function AboutPage() {
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="about-page__strip-link">
                   {label}
                 </a>
+              ) : href === '/projects' ? (
+                <SeamlessProjectsLink key={label} to={href} className="about-page__strip-link">
+                  {label}
+                </SeamlessProjectsLink>
               ) : (
                 <Link key={label} to={href} className="about-page__strip-link">
                   {label}

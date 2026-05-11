@@ -46,6 +46,11 @@ html.snap-pages #root.snap-pages-root {
     min-height: 100dvh;
 }
 
+/* Футер: только высота контента — полноэкранный min-height snap-screen давал пустоту под текстом */
+.footer.snap-screen {
+    min-height: auto;
+}
+
 /* Главная: hero сбрасывал min-height — для snap возвращаем высоту экрана */
 .page-home .hero.snap-screen {
     min-height: 100vh;
@@ -63,6 +68,44 @@ html.snap-pages #root.snap-pages-root {
 /* Липкая шапка: якорь не прячется под Header */
 .page:not(.page-home).page--snap .snap-screen {
     scroll-margin-top: max(108px, calc(env(safe-area-inset-top, 0px) + 80px));
+}
+
+/* Переход между страницами — только контент main (шапка/фон без рывков) */
+@keyframes page-transition-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-transition {
+    animation: page-transition-in var(--page-transition-duration) var(--ease-page) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-transition {
+        animation: none;
+    }
+}
+
+/* View Transitions API — смена кадра при переходе на /projects (SeamlessProjectsLink) */
+@supports (view-transition-name: none) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation-duration: 0.38s;
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation-duration: 0.001ms !important;
+    }
 }
 
 /* Scrollbar — цвет ползунка #F0A */
@@ -208,6 +251,26 @@ button:focus-visible,
     mix-blend-mode: var(--mix-blend-exclusion, exclusion);
     flex-shrink: 0;
     text-decoration: none;
+    transition: opacity var(--transition-base);
+}
+
+.logo:hover {
+    opacity: 0.88;
+}
+
+.logo:active {
+    opacity: 0.78;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo {
+        transition: none;
+    }
+
+    .logo:hover,
+    .logo:active {
+        opacity: 1;
+    }
 }
 
 .logo .blend-text,
@@ -1381,7 +1444,7 @@ button:focus-visible,
     -webkit-backdrop-filter: blur(27.5px) saturate(1.2);
 }
 
-/* Figma 1:290 — табы: общая высота 36px, pill; варианты — модификаторы */
+/* Figma 1:290 — табы: общая высота 36px, одна типографика и обводка внутри стеклянной группы */
 .filter-pill {
     font-size: 14px;
     font-weight: 400;
@@ -1395,137 +1458,24 @@ button:focus-visible,
     justify-content: center;
     border-radius: var(--radius-full);
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     text-transform: uppercase;
     text-decoration: none;
     box-sizing: border-box;
-    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, filter 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
-/* Figma Variant14 — UX/UI (gel button) */
-.filter-pill.filter-pill--uxui {
-    position: relative;
-    min-width: 117px;
-    padding: var(--space-8) var(--space-20);
-    border: 0.893px solid #0965e3;
-    border-radius: var(--radius-xl);
-    background: url('/images/figma-1-285/1b21070caee8db926d63650b57656b65ba0ba3c7.svg') center / cover no-repeat;
+.filter-pill:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.38);
     color: var(--color-text-primary);
-    font-size: 14.282px;
-    line-height: 1;
-    font-weight: 400;
-    letter-spacing: 0;
-    text-transform: none;
-    text-shadow: 0 0.595px 0.893px #2663b6;
-    opacity: 0.92;
 }
 
-.filter-pill.filter-pill--uxui:hover {
-    filter: brightness(1.06);
-    border-color: #0a72ff;
-}
-
-/* Figma Graphiks — «Графика» */
-.filter-pill.filter-pill--grafika {
-    border: none;
-    background: transparent;
-    color: #d4ff00;
-    font-style: italic;
-    font-weight: 900;
-    font-size: 14px;
-    line-height: normal;
-    letter-spacing: 1px;
-    text-transform: none;
-}
-
-.filter-pill.filter-pill--grafika:hover {
-    color: #e5ff4d;
-    background: rgba(212, 255, 0, 0.06);
-}
-
-/* Figma research — «Исследования» */
-.filter-pill.filter-pill--research {
-    border: none;
-    border-radius: var(--radius-full);
-    background-color: #0d0d0d;
-    background-image: url('/images/figma-1-285/a57f2ea88d76c6565a1d93e776ba3ddd05937ae6.png'),
-        url('/images/figma-1-285/a084ce0a25feba75d097bbb9748bc00927146c5c.png'),
-        url('/images/figma-1-285/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png');
-    background-size: cover, cover, cover;
-    background-position: center, center bottom, center;
-    background-repeat: no-repeat;
-    color: #00ddff;
-    font-size: 20px;
-    line-height: normal;
-    font-weight: 400;
-    letter-spacing: 0.2px;
-    box-shadow: inset 0 0 3.6px #000000;
-}
-
-.filter-pill.filter-pill--research:hover {
-    filter: brightness(1.08);
-}
-
-/* Figma Variant13 (border) — In progress */
-.filter-pill.filter-pill--inprogress {
-    border: 1px solid #383838;
-    border-radius: var(--radius-full);
-    background: transparent;
-    color: var(--color-text-primary);
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
-    text-transform: none;
-}
-
-.filter-pill.filter-pill--inprogress:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: #4a4a4a;
-}
-
-/* Figma Variant13 (inner) — Things */
-.filter-pill.filter-pill--things {
-    border: none;
-    border-radius: var(--radius-full);
-    background: radial-gradient(ellipse 120% 100% at 50% 0%, #2e2e2e 0%, #1a1a1a 32%, #0d0d0d 66%, #000000 100%);
-    color: var(--color-text-primary);
-    font-size: 18px;
-    font-weight: 300;
-    line-height: normal;
-    letter-spacing: 1.08px;
-    text-transform: none;
-    box-shadow: inset -2px 2px 4.1px rgba(255, 255, 255, 0.74);
-}
-
-.filter-pill.filter-pill--things:hover {
-    filter: brightness(1.05);
-}
-
-/* Figma all — «Всё» */
-.filter-pill.filter-pill--all {
-    border: 4px solid var(--color-text-primary);
-    border-radius: var(--radius-full);
-    background: #ff85f7;
-    color: var(--color-text-primary);
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15),
-        inset 0 12px 24px rgba(255, 255, 255, 0.12);
-}
-
-.filter-pill.filter-pill--all:hover {
-    filter: brightness(1.05);
-    border-color: var(--color-text-primary);
-}
-
-/* Класс активного таба (если будет состояние выбора) */
-.filter-pill--active {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
+.filter-pill.filter-pill--active {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.48);
     font-weight: 500;
+    color: var(--color-text-primary);
 }
 
 /* Project Card — Figma 1:298: ячейка сетки; раскладку колонки задаёт только .preview-card__link */
@@ -1977,6 +1927,124 @@ button:focus-visible,
     gap: var(--space-72);
     box-sizing: border-box;
     overflow-x: visible;
+}
+
+/* Spy-scroll по кейсу: якоря + оглавление */
+.project-case-study-mail section[id^='case-'] {
+    scroll-margin-top: max(116px, calc(env(safe-area-inset-top, 0px) + 92px));
+}
+
+.project-spy {
+    position: fixed;
+    right: max(12px, env(safe-area-inset-right));
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 55;
+    max-width: min(200px, 30vw);
+    pointer-events: auto;
+}
+
+.project-spy__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    border-radius: var(--radius-lg);
+    background: rgba(11, 11, 12, 0.78);
+    border: 1px solid var(--color-surface-border);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    box-shadow: var(--shadow-nav-drawer);
+}
+
+.project-spy__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: 6px 4px;
+    border-radius: var(--radius-xs);
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.project-spy__dot {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-text-extra-muted);
+    transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.project-spy__label {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.25;
+}
+
+.project-spy__link--active {
+    color: var(--color-text-primary);
+}
+
+.project-spy__link--active .project-spy__dot {
+    background: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(245, 245, 245, 0.15);
+    transform: scale(1.15);
+}
+
+.project-spy__link:hover {
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+@media (max-width: 960px) {
+    .project-spy {
+        top: auto;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        max-width: calc(100vw - 24px);
+    }
+
+    .project-spy__list {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        max-width: 100%;
+        gap: var(--space-4);
+        padding: var(--space-8) var(--space-12);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .project-spy__item {
+        flex-shrink: 0;
+        max-width: 132px;
+    }
+
+    .project-spy__link {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        max-width: 132px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-spy__link,
+    .project-spy__dot {
+        transition: none;
+    }
 }
 .project-case-study-mail .hero {
     margin: 0;
@@ -4386,11 +4454,13 @@ button:focus-visible,
     text-transform: uppercase;
     color: var(--color-text-primary);
     text-decoration: none;
+    transition: opacity var(--transition-base), color var(--transition-base), text-decoration-color var(--transition-base);
 }
 
 .footer-link:hover,
 .footer-links-row a:hover {
     text-decoration: underline;
+    opacity: 0.92;
 }
 
 /* Figma 16:183 — Note: 24px, -1px tracking, 1.2 line-height, max 661px; "расскажите мне об этом" underlined */
@@ -4855,7 +4925,6 @@ p,
 }
 
 .project-tools-pill,
-.filter-pill,
 .btn-show-all,
 .preview-card-block__cta {
     background: var(--color-surface);
@@ -4864,7 +4933,6 @@ p,
 }
 
 .project-tools-pill:hover,
-.filter-pill:hover,
 .btn-show-all:hover,
 .preview-card-block__cta:hover {
     background: var(--color-surface-light);
