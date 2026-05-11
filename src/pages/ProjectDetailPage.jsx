@@ -9,6 +9,7 @@ import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
 import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
 import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
+import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
 import ScrollScrubRow from '../components/ScrollScrubRow.jsx';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
@@ -374,23 +375,13 @@ export default function ProjectDetailPage() {
 
           <section className="cards-section" id={`case-${project.slug}-overview`}>
             <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
-              {topCards.map((item) => {
+              {topCards.map((item, cardIdx) => {
                 const iconSrc = caseStudyStripIconSrc(item.title);
                 return (
                   <div key={item.title} className="card">
                     <h3>{item.title}</h3>
                     <p>{item.value}</p>
-                    {iconSrc ? (
-                      <img
-                        className="card__corner-icon"
-                        src={iconSrc}
-                        alt=""
-                        aria-hidden="true"
-                        width={56}
-                        height={56}
-                        decoding="async"
-                      />
-                    ) : null}
+                    {iconSrc ? <CaseStudyCardCornerIcon src={iconSrc} staggerIndex={cardIdx} /> : null}
                   </div>
                 );
               })}
@@ -587,23 +578,13 @@ export default function ProjectDetailPage() {
                     ].filter((item) => item.value);
                     return (
                       <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
-                        {sectionCards.map((item) => {
+                        {sectionCards.map((item, cardIdx) => {
                           const iconSrc = caseStudyStripIconSrc(item.title);
                           return (
                             <div key={item.title} className="card">
                               <h3>{item.title}</h3>
                               <p>{item.value}</p>
-                              {iconSrc ? (
-                                <img
-                                  className="card__corner-icon"
-                                  src={iconSrc}
-                                  alt=""
-                                  aria-hidden="true"
-                                  width={56}
-                                  height={56}
-                                  decoding="async"
-                                />
-                              ) : null}
+                              {iconSrc ? <CaseStudyCardCornerIcon src={iconSrc} staggerIndex={cardIdx} /> : null}
                             </div>
                           );
                         })}

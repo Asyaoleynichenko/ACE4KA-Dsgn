@@ -1,37 +1,61 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { createPortal } from 'react-dom';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 
 const COLLAPSED_STORAGE = 'ace4ka:caseSpyNavCollapsed';
 
-const spring = { type: 'spring', stiffness: 400, damping: 32, mass: 0.85 };
-
-function dashWidth(level, isActive) {
+function dashWidthPx(level, isActive) {
   const l1 = (level ?? 2) <= 1;
-  if (isActive) return l1 ? 40 : 26;
-  return l1 ? 15 : 8;
+  if (isActive) return l1 ? 44 : 28;
+  return l1 ? 18 : 10;
 }
 
 function navigableRows(sections) {
   return sections.filter((s) => s.id);
 }
 
-/** Оглавление кейса: стеклянная панель + сворачивание в колонку «тире». */
+/** Оглавление кейса: fixed справа по центру вьюпорта (портал в body из-за transform у .page-transition). */
 export default function ProjectCaseStudySpyNav({ sections, activeId }) {
   const { t } = useI18n();
-  const reduceMotion = useReducedMotion();
-  const tx = reduceMotion ? { duration: 0.16 } : spring;
+  const reduceMotion = useReducedMotion() === true;
 
-  /** Портал в body: иначе position:fixed цепляется к .page-transition с transform и пропадает с края экрана */
   const [mounted, setMounted] = useState(false);
+  const [canHoverOpen, setCanHoverOpen] = useState(false);
+  const leaveTimerRef = useRef(null);
+  const hoverSuppressRef = useRef(false);
+
   useEffect(() => {
     setMounted(true);
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const syncHover = () => setCanHoverOpen(mq.matches);
+    syncHover();
+    mq.addEventListener('change', syncHover);
+    return () => mq.removeEventListener('change', syncHover);
   }, []);
 
+  const clearLeaveTimer = () => {
+    if (leaveTimerRef.current != null) {
+      window.clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+  };
+
+  const scheduleCollapse = () => {
+    clearLeaveTimer();
+    leaveTimerRef.current = window.setTimeout(() => {
+      leaveTimerRef.current = null;
+      setCollapsed(true);
+    }, 220);
+  };
+
+  useEffect(() => () => clearLeaveTimer(), []);
+
   const [collapsed, setCollapsed] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.sessionStorage.getItem(COLLAPSED_STORAGE) === '1';
+    if (typeof window === 'undefined') return true;
+    const stored = window.sessionStorage.getItem(COLLAPSED_STORAGE);
+    if (stored === null || stored === '') return true;
+    return stored === '1';
   });
 
   useEffect(() => {
@@ -54,52 +78,104 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
     el.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
   };
 
-  if (!sections?.length) return null;
-  if (!mounted || typeof document === 'undefined') return null;
+  const spring = reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 460, damping: 30, mass: 0.32 };
+  const panelTransition = reduceMotion
+    ? { duration: 0 }
+    : { type: 'spring', stiffness: 380, damping: 32, mass: 0.4 };
 
-  const rail = (
+  const dashStagger = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: reduceMotion ? 0 : 0.028,
+        delayChildren: reduceMotion ? 0 : 0.04,
+      },
+    },
+  };
+
+  const dashRow = {
+    hidden: reduceMotion ? {} : { opacity: 0, x: 10 },
+    show: reduceMotion ? {} : { opacity: 1, x: 0, transition: spring },
+  };
+
+  if (!sections?.length) return null;
+
+  const openFromHover = () => {
+    clearLeaveTimer();
+    if (!canHoverOpen || hoverSuppressRef.current) return;
+    setCollapsed(false);
+  };
+
+  const handleNavMouseLeave = () => {
+    hoverSuppressRef.current = false;
+    if (!canHoverOpen) return;
+    scheduleCollapse();
+  };
+
+  const handleNavFocusCapture = () => {
+    clearLeaveTimer();
+    setCollapsed(false);
+  };
+
+  const handleNavBlurCapture = (e) => {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    if (canHoverOpen) scheduleCollapse();
+    else setCollapsed(true);
+  };
+
+  const handleCollapseClick = () => {
+    hoverSuppressRef.current = true;
+    setCollapsed(true);
+  };
+
+  const nav = (
     <nav
-      className="pointer-events-auto fixed top-1/2 z-[120] hidden min-[768px]:block -translate-y-1/2"
-      style={{ right: 'max(12px, env(safe-area-inset-right, 0px))' }}
+      className={`case-study-rail case-study-rail--fixed${collapsed ? ' case-study-rail--collapsed' : ''}${canHoverOpen ? ' case-study-rail--hover-expand' : ''}`}
       aria-label={t('projectDetail.spyNavAria')}
+      aria-expanded={canHoverOpen ? !collapsed : undefined}
+      onMouseEnter={openFromHover}
+      onMouseLeave={handleNavMouseLeave}
+      onFocusCapture={handleNavFocusCapture}
+      onBlurCapture={handleNavBlurCapture}
     >
       <AnimatePresence mode="wait" initial={false}>
         {!collapsed ? (
           <motion.div
-            key="spy-expanded"
-            initial={{ opacity: 0, x: 20, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, x: 14, filter: 'blur(4px)' }}
-            transition={tx}
-            className="relative max-w-[min(268px,calc(42vw-20px))] rounded-[1.35rem] border border-white/12 bg-black/40 px-4 py-5 pr-11 font-sans shadow-[0_16px_48px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
+            key="rail-expanded"
+            className="case-study-rail__panel"
+            initial={reduceMotion ? false : { opacity: 0, x: 18, scale: 0.985 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={reduceMotion ? undefined : { opacity: 0, x: 12, scale: 0.985 }}
+            transition={panelTransition}
+            whileHover={reduceMotion || canHoverOpen ? undefined : { y: -2 }}
           >
-            <button
+            <motion.button
               type="button"
-              className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white"
+              className="case-study-rail__icon-btn case-study-rail__icon-btn--collapse"
               aria-expanded="true"
               aria-label={t('projectDetail.spyNavCollapse')}
-              onClick={() => setCollapsed(true)}
+              onClick={handleCollapseClick}
+              whileTap={reduceMotion ? undefined : { scale: 0.9 }}
+              transition={spring}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
                 <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </button>
-
-            <ol className="m-0 list-none space-y-3 p-0" id="case-spy-outline">
+            </motion.button>
+            <ol className="case-study-rail__list">
               {sections.map((entry, index) => {
                 if (entry.chapterTitle) {
                   return (
-                    <li key={`spy-ch-${index}`} className="border-b border-white/10 pb-2.5">
-                      <div className="flex items-start gap-2.5">
-                        <span
-                          className="mt-[0.38em] inline-block h-0.5 w-4 shrink-0 rounded-full bg-white/50"
-                          aria-hidden
-                        />
-                        <span className="text-[10px] font-semibold uppercase leading-snug tracking-[0.09em] text-white/95">
-                          {entry.chapterTitle}
-                        </span>
-                      </div>
-                    </li>
+                    <motion.li
+                      key={`spy-ch-${index}`}
+                      className="case-study-rail__chapter"
+                      initial={reduceMotion ? false : { opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.02 }}
+                    >
+                      <span className="case-study-rail__chapter-dash" aria-hidden />
+                      <span className="case-study-rail__chapter-text">{entry.chapterTitle}</span>
+                    </motion.li>
                   );
                 }
 
@@ -111,135 +187,140 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
 
                 if (!hasChapter) {
                   return (
-                    <li key={id}>
-                      <a
+                    <motion.li
+                      key={id}
+                      initial={reduceMotion ? false : { opacity: 0, x: 8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.018 }}
+                    >
+                      <motion.a
                         href={`#${id}`}
-                        className="group flex items-start gap-2.5 rounded-lg py-1 outline-none ring-offset-2 ring-offset-transparent focus-visible:ring-2 focus-visible:ring-white/40"
+                        className={`case-study-rail__link case-study-rail__link--flat${isActive ? ' is-active' : ''}`}
                         aria-current={isActive ? 'location' : undefined}
                         title={titleAttr}
                         onClick={(e) => {
                           e.preventDefault();
                           scrollToId(id);
                         }}
+                        whileHover={reduceMotion ? undefined : { x: -3 }}
+                        whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+                        transition={spring}
                       >
                         <motion.span
-                          className="mt-[0.42em] inline-block h-0.5 shrink-0 rounded-full"
-                          layout={false}
-                          initial={false}
-                          animate={{
-                            width: dashWidth(lv, isActive),
-                            backgroundColor: isActive ? '#ffffff' : 'rgba(255,255,255,0.32)',
-                            opacity: isActive ? 1 : 0.6,
-                          }}
-                          transition={tx}
+                          className="case-study-rail__dash"
+                          style={{ width: `${dashWidthPx(lv, isActive)}px`, transformOrigin: 'right center' }}
+                          layout={!reduceMotion}
+                          transition={{ layout: spring }}
                           aria-hidden
+                          whileHover={reduceMotion ? undefined : { scaleX: 1.1 }}
                         />
-                        <span
-                          className={`min-w-0 text-[11px] uppercase leading-snug tracking-[0.12em] ${
-                            isActive ? 'font-semibold text-white' : 'font-medium text-white/45'
-                          }`}
-                        >
-                          {label}
-                        </span>
-                      </a>
-                    </li>
+                        <span className="case-study-rail__link-text">{label}</span>
+                      </motion.a>
+                    </motion.li>
                   );
                 }
 
                 return (
-                  <li key={id} className="pl-2">
-                    <a
+                  <motion.li
+                    key={id}
+                    initial={reduceMotion ? false : { opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.018 }}
+                  >
+                    <motion.a
                       href={`#${id}`}
-                      className="flex flex-col gap-0.5 rounded-lg py-1 pl-2 outline-none ring-offset-2 ring-offset-transparent transition-colors focus-visible:ring-2 focus-visible:ring-white/40"
+                      className={`case-study-rail__link case-study-rail__link--stack${isActive ? ' is-active' : ''}`}
                       aria-current={isActive ? 'location' : undefined}
                       title={titleAttr}
                       onClick={(e) => {
                         e.preventDefault();
                         scrollToId(id);
                       }}
+                      whileHover={reduceMotion ? undefined : { x: -2 }}
+                      whileTap={reduceMotion ? undefined : { scale: 0.995 }}
+                      transition={spring}
                     >
-                      <span
-                        className={`text-[11px] uppercase tracking-[0.12em] ${
-                          isActive ? 'font-bold text-white' : 'font-semibold text-white/42'
-                        }`}
-                      >
-                        {keyword ?? label}
-                      </span>
-                      {isRich ? (
-                        <span
-                          className={`text-[10px] font-medium normal-case leading-snug tracking-[0.03em] ${
-                            isActive ? 'text-white/88' : 'text-white/36'
-                          }`}
-                        >
-                          {caption}
-                        </span>
-                      ) : null}
-                    </a>
-                  </li>
+                      <span className="case-study-rail__kw">{keyword ?? label}</span>
+                      {isRich ? <span className="case-study-rail__cap">{caption}</span> : null}
+                    </motion.a>
+                  </motion.li>
                 );
               })}
             </ol>
           </motion.div>
         ) : (
           <motion.div
-            key="spy-collapsed"
-            initial={{ opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 8 }}
-            transition={tx}
-            className="flex flex-col items-end gap-2"
+            key="rail-compact"
+            className="case-study-rail__panel case-study-rail__panel--compact"
+            initial={reduceMotion ? false : { opacity: 0, x: 16, scale: 0.97 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={reduceMotion ? undefined : { opacity: 0, x: 10, scale: 0.97 }}
+            transition={panelTransition}
+            whileHover={reduceMotion || canHoverOpen ? undefined : { x: -6, transition: spring }}
           >
-            <div className="flex flex-col items-end gap-1.5 rounded-2xl border border-white/10 bg-black/38 px-2.5 py-3 shadow-lg backdrop-blur-xl">
+            <motion.div
+              className="case-study-rail__dashes"
+              variants={dashStagger}
+              initial="hidden"
+              animate="show"
+            >
               {rows.map((entry) => {
                 const { id, label, keyword, caption, level } = entry;
                 const lv = level ?? (hasChapter ? 2 : 1);
                 const isActive = activeId === id;
                 const tip = keyword && caption ? `${keyword} — ${caption}` : label;
+                const w = dashWidthPx(lv, isActive);
                 return (
-                  <a
+                  <motion.a
                     key={id}
                     href={`#${id}`}
+                    className={`case-study-rail__dash-hit${isActive ? ' is-active' : ''}`}
                     title={tip}
-                    className="flex justify-end py-0.5 outline-none focus-visible:ring-2 focus-visible:ring-white/35 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm"
                     aria-current={isActive ? 'location' : undefined}
+                    variants={dashRow}
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToId(id);
                     }}
+                    whileTap={reduceMotion ? undefined : { scale: 0.94 }}
+                    transition={spring}
                   >
-                    <motion.div
-                      className="h-0.5 rounded-full"
-                      initial={false}
-                      animate={{
-                        width: dashWidth(lv, isActive),
-                        backgroundColor: isActive ? '#ffffff' : 'rgba(255,255,255,0.28)',
-                        opacity: isActive ? 1 : 0.52,
-                      }}
-                      transition={tx}
+                    <motion.span
+                      className="case-study-rail__dash"
+                      style={{ width: `${w}px`, transformOrigin: 'right center' }}
+                      layout={!reduceMotion}
+                      transition={{ layout: spring }}
+                      aria-hidden
+                      whileHover={reduceMotion ? undefined : { scaleX: 1.22, scaleY: 1.35 }}
                     />
-                  </a>
+                  </motion.a>
                 );
               })}
-            </div>
-            <motion.button
-              type="button"
-              layout
-              className="flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-full border border-white/12 bg-black text-white/75 shadow-md transition hover:bg-zinc-950 hover:text-white"
-              aria-expanded="false"
-              aria-label={t('projectDetail.spyNavExpand')}
-              onClick={() => setCollapsed(false)}
-            >
-              <span className="flex flex-col items-center justify-center gap-[3px]" aria-hidden>
-                <span className="h-0.5 w-[14px] rounded-full bg-current opacity-90" />
-                <span className="h-0.5 w-[14px] rounded-full bg-current opacity-65" />
-                <span className="h-0.5 w-[14px] rounded-full bg-current opacity-45" />
-              </span>
-            </motion.button>
+            </motion.div>
+            {!canHoverOpen ? (
+              <motion.button
+                type="button"
+                className="case-study-rail__icon-btn case-study-rail__icon-btn--expand"
+                aria-expanded="false"
+                aria-label={t('projectDetail.spyNavExpand')}
+                onClick={() => setCollapsed(false)}
+                whileHover={reduceMotion ? undefined : { scale: 1.06 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.9 }}
+                transition={spring}
+              >
+                <span className="case-study-rail__burger" aria-hidden>
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </motion.button>
+            ) : null}
           </motion.div>
         )}
       </AnimatePresence>
     </nav>
   );
 
-  return createPortal(rail, document.body);
+  if (!mounted) return null;
+  return createPortal(nav, document.body);
 }
