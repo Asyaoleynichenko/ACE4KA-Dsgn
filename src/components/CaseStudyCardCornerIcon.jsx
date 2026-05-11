@@ -1,32 +1,35 @@
-/**
- * Декоративная иконка угла карточки кейса: базовый PNG + слои «LED-матрицы»
- * (маска = силуэт иконки). Уважает prefers-reduced-motion через CSS.
- */
-function ledMaskStyle(src) {
-  if (!src) return undefined;
-  const safe = String(src)
-    .replace(/\\/g, '/')
-    .replace(/"/g, '%22')
-    .replace(/\(/g, '%28')
-    .replace(/\)/g, '%29');
-  return { '--led-mask': `url("${safe}")` };
-}
+import { useMemo } from 'react';
+import { getLedPatternCircles } from '../utils/caseStudyLedPatterns.js';
 
-export default function CaseStudyCardCornerIcon({ src, staggerIndex = 0 }) {
-  if (!src) return null;
-  const stagger = `${(Number(staggerIndex) % 16) * 0.09}s`;
+/**
+ * LED-иконка угла карточки кейса: каждый «диод» — отдельный <circle> с CSS-анимацией.
+ * @param {{ kind: 'task' | 'solution' | 'influence' | 'metrics' | 'problem' | 'context', staggerIndex?: number }} props
+ */
+export default function CaseStudyCardCornerIcon({ kind, staggerIndex = 0 }) {
+  const { viewBox, circles } = useMemo(() => getLedPatternCircles(kind), [kind]);
+  const staggerSec = (Number(staggerIndex) % 24) * 0.055;
+
+  if (!kind) return null;
+
   return (
-    <span
-      className="card__corner-icon-led"
-      style={{
-        ...ledMaskStyle(src),
-        '--led-stagger': stagger,
-      }}
-    >
-      <img src={src} alt="" className="card__corner-icon" width={56} height={56} decoding="async" aria-hidden />
-      <span className="card__corner-icon-led__dots card__corner-icon-led__dots--a" aria-hidden />
-      <span className="card__corner-icon-led__dots card__corner-icon-led__dots--b" aria-hidden />
-      <span className="card__corner-icon-led__scan" aria-hidden />
+    <span className="card__corner-icon-led" style={{ '--led-card-stagger': `${staggerSec}s` }}>
+      <svg
+        className="case-strip-led-svg"
+        viewBox={viewBox}
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden
+      >
+        {circles.map((c) => (
+          <circle
+            key={`${c.idx}-${c.cx}-${c.cy}`}
+            className="case-strip-led-svg__dot"
+            cx={c.cx}
+            cy={c.cy}
+            r={c.r}
+            style={{ '--led-idx': c.idx }}
+          />
+        ))}
+      </svg>
     </span>
   );
 }

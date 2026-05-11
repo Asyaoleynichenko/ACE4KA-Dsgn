@@ -7,6 +7,18 @@ const SRC = {
   metrics: publicUrl('/images/icons/card-metrics.png'),
 };
 
+/** Кодовые LED-иконки в карточках кейса — см. `CaseStudyCardCornerIcon` + `caseStudyLedPatterns.js` */
+const KIND = {
+  task: 'task',
+  solution: 'solution',
+  influence: 'influence',
+  metrics: 'metrics',
+  /** Figma `430:27691` — «Проблема» в блоке 300:107895 */
+  problem: 'problem',
+  /** Figma `430:29004` — тот же SVG, что `nav-icon-430-29004.svg` */
+  context: 'context',
+};
+
 function norm(title) {
   return String(title ?? '')
     .normalize('NFKC')
@@ -24,10 +36,24 @@ const STRIP_ICON_BY_TITLE = (() => {
       [['Решение', 'Solution'], SRC.solution],
       [['Влияние', 'Impact'], SRC.influence],
       [['Метрики', 'Metrics'], SRC.metrics],
-      // В макетах четвёртая иконка из того же набора; отдельного экспорта «Проблема» пока нет — визуально ближе «Влияние»
-      [['Проблема', 'Problem'], SRC.influence],
-      [['Контекст', 'Context'], SRC.influence],
+      [['Проблема', 'Problem'], SRC.solution],
+      [['Контекст', 'Context'], publicUrl('/images/icons/nav-icon-430-29004.svg')],
       [['Результат', 'Outcome'], SRC.influence],
+    ]),
+  );
+})();
+
+const STRIP_KIND_BY_TITLE = (() => {
+  const e = (pairs) => pairs.flatMap(([labels, kind]) => labels.map((l) => [norm(l), kind]));
+  return Object.fromEntries(
+    e([
+      [['Задача', 'Challenge'], KIND.task],
+      [['Решение', 'Solution'], KIND.solution],
+      [['Влияние', 'Impact'], KIND.influence],
+      [['Метрики', 'Metrics'], KIND.metrics],
+      [['Проблема', 'Problem'], KIND.influence],
+      [['Контекст', 'Context'], KIND.influence],
+      [['Результат', 'Outcome'], KIND.influence],
     ]),
   );
 })();
@@ -39,4 +65,12 @@ const STRIP_ICON_BY_TITLE = (() => {
  */
 export function caseStudyStripIconSrc(title) {
   return STRIP_ICON_BY_TITLE[norm(title)] ?? null;
+}
+
+/**
+ * Тип кодовой LED-иконки для заголовка карточки.
+ * @returns {'task' | 'solution' | 'influence' | 'metrics' | 'problem' | 'context' | null}
+ */
+export function caseStudyStripIconKind(title) {
+  return STRIP_KIND_BY_TITLE[norm(title)] ?? null;
 }

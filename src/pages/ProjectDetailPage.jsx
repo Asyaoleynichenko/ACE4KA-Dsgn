@@ -4,7 +4,7 @@ import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import { projects } from '../data/projects';
 import { publicUrl } from '../utils/publicUrl.js';
-import { caseStudyStripIconSrc } from '../utils/caseStudyStripIcons.js';
+import { caseStudyStripIconKind } from '../utils/caseStudyStripIcons.js';
 import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
 import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
 import { useScrollSpy } from '../hooks/useScrollSpy.js';
@@ -376,12 +376,12 @@ export default function ProjectDetailPage() {
           <section className="cards-section" id={`case-${project.slug}-overview`}>
             <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
               {topCards.map((item, cardIdx) => {
-                const iconSrc = caseStudyStripIconSrc(item.title);
+                const iconKind = caseStudyStripIconKind(item.title);
                 return (
                   <div key={item.title} className="card">
                     <h3>{item.title}</h3>
                     <p>{item.value}</p>
-                    {iconSrc ? <CaseStudyCardCornerIcon src={iconSrc} staggerIndex={cardIdx} /> : null}
+                    {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
                   </div>
                 );
               })}
@@ -579,12 +579,12 @@ export default function ProjectDetailPage() {
                     return (
                       <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
                         {sectionCards.map((item, cardIdx) => {
-                          const iconSrc = caseStudyStripIconSrc(item.title);
+                          const iconKind = caseStudyStripIconKind(item.title);
                           return (
                             <div key={item.title} className="card">
                               <h3>{item.title}</h3>
                               <p>{item.value}</p>
-                              {iconSrc ? <CaseStudyCardCornerIcon src={iconSrc} staggerIndex={cardIdx} /> : null}
+                              {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
                             </div>
                           );
                         })}
