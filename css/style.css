@@ -764,10 +764,10 @@ button:focus-visible,
     margin-bottom: 0;
 }
 
-/* Figma 89:347 — Header на главной: те же краевые inset, что 1:230 master (≈21px) */
+/* Figma 89:347 — Header на главной: горизонтальные inset 34px (макет «Главная») */
 .page-home .header .nav {
-    padding-left: max(21px, env(safe-area-inset-left, 0px));
-    padding-right: max(21px, env(safe-area-inset-right, 0px));
+    padding-left: max(34px, env(safe-area-inset-left, 0px));
+    padding-right: max(34px, env(safe-area-inset-right, 0px));
 }
 
 .header-items {
@@ -862,7 +862,7 @@ button:focus-visible,
 }
 
 .preview-card__body {
-    gap: 8px;
+    gap: var(--card-gap);
     min-height: 86px;
 }
 
@@ -1947,6 +1947,14 @@ button:focus-visible,
     scroll-margin-top: max(116px, calc(env(safe-area-inset-top, 0px) + 92px));
 }
 
+.project-case-study-mail .case-study-subanchor {
+    scroll-margin-top: max(116px, calc(env(safe-area-inset-top, 0px) + 92px));
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
 .project-spy {
     position: fixed;
     right: max(12px, env(safe-area-inset-right));
@@ -2004,6 +2012,53 @@ button:focus-visible,
     line-height: 1.25;
 }
 
+.project-spy__chapter-row {
+    list-style: none;
+    padding: 2px 4px 6px;
+    margin: 0 0 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.project-spy__chapter {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.35;
+    color: var(--color-text-primary);
+}
+
+.project-spy__label--rich {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.project-spy__keyword {
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+.project-spy__emdash {
+    font-weight: 400;
+    opacity: 0.55;
+}
+
+.project-spy__caption {
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: none;
+}
+
+.project-spy__link:not(.project-spy__link--active) .project-spy__caption {
+    color: var(--color-text-muted);
+}
+
+.project-spy__link--active .project-spy__caption {
+    color: var(--color-text-primary);
+}
+
 .project-spy__link--active {
     color: var(--color-text-primary);
 }
@@ -2031,13 +2086,20 @@ button:focus-visible,
 
     .project-spy__list {
         flex-direction: row;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         overflow-x: auto;
         max-width: 100%;
         gap: var(--space-4);
         padding: var(--space-8) var(--space-12);
         -webkit-overflow-scrolling: touch;
         scrollbar-width: thin;
+    }
+
+    .project-spy__chapter-row {
+        flex: 1 0 100%;
+        border-bottom: none;
+        padding-bottom: var(--space-4);
+        margin-bottom: var(--space-2);
     }
 
     .project-spy__item {

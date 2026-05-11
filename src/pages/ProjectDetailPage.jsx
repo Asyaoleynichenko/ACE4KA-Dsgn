@@ -276,7 +276,7 @@ export default function ProjectDetailPage() {
   const project = projects.find((p) => p.slug === slug);
 
   const spySections = project?.layout === 'case-study' ? buildCaseStudySpySections(project) : [];
-  const spySectionIds = spySections.map((s) => s.id);
+  const spySectionIds = spySections.map((s) => s.id).filter(Boolean);
   const activeSpyId = useScrollSpy(spySectionIds);
 
   if (!project) {
@@ -520,6 +520,13 @@ export default function ProjectDetailPage() {
                   <div className="gallery gallery--before-hypotheses">
                     <img src={publicUrl(section.galleryBeforeHypotheses)} alt="" />
                   </div>
+                ) : null}
+                {section.hypotheses?.length > 0 ? (
+                  <div
+                    className="case-study-subanchor"
+                    id={`case-${project.slug}-body-${i}-hyp`}
+                    aria-hidden="true"
+                  />
                 ) : null}
                 {section.hypotheses?.length > 0 && (
                   <div className="hypothesis">

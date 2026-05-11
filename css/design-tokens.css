@@ -96,8 +96,8 @@
   --space-48: 48px;
   --space-64: 64px;
   --space-72: 64px;
-  /* Figma 1:300 — между title / meta / desc внутри блока текста */
-  --card-gap: 16px;
+  /* Figma 1:300 — между title / meta / desc внутри блока текста; 1:290 — gap между пилюлями фильтра */
+  --card-gap: 8px;
   /* Figma 1:298 — между превью и блоком текста (Project Card) */
   --preview-card-media-body-gap: 16px;
   /* Сетка проектов 1-297: row-gap 24px, column-gap 8px */
@@ -108,7 +108,8 @@
   --hero-card-width: 369px;
   --hero-row-gap: 24px;
   --hero-lead-max: 661px;
-  --hero-section-gap: 48px;
+  /* Figma 89:347 — 64px между First screen (70:343) и блоком 1:232; столько же до секции проектов (1:285) */
+  --hero-section-gap: 64px;
 
   --project-page-max-width: 1290px;
   --project-page-padding-y: 48px;
