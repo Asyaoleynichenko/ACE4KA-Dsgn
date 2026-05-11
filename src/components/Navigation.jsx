@@ -14,6 +14,13 @@ export const NAV_ROUTE_KEYS = [
 /** Декоративная звезда как в макете (433:31043 / совпадает с nav-icon-430-29004.svg). */
 const HEADER_SNOW_ICON = publicUrl('/images/icons/nav-icon-430-29004.svg');
 
+/** Иконки пунктов навигации Default (32×32 SVG, в пилюле ~18px) — `public/images/icons/README.md`. */
+const NAV_ROUTE_ICONS = {
+  '/': publicUrl('/images/icons/home.svg'),
+  '/projects': publicUrl('/images/icons/projects.svg'),
+  '/about': publicUrl('/images/icons/about.svg'),
+};
+
 function itemIsActive(pathname, targetPath) {
   const base = stripLocaleFromPathname(pathname);
   if (targetPath === '/projects') {
@@ -93,6 +100,15 @@ export function Navigation({ variant = 'routes', caseStudy = null, menuOpen, onI
         return (
           <li key={path}>
             <NavItem to={to} className={`nav-link${active ? ' active' : ''}`} onClick={onItemClick}>
+              <img
+                className="nav-link__pill-icon"
+                src={NAV_ROUTE_ICONS[path]}
+                alt=""
+                aria-hidden
+                width={18}
+                height={18}
+                decoding="async"
+              />
               <span className="blend-text">{label}</span>
             </NavItem>
           </li>

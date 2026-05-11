@@ -10,7 +10,6 @@ export const HEADER_FIRST_SCREEN = { w: 1275.452, h: 312.784 };
 
 export const SECTION_HEADER_IMAGES = {
   folder: folderIconFromFigma,
-  projects: publicUrl('/images/icons/projects.svg'),
   contact: publicUrl('/images/icons/contact.svg'),
   team: publicUrl('/images/icons/team.svg'),
   habitat: publicUrl('/images/icons/habitat.svg'),
@@ -19,7 +18,7 @@ export const SECTION_HEADER_IMAGES = {
 export const headerItemsFolder = [
   { nodeId: '1-206', labelKey: 'sectionNav.experience', iconKey: 'folder', to: '/about#experience', placement: { x: 1097.67, y: 30.11 } },
   { nodeId: '1-209', labelKey: 'sectionNav.memes', iconKey: 'folder', to: '/about#memes', placement: { x: 46.91, y: 179.79 } },
-  { nodeId: '1-224', labelKey: 'sectionNav.projectsOverview', iconKey: 'projects', to: '/projects', placement: { x: 232.91, y: 4.11 } },
+  { nodeId: '1-224', labelKey: 'sectionNav.projectsOverview', iconKey: 'folder', to: '/projects', placement: { x: 232.91, y: 4.11 } },
   { nodeId: '1-227', labelKey: 'sectionNav.educationFolder', iconKey: 'folder', to: '/about#education', placement: { x: 938.73, y: 129.03 } },
 ];
 
