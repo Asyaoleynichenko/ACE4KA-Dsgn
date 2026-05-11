@@ -2,7 +2,6 @@ import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react
 import { useParams } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
-import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import { projects } from '../data/projects';
 import { publicUrl } from '../utils/publicUrl.js';
 import { caseStudyStripIconSrc } from '../utils/caseStudyStripIcons.js';
@@ -273,8 +272,7 @@ function HorizontalGallery({ images }) {
 
 export default function ProjectDetailPage() {
   const { slug } = useParams();
-  const { localizedPath, t } = useI18n();
-  const projectsListingTo = localizedPath('/projects');
+  const { t } = useI18n();
   const project = projects.find((p) => p.slug === slug);
 
   const spySections = project?.layout === 'case-study' ? buildCaseStudySpySections(project) : [];
@@ -285,7 +283,6 @@ export default function ProjectDetailPage() {
     return (
       <div className="project-page-wrap">
         <p>{t('projectDetail.notFound')}</p>
-        <SeamlessProjectsLink to={projectsListingTo}>{t('projectDetail.backToProjects')}</SeamlessProjectsLink>
       </div>
     );
   }
@@ -322,12 +319,6 @@ export default function ProjectDetailPage() {
         data-node-id={project.figmaNodeId}
         data-figma-url={project.figmaUrl}
       >
-        <div className="project-back-wrap">
-          <SeamlessProjectsLink to={projectsListingTo} className="back-link">
-            <span className="back-link__icon" aria-hidden="true">←</span>
-            {t('projectDetail.backToProjects')}
-          </SeamlessProjectsLink>
-        </div>
         <div className="container container--case-study">
           <ProjectCaseStudySpyNav sections={spySections} activeId={activeSpyId} />
           <section className="hero" id={`case-${project.slug}-hero`}>
@@ -639,12 +630,6 @@ export default function ProjectDetailPage() {
 
   return (
     <div className={`project-page-wrap project-page-wrap--layout-89${!hasHero ? ' project-page-wrap--no-hero' : ''}`}>
-      <div className="project-back-wrap">
-        <SeamlessProjectsLink to={projectsListingTo} className="back-link">
-          <span className="back-link__icon" aria-hidden="true">←</span>
-          {t('projectDetail.backToProjects')}
-        </SeamlessProjectsLink>
-      </div>
       {hasHero && (
         <div className="project-hero">
           <img

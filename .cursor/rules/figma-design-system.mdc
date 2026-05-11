@@ -45,7 +45,6 @@ This project follows design specs from **Figma file «В разработку»*
 
 ### 1-522 Project detail page
 - Background `#0a0a0a` (`.main--project`).
-- Back link: 14px, 0.55px letter-spacing, uppercase.
 - Hero image: 1310×721px, border-radius 21px.
 - Top row: title+lead (left, max ~863px) | meta card (right, 415px, #0f0f0f, 16px radius, 24px padding).
 - Grid: 2 cols, gap 24px; cards #0f0f0f, 16px radius, 33px padding; label 12px 0.6px uppercase 40%; body 18px 29.25px -0.44px 80%.
