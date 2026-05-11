@@ -4523,6 +4523,8 @@ button:focus-visible,
 }
 
 .site-footer__wordmark {
+    container-name: foot-wm;
+    container-type: inline-size;
     margin: 0 0 clamp(1.75rem, 4vw, 3rem);
     padding: 0 max(24px, env(safe-area-inset-left, 0px)) 0 max(24px, env(safe-area-inset-right, 0px));
     box-sizing: border-box;
@@ -4539,7 +4541,7 @@ button:focus-visible,
     padding-right: max(34px, env(safe-area-inset-right, 0px));
 }
 
-/* Буквы от края до края вьюпорта (в пределах padding) */
+/* Кегль от ширины строки (cqi) и от вьюпорта (vw); space-between тянет буквы на всю ширину */
 .site-footer__wordmark__track {
     display: flex;
     justify-content: space-between;
@@ -4549,13 +4551,19 @@ button:focus-visible,
     margin: 0;
     padding: 0;
     font-family: var(--font-body), Inter, sans-serif;
-    font-size: clamp(2.75rem, min(22vw, 19rem), 20.625rem);
+    font-size: clamp(2rem, min(20vw, 19rem), 20.625rem);
     font-style: normal;
     font-weight: 600;
     line-height: 0.88;
     letter-spacing: 0;
     text-transform: uppercase;
     color: inherit;
+}
+
+@supports (font-size: 1cqi) {
+    .site-footer__wordmark__track {
+        font-size: clamp(2rem, min(30cqi, 24vw), 20.625rem);
+    }
 }
 
 .site-footer__wordmark__char {
@@ -4720,7 +4728,13 @@ button:focus-visible,
     }
 
     .site-footer__wordmark__track {
-        font-size: clamp(2.25rem, min(19vw, 5.25rem), 14rem);
+        font-size: clamp(1.75rem, min(18vw, 10rem), 12rem);
+    }
+
+    @supports (font-size: 1cqi) {
+        .site-footer__wordmark__track {
+            font-size: clamp(1.75rem, min(36cqi, 20vw), 12rem);
+        }
     }
 
     .site-footer__main {
