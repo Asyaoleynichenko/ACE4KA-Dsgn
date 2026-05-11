@@ -1,14 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { stripLocaleFromPathname } from '../i18n/localePath.js';
 
-/** Строка или объект `to` ведёт на список проектов `/projects` (включая query). */
+/** Строка или объект `to` ведёт на список проектов `/projects` (включая query), с префиксом `/ru` или `/en`. */
 export function isProjectsListingTarget(to) {
   if (typeof to === 'string') {
     const path = to.split('?')[0].split('#')[0];
-    return path === '/projects';
+    return stripLocaleFromPathname(path) === '/projects';
   }
   if (to && typeof to === 'object' && 'pathname' in to) {
     const p = to.pathname ?? '/';
-    return p === '/projects';
+    return stripLocaleFromPathname(p) === '/projects';
   }
   return false;
 }

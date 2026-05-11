@@ -1,5 +1,8 @@
+import { useI18n } from '../i18n/I18nProvider.jsx';
+
 /** Оглавление кейса: подсветка активного раздела при скролле (spy scroll). */
 export default function ProjectCaseStudySpyNav({ sections, activeId }) {
+  const { t } = useI18n();
   const reduced =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -12,7 +15,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
   };
 
   return (
-    <nav className="project-spy" aria-label="Разделы кейса">
+    <nav className="project-spy" aria-label={t('projectDetail.spyNavAria')}>
       <ol className="project-spy__list">
         {sections.map(({ id, label }) => (
           <li key={id} className="project-spy__item">

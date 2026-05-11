@@ -1,15 +1,18 @@
+import { useI18n } from '../i18n/I18nProvider.jsx';
+
 export default function ContactPage() {
+  const { t } = useI18n();
+
   return (
     <div className="page-contact__wrap snap-screen" data-node-id="89-756">
       <header className="page-header">
-        <h1>Контакты</h1>
+        <h1>{t('contact.title')}</h1>
         <p>
           <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">
-            Написать в Telegram
-          </a>
-          {' '}
-          или{' '}
-          <a href="mailto:hello@example.com">на почту</a>
+            {t('contact.telegram')}
+          </a>{' '}
+          {t('contact.or')}{' '}
+          <a href="mailto:hello@example.com">{t('contact.mailTo')}</a>
         </p>
       </header>
 
@@ -17,14 +20,14 @@ export default function ContactPage() {
         <div className="contact-item">
           <span aria-hidden="true">✉</span>
           <div>
-            <strong>Mail</strong>
+            <strong>{t('contact.labels.mail')}</strong>
             <a href="mailto:hello@example.com">hello@example.com</a>
           </div>
         </div>
         <div className="contact-item">
           <span aria-hidden="true">📱</span>
           <div>
-            <strong>Telegram</strong>
+            <strong>{t('contact.labels.telegram')}</strong>
             <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">
               @pnkprty
             </a>
@@ -33,7 +36,7 @@ export default function ContactPage() {
         <div className="contact-item">
           <span aria-hidden="true">💼</span>
           <div>
-            <strong>Behance</strong>
+            <strong>{t('contact.labels.behance')}</strong>
             <a href="https://behance.net/" target="_blank" rel="noopener noreferrer">
               behance.net
             </a>
@@ -42,7 +45,7 @@ export default function ContactPage() {
         <div className="contact-item">
           <span aria-hidden="true">📌</span>
           <div>
-            <strong>Pinterest</strong>
+            <strong>{t('contact.labels.pinterest')}</strong>
             <a href="https://pinterest.com/" target="_blank" rel="noopener noreferrer">
               pinterest.com
             </a>

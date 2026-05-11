@@ -1,26 +1,32 @@
 import { useLocation } from 'react-router-dom';
+import { stripLocaleFromPathname } from '../i18n/localePath.js';
+import { useI18n } from '../i18n/I18nProvider.jsx';
 import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 
 const pills = [
-  { filter: 'uxui', label: 'UX/UI' },
-  { filter: 'grafika', label: 'Графика' },
-  { filter: 'issledovaniya', label: 'Исследования' },
-  { filter: 'inprogress', label: 'In progress' },
-  { filter: 'shtuki', label: 'Things' },
-  { filter: 'vsyo', label: 'Всё' },
+  { filter: 'uxui', labelKey: 'filters.uxui' },
+  { filter: 'grafika', labelKey: 'filters.grafika' },
+  { filter: 'issledovaniya', labelKey: 'filters.issledovaniya' },
+  { filter: 'inprogress', labelKey: 'filters.inprogress' },
+  { filter: 'shtuki', labelKey: 'filters.shtuki' },
+  { filter: 'vsyo', labelKey: 'filters.vsyo' },
 ];
 
 export default function FilterPills() {
   const { pathname, search } = useLocation();
+  const { localizedPath, t } = useI18n();
   const params = new URLSearchParams(search);
-  /** На странице проектов активен таб, совпадающий с ?filter= (по умолчанию «Всё»). На главной ни один не активен. */
-  const currentFilter = pathname === '/projects' ? params.get('filter') ?? 'vsyo' : null;
+  const basePath = stripLocaleFromPathname(pathname);
+  const currentFilter = basePath === '/projects' ? params.get('filter') ?? 'vsyo' : null;
 
   return (
-    <nav className="filter-pills" data-node-id="1:290" aria-label="Фильтр проектов">
-      {pills.map(({ filter, label }) => {
+    <nav className="filter-pills" data-node-id="1:290" aria-label={t('filters.aria')}>
+      {pills.map(({ filter, labelKey }) => {
         const isActive = currentFilter !== null && currentFilter === filter;
-        const to = filter === 'vsyo' ? '/projects' : `/projects?filter=${encodeURIComponent(filter)}`;
+        const to =
+          filter === 'vsyo'
+            ? localizedPath('/projects')
+            : localizedPath(`/projects?filter=${encodeURIComponent(filter)}`);
         return (
           <SeamlessProjectsLink
             key={filter}
@@ -28,7 +34,7 @@ export default function FilterPills() {
             className={`filter-pill${isActive ? ' filter-pill--active' : ''}`}
             aria-current={isActive ? 'page' : undefined}
           >
-            {label}
+            {t(labelKey)}
           </SeamlessProjectsLink>
         );
       })}

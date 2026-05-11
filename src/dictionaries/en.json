@@ -1,0 +1,327 @@
+{
+  "common": {
+    "brandName": "Asya Oleinichenko",
+    "caseStudy": {
+      "task": "Challenge",
+      "solution": "Solution",
+      "influence": "Impact",
+      "metrics": "Metrics",
+      "context": "Context",
+      "problem": "Problem",
+      "result": "Outcome",
+      "category": "Category",
+      "hypothesis": "Hypothesis {{n}}",
+      "problemFallback": "The main constraints are spelled out in the project brief."
+    },
+    "altBefore": "Before",
+    "altAfter": "After"
+  },
+  "header": {
+    "menuAria": "Menu",
+    "about": "About",
+    "nav": {
+      "home": "Home",
+      "projects": "Projects",
+      "about": "About"
+    }
+  },
+  "hero": {
+    "title": "Asya Oleinichenko",
+    "role": "Product designer, Mail Cloud & Mail (VK)",
+    "text": "Five years shipping and evolving digital products. I know how teams work, how products behave in the wild, and how to keep craft simple and solid.",
+    "moreAbout": "More about me",
+    "sectionNavAria": "Sections",
+    "projectsSectionTitle": "Projects",
+    "allProjects": "All projects",
+    "info": {
+      "location": "Location",
+      "locationValue": "Moscow",
+      "company": "Company",
+      "companyValue": "VK",
+      "focus": "Focus",
+      "focusValue": "Monetization",
+      "education": "Education",
+      "educationValueLine1": "HSE Design",
+      "educationValueLine2": "& programming",
+      "contacts": "Contacts",
+      "contactsValue": "@pnkprty"
+    },
+    "links": {
+      "resume": "Résumé",
+      "mail": "Mail"
+    }
+  },
+  "sectionNav": {
+    "experience": "Experience",
+    "memes": "Favorite memes by imaginary people",
+    "projectsOverview": "Quick tour of projects",
+    "educationFolder": "Education",
+    "contact": "Contact",
+    "team": "Team",
+    "habitat": "Me in my natural habitat"
+  },
+  "filters": {
+    "aria": "Project filters",
+    "uxui": "UX/UI",
+    "grafika": "Visual",
+    "issledovaniya": "Research",
+    "inprogress": "In progress",
+    "shtuki": "Things",
+    "vsyo": "All"
+  },
+  "footer": {
+    "openForWork": "Open to work",
+    "devNote": "Site is a work in progress. Something broke —",
+    "emailLink": "email me",
+    "links": {
+      "resume": "Résumé",
+      "projects": "Projects",
+      "contact": "Contact",
+      "telegram": "Telegram",
+      "pinterest": "Pinterest",
+      "behance": "Behance",
+      "email": "Email",
+      "dribbble": "Dribbble",
+      "linkedin": "LinkedIn"
+    }
+  },
+  "previewCard": {
+    "trafficClose": "Close",
+    "trafficMinimize": "Minimize",
+    "trafficZoom": "Zoom",
+    "aria": "Message me on Telegram, @pnkprty",
+    "title": "Hi there!",
+    "cta": "Message me"
+  },
+  "projectsPage": {
+    "title": "All projects"
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "DM on Telegram or drop an email",
+    "telegram": "Message on Telegram",
+    "or": "or",
+    "mailTo": "send an email",
+    "labels": {
+      "mail": "Mail",
+      "telegram": "Telegram",
+      "behance": "Behance",
+      "pinterest": "Pinterest"
+    }
+  },
+  "resume": {
+    "title": "Résumé",
+    "subtitle": "Experience and core skills.",
+    "experienceTitle": "Experience",
+    "experienceText": "Product designer at Mail, Cloud, and VK — launching and growing digital products.",
+    "skillsTitle": "Skills",
+    "skillsText": "UX/UI, design systems, prototyping, user research.",
+    "educationTitle": "Education",
+    "educationText": "HSE, Design & Programming track.",
+    "downloadTitle": "Download",
+    "downloadLink": "Résumé (PDF)"
+  },
+  "education": {
+    "title": "Education",
+    "subtitle": "Studies and professional growth.",
+    "hseTitle": "HSE University",
+    "hseText": "Design & Programming, undergraduate programme.",
+    "coursesTitle": "Courses & workshops",
+    "coursesText": "Advanced training in product design and UX.",
+    "languagesTitle": "Languages",
+    "languagesText": "Russian — native. English — working proficiency."
+  },
+  "draftPage": {
+    "title": "Page {{id}}",
+    "subtitle": "Content for Figma layout {{id}}.",
+    "blockTitle": "Block {{n}}",
+    "blockText": "Placeholder copy for this layout."
+  },
+  "projectDetail": {
+    "mvpHelp": "Use the side arrows, the dots below, or the left and right keys to change slides. On mobile, swipe left or right.",
+    "mvpRegion": "MVP slides",
+    "heroPlaceholder": "Project preview",
+    "toolsHeading": "Tools",
+    "linksHeading": "Links",
+    "notFound": "Project not found.",
+    "backToProjects": "Back to projects",
+    "sliderRole": "carousel",
+    "prevSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "openLightbox": "Open image fullscreen",
+    "slideDots": "Choose slide",
+    "slideNamed": "Slide {{index}}: {{heading}}",
+    "slideOf": "Slide {{index}} of {{total}}",
+    "closeLightbox": "Close image",
+    "galleryRegion": "Project gallery",
+    "openImageN": "Open image {{n}}",
+    "pillsDefaultAria": "Key points",
+    "nestedSubtitle": "More detail",
+    "toolsListAria": "Tools",
+    "spyNavAria": "Case sections"
+  },
+  "errors": {
+    "rootTitle": "Couldn’t render the app",
+    "rootBody": "Open the browser console (F12 → Console). If the URL or build base path is wrong, scripts may fail to load (blank white screen)."
+  },
+  "about": {
+    "intro": {
+      "name": "Asya Oleinichenko",
+      "lead1": "Product designer at Mail (VK): monetization, personalization, and shipping features across mail and cloud. Five years in product — from research and prototypes to releases and metric-led experiments.",
+      "lead2": "I care about growth systems, AI in interfaces, and design that works for both people and the business. Open to new roles and collaborations."
+    },
+    "experience": {
+      "title": "Experience"
+    },
+    "skills": {
+      "title": "Skills",
+      "items": [
+        "UX/UI",
+        "Product design",
+        "Design systems",
+        "Research",
+        "A/B and product experiments",
+        "Monetization",
+        "Personalization",
+        "AI in production",
+        "Figma"
+      ]
+    },
+    "education": {
+      "title": "Education"
+    },
+    "team": {
+      "title": "Team",
+      "body": "I work in cross-functional teams with PMs, analytics, engineering, and researchers — from hypothesis to experiment readout."
+    },
+    "habitat": {
+      "title": "Beyond work",
+      "body": "City life, music, internet visual noise, and an endless stream of references — where I recharge for interfaces and art direction."
+    },
+    "memes": {
+      "title": "Favorite memes by imaginary people",
+      "body": "A stash of absurd images and quotes without context — a reminder that products live in culture, not only in dashboards."
+    },
+    "strip": {
+      "status": "Open to work",
+      "linksAria": "Links",
+      "note": "Site in progress. Some layout was drafted with AI and finished by hand. Something broke —",
+      "emailLink": "email me"
+    },
+    "jobs": [
+      {
+        "title": "Product designer",
+        "org": "VK · Mail Cloud & Mail",
+        "period": "2022 — present",
+        "text": "Monetization and personalization across Mail: upsell flows, subscriptions, LTV scenarios, close work with analytics and research."
+      },
+      {
+        "title": "Head of Product Design",
+        "org": "Bang Bang Education",
+        "period": "2024 — 2025",
+        "text": "Led product design for edtech: process, release quality, tying design to metrics and content."
+      },
+      {
+        "title": "Special projects & content",
+        "org": "Mail",
+        "period": "Earlier",
+        "text": "Built the special-projects stream from zero: dozens of concepts, AI in the pipeline, scaling production."
+      }
+    ],
+    "eduItems": [
+      {
+        "school": "HSE University",
+        "years": "2021 — 2025",
+        "line": "Faculty of communications, media, and design",
+        "detail": "Design & programming",
+        "extra": "GPA 8.82"
+      },
+      {
+        "school": "Bang Bang Education",
+        "years": "2025",
+        "line": "Head of Product Design",
+        "detail": "Intensive on product design and leadership",
+        "extra": ""
+      },
+      {
+        "school": "UI course",
+        "years": "2025",
+        "line": "Vika Breusova",
+        "detail": "Lead designer, Yandex Travel",
+        "extra": ""
+      },
+      {
+        "school": "VK Education",
+        "years": "2023 — present",
+        "line": "Workshops and learning formats",
+        "detail": "Hands-on product design and teamwork",
+        "extra": ""
+      }
+    ],
+    "links": {
+      "telegram": "Telegram",
+      "pinterest": "Pinterest",
+      "behance": "Behance",
+      "resume": "Résumé",
+      "email": "Email",
+      "dribbble": "Dribbble",
+      "linkedin": "LinkedIn",
+      "projects": "Projects",
+      "contact": "Contact"
+    }
+  },
+  "projects": {
+    "cards": {
+      "mail-nauki": {
+        "title": "Mail Science launch & a systematic Mail media redesign",
+        "meta": "Media · Mail",
+        "desc": "One thematic media platform across VK: redesign, Mail Science, and scaling the experience"
+      },
+      "mail-spetsproekty": {
+        "title": "Growing the special-projects stream",
+        "meta": "Mail Media · 2025",
+        "desc": "Branded specials: tighter process, AI in the workflow, less outsourcing"
+      },
+      "mail-monetization": {
+        "title": "Mail monetization",
+        "meta": "Mail · Cloud & Mail · 2025 — present",
+        "desc": "Mail Space subscription: pricing tiers, experiments, freemium features"
+      },
+      "drop": {
+        "title": "DROP — networking for city life",
+        "meta": "UX/UI · 2024–2025",
+        "desc": "Location-based networking: iOS concept and a Telegram MVP"
+      },
+      "loochok": {
+        "title": "LÒÒCHOK — customization & DIY community",
+        "meta": "UX/UI · Product · 2023–2024",
+        "desc": "0→1: DIY platform, community, web + iOS, pitch"
+      },
+      "neural": {
+        "title": "Mail Hi-Tech feature — a landing on neural networks",
+        "meta": "Mail Hi-Tech · 2024",
+        "desc": "Interactive NN landing: visual storytelling, AI graphics, and a fresh special-project format"
+      },
+      "inkz": {
+        "title": "INKZ — find your tattoo artist",
+        "meta": "UX/UI · HSE · Sep — Oct 2023",
+        "desc": "Two-month 0→1: research, MVP, monetization for artists"
+      },
+      "biohacking": {
+        "title": "Immersive ad mechanics: “Biohacking” for Invitro",
+        "meta": "Mail Media · 2024",
+        "desc": "Readymag + Spline: a native brand inside an editorial longread"
+      },
+      "retrash": {
+        "title": "RE*TRASH — media about mindful consumption",
+        "meta": "Media · HSE · 2022–2023",
+        "desc": "Product + brand: sustainability without the lecture"
+      },
+      "racktables": {
+        "title": "RackTables: redesigning infrastructure management",
+        "meta": "UX/UI · Yandex Fast Track · 2026",
+        "desc": "Fast Track: from a passive database to solution support in two days"
+      }
+    }
+  }
+}

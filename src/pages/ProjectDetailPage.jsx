@@ -1,14 +1,18 @@
 import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useI18n } from '../i18n/I18nProvider.jsx';
+import { tWithFallback } from '../i18n/tWithFallback.js';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import { projects } from '../data/projects';
 import { publicUrl } from '../utils/publicUrl.js';
 import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
+import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
 import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
 function HorizontalMvpGallery({ slides }) {
+  const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const helpId = useId();
@@ -51,18 +55,18 @@ function HorizontalMvpGallery({ slides }) {
   };
 
   const onTouchStart = (event) => {
-    const t = event.touches[0];
-    if (!t) return;
-    touchStartX.current = t.clientX;
+    const pt = event.touches[0];
+    if (!pt) return;
+    touchStartX.current = pt.clientX;
   };
 
   const onTouchEnd = (event) => {
     const start = touchStartX.current;
     touchStartX.current = null;
     if (start == null) return;
-    const t = event.changedTouches[0];
-    if (!t) return;
-    const dx = t.clientX - start;
+    const pt = event.changedTouches[0];
+    if (!pt) return;
+    const dx = pt.clientX - start;
     if (Math.abs(dx) < 48) return;
     setActiveIndex((i) => {
       if (dx < 0) return Math.min(total - 1, i + 1);
@@ -75,15 +79,14 @@ function HorizontalMvpGallery({ slides }) {
   return (
     <div className="mvp-slider" data-component="HorizontalMvpGallery">
       <p id={helpId} className="mvp-slider__sr-only">
-        Стрелки по бокам картинки, точки внизу или клавиши влево и вправо переключают слайды. На телефоне
-        можно смахнуть влево или вправо.
+        {t('projectDetail.mvpHelp')}
       </p>
 
       <div
         className="mvp-slider__viewport"
         role="region"
-        aria-roledescription="слайдер"
-        aria-label="MVP: слайды"
+        aria-roledescription={t('projectDetail.sliderRole')}
+        aria-label={t('projectDetail.mvpRegion')}
         aria-describedby={helpId}
         aria-live="polite"
         tabIndex={0}
@@ -99,7 +102,7 @@ function HorizontalMvpGallery({ slides }) {
               className="mvp-slider__chev mvp-slider__chev--prev"
               disabled={!canPrev}
               onClick={() => goTo(activeIndex - 1)}
-              aria-label="Предыдущий слайд"
+              aria-label={t('projectDetail.prevSlide')}
             >
               <span aria-hidden="true">‹</span>
             </button>
@@ -108,7 +111,7 @@ function HorizontalMvpGallery({ slides }) {
               className="mvp-slider__chev mvp-slider__chev--next"
               disabled={!canNext}
               onClick={() => goTo(activeIndex + 1)}
-              aria-label="Следующий слайд"
+              aria-label={t('projectDetail.nextSlide')}
             >
               <span aria-hidden="true">›</span>
             </button>
@@ -117,7 +120,7 @@ function HorizontalMvpGallery({ slides }) {
                 type="button"
                 className="mvp-slider__media-btn"
                 onClick={() => setLightboxIndex(activeIndex)}
-                aria-label="Открыть изображение в полный экран"
+                aria-label={t('projectDetail.openLightbox')}
               >
                 <img src={publicUrl(slide.image)} alt="" />
               </button>
@@ -130,7 +133,7 @@ function HorizontalMvpGallery({ slides }) {
         </article>
       </div>
 
-      <div className="mvp-slider__dots" role="group" aria-label="Выбор слайда">
+      <div className="mvp-slider__dots" role="group" aria-label={t('projectDetail.slideDots')}>
         {slides.map((dotSlide, index) => (
           <button
             key={dotSlide.nodeId ?? `${dotSlide.image}-${index}`}
@@ -138,8 +141,8 @@ function HorizontalMvpGallery({ slides }) {
             aria-current={index === activeIndex ? 'true' : undefined}
             aria-label={
               dotSlide.heading
-                ? `Слайд ${index + 1}: ${dotSlide.heading}`
-                : `Слайд ${index + 1} из ${total}`
+                ? t('projectDetail.slideNamed', { index: index + 1, heading: dotSlide.heading })
+                : t('projectDetail.slideOf', { index: index + 1, total })
             }
             className={`mvp-slider__dot${index === activeIndex ? ' is-active' : ''}`}
             onClick={() => goTo(index)}
@@ -153,7 +156,7 @@ function HorizontalMvpGallery({ slides }) {
             type="button"
             className="gallery-lightbox__close"
             onClick={() => setLightboxIndex(null)}
-            aria-label="Закрыть изображение"
+            aria-label={t('projectDetail.closeLightbox')}
           >
             ×
           </button>
@@ -170,6 +173,7 @@ function HorizontalMvpGallery({ slides }) {
 }
 
 function HorizontalGallery({ images }) {
+  const { t } = useI18n();
   const scrollerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
@@ -223,14 +227,14 @@ function HorizontalGallery({ images }) {
 
   return (
     <>
-      <div className="gallery gallery--horizontal" role="region" aria-label="Галерея проекта" ref={scrollerRef}>
+      <div className="gallery gallery--horizontal" role="region" aria-label={t('projectDetail.galleryRegion')} ref={scrollerRef}>
         {images.map((src, index) => (
           <button
             key={src}
             type="button"
             className={`gallery--horizontal__item${index === activeIndex ? ' is-active' : ''}`}
             onClick={() => setLightboxIndex(index)}
-            aria-label={`Открыть изображение ${index + 1}`}
+            aria-label={t('projectDetail.openImageN', { n: index + 1 })}
           >
             <img src={publicUrl(src)} alt="" />
           </button>
@@ -249,7 +253,7 @@ function HorizontalGallery({ images }) {
             type="button"
             className="gallery-lightbox__close"
             onClick={() => setLightboxIndex(null)}
-            aria-label="Закрыть изображение"
+            aria-label={t('projectDetail.closeLightbox')}
           >
             ×
           </button>
@@ -267,6 +271,8 @@ function HorizontalGallery({ images }) {
 
 export default function ProjectDetailPage() {
   const { slug } = useParams();
+  const { localizedPath, t } = useI18n();
+  const projectsListingTo = localizedPath('/projects');
   const project = projects.find((p) => p.slug === slug);
 
   const spySections = project?.layout === 'case-study' ? buildCaseStudySpySections(project) : [];
@@ -276,31 +282,34 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <div className="project-page-wrap">
-        <p>Проект не найден.</p>
-        <SeamlessProjectsLink to="/projects">К проектам</SeamlessProjectsLink>
+        <p>{t('projectDetail.notFound')}</p>
+        <SeamlessProjectsLink to={projectsListingTo}>{t('projectDetail.backToProjects')}</SeamlessProjectsLink>
       </div>
     );
   }
 
+  const displayTitle = tWithFallback(t, `projects.cards.${slug}.title`, project.title);
+  const ct = (key) => t(`common.caseStudy.${key}`);
+
   const lead = project.lead ?? project.desc;
-  const metaItems = project.metaItems ?? [{ label: 'Категория', value: project.meta }];
+  const metaItems = project.metaItems ?? [{ label: t('common.caseStudy.category'), value: project.meta }];
   const isCaseStudy = project.layout === 'case-study';
   const hasHero = Boolean(project.image);
   const caseStudyTopCards = project.topCards ?? [
-    { title: 'Задача', value: project.task },
-    { title: 'Решение', value: project.solution },
-    { title: 'Влияние', value: project.influence },
-    { title: 'Метрики', value: project.metrics },
+    { title: ct('task'), value: project.task },
+    { title: ct('solution'), value: project.solution },
+    { title: ct('influence'), value: project.influence },
+    { title: ct('metrics'), value: project.metrics },
   ];
   const topCards = (isCaseStudy
     ? caseStudyTopCards
     : [
-        { title: 'Контекст', value: project.context ?? lead },
-        { title: 'Проблема', value: project.problem ?? 'Ключевой барьер и ограничения раскрыты в задаче проекта.' },
-        { title: 'Задача', value: project.task },
-        { title: 'Решение', value: project.solution },
-        { title: 'Результат', value: project.influence },
-        { title: 'Метрики', value: project.metrics },
+        { title: ct('context'), value: project.context ?? lead },
+        { title: ct('problem'), value: project.problem ?? t('common.caseStudy.problemFallback') },
+        { title: ct('task'), value: project.task },
+        { title: ct('solution'), value: project.solution },
+        { title: ct('result'), value: project.influence },
+        { title: ct('metrics'), value: project.metrics },
       ]).filter((item) => item.value);
   const topCardsClassName = `cards${!isCaseStudy && topCards.length >= 6 ? ' cards--bento' : ''}`;
 
@@ -317,24 +326,28 @@ export default function ProjectDetailPage() {
           <ProjectCaseStudySpyNav sections={spySections} activeId={activeSpyId} />
           <section className="hero" id={`case-${project.slug}-hero`}>
             {heroImages.length ? (
-              <div className="hero__media" aria-label={project.title}>
+              <div className="hero__media" aria-label={displayTitle}>
                 {heroImages.map((src, index) => (
                   <img
                     key={src}
+                    ref={(el) => {
+                      if (index === 0) setProjectHeroVtName(el, project.slug);
+                      else if (el) el.style.removeProperty('view-transition-name');
+                    }}
                     src={publicUrl(src)}
-                    alt={index === heroImages.length - 1 ? project.title : ''}
+                    alt={index === heroImages.length - 1 ? displayTitle : ''}
                     aria-hidden={index === heroImages.length - 1 ? undefined : 'true'}
                   />
                 ))}
               </div>
             ) : (
-              <div className="hero-placeholder">Превью проекта</div>
+              <div className="hero-placeholder">{t('projectDetail.heroPlaceholder')}</div>
             )}
           </section>
 
           <section className="project-intro" id={`case-${project.slug}-intro`}>
             <div className="title">
-              <h1>{project.title}</h1>
+              <h1>{displayTitle}</h1>
               {(project.intro?.length ? project.intro : [project.lead]).map((para, idx) => (
                 <p key={idx}>{para}</p>
               ))}
@@ -394,8 +407,8 @@ export default function ProjectDetailPage() {
                         <h2 className="dual-outcomes__title">{col.title}</h2>
                         {col.tasks?.length ? (
                           <ul className="section__pills dual-outcomes__pills" aria-label={col.title}>
-                            {col.tasks.map((t, j) => (
-                              <li key={j}>{t}</li>
+                            {col.tasks.map((line, j) => (
+                              <li key={j}>{line}</li>
                             ))}
                           </ul>
                         ) : null}
@@ -456,15 +469,15 @@ export default function ProjectDetailPage() {
                 ) : null}
                 {section.tasks?.length > 0 && (
                   section.taskLayout === 'pills' ? (
-                    <ul className="section__pills" aria-label={section.pillsLabel ?? 'Ключевые пункты'}>
-                      {section.tasks.map((t, j) => (
-                        <li key={j}>{t}</li>
+                    <ul className="section__pills" aria-label={section.pillsLabel ?? t('projectDetail.pillsDefaultAria')}>
+                      {section.tasks.map((line, j) => (
+                        <li key={j}>{line}</li>
                       ))}
                     </ul>
                   ) : (
                     <ul>
-                      {section.tasks.map((t, j) => (
-                        <li key={j}>{t}</li>
+                      {section.tasks.map((line, j) => (
+                        <li key={j}>{line}</li>
                       ))}
                     </ul>
                   )
@@ -484,16 +497,16 @@ export default function ProjectDetailPage() {
                       section.nestedAfterPills.taskLayout === 'pills' ? (
                       <ul
                         className="section__pills section__pills--nested"
-                        aria-label={section.nestedAfterPills.subtitle ?? 'Дополнительно'}
+                        aria-label={section.nestedAfterPills.subtitle ?? t('projectDetail.nestedSubtitle')}
                       >
-                        {section.nestedAfterPills.tasks.map((t, j) => (
-                          <li key={j}>{t}</li>
+                        {section.nestedAfterPills.tasks.map((line, j) => (
+                          <li key={j}>{line}</li>
                         ))}
                       </ul>
                       ) : (
                       <ul>
-                        {section.nestedAfterPills.tasks.map((t, j) => (
-                          <li key={j}>{t}</li>
+                        {section.nestedAfterPills.tasks.map((line, j) => (
+                          <li key={j}>{line}</li>
                         ))}
                       </ul>
                       )
@@ -512,7 +525,7 @@ export default function ProjectDetailPage() {
                   <div className="hypothesis">
                     {section.hypotheses.map((h, j) => (
                       <div key={j} className="hyp-card">
-                        <h4>{h.title ?? `Гипотеза ${j + 1}`}</h4>
+                        <h4>{h.title ?? t('common.caseStudy.hypothesis', { n: j + 1 })}</h4>
                         <p>{h.text}</p>
                         {h.outcome ? (
                           <div className="hyp-card__outcome">
@@ -542,12 +555,12 @@ export default function ProjectDetailPage() {
                 {section.blockCards ? (
                   (() => {
                     const sectionCards = [
-                      { title: 'Контекст', value: section.blockCards.context },
-                      { title: 'Проблема', value: section.blockCards.problem },
-                      { title: 'Задача', value: section.blockCards.task },
-                      { title: 'Решение', value: section.blockCards.solution },
-                      { title: 'Влияние', value: section.blockCards.influence },
-                      { title: 'Метрики', value: section.blockCards.metrics },
+                      { title: ct('context'), value: section.blockCards.context },
+                      { title: ct('problem'), value: section.blockCards.problem },
+                      { title: ct('task'), value: section.blockCards.task },
+                      { title: ct('solution'), value: section.blockCards.solution },
+                      { title: ct('influence'), value: section.blockCards.influence },
+                      { title: ct('metrics'), value: section.blockCards.metrics },
                     ].filter((item) => item.value);
                     const sectionCardsClassName = `cards${sectionCards.length >= 6 ? ' cards--bento' : ''}`;
                     return (
@@ -567,8 +580,8 @@ export default function ProjectDetailPage() {
               </section>
               {i === 0 && (caseImages.before || caseImages.after) && (
                 <section className="images" id={`case-${project.slug}-compare`}>
-                  {caseImages.before && <img src={publicUrl(caseImages.before)} alt="До" />}
-                  {caseImages.after && <img src={publicUrl(caseImages.after)} alt="После" />}
+                  {caseImages.before && <img src={publicUrl(caseImages.before)} alt={t('common.altBefore')} />}
+                  {caseImages.after && <img src={publicUrl(caseImages.after)} alt={t('common.altAfter')} />}
                 </section>
               )}
             </Fragment>
@@ -582,19 +595,23 @@ export default function ProjectDetailPage() {
   return (
     <div className={`project-page-wrap project-page-wrap--layout-89${!hasHero ? ' project-page-wrap--no-hero' : ''}`}>
       <div className="project-back-wrap">
-        <SeamlessProjectsLink to="/projects" className="back-link">
+        <SeamlessProjectsLink to={projectsListingTo} className="back-link">
           <span className="back-link__icon" aria-hidden="true">←</span>
-          К проектам
+          {t('projectDetail.backToProjects')}
         </SeamlessProjectsLink>
       </div>
       {hasHero && (
         <div className="project-hero">
-          <img src={publicUrl(project.image)} alt={project.title} />
+          <img
+            ref={(el) => setProjectHeroVtName(el, project.slug)}
+            src={publicUrl(project.image)}
+            alt={displayTitle}
+          />
         </div>
       )}
       <div className="page-contact__wrap page-contact__wrap--project" data-node-id="89-756">
         <header className="page-header">
-          <h1>{project.title}</h1>
+          <h1>{displayTitle}</h1>
           <p>{lead}</p>
         </header>
         <div className="contact-grid">
@@ -621,8 +638,8 @@ export default function ProjectDetailPage() {
           <footer className="project-detail-footer project-detail-footer--centered">
             {project.tools?.length ? (
               <div>
-                <h3 className="project-detail-footer__label">Инструменты</h3>
-                <ul className="tools-list" aria-label="Инструменты">
+                <h3 className="project-detail-footer__label">{t('projectDetail.toolsHeading')}</h3>
+                <ul className="tools-list" aria-label={t('projectDetail.toolsListAria')}>
                   {project.tools.map((tool) => (
                     <li key={tool}>
                       <span className="tools-list__pill">{tool}</span>
@@ -633,7 +650,7 @@ export default function ProjectDetailPage() {
             ) : null}
             {project.extLink ? (
               <div>
-                <h3 className="project-detail-footer__label">Ссылки</h3>
+                <h3 className="project-detail-footer__label">{t('projectDetail.linksHeading')}</h3>
                 <a href={project.extLink.href} className="ext-link" target="_blank" rel="noopener noreferrer">
                   {project.extLink.label}
                 </a>

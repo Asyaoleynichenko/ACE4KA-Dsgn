@@ -5090,6 +5090,48 @@ p,
     mix-blend-mode: difference !important;
 }
 
+/* Переключатель языка: не сжимать и не терять под широким nav-list */
+.header .lang-switch {
+    position: relative;
+    z-index: 5;
+    flex-shrink: 0;
+    min-width: min-content;
+}
+
+.lang-switch__toggle-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35em;
+}
+
+.lang-switch__split {
+    opacity: 0.5;
+    user-select: none;
+}
+
+.lang-switch__btn {
+    cursor: pointer;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    opacity: 0.48;
+}
+
+.lang-switch__btn:hover,
+.lang-switch__btn:focus-visible {
+    opacity: 0.88;
+}
+
+.lang-switch__btn.is-active {
+    opacity: 1;
+}
+
 .header .logo .blend-text,
 .header .lang-switch .blend-text {
     mix-blend-mode: difference !important;
@@ -5104,7 +5146,7 @@ p,
     border-radius: 9999px;
     height: 46px;
     box-sizing: border-box;
-    width: min(332px, calc(100vw - 320px));
+    width: min(332px, max(0px, calc(100vw - 300px)));
     max-width: 100%;
     /* tint + blur на ::before — стабильнее в Chrome, чем backdrop на самом flex-контейнере */
     background: transparent !important;

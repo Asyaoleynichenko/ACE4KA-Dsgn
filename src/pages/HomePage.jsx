@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import { useI18n } from '../i18n/I18nProvider.jsx';
+import { tWithFallback } from '../i18n/tWithFallback.js';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import PreviewCardBlock from '../components/PreviewCardBlock';
 import ProjectCard from '../components/ProjectCard';
@@ -24,8 +26,8 @@ function headerItemPlacementStyle(placement) {
 const heroLinks = [
   { href: 'https://t.me/pnkprty', label: 'Telegram' },
   { href: 'https://behance.net/', label: 'Behance' },
-  { href: '/resume', label: 'Резюме' },
-  { href: 'mailto:hello@example.com', label: 'Mail' },
+  { href: '/resume', labelKey: 'hero.links.resume' },
+  { href: 'mailto:hello@example.com', labelKey: 'hero.links.mail' },
   { href: 'https://pinterest.com/', label: 'Pinterest' },
 ];
 
@@ -45,6 +47,8 @@ const HOME_PROJECT_SLUGS = [
 const homeProjects = HOME_PROJECT_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(Boolean);
 
 export default function HomePage() {
+  const { t, localizedPath } = useI18n();
+
   return (
     <div className="home-page home-page--chrome" data-node-id="89:347" data-name="Главная">
       <Header mode="in-hero" />
@@ -61,14 +65,14 @@ export default function HomePage() {
               <PreviewCardBlock />
             </div>
           </div>
-          <nav className="section-nav section-nav--home section-nav--overlay" aria-label="Разделы">
+          <nav className="section-nav section-nav--home section-nav--overlay" aria-label={t('hero.sectionNavAria')}>
             <div className="header-items header-items--figma">
-              {headerItemsFolder.map(({ nodeId, label, iconKey, to, placement }) => {
+              {headerItemsFolder.map(({ nodeId, labelKey, iconKey, to, placement }) => {
                 const FolderLink = to === '/projects' ? SeamlessProjectsLink : Link;
                 return (
                 <FolderLink
                   key={nodeId}
-                  to={to}
+                  to={localizedPath(to)}
                   className="header-item header-item--folder"
                   data-node-id={nodeId}
                   style={headerItemPlacementStyle(placement)}
@@ -76,14 +80,14 @@ export default function HomePage() {
                   <div className="header-item__icon-wrap">
                     <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} />
                   </div>
-                  <span className="header-item__label">{label}</span>
+                  <span className="header-item__label">{t(labelKey)}</span>
                 </FolderLink>
               );
               })}
-              {headerItemsWell.map(({ nodeId, label, iconKey, to, placement }) => (
+              {headerItemsWell.map(({ nodeId, labelKey, iconKey, to, placement }) => (
                 <Link
                   key={nodeId}
-                  to={to}
+                  to={localizedPath(to)}
                   className="header-item header-item--image-well"
                   data-node-id={nodeId}
                   style={headerItemPlacementStyle(placement)}
@@ -91,7 +95,7 @@ export default function HomePage() {
                   <div className="header-item__well">
                     <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" />
                   </div>
-                  <span className="header-item__label">{label}</span>
+                  <span className="header-item__label">{t(labelKey)}</span>
                 </Link>
               ))}
             </div>
@@ -101,52 +105,49 @@ export default function HomePage() {
         <div className="hero__row" data-node-id="1:232">
           <div className="hero__content">
             <div className="hero-content">
-              <p className="hero-role">Продуктовый дизайнер Mail Почта и Облако</p>
-              <h1 className="hero-title">Ася Олейниченко</h1>
-              <p className="hero-text">
-                5 лет запускаю и развиваю цифровые продукты. Знаю, как выстраиваются процессы, как работает продукт и
-                как просто делать хорошо.
-              </p>
-              <Link to="/about" className="hero-more hero-more--with-icon">
-                <span className="hero-more__text">Больше обо мне</span>
+              <p className="hero-role">{t('hero.role')}</p>
+              <h1 className="hero-title">{t('hero.title')}</h1>
+              <p className="hero-text">{t('hero.text')}</p>
+              <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
+                <span className="hero-more__text">{t('hero.moreAbout')}</span>
                 <span className="hero-more__chevron" aria-hidden="true" />
               </Link>
             </div>
             <div className="info-grid">
               <div className="info-card">
-                <span className="info-label">Локация</span>
-                <span className="info-value">Москва</span>
+                <span className="info-label">{t('hero.info.location')}</span>
+                <span className="info-value">{t('hero.info.locationValue')}</span>
               </div>
               <div className="info-card">
-                <span className="info-label">Компания</span>
-                <span className="info-value">VK</span>
+                <span className="info-label">{t('hero.info.company')}</span>
+                <span className="info-value">{t('hero.info.companyValue')}</span>
               </div>
               <div className="info-card">
-                <span className="info-label">Направление</span>
-                <span className="info-value">Монетизация</span>
+                <span className="info-label">{t('hero.info.focus')}</span>
+                <span className="info-value">{t('hero.info.focusValue')}</span>
               </div>
               <div className="info-card info-card--wide">
-                <span className="info-label">Образование</span>
+                <span className="info-label">{t('hero.info.education')}</span>
                 <span className="info-value">
-                  ВШЭ Дизайн
+                  {t('hero.info.educationValueLine1')}
                   <br />
-                  и программирование
+                  {t('hero.info.educationValueLine2')}
                 </span>
               </div>
               <div className="info-card">
-                <span className="info-label">Контакты</span>
-                <span className="info-value">@pnkprty</span>
+                <span className="info-label">{t('hero.info.contacts')}</span>
+                <span className="info-value">{t('hero.info.contactsValue')}</span>
               </div>
             </div>
             <div className="hero-links">
-              {heroLinks.map(({ href, label }) =>
+              {heroLinks.map(({ href, label, labelKey }) =>
                 href.startsWith('/') ? (
-                  <Link key={label} to={href}>
-                    {label}
+                  <Link key={href} to={localizedPath(href)}>
+                    {labelKey ? t(labelKey) : label}
                   </Link>
                 ) : (
-                  <a key={label} href={href} target="_blank" rel="noopener noreferrer">
-                    {label}
+                  <a key={href} href={href} target="_blank" rel="noopener noreferrer">
+                    {labelKey ? t(labelKey) : label}
                   </a>
                 ),
               )}
@@ -157,7 +158,7 @@ export default function HomePage() {
 
       <section className="section section-projects snap-screen" data-node-id="1:285" data-figma-node="1-285">
         <div className="logo-section" data-node-id="1:286">
-          <h2 className="projects-title-main" data-node-id="1:289">Проекты</h2>
+          <h2 className="projects-title-main" data-node-id="1:289">{t('hero.projectsSectionTitle')}</h2>
           <FilterPills />
         </div>
         <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">
@@ -165,16 +166,18 @@ export default function HomePage() {
             <ProjectCard
               key={item.slug}
               slug={item.slug}
-              title={item.title}
-              meta={item.meta}
-              desc={item.desc}
+              title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
+              meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}
+              desc={tWithFallback(t, `projects.cards.${item.slug}.desc`, item.desc)}
               image={item.image}
               isDemo={false}
             />
           ))}
         </div>
         <div className="show-all-wrap" data-node-id="1:397" data-figma-node="1-397">
-          <SeamlessProjectsLink to="/projects" className="btn-show-all">Все проекты</SeamlessProjectsLink>
+          <SeamlessProjectsLink to={localizedPath('/projects')} className="btn-show-all">
+            {t('hero.allProjects')}
+          </SeamlessProjectsLink>
         </div>
         </section>
       </div>
