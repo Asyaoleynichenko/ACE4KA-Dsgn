@@ -1420,3 +1420,14 @@ export const projects = [
 export function getProjectBySlug(slug) {
   return projects.find((p) => p.slug === slug);
 }
+
+/** Соседние страницы кейсов в порядке массива `projects` (только `layout: 'case-study'`). Соответствует ленте макетов в Figma 89-156. */
+export function getCaseStudyNeighbors(currentSlug) {
+  const list = projects.filter((p) => p.layout === 'case-study');
+  const idx = list.findIndex((p) => p.slug === currentSlug);
+  if (idx === -1) return { prev: null, next: null };
+  return {
+    prev: idx > 0 ? list[idx - 1] : null,
+    next: idx < list.length - 1 ? list[idx + 1] : null,
+  };
+}

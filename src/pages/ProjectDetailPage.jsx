@@ -1,14 +1,16 @@
 import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import { projects } from '../data/projects';
 import { publicUrl } from '../utils/publicUrl.js';
+import { caseStudyStripIconSrc } from '../utils/caseStudyStripIcons.js';
 import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
 import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
 import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
+import ScrollScrubRow from '../components/ScrollScrubRow.jsx';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
 function HorizontalMvpGallery({ slides }) {
@@ -311,8 +313,6 @@ export default function ProjectDetailPage() {
         { title: ct('result'), value: project.influence },
         { title: ct('metrics'), value: project.metrics },
       ]).filter((item) => item.value);
-  const topCardsClassName = `cards${!isCaseStudy && topCards.length >= 6 ? ' cards--bento' : ''}`;
-
   if (isCaseStudy) {
     const caseImages = project.caseStudyImages || {};
     const heroImages = project.heroImages?.length ? project.heroImages : project.image ? [project.image] : [];
@@ -326,7 +326,10 @@ export default function ProjectDetailPage() {
           <ProjectCaseStudySpyNav sections={spySections} activeId={activeSpyId} />
           <section className="hero" id={`case-${project.slug}-hero`}>
             {heroImages.length ? (
-              <div className="hero__media" aria-label={displayTitle}>
+              <div
+                className={`hero__media${heroImages.length > 1 ? ' hero__media--carousel' : ''}`}
+                aria-label={displayTitle}
+              >
                 {heroImages.map((src, index) => (
                   <img
                     key={src}
@@ -372,13 +375,29 @@ export default function ProjectDetailPage() {
             </div>
           </section>
 
-          <section className={topCardsClassName} id={`case-${project.slug}-overview`}>
-            {topCards.map((item) => (
-              <div key={item.title} className="card">
-                <h3>{item.title}</h3>
-                <p>{item.value}</p>
-              </div>
-            ))}
+          <section className="cards-section" id={`case-${project.slug}-overview`}>
+            <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
+              {topCards.map((item) => {
+                const iconSrc = caseStudyStripIconSrc(item.title);
+                return (
+                  <div key={item.title} className="card">
+                    <h3>{item.title}</h3>
+                    <p>{item.value}</p>
+                    {iconSrc ? (
+                      <img
+                        className="card__corner-icon"
+                        src={iconSrc}
+                        alt=""
+                        aria-hidden="true"
+                        width={56}
+                        height={56}
+                        decoding="async"
+                      />
+                    ) : null}
+                  </div>
+                );
+              })}
+            </ScrollScrubRow>
           </section>
 
           {project.showNarrative && (project.context || project.problem) ? (
@@ -529,7 +548,7 @@ export default function ProjectDetailPage() {
                   />
                 ) : null}
                 {section.hypotheses?.length > 0 && (
-                  <div className="hypothesis">
+                  <ScrollScrubRow variant="hypothesis" ariaLabel={t('projectDetail.hypothesisStripAria')}>
                     {section.hypotheses.map((h, j) => (
                       <div key={j} className="hyp-card">
                         <h4>{h.title ?? t('common.caseStudy.hypothesis', { n: j + 1 })}</h4>
@@ -541,7 +560,7 @@ export default function ProjectDetailPage() {
                         ) : null}
                       </div>
                     ))}
-                  </div>
+                  </ScrollScrubRow>
                 )}
                 {section.galleryImage ? (
                   <div className="gallery">
@@ -569,16 +588,29 @@ export default function ProjectDetailPage() {
                       { title: ct('influence'), value: section.blockCards.influence },
                       { title: ct('metrics'), value: section.blockCards.metrics },
                     ].filter((item) => item.value);
-                    const sectionCardsClassName = `cards${sectionCards.length >= 6 ? ' cards--bento' : ''}`;
                     return (
-                      <div className={sectionCardsClassName}>
-                        {sectionCards.map((item) => (
-                        <div key={item.title} className="card">
-                          <h3>{item.title}</h3>
-                          <p>{item.value}</p>
-                        </div>
-                        ))}
-                      </div>
+                      <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
+                        {sectionCards.map((item) => {
+                          const iconSrc = caseStudyStripIconSrc(item.title);
+                          return (
+                            <div key={item.title} className="card">
+                              <h3>{item.title}</h3>
+                              <p>{item.value}</p>
+                              {iconSrc ? (
+                                <img
+                                  className="card__corner-icon"
+                                  src={iconSrc}
+                                  alt=""
+                                  aria-hidden="true"
+                                  width={56}
+                                  height={56}
+                                  decoding="async"
+                                />
+                              ) : null}
+                            </div>
+                          );
+                        })}
+                      </ScrollScrubRow>
                     );
                   })()
                 ) : null}
@@ -621,7 +653,11 @@ export default function ProjectDetailPage() {
           <h1>{displayTitle}</h1>
           <p>{lead}</p>
         </header>
-        <div className="contact-grid">
+        <ScrollScrubRow
+          variant="contact"
+          className="contact-grid-wrap"
+          ariaLabel={t('projectDetail.projectMetaStripAria')}
+        >
           {metaItems.map((item) => (
             <div key={item.label} className="contact-item">
               <span className="contact-item__icon" aria-hidden="true">•</span>
@@ -640,7 +676,7 @@ export default function ProjectDetailPage() {
               </div>
             </div>
           ))}
-        </div>
+        </ScrollScrubRow>
         {(project.tools?.length || project.extLink) ? (
           <footer className="project-detail-footer project-detail-footer--centered">
             {project.tools?.length ? (

@@ -18,7 +18,10 @@
   },
   "header": {
     "menuAria": "Меню",
+    "navListAria": "Основное меню",
     "about": "О\u00a0себе",
+    "caseStudyBack": "Назад",
+    "caseStudyNext": "Следующий",
     "nav": {
       "home": "Главная",
       "projects": "Проекты",
@@ -158,7 +161,12 @@
     "pillsDefaultAria": "Ключевые пункты",
     "nestedSubtitle": "Дополнительно",
     "toolsListAria": "Инструменты",
-    "spyNavAria": "Разделы кейса"
+    "spyNavAria": "Разделы кейса",
+    "caseStudyNavAria": "К списку проектов и следующему кейсу",
+    "nextCaseWithTitle": "Следующий: {{title}}",
+    "cardsStripAria": "Карточки кейса: при прокрутке страницы полоса движется слева направо",
+    "hypothesisStripAria": "Гипотезы: при прокрутке страницы полоса движется слева направо",
+    "projectMetaStripAria": "Блоки проекта: при прокрутке страницы полоса движется слева направо"
   },
   "errors": {
     "rootTitle": "Не удалось отрисовать приложение",

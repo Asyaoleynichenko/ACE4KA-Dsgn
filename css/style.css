@@ -220,25 +220,6 @@ button:focus-visible,
     isolation: auto !important;
 }
 
-/* Figma 300:107467 — Nav container: full width with 24px page gutter */
-.nav {
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    padding-top: max(var(--space-24), env(safe-area-inset-top, 0px));
-    padding-bottom: var(--space-24);
-    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
-    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
-    min-height: 88px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-    background: transparent;
-}
-
 /* Figma 300:107467 — Logo: 24px, 32px line-height, -1px, основной текст, mix-blend-mode exclusion */
 .logo {
     font-size: 24px;
@@ -1882,66 +1863,6 @@ button:focus-visible,
     overflow-x: visible;
 }
 
-/* Figma 300:104228 — Watch more */
-.case-study-nav {
-    width: 100%;
-}
-.case-study-nav__inner {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 var(--project-page-padding-x);
-    box-sizing: border-box;
-}
-.case-study-nav__link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-8);
-    font-family: var(--font-body);
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: -1px;
-    text-transform: uppercase;
-    color: var(--color-text);
-    text-decoration: none;
-}
-.case-study-nav__link:hover {
-    color: #fff;
-    opacity: 0.92;
-}
-.case-study-nav__link--next {
-    flex-direction: row;
-}
-.case-study-nav__icon {
-    font-size: 16px;
-    line-height: 1;
-    opacity: 0.9;
-}
-.case-study-nav__icon--flip {
-    display: inline-block;
-    transform: scaleX(-1);
-}
-.case-study-nav__spacer {
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-}
-
-.project-case-study-mail .container--case-study {
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    padding: 0 var(--project-page-padding-x) var(--space-64);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-72);
-    box-sizing: border-box;
-    overflow-x: visible;
-}
-
 /* Spy-scroll по кейсу: якоря + оглавление */
 .project-case-study-mail section[id^='case-'] {
     scroll-margin-top: max(116px, calc(env(safe-area-inset-top, 0px) + 92px));
@@ -2150,6 +2071,34 @@ button:focus-visible,
     height: auto;
     aspect-ratio: 16 / 9;
 }
+.project-case-study-mail .hero__media--carousel {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+.project-case-study-mail .hero__media--carousel::-webkit-scrollbar {
+    height: 5px;
+}
+.project-case-study-mail .hero__media--carousel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: var(--radius-full);
+}
+.project-case-study-mail .hero__media--carousel img {
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
 .project-case-study-mail .hero-placeholder {
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -2265,47 +2214,66 @@ button:focus-visible,
 .project-case-study-mail .case-study-narrative__p:last-child {
     margin-bottom: 0;
 }
-.project-case-study-mail .cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-24);
+/* Карточки кейса — вертикальный скролл страницы двигает полосу слева направо (ScrollScrubRow) */
+.project-case-study-mail .cards-section {
     margin: 0;
+    width: 100%;
 }
-.project-case-study-mail .cards.cards--bento {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    grid-auto-flow: dense;
+.project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards,
+.project-case-study-mail .scroll-scrub-row.scroll-scrub-row--cards {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
 }
-.project-case-study-mail .cards.cards--bento .card:nth-child(1) {
-    grid-column: span 8;
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__sticky {
+    position: sticky;
+    top: max(12px, env(safe-area-inset-top, 0px));
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
 }
-.project-case-study-mail .cards.cards--bento .card:nth-child(2) {
-    grid-column: span 4;
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__viewport {
+    overflow: hidden;
+    width: 100%;
+    max-width: none;
+    margin-left: calc(-1 * var(--project-page-padding-x));
+    margin-right: calc(-1 * var(--project-page-padding-x));
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    box-sizing: border-box;
+    /* Ширина ленты без max-content-петли: задаём базис карточкам через cqi (~2 экранные карты) */
+    container-type: inline-size;
+    container-name: scrub-cards;
 }
-.project-case-study-mail .cards.cards--bento .card:nth-child(3) {
-    grid-column: span 4;
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--space-24);
+    width: max-content;
+    will-change: transform;
 }
-.project-case-study-mail .cards.cards--bento .card:nth-child(4) {
-    grid-column: span 8;
-}
-.project-case-study-mail .cards.cards--bento .card:nth-child(5) {
-    grid-column: span 7;
-}
-.project-case-study-mail .cards.cards--bento .card:nth-child(6) {
-    grid-column: span 5;
-}
-.project-case-study-mail .card {
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
+    --scrub-card-basis: clamp(260px, calc((100cqi - var(--space-24)) / 2), 560px);
+    flex: 0 0 var(--scrub-card-basis);
+    width: var(--scrub-card-basis);
+    max-width: var(--scrub-card-basis);
     background: #161616;
     padding: var(--space-32);
+    /* Запас снизу под правую-нижнюю иконку */
+    padding-bottom: calc(var(--space-32) + 40px);
     border-radius: var(--radius-2xl);
     border: 1px solid transparent;
     box-sizing: border-box;
     min-height: 280px;
+    position: relative;
+    overflow: hidden; /* prevents icon overflow affecting scrub calculations */
 }
-.project-case-study-mail .cards > .card:nth-child(3),
-.project-case-study-mail .cards > .card:nth-child(4) {
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:nth-child(3),
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:nth-child(4) {
     min-height: 300px;
 }
-.project-case-study-mail .card h3 {
+.project-case-study-mail .scroll-scrub-row--cards .card h3 {
     font-size: 18px;
     font-weight: 500;
     line-height: 16px;
@@ -2315,7 +2283,20 @@ button:focus-visible,
     opacity: 0.4;
     margin: 0 0 var(--space-16);
 }
-.project-case-study-mail .card p {
+
+.project-case-study-mail .scroll-scrub-row--cards .card__corner-icon {
+    position: absolute;
+    right: var(--space-24);
+    bottom: var(--space-24);
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+    flex-shrink: 0;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+}
+.project-case-study-mail .scroll-scrub-row--cards .card p {
     font-size: 21px;
     line-height: 1.2;
     letter-spacing: -1px;
@@ -2323,10 +2304,50 @@ button:focus-visible,
     margin: 0;
     white-space: pre-line;
 }
-.project-case-study-mail .cards .card:nth-child(4) p {
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:nth-child(4) p {
     font-size: 28px;
     line-height: 1.15;
     letter-spacing: -1px;
+}
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+    margin-top: var(--space-12);
+    width: 100%;
+    box-sizing: border-box;
+}
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__dot {
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.25);
+    transition: transform var(--transition-fast), background var(--transition-fast);
+}
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__dot.is-active {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.25);
+}
+.project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--cards .scroll-scrub-row__viewport--reduced {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    margin-left: calc(-1 * var(--project-page-padding-x));
+    margin-right: calc(-1 * var(--project-page-padding-x));
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    padding-bottom: var(--space-8);
+    -webkit-overflow-scrolling: touch;
+    container-type: inline-size;
+    container-name: scrub-cards-rm;
+}
+.project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--cards .scroll-scrub-row__inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--space-24);
+    width: max-content;
 }
 .project-case-study-mail .section {
     margin: 0;
@@ -2540,7 +2561,7 @@ button:focus-visible,
     opacity: 0.95;
     white-space: pre-line;
 }
-.project-case-study-mail .section .cards {
+.project-case-study-mail .section .scroll-scrub-row__track {
     margin-top: var(--space-72);
 }
 .project-case-study-mail .section p,
@@ -2600,24 +2621,95 @@ button:focus-visible,
     letter-spacing: -0.6px;
     color: #87898f;
 }
-.project-case-study-mail .section__pills + .hypothesis {
+.project-case-study-mail .section__pills ~ .scroll-scrub-row--hypothesis,
+.project-case-study-mail .gallery--before-hypotheses ~ .scroll-scrub-row--hypothesis {
     margin-top: var(--space-72);
 }
 .project-case-study-mail .section__pills + .gallery--before-hypotheses {
     margin-top: var(--space-72);
 }
-.project-case-study-mail .section__pills + .gallery--before-hypotheses + .hypothesis {
+.project-case-study-mail .scroll-scrub-row--hypothesis + .gallery {
     margin-top: var(--space-72);
 }
-.project-case-study-mail .hypothesis + .gallery {
-    margin-top: var(--space-72);
+.project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--hypothesis,
+.project-case-study-mail .scroll-scrub-row.scroll-scrub-row--hypothesis {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
 }
-.project-case-study-mail .hypothesis {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__sticky {
+    position: sticky;
+    top: max(12px, env(safe-area-inset-top, 0px));
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
+}
+.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__viewport {
+    overflow: hidden;
+    width: 100%;
+    margin-left: calc(-1 * var(--project-page-padding-x));
+    margin-right: calc(-1 * var(--project-page-padding-x));
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    box-sizing: border-box;
+    container-type: inline-size;
+    container-name: scrub-hyp;
+}
+.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     gap: var(--space-20);
-    margin-top: 0;
+    width: max-content;
     align-items: stretch;
+    will-change: transform;
+}
+.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__inner > .hyp-card {
+    --scrub-hyp-basis: clamp(260px, calc((100cqi - var(--space-20)) / 2), 560px);
+    flex: 0 0 var(--scrub-hyp-basis);
+    width: var(--scrub-hyp-basis);
+    max-width: var(--scrub-hyp-basis);
+    box-sizing: border-box;
+}
+.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+    margin-top: var(--space-12);
+    width: 100%;
+    box-sizing: border-box;
+}
+.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__dot {
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.25);
+    transition: transform var(--transition-fast), background var(--transition-fast);
+}
+.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__dot.is-active {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.25);
+}
+.project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--hypothesis .scroll-scrub-row__viewport--reduced {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    margin-left: calc(-1 * var(--project-page-padding-x));
+    margin-right: calc(-1 * var(--project-page-padding-x));
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    padding-bottom: var(--space-8);
+    -webkit-overflow-scrolling: touch;
+    container-type: inline-size;
+    container-name: scrub-hyp-rm;
+}
+.project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--hypothesis .scroll-scrub-row__inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--space-20);
+    width: max-content;
 }
 .project-case-study-mail .hyp-card {
     display: flex;
@@ -3013,17 +3105,17 @@ button:focus-visible,
     .project-case-study-mail .project-intro {
         flex-direction: column;
     }
-    .project-case-study-mail .cards {
-        grid-template-columns: 1fr;
+    .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
+        --scrub-card-basis: min(340px, calc(100cqi - var(--space-16)));
+        flex: 0 0 var(--scrub-card-basis);
+        width: var(--scrub-card-basis);
+        max-width: var(--scrub-card-basis);
     }
-    .project-case-study-mail .cards.cards--bento {
-        grid-template-columns: 1fr;
-    }
-    .project-case-study-mail .cards.cards--bento .card {
-        grid-column: auto;
-    }
-    .project-case-study-mail .hypothesis {
-        grid-template-columns: 1fr;
+    .project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__inner > .hyp-card {
+        --scrub-hyp-basis: min(300px, calc(100cqi - var(--space-16)));
+        flex: 0 0 var(--scrub-hyp-basis);
+        width: var(--scrub-hyp-basis);
+        max-width: var(--scrub-hyp-basis);
     }
     .project-case-study-mail .images {
         grid-template-columns: 1fr;
@@ -4371,9 +4463,78 @@ button:focus-visible,
     align-items: center;
     text-align: center;
 }
-.project-page-wrap--layout-89 .contact-grid {
-    margin-left: auto;
-    margin-right: auto;
+.project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row__track,
+.project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row--contact {
+    position: relative;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__sticky {
+    position: sticky;
+    top: max(12px, env(safe-area-inset-top, 0px));
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__viewport {
+    overflow: hidden;
+    width: 100%;
+    margin-left: calc(-1 * var(--project-page-padding-x));
+    margin-right: calc(-1 * var(--project-page-padding-x));
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    box-sizing: border-box;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--layout-89-756-grid-gap);
+    width: max-content;
+    will-change: transform;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__inner > .contact-item {
+    flex: 0 0 min(280px, min(var(--layout-89-756-grid-max-width), 88vw));
+    width: min(280px, min(var(--layout-89-756-grid-max-width), 88vw));
+    max-width: min(280px, min(var(--layout-89-756-grid-max-width), 88vw));
+    box-sizing: border-box;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+    margin-top: var(--space-12);
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__dot {
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.22);
+    transition: transform var(--transition-fast), background var(--transition-fast);
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__dot.is-active {
+    background: rgba(255, 255, 255, 0.88);
+    transform: scale(1.25);
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--reduced-motion.scroll-scrub-row--contact .scroll-scrub-row__viewport--reduced {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    margin-left: calc(-1 * var(--project-page-padding-x));
+    margin-right: calc(-1 * var(--project-page-padding-x));
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    padding-bottom: var(--space-8);
+    -webkit-overflow-scrolling: touch;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--reduced-motion.scroll-scrub-row--contact .scroll-scrub-row__inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--layout-89-756-grid-gap);
+    width: max-content;
 }
 .project-page-wrap--layout-89 .contact-item {
     flex-direction: column;
@@ -5144,19 +5305,32 @@ p,
     }
 }
 
-/* Figma 1:230 Header (инстанс 300:107467): max 1358px, отступы 21px; пилюля gap 8 + flex-start; logo/lang — exclusion */
+/* Figma 432:30376 Header — строка контролов под логотипом */
 .header .nav {
-    max-width: 1358px;
+    max-width: min(1358px, 100%);
     margin-left: auto;
     margin-right: auto;
-    padding-top: max(21px, env(safe-area-inset-top, 0px));
-    padding-bottom: 21px;
-    padding-left: max(21px, env(safe-area-inset-left, 0px));
-    padding-right: max(21px, env(safe-area-inset-right, 0px));
-    min-height: 88px;
+    padding-top: max(12px, env(safe-area-inset-top, 0px));
+    padding-bottom: 12px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    min-height: 0;
+    box-sizing: border-box;
+    display: flex;
     align-items: center;
+    justify-content: flex-start;
     flex-wrap: nowrap;
-    gap: 20px;
+    gap: clamp(12px, 2vw, 20px);
+    background: transparent;
+}
+
+.header .nav__trail {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 28px);
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    min-width: 0;
 }
 
 .header .logo,
@@ -5168,12 +5342,13 @@ p,
     mix-blend-mode: exclusion !important;
 }
 
-/* Переключатель языка: не сжимать и не терять под широким nav-list */
+/* Переключатель языка: компактнее рядом с пилюлей навигации */
 .header .lang-switch {
     position: relative;
     z-index: 5;
     flex-shrink: 0;
-    min-width: min(228px, 42vw);
+    min-width: 0;
+    text-align: right;
 }
 
 .lang-switch__toggle-row {
@@ -5215,17 +5390,18 @@ p,
     mix-blend-mode: exclusion !important;
 }
 
-.header .nav-list[data-node-id="I300:107467;10:1530"] {
+.header .nav-list {
     display: inline-flex;
     justify-content: flex-start;
     align-items: center;
     padding: 4px;
     gap: 8px;
     border-radius: 9999px;
-    height: 46px;
+    min-height: 46px;
+    height: auto;
     box-sizing: border-box;
     width: auto;
-    max-width: min(332px, max(0px, calc(100vw - 300px)));
+    max-width: min(440px, max(0px, calc(100vw - 220px)));
     /* tint + blur на ::before — стабильнее в Chrome, чем backdrop на самом flex-контейнере */
     background: transparent !important;
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -5239,8 +5415,12 @@ p,
     -webkit-backdrop-filter: none !important;
 }
 
+.header .nav-list--case-study {
+    max-width: min(760px, calc(100vw - 120px));
+}
+
 /* Слой матового стекла под пунктами меню (Chrome-friendly) */
-.header .nav-list[data-node-id="I300:107467;10:1530"]::before {
+.header .nav-list::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -5262,11 +5442,17 @@ p,
 }
 
 .header .nav-list .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     min-height: auto;
-    height: 36px;
+    min-width: auto;
+    height: auto;
     font-size: 14px;
     line-height: 20px;
     letter-spacing: -1px;
+    text-transform: uppercase;
     color: #fafafa !important;
     padding: 8px 21px;
     border-radius: 100px;
@@ -5292,7 +5478,9 @@ p,
     outline: 1px solid rgba(255, 255, 255, 0.2);
     outline-offset: 0;
     background: rgba(0, 0, 0, 0.55);
-    box-shadow: inset 1px -1px 1.6px 0 rgba(255, 255, 255, 0.51), inset 0 0 6.2px 0 rgba(255, 255, 255, 0.51);
+    box-shadow:
+        inset 1px -1px 1.6px 0 rgba(255, 255, 255, 0.51),
+        inset 0 0 6.2px 0 rgba(255, 255, 255, 0.51);
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
@@ -5305,10 +5493,49 @@ p,
     background: rgba(255, 255, 255, 0.06);
 }
 
+.header .nav-list .nav-link__snow {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.92;
+}
+
+.header .nav-list .nav-link__snow--flip {
+    transform: scaleX(-1);
+}
+
+.header .nav-list .nav-link--case-next {
+    padding: 8px 12px 8px 21px;
+}
+
+.header .nav-list--case-study > li:nth-child(2) {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.header .nav-list .nav-link--case-title.nav-link.active {
+    width: 100%;
+    max-width: min(380px, 46vw);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .header .nav-list .nav-link--case-title.nav-link.active {
+        max-width: min(240px, 62vw);
+    }
+}
+
 @media (max-width: 900px) {
     .header .nav {
-        padding-top: max(var(--space-24), env(safe-area-inset-top, 0px));
-        padding-bottom: var(--space-24);
+        padding-top: max(12px, env(safe-area-inset-top, 0px));
+        padding-bottom: 12px;
         padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
         padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
         max-width: none;
@@ -5317,7 +5544,11 @@ p,
         margin-right: 0;
     }
 
-    .header .nav-list[data-node-id="I300:107467;10:1530"] {
+    .header .nav-toggle {
+        margin-left: auto;
+    }
+
+    .header .nav-list {
         width: min(280px, calc(100vw - 48px));
         border-radius: 0;
         background: transparent !important;
@@ -5329,7 +5560,7 @@ p,
         -webkit-backdrop-filter: none !important;
     }
 
-    .header .nav-list[data-node-id="I300:107467;10:1530"]::before {
+    .header .nav-list::before {
         background: rgba(26, 26, 26, 0.72);
         box-shadow: none;
         border-radius: inherit;

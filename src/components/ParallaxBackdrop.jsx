@@ -9,7 +9,14 @@ export default function ParallaxBackdrop() {
     if (!root) return;
 
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let raf = null;
+    /** Плавное следование за скроллом: τ секунд — чем больше, тем мягче движение слоёв */
+    const TAU_SEC = 0.32;
+    const EPS_PX = 0.2;
+
+    let tickRaf = null;
+    let lastTs = 0;
+    let targetY = 0;
+    let smoothY = 0;
 
     const clearVars = () => {
       root.style.removeProperty('--parallax-y1');
@@ -25,28 +32,55 @@ export default function ParallaxBackdrop() {
       return window.scrollY || document.documentElement.scrollTop || 0;
     };
 
-    const applyScroll = () => {
-      raf = null;
-      if (mq.matches) {
-        clearVars();
-        return;
-      }
-      const y = getScrollY();
+    const applyParallaxFromY = (y) => {
       root.style.setProperty('--parallax-y1', `${y * 0.06}px`);
       root.style.setProperty('--parallax-y2', `${y * 0.12}px`);
       root.style.setProperty('--parallax-y3', `${y * 0.18}px`);
     };
 
+    const tick = (now) => {
+      tickRaf = null;
+      if (mq.matches) {
+        clearVars();
+        lastTs = 0;
+        return;
+      }
+      if (!lastTs) lastTs = now;
+      const dt = Math.min((now - lastTs) / 1000, 0.05);
+      lastTs = now;
+      const alpha = dt > 0 ? 1 - Math.exp(-dt / TAU_SEC) : 1;
+      smoothY += (targetY - smoothY) * alpha;
+      applyParallaxFromY(smoothY);
+
+      if (Math.abs(targetY - smoothY) > EPS_PX) {
+        tickRaf = window.requestAnimationFrame(tick);
+      } else {
+        smoothY = targetY;
+        applyParallaxFromY(smoothY);
+        lastTs = 0;
+      }
+    };
+
     const onScroll = () => {
-      if (raf == null) raf = window.requestAnimationFrame(applyScroll);
+      targetY = getScrollY();
+      if (tickRaf == null) tickRaf = window.requestAnimationFrame(tick);
     };
 
     const onMotionChange = () => {
-      if (mq.matches) clearVars();
-      else applyScroll();
+      if (mq.matches) {
+        if (tickRaf != null) window.cancelAnimationFrame(tickRaf);
+        tickRaf = null;
+        lastTs = 0;
+        clearVars();
+      } else {
+        targetY = smoothY = getScrollY();
+        applyParallaxFromY(smoothY);
+        lastTs = 0;
+      }
     };
 
-    applyScroll();
+    targetY = smoothY = getScrollY();
+    if (!mq.matches) applyParallaxFromY(smoothY);
     mq.addEventListener('change', onMotionChange);
     window.addEventListener('scroll', onScroll, { passive: true });
     scrollParent()?.addEventListener('scroll', onScroll, { passive: true });
@@ -55,7 +89,7 @@ export default function ParallaxBackdrop() {
       mq.removeEventListener('change', onMotionChange);
       window.removeEventListener('scroll', onScroll);
       scrollParent()?.removeEventListener('scroll', onScroll);
-      if (raf != null) window.cancelAnimationFrame(raf);
+      if (tickRaf != null) window.cancelAnimationFrame(tickRaf);
       clearVars();
     };
   }, []);

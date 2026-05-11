@@ -18,7 +18,10 @@
   },
   "header": {
     "menuAria": "Menu",
+    "navListAria": "Main navigation",
     "about": "About",
+    "caseStudyBack": "Back",
+    "caseStudyNext": "Next",
     "nav": {
       "home": "Home",
       "projects": "Projects",
@@ -158,7 +161,12 @@
     "pillsDefaultAria": "Key points",
     "nestedSubtitle": "More detail",
     "toolsListAria": "Tools",
-    "spyNavAria": "Case sections"
+    "spyNavAria": "Case sections",
+    "caseStudyNavAria": "All projects and next case study",
+    "nextCaseWithTitle": "Next: {{title}}",
+    "cardsStripAria": "Case cards: the row moves left to right as you scroll the page",
+    "hypothesisStripAria": "Hypotheses: the row moves left to right as you scroll the page",
+    "projectMetaStripAria": "Project blocks: the row moves left to right as you scroll the page"
   },
   "errors": {
     "rootTitle": "Couldn’t render the app",
