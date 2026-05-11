@@ -16,7 +16,7 @@ This project follows design specs from **Figma file «В разработку»*
 | **1-399** | Projects page layout | `ProjectsPage` — `.page-projects__wrap` |
 | **1-522** | Project detail page | `ProjectDetailPage` — `.project-page-wrap`, `.project-detail` |
 | **16-184** | Footer area / links row | `Footer` — `.footer-links-row` (or parent of 16-185…) |
-| **16-164** | Header | `Header` — `.header`, `.nav`, `.nav-list`, `.logo`, `.lang-switch` |
+| **16-164** / **432:30376** | Header (компонент + мастер 1-230) | `Header` — `.header` (`data-node-id="432:30376"`), `.nav`, `.nav-list`, `.logo`, `.lang-switch` |
 | **16-170** | Footer | `Footer` — `.footer`, `.footer-ace4ka`, `.footer-inner` |
 
 ## Tokens to use
@@ -54,13 +54,13 @@ This project follows design specs from **Figma file «В разработку»*
 ### 16-184 (Footer area)
 - Part of footer; links row or container for 16-185…16-209. Use `.footer-links-row`, gap 14px, 14px uppercase links.
 
-### 16-164 Header (master 1-230; live instance **300:107467**)
-- Padding 21px; min-height 88px; max-width 1358px.
-- Logo: 24px, 32px line-height, -1px, #fafafa, mix-blend-mode: exclusion; non-breaking space in «Ася Олейниченко».
+### 16-164 Header (master 1-230; компонент **432:30376**; инстанс **300:107467**)
+- Контейнер `.nav`: max-width **1358px**; padding **24px × 12px** (главная 89:347 — **34px** по горизонтали); одна строка **`justify-content: space-between`**: логотип → Navigation (пилюля) → язык **228px** справа.
+- Logo: 24px, 32px line-height, -1px, #fafafa, mix-blend-mode: exclusion; non-breaking space в «Ася Олейниченко».
 - Nav pill (300:107467): background rgba(255,255,255,0.11), padding 4px, border-radius 9999px, `backdrop-filter` via **`--blur-nav-list`** (liquid blur) + saturate; **inline-flex**, **gap 8px**, **justify-content: flex-start**; links inside pill use **normal** mix-blend so blur reads; active link rgba(0,0,0,0.55), inset box-shadow, **outline 1px rgba(255,255,255,0.2)**, optional blur on active (`--blur-nav-pill`).
 - Active link: background rgba(0,0,0,0.55), border rgba(255,255,255,0.48), letter-spacing 1px, inset shadow per `--shadow-nav-active`.
-- Lang: 24px, min-width 228px, mix-blend exclusion.
-- Use `data-node-id="300:107467"` on `.header` (see `Header.jsx`); master frame remains [1-230](https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=1-230&m=dev).
+- Lang: 24px, **width 228px** (колонка справа), mix-blend exclusion.
+- Use `data-node-id="432:30376"` on `<header class="header">` (см. `Header.jsx`); мастер-фрейм [1-230](https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=1-230&m=dev), компонент [432:30376](https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=432-30376&m=dev).
 
 ### 16-170 Footer
 - Max-width 1358px. ACE4KA block (home only): 20.625rem, 600, #fff, -webkit-text-stroke 78px #101010; then inner block #101010, 16px padding.

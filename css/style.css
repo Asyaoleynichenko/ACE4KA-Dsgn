@@ -46,9 +46,11 @@ html.snap-pages #root.snap-pages-root {
     min-height: 100dvh;
 }
 
-/* Футер: только высота контента — полноэкранный min-height snap-screen давал пустоту под текстом */
-.footer.snap-screen {
+/* Футер: высота по контенту + обязательная точка snap (без align скролл mandatory не доходит до футера) */
+.site-footer.site-footer--snap {
     min-height: auto;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
 }
 
 /* Главная: hero сбрасывал min-height — для snap возвращаем высоту экрана */
@@ -61,7 +63,7 @@ html.snap-pages #root.snap-pages-root {
     scroll-margin-top: 0;
 }
 
-.page-home .footer.snap-screen {
+.page-home .site-footer.site-footer--snap {
     scroll-margin-top: 0;
 }
 
@@ -194,8 +196,8 @@ button:focus-visible,
     border-radius: var(--radius-lg);
 }
 .contact-item a:focus-visible,
-.footer-links-row a:focus-visible,
-.footer-note a:focus-visible {
+.site-footer__link:focus-visible,
+.site-footer__note a:focus-visible {
     outline-offset: 2px;
 }
 
@@ -819,18 +821,18 @@ button:focus-visible,
 }
 
 .preview-card__link {
-    gap: 16px;
+    gap: var(--preview-card-media-body-gap);
 }
 
 .preview-image {
     min-height: 358px;
     border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     background: rgba(38, 38, 38, 0.4);
 }
 
 .preview-image img {
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
 }
 
 .preview-card__body {
@@ -844,7 +846,7 @@ button:focus-visible,
     font-weight: 500;
     line-height: 32px;
     letter-spacing: -0.53px;
-    color: #fafafa;
+    color: var(--project-title-color);
 }
 
 .preview-card__meta {
@@ -854,7 +856,7 @@ button:focus-visible,
     line-height: 16px;
     letter-spacing: 0.6px;
     text-transform: uppercase;
-    color: #fafafa;
+    color: var(--project-title-color);
     opacity: 0.4;
 }
 
@@ -864,7 +866,7 @@ button:focus-visible,
     font-weight: 400;
     line-height: 22.75px;
     letter-spacing: -0.15px;
-    color: #fafafa;
+    color: var(--project-title-color);
     opacity: 0.6;
 }
 
@@ -877,7 +879,7 @@ button:focus-visible,
 
 @media (max-width: 768px) {
     .preview-card {
-        border-radius: 16px;
+        border-radius: var(--radius-lg);
     }
 
     .preview-image {
@@ -996,7 +998,7 @@ button:focus-visible,
     overflow: hidden;
     box-shadow: var(--shadow-preview-card);
     transition: transform var(--transition-base), box-shadow var(--transition-base);
-    background: #262626;
+    background: var(--color-elevated-mid);
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1005,12 +1007,12 @@ button:focus-visible,
     box-shadow: var(--shadow-preview-card-hover);
 }
 
-/* Слой 1: #262626 (Figma mix-blend-plus-lighter — в CSS опускаем) */
+/* Слой 1: сплошная база (Figma mix-blend-plus-lighter — в CSS опускаем) */
 .preview-card-block__overlay--base {
     position: absolute;
     inset: 0;
     border-radius: var(--radius-lg);
-    background: #262626;
+    background: var(--color-elevated-mid);
     pointer-events: none;
     z-index: 0;
 }
@@ -1242,11 +1244,11 @@ button:focus-visible,
 .preview-card-block__image {
     position: absolute;
     top: var(--preview-image-titlebar-height);
-    left: var(--space-8);
-    right: var(--space-8);
+    left: var(--preview-image-inset-x);
+    right: var(--preview-image-inset-x);
     bottom: var(--space-8);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: var(--radius);
+    border-radius: var(--preview-image-inner-radius);
     overflow: hidden;
     z-index: 1;
     box-sizing: border-box;
@@ -1257,12 +1259,13 @@ button:focus-visible,
 }
 
 .preview-card-block--mac-window .preview-card-block__image {
-    top: 40px;
-    left: 0;
-    right: 0;
+    top: var(--preview-image-titlebar-height);
+    left: var(--preview-image-inset-x);
+    right: var(--preview-image-inset-x);
     bottom: 0;
     border: none;
-    border-radius: 0 0 10px 10px;
+    border-radius: var(--preview-image-inner-radius);
+    overflow: hidden;
     background: transparent;
 }
 
@@ -1273,7 +1276,7 @@ button:focus-visible,
     object-fit: cover;
     object-position: center;
     display: block;
-    border-radius: var(--radius);
+    border-radius: var(--preview-image-inner-radius);
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
 }
@@ -1281,7 +1284,7 @@ button:focus-visible,
 .preview-card-block--mac-window .preview-card-block__image img {
     max-width: none;
     border: none;
-    border-radius: 0 0 10px 10px;
+    border-radius: var(--preview-image-inner-radius);
 }
 
 .hero__card .preview-card-block {
@@ -2497,7 +2500,7 @@ button:focus-visible,
     font-weight: 500;
     line-height: 0.9;
     letter-spacing: -2px;
-    color: #fafafa;
+    color: var(--project-title-color);
 }
 
 .project-case-study-mail .title-info-card__text-group p {
@@ -2637,7 +2640,7 @@ button:focus-visible,
     margin: 0;
     padding: var(--space-8) var(--space-20);
     border-radius: var(--radius-full);
-    background: #262626;
+    background: var(--color-elevated-mid);
     font-size: 20px;
     line-height: normal;
     letter-spacing: -0.6px;
@@ -2769,7 +2772,7 @@ button:focus-visible,
     display: inline-block;
     padding: var(--space-8) var(--space-20);
     border-radius: var(--radius-full);
-    background: #262626;
+    background: var(--color-elevated-mid);
     font-size: 20px;
     line-height: 1.2;
     letter-spacing: -0.6px;
@@ -3488,13 +3491,13 @@ button:focus-visible,
 .project-meta:not(.project-meta--card) {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 16px;
+    gap: var(--space-16);
 }
 
 .project-meta:not(.project-meta--card) .project-meta-item {
-    background: #0f0f0f;
+    background: var(--project-meta-card-bg);
     border-radius: var(--radius-lg);
-    padding: 16px;
+    padding: var(--space-16);
 }
 
 .project-meta:not(.project-meta--card) .project-meta-item .label {
@@ -3782,16 +3785,20 @@ button:focus-visible,
     color: var(--color-text-primary);
 }
 
-/* Figma 140:12528 — «О себе»: контентная колонка; общий Footer из Layout */
+/* Figma 140:12528 — «О себе»: колонка контента; max-width как шапка/футер (1358) */
 .page-about .main:has(.about-page) {
     display: block;
     align-items: stretch;
     text-align: left;
-    max-width: 1310px;
+    max-width: min(1358px, 100%);
     margin-left: auto;
     margin-right: auto;
     padding-top: 120px;
     padding-bottom: 0;
+}
+
+.page-about .about-page [id] {
+    scroll-margin-top: max(100px, calc(env(safe-area-inset-top, 0px) + 72px));
 }
 
 .about-page {
@@ -4475,8 +4482,8 @@ button:focus-visible,
     justify-content: center;
 }
 
-/* Footer — Figma 420:21377 (главная: ACE4KA + тёмный блок; колонка max 1358 как шапка) */
-.footer {
+/* Site footer — макет: ACE4KA на чёрном; снизу слева статус + примечание, справа ряд ссылок */
+.site-footer {
     position: relative;
     z-index: 1;
     display: flex;
@@ -4488,46 +4495,19 @@ button:focus-visible,
     margin: 0;
     padding: 0;
     overflow-x: clip;
-}
-
-/* Figma 16:171 / 420:21377 — ACE4KA: горизонталь как у .header .nav (24px; на главной 34px) */
-.footer-ace4ka {
-    align-self: stretch;
-    color: var(--color-text-primary);
-    -webkit-text-fill-color: var(--color-text-primary);
-    text-align: center;
-    -webkit-text-stroke-width: 0.237em;
-    -webkit-text-stroke-color: #101010;
-    paint-order: stroke fill;
-    font-family: var(--font-body), Inter, sans-serif;
-    font-size: clamp(3.25rem, 14vw, 20.625rem);
-    font-style: normal;
-    font-weight: 600;
-    line-height: 0.9;
-    letter-spacing: -0.0625rem;
-    text-transform: uppercase;
-    margin: 0;
-    padding: 0 max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px));
     box-sizing: border-box;
 }
 
-.page-home .footer-ace4ka {
-    padding-left: max(34px, env(safe-area-inset-left, 0px));
-    padding-right: max(34px, env(safe-area-inset-right, 0px));
-}
-
-/* Figma 16:172 — тёмная полоса на всю ширину; вертикаль только здесь (без двойного padding с контентом) */
-.footer-inner {
+.site-footer__surface {
     width: 100%;
-    background: #101010;
-    padding: var(--space-16) 0;
+    background: #000;
+    padding: clamp(2rem, 5vw, 3.5rem) 0;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
 }
 
-/* Как .header .nav: max-width 1358 + боковые inset внутри одной коробки (border-box) */
-.footer__content {
+.site-footer__contain {
     width: 100%;
     max-width: 1358px;
     margin-left: auto;
@@ -4537,50 +4517,85 @@ button:focus-visible,
     padding-right: max(24px, env(safe-area-inset-right, 0px));
 }
 
-.page-home .footer__content {
+.page-home .site-footer__contain {
     padding-left: max(34px, env(safe-area-inset-left, 0px));
     padding-right: max(34px, env(safe-area-inset-right, 0px));
 }
 
-.footer-inner > * {
-    max-width: none;
-    margin-left: 0;
-    margin-right: 0;
+.site-footer__wordmark {
+    margin: 0 0 clamp(1.75rem, 4vw, 3rem);
+    padding: 0 max(24px, env(safe-area-inset-left, 0px)) 0 max(24px, env(safe-area-inset-right, 0px));
+    box-sizing: border-box;
     width: 100%;
+    max-width: none;
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    -webkit-text-stroke-width: 0;
+    paint-order: normal;
 }
 
-/* Figma 16:173 — Top: row (status + links) align-end, then note on next row, row-gap 16px */
-.footer-top {
+.page-home .site-footer__wordmark {
+    padding-left: max(34px, env(safe-area-inset-left, 0px));
+    padding-right: max(34px, env(safe-area-inset-right, 0px));
+}
+
+/* Буквы от края до края вьюпорта (в пределах padding) */
+.site-footer__wordmark__track {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-16);
-    padding: 0;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+    max-width: none;
     margin: 0;
+    padding: 0;
+    font-family: var(--font-body), Inter, sans-serif;
+    font-size: clamp(2.75rem, min(22vw, 19rem), 20.625rem);
+    font-style: normal;
+    font-weight: 600;
+    line-height: 0.88;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: inherit;
 }
 
-.footer-top__row {
+.site-footer__wordmark__char {
+    flex: 0 0 auto;
+    display: block;
+    line-height: inherit;
+}
+
+.site-footer__main {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
-    gap: var(--space-16);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
 }
 
-/* Figma 16:174–176 — Status: gap 12px, горизонтальный inset 12px внутри строки */
-.footer-status {
+.site-footer__left {
+    flex: 1 1 260px;
+    max-width: min(100%, 640px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(12px, 2vw, 20px);
+    min-width: 0;
+}
+
+.site-footer__status {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 0 12px;
-    font-size: 24px;
+    padding: 0;
+    margin: 0;
+    font-size: clamp(18px, 2.2vw, 24px);
     font-weight: 400;
     line-height: 1.2;
-    letter-spacing: -1px;
-    color: var(--color-text-primary);
-    margin: 0;
+    letter-spacing: -0.02em;
+    color: #fff;
 }
 
-.footer-dot {
+.site-footer__dot {
     display: inline-block;
     flex-shrink: 0;
     width: 19px;
@@ -4590,120 +4605,67 @@ button:focus-visible,
     vertical-align: middle;
 }
 
-/* Figma 16:177 — Links row; gap 14px в макете */
-.footer-links-row {
+.site-footer__nav {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-left: auto;
+}
+
+.site-footer__list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    flex: 1 1 auto;
     gap: 14px;
     margin: 0;
-    min-width: 0;
+    padding: 0;
+    list-style: none;
 }
 
-.footer-link,
-.footer-links-row a {
+.site-footer__item {
+    margin: 0;
+    padding: 0;
+}
+
+.site-footer__link {
+    display: inline;
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
-    letter-spacing: 1px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-text-primary);
+    color: #fff;
     text-decoration: none;
     transition: opacity var(--transition-base), color var(--transition-base), text-decoration-color var(--transition-base);
 }
 
-.footer-link:hover,
-.footer-links-row a:hover {
+.site-footer__link:hover {
     text-decoration: underline;
     opacity: 0.92;
 }
 
-/* Figma 16:183 — Note: 24px, -1px tracking, 1.2 line-height, max 661px; "расскажите мне об этом" underlined */
-.footer-note {
-    font-size: 24px;
+/* Примечание — уже статуса, узкая колонка как в макете (~половина блока) */
+.site-footer__note {
+    font-size: clamp(14px, 1.65vw, 18px);
     font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    color: var(--color-text-primary);
-    max-width: 661px;
+    line-height: 1.45;
+    letter-spacing: 0;
+    color: rgba(255, 255, 255, 0.92);
     margin: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-.footer-note a {
-    color: var(--color-text-primary);
+.site-footer__note a {
+    color: inherit;
     text-decoration: underline;
     text-decoration-skip-ink: none;
 }
 
-.footer-note a:hover {
+.site-footer__note a:hover {
     text-decoration: none;
 }
 
-/* Поверх глобальной типографики (h3 / p / secondary) — размеры Figma 420:21377 / 16-170 */
-.footer .footer-status {
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    color: var(--color-text-primary);
-}
-
-.footer .footer-note {
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    color: var(--color-text-primary);
-    max-width: 661px;
-    margin: 0;
-}
-
-.footer .footer-link,
-.footer .footer-links-row a {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--color-text-primary);
-}
-
-.footer .footer-note a {
-    color: inherit;
-}
-
-.footer-credits {
-    text-align: right;
-}
-
-.footer-credits p {
-    font-size: 0.85rem;
-    color: var(--color-text-primary);
-}
-
-.footer p {
-    font-size: 0.9rem;
-    color: var(--color-text-primary);
-}
-
-.footer-links {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.footer-links a {
-    font-size: 0.95rem;
-    color: var(--color-text-primary);
-}
-
-.footer-links a:hover {
-    color: var(--color-text-primary);
-    opacity: 0.9;
-}
-
-/* Mobile */
 @media (max-width: 768px) {
     .nav {
         padding-top: max(var(--space-24), env(safe-area-inset-top, 0px));
@@ -4731,43 +4693,62 @@ button:focus-visible,
         grid-template-columns: 1fr;
     }
 
-    .footer-ace4ka {
+    .site-footer__surface {
+        padding-top: var(--space-24);
+        padding-bottom: var(--space-24);
+    }
+
+    .site-footer__contain {
         padding-left: max(24px, env(safe-area-inset-left, 0px));
         padding-right: max(24px, env(safe-area-inset-right, 0px));
     }
 
-    .page-home .footer-ace4ka {
+    .page-home .site-footer__contain {
         padding-left: max(34px, env(safe-area-inset-left, 0px));
         padding-right: max(34px, env(safe-area-inset-right, 0px));
     }
 
-    .footer-inner {
-        padding-top: var(--space-16);
-        padding-bottom: var(--space-16);
-    }
-
-    .footer__content {
+    .site-footer__wordmark {
+        margin-bottom: clamp(1.25rem, 4vw, 2rem);
         padding-left: max(24px, env(safe-area-inset-left, 0px));
         padding-right: max(24px, env(safe-area-inset-right, 0px));
     }
 
-    .page-home .footer__content {
-        padding-left: max(34px, env(safe-area-inset-left, 0px));
-        padding-right: max(34px, env(safe-area-inset-right, 0px));
+    .page-home .site-footer__wordmark {
+        padding-left: max(24px, env(safe-area-inset-left, 0px));
+        padding-right: max(24px, env(safe-area-inset-right, 0px));
     }
 
-    .footer-top__row {
+    .site-footer__wordmark__track {
+        font-size: clamp(2.25rem, min(19vw, 5.25rem), 14rem);
+    }
+
+    .site-footer__main {
         flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+
+    .site-footer__left {
+        max-width: none;
         align-items: center;
         text-align: center;
-        gap: 1rem;
     }
 
-    .footer-links-row {
+    .site-footer__status {
         justify-content: center;
     }
 
-    .footer-note {
+    .site-footer__nav {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .site-footer__list {
+        justify-content: center;
+    }
+
+    .site-footer__note {
         text-align: center;
     }
 }
@@ -4959,8 +4940,7 @@ h2,
 }
 
 h3,
-.project-subtitle,
-.footer-status {
+.project-subtitle {
     font-size: var(--type-h3-size);
     line-height: var(--type-h3-line);
     font-weight: var(--type-h3-weight);
@@ -4971,8 +4951,7 @@ p,
 .hero-text,
 .hero-more,
 .info-value,
-.project-lead,
-.footer-note {
+.project-lead {
     font-size: var(--type-body-size);
     line-height: var(--type-body-line);
     font-weight: var(--type-body-weight);
@@ -4984,9 +4963,7 @@ p,
 .nav-link,
 .hero-links a,
 .project-ext-link,
-.text-89-756-link,
-.footer-link,
-.footer-links-row a {
+.text-89-756-link {
     font-size: var(--type-secondary-size);
     line-height: var(--type-secondary-line);
     font-weight: 400;
@@ -5007,7 +4984,6 @@ p,
 }
 
 .hero-text,
-.footer-note,
 .project-heading,
 .text-89-756-lead,
 .about-lead {
@@ -5025,7 +5001,7 @@ p,
 .project-page,
 .section-projects,
 .section-nav,
-.footer {
+.site-footer {
     margin-bottom: var(--space-48);
 }
 
@@ -5037,7 +5013,7 @@ p,
     gap: var(--space-24);
 }
 
-.preview-card-block,
+.preview-card-block:not(.preview-card-block--mac-window),
 .project-card,
 .project-meta-card,
 .layout-89-756-item,
@@ -5046,7 +5022,7 @@ p,
 }
 
 .nav-list,
-.preview-card-block,
+.preview-card-block:not(.preview-card-block--mac-window),
 .project-card,
 .project-meta-card,
 .layout-89-756-item {
@@ -5071,8 +5047,7 @@ p,
 }
 
 .nav-link:hover:not(.active),
-.hero-links a:hover,
-.footer-links-row a:hover {
+.hero-links a:hover {
     color: var(--color-text);
     text-decoration: none;
 }
@@ -5088,16 +5063,13 @@ p,
 
 .hero-text,
 .project-lead,
-.text-89-756-lead,
-.footer-note {
+.text-89-756-lead {
     color: var(--color-text-muted);
 }
 
 .hero-role,
 .nav-link,
 .hero-links a,
-.footer-link,
-.footer-links-row a,
 .project-ext-link,
 .text-89-756-link {
     color: var(--color-text-label);
@@ -5107,8 +5079,7 @@ p,
 .project-meta-label,
 .project-card-title,
 .project-footer-label,
-.header-item__label,
-.footer-credits p {
+.header-item__label {
     color: var(--color-text-extra-muted);
     opacity: 1;
 }
@@ -5116,8 +5087,7 @@ p,
 .info-value,
 .project-meta-value,
 .project-card-text,
-.text-89-756-body,
-.footer-status {
+.text-89-756-body {
     color: var(--color-text);
 }
 
@@ -5125,7 +5095,7 @@ p,
 .project-meta-card,
 .layout-89-756-item,
 .preview-card,
-.preview-card-block {
+.preview-card-block:not(.preview-card-block--mac-window) {
     background: var(--color-surface-solid);
     border-color: var(--color-surface-border);
 }
@@ -5147,15 +5117,14 @@ p,
 
 .nav-link:hover:not(.active),
 .hero-links a:hover,
-.footer-links-row a:hover,
 .project-ext-link:hover {
     color: var(--color-text);
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-.footer,
-.footer-inner,
+.site-footer,
+.site-footer__surface,
 .project-footer {
     border-top-color: var(--color-surface-border);
 }
@@ -5172,7 +5141,7 @@ p,
     .hero,
     .project-page,
     .section-projects,
-    .footer {
+    .site-footer {
         margin-bottom: var(--space-40);
     }
 
@@ -5220,7 +5189,7 @@ p,
 
 @media (max-width: 768px) {
     .preview-card,
-    .preview-card-block,
+    .preview-card-block:not(.preview-card-block--mac-window),
     .project-card,
     .project-meta-card,
     .layout-89-756-item {
@@ -5258,8 +5227,7 @@ p,
 
     .hero-text,
     .project-lead,
-    .text-89-756-body,
-    .footer-note {
+    .text-89-756-body {
         font-size: var(--type-secondary-size);
         line-height: var(--type-secondary-line);
     }
@@ -5267,14 +5235,13 @@ p,
     .hero-role,
     .nav-link,
     .hero-links a,
-    .project-ext-link,
-    .footer-links-row a {
+    .project-ext-link {
         font-size: var(--type-caption-size);
         line-height: var(--type-caption-line);
     }
 }
 
-/* Figma 432:30376 Header — строка контролов под логотипом */
+/* Figma 432:30376 Header — одна строка: логотип | Navigation | язык (max 1358, px 24 py 12, space-between) */
 .header .nav {
     max-width: min(1358px, 100%);
     margin-left: auto;
@@ -5287,18 +5254,14 @@ p,
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     flex-wrap: nowrap;
-    gap: clamp(12px, 2vw, 20px);
+    gap: 0;
     background: transparent;
 }
 
-.header .nav__trail {
-    display: flex;
-    align-items: center;
-    gap: clamp(12px, 3vw, 28px);
-    flex: 1 1 auto;
-    justify-content: flex-end;
+.header .nav > .nav-list {
+    flex-shrink: 1;
     min-width: 0;
 }
 
@@ -5307,16 +5270,19 @@ p,
     font-size: 24px;
     line-height: 32px;
     letter-spacing: -1px;
-    color: #fafafa;
+    color: var(--project-title-color);
     mix-blend-mode: exclusion !important;
 }
 
-/* Переключатель языка: компактнее рядом с пилюлей навигации */
+/* Переключатель языка — Figma 432:30380 / 16:168: фиксированная колонка 228px справа */
 .header .lang-switch {
     position: relative;
     z-index: 5;
-    flex-shrink: 0;
-    min-width: 0;
+    flex: 0 0 228px;
+    width: 228px;
+    max-width: 228px;
+    min-width: 228px;
+    box-sizing: border-box;
     text-align: right;
 }
 
@@ -5422,7 +5388,7 @@ p,
     line-height: 20px;
     letter-spacing: -1px;
     text-transform: uppercase;
-    color: #fafafa !important;
+    color: var(--project-title-color) !important;
     padding: 8px 21px;
     border-radius: 100px;
     border: 1px solid transparent;
@@ -5511,10 +5477,20 @@ p,
         min-height: auto;
         margin-left: 0;
         margin-right: 0;
+        justify-content: flex-start;
+        gap: clamp(8px, 2vw, 16px);
+    }
+
+    .header .lang-switch {
+        flex: 0 1 auto;
+        width: auto;
+        max-width: min(228px, 42vw);
+        margin-left: auto;
     }
 
     .header .nav-toggle {
-        margin-left: auto;
+        margin-left: 0;
+        flex-shrink: 0;
     }
 
     .header .nav-list {
@@ -5546,7 +5522,7 @@ p,
     height: auto;
     min-height: 0;
     margin-bottom: 0;
-    border-radius: 10px;
+    border-radius: var(--preview-image-block-radius);
     border: 1px solid rgba(0, 0, 0, 0.22);
     background: transparent;
     box-shadow:
@@ -5557,22 +5533,22 @@ p,
 
 .hero__card .preview-card-block__overlay--base,
 .hero__card .preview-card-block__overlay--blur {
-    border-radius: 10px;
+    border-radius: var(--preview-image-block-radius);
 }
 
 .hero__card .preview-card-block__overlay--base {
-    background: #262626;
+    background: var(--preview-image-base-gradient);
     mix-blend-mode: plus-lighter;
 }
 
 .hero__card .preview-card-block__overlay--blur {
-    background: rgba(240, 240, 240, 0.54);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--effect-preview-overlay);
+    backdrop-filter: blur(var(--blur-preview-card));
+    -webkit-backdrop-filter: blur(var(--blur-preview-card));
 }
 
 .hero__card .preview-card-block__titlebar {
-    height: 38px;
+    height: var(--preview-image-titlebar-height);
     padding: 0 8px 0 10px;
 }
 
@@ -5601,16 +5577,16 @@ p,
 }
 
 .hero__card .preview-card-block__cta {
-    border: 1px solid #f5f5f5;
-    border-radius: 0.375rem;
+    border: var(--preview-cta-border);
+    border-radius: var(--preview-cta-radius);
     padding: 3px 7px;
     font-family: 'SF Pro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 13px;
     font-weight: 400;
     line-height: 16px;
-    color: rgba(0, 0, 0, 0.5);
+    color: var(--preview-cta-color);
     background: transparent;
-    mix-blend-mode: plus-darker;
+    mix-blend-mode: var(--preview-cta-mix-blend);
 }
 
 .hero__card .preview-card-block__cta:hover {
@@ -5621,18 +5597,19 @@ p,
 }
 
 .hero__card .preview-card-block__image {
-    top: 38px;
-    left: 0;
-    right: 0;
+    top: var(--preview-image-titlebar-height);
+    left: var(--preview-image-inset-x);
+    right: var(--preview-image-inset-x);
     bottom: 0;
-    border-radius: 0 0 10px 10px;
+    border-radius: var(--preview-image-inner-radius);
+    overflow: hidden;
     border: none;
     background: transparent;
 }
 
 .hero__card .preview-card-block__image img {
     max-width: none;
-    border-radius: 0 0 10px 10px;
+    border-radius: var(--preview-image-inner-radius);
     border: 0;
 }
 
@@ -5671,12 +5648,6 @@ canvas {
     .logo-section {
         gap: var(--space-12);
         margin-bottom: var(--space-32);
-    }
-
-    .footer-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        row-gap: var(--space-8);
     }
 
     .skills-grid {

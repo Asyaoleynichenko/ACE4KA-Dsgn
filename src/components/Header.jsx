@@ -38,17 +38,15 @@ export default function Header({ mode = 'default' }) {
         <Link to={localizedPath('/')} className="logo" data-node-id="432:30377">
           <span className="blend-text">{t('common.brandName')}</span>
         </Link>
-        <div className="nav__trail">
-          <span className="lang-switch" data-node-id="432:30380">
-            <LanguageSwitcher />
-          </span>
-          <Navigation
-            variant={isCaseStudyHeader ? 'case-study' : 'routes'}
-            caseStudy={caseStudyNav}
-            menuOpen={menuOpen}
-            onItemClick={closeMenu}
-          />
-        </div>
+        <Navigation
+          variant={isCaseStudyHeader ? 'case-study' : 'routes'}
+          caseStudy={caseStudyNav}
+          menuOpen={menuOpen}
+          onItemClick={closeMenu}
+        />
+        <span className="lang-switch" data-node-id="432:30380">
+          <LanguageSwitcher />
+        </span>
         <button
           type="button"
           className={`nav-toggle${menuOpen ? ' active' : ''}`}

@@ -73,6 +73,7 @@
     "vsyo": "All"
   },
   "footer": {
+    "navAria": "Footer links",
     "openForWork": "Open to work",
     "devNote": "Site is a work in progress. Something broke —",
     "emailLink": "email me",

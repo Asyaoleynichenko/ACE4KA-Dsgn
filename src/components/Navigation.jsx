@@ -81,7 +81,7 @@ export function Navigation({ variant = 'routes', caseStudy = null, menuOpen, onI
   return (
     <ul
       className={listClass}
-      data-node-id="I433:30466"
+      data-node-id="433:30466"
       data-variant="Default"
       aria-label={t('header.navListAria')}
     >

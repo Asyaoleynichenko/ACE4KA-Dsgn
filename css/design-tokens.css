@@ -45,6 +45,8 @@
   --radius-2xl: 16px;
   --radius-full: 9999px;
   --color-surface-border: #2a2a31;
+  /* Figma 1-522 / 1-231 — #262626 (border футера/пилюль проекта, база превью, градиент) */
+  --color-elevated-mid: #262626;
   --font-size-14: 14px;
   --font-size-16: 16px;
   --font-size-18: 18px;
@@ -78,7 +80,7 @@
   /* Figma 420:21377 / 1:231 — оверлей поверх градиента + backdrop blur */
   --effect-preview-overlay: rgba(240, 240, 240, 0.54);
   /* Figma 1:231 — фон карточки превью */
-  --preview-image-base-gradient: linear-gradient(180deg, #262626 0%, #1a1a1a 100%);
+  --preview-image-base-gradient: linear-gradient(180deg, var(--color-elevated-mid) 0%, #1a1a1a 100%);
   --preview-image-block-radius: 10px;
   --preview-image-titlebar-height: 38px;
   --preview-image-inner-radius: 6px;
@@ -165,7 +167,7 @@
   /* Figma 1-522 — футер блока проекта: отступ сверху 65px */
   --project-footer-border-top: 65px;
   --project-footer-pt: 65px;
-  --project-footer-border: 1px solid #262626;
+  --project-footer-border: 1px solid var(--color-elevated-mid);
   --project-footer-gap: 48px;
   --project-footer-label-font-size: 14px;
   --project-footer-label-line-height: 1.4;
@@ -190,7 +192,7 @@
   --project-tools-pill-padding: 8px 16px;
   --project-tools-pill-font-size: 14px;
   --project-tools-pill-line-height: 1.4;
-  --project-tools-pill-border: 1px solid #262626;
+  --project-tools-pill-border: 1px solid var(--color-elevated-mid);
   --project-tools-pill-height: auto;
   --project-ext-link-font-size: 16px;
   --project-ext-link-line-height: 1.5;

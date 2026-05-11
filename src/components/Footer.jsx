@@ -20,73 +20,84 @@ export default function Footer({ snapScreen = false }) {
   const { localizedPath, t } = useI18n();
   const isHome = stripLocaleFromPathname(pathname) === '/';
 
+  const rootClass = snapScreen ? 'site-footer site-footer--snap' : 'site-footer';
+
   return (
-    <footer
-      className={snapScreen ? 'footer snap-screen' : 'footer'}
-      data-node-id="433-32881"
-      data-name="Footer"
-    >
-      {isHome ? (
-        <p className="footer-ace4ka" data-node-id="16-171" aria-hidden="true">
-          ACE4KA
-        </p>
-      ) : null}
-      <div className="footer-inner" data-node-id="16-172">
-        <div className="footer__content">
-          <div className="footer-top" data-node-id="16-173">
-            <div className="footer-top__row">
-              <div className="footer-status" data-node-id="16-174">
-                <span className="footer-dot" aria-hidden="true" data-node-id="16-175" />{' '}
+    <footer className={rootClass} data-node-id="16-170" data-name="Footer">
+      <div className="site-footer__surface" data-node-id="16-172">
+        {isHome ? (
+          <p className="site-footer__wordmark" data-node-id="16-171" aria-hidden="true">
+            <span className="site-footer__wordmark__track">
+              {'ACE4KA'.split('').map((ch, i) => (
+                <span key={`${ch}-${i}`} className="site-footer__wordmark__char">
+                  {ch}
+                </span>
+              ))}
+            </span>
+          </p>
+        ) : null}
+
+        <div className="site-footer__contain">
+          <div className="site-footer__main" data-node-id="16-173">
+            <div className="site-footer__left">
+              <div className="site-footer__status" data-node-id="16-174">
+                <span className="site-footer__dot" aria-hidden="true" data-node-id="16-175" />
                 <span data-node-id="16-176">{t('footer.openForWork')}</span>
               </div>
-              <div className="footer-links-row" data-node-id="16-177">
+              <p className="site-footer__note" data-node-id="16-183">
+                {t('footer.devNote')}{' '}
+                <a href="mailto:hello@example.com">{t('footer.emailLink')}</a>
+              </p>
+            </div>
+
+            <nav className="site-footer__nav" aria-label={t('footer.navAria')} data-node-id="16-177">
+              <ul className="site-footer__list">
                 {footerLinks.map(({ nodeId, href, linkKey }) => {
                   const label = t(`footer.links.${linkKey}`);
                   const isInternal = href.startsWith('/');
                   const isExternal = href.startsWith('http');
+
+                  const linkClass = 'site-footer__link';
+
                   if (isInternal) {
                     if (href === '/projects') {
                       return (
-                        <SeamlessProjectsLink
-                          key={nodeId}
-                          to={localizedPath(href)}
-                          className="footer-link"
-                          data-node-id={nodeId}
-                        >
-                          {label}
-                        </SeamlessProjectsLink>
+                        <li key={nodeId} className="site-footer__item">
+                          <SeamlessProjectsLink
+                            to={localizedPath(href)}
+                            className={linkClass}
+                            data-node-id={nodeId}
+                          >
+                            {label}
+                          </SeamlessProjectsLink>
+                        </li>
                       );
                     }
                     return (
-                      <Link
-                        key={nodeId}
-                        to={localizedPath(href)}
-                        className="footer-link"
-                        data-node-id={nodeId}
-                      >
-                        {label}
-                      </Link>
+                      <li key={nodeId} className="site-footer__item">
+                        <Link to={localizedPath(href)} className={linkClass} data-node-id={nodeId}>
+                          {label}
+                        </Link>
+                      </li>
                     );
                   }
+
                   return (
-                    <a
-                      key={nodeId}
-                      href={href}
-                      className="footer-link"
-                      data-node-id={nodeId}
-                      target={isExternal ? '_blank' : undefined}
-                      rel={isExternal ? 'noopener noreferrer' : undefined}
-                    >
-                      {label}
-                    </a>
+                    <li key={nodeId} className="site-footer__item">
+                      <a
+                        href={href}
+                        className={linkClass}
+                        data-node-id={nodeId}
+                        target={isExternal ? '_blank' : undefined}
+                        rel={isExternal ? 'noopener noreferrer' : undefined}
+                      >
+                        {label}
+                      </a>
+                    </li>
                   );
                 })}
-              </div>
-            </div>
-            <p className="footer-note" data-node-id="16-183">
-              {t('footer.devNote')}{' '}
-              <a href="mailto:hello@example.com">{t('footer.emailLink')}</a>
-            </p>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>

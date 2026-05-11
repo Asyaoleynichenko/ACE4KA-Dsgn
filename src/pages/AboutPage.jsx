@@ -2,6 +2,9 @@ import { useMemo } from 'react';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import SideScrollspyNav from '../components/SideScrollspyNav.jsx';
 
+const ABOUT_FIGMA_URL =
+  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=140-12528&m=dev';
+
 export default function AboutPage() {
   const { t, messages } = useI18n();
   const jobs = messages.about?.jobs ?? [];
@@ -21,9 +24,14 @@ export default function AboutPage() {
   );
 
   return (
-    <div className="about-page" data-node-id="140:12528" data-name="Background">
+    <div
+      className="about-page"
+      data-node-id="140:12528"
+      data-name="Background"
+      data-figma-url={ABOUT_FIGMA_URL}
+    >
       <SideScrollspyNav items={spyItems} ariaLabel={t('about.spyNav.aria')} />
-      <header className="about-page__intro snap-screen" id="intro">
+      <header className="about-page__intro" id="intro">
         <h1 className="about-page__name">{t('about.intro.name')}</h1>
         <div className="about-page__lead">
           <p>{t('about.intro.lead1')}</p>
@@ -31,7 +39,7 @@ export default function AboutPage() {
         </div>
       </header>
 
-      <div className="about-page__grid snap-screen" id="experience">
+      <div className="about-page__grid" id="experience">
         <section className="about-page__panel about-page__panel--experience" aria-labelledby="about-exp-heading">
           <h2 className="about-page__panel-title" id="about-exp-heading">
             {t('about.experience.title')}
@@ -62,7 +70,7 @@ export default function AboutPage() {
         </section>
       </div>
 
-      <section className="about-page__section snap-screen" id="education" aria-labelledby="about-edu-heading">
+      <section className="about-page__section" id="education" aria-labelledby="about-edu-heading">
         <h2 className="about-page__section-title" id="about-edu-heading">
           {t('about.education.title')}
         </h2>
@@ -79,7 +87,7 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="about-page__section about-page__section--compact snap-screen" id="team" aria-labelledby="about-team-heading">
+      <section className="about-page__section about-page__section--compact" id="team" aria-labelledby="about-team-heading">
         <h2 className="about-page__section-title" id="about-team-heading">
           {t('about.team.title')}
         </h2>
@@ -87,7 +95,7 @@ export default function AboutPage() {
       </section>
 
       <section
-        className="about-page__section about-page__section--compact snap-screen"
+        className="about-page__section about-page__section--compact"
         id="habitat"
         aria-labelledby="about-habitat-heading"
       >
@@ -97,7 +105,7 @@ export default function AboutPage() {
         <p className="about-page__muted">{t('about.habitat.body')}</p>
       </section>
 
-      <section className="about-page__section about-page__section--compact snap-screen" id="memes" aria-labelledby="about-memes-heading">
+      <section className="about-page__section about-page__section--compact" id="memes" aria-labelledby="about-memes-heading">
         <h2 className="about-page__section-title" id="about-memes-heading">
           {t('about.memes.title')}
         </h2>
