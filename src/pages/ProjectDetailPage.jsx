@@ -322,6 +322,12 @@ export default function ProjectDetailPage() {
         data-node-id={project.figmaNodeId}
         data-figma-url={project.figmaUrl}
       >
+        <div className="project-back-wrap">
+          <SeamlessProjectsLink to={projectsListingTo} className="back-link">
+            <span className="back-link__icon" aria-hidden="true">←</span>
+            {t('projectDetail.backToProjects')}
+          </SeamlessProjectsLink>
+        </div>
         <div className="container container--case-study">
           <ProjectCaseStudySpyNav sections={spySections} activeId={activeSpyId} />
           <section className="hero" id={`case-${project.slug}-hero`}>

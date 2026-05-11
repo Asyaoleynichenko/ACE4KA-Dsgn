@@ -31,16 +31,17 @@ const heroLinks = [
   { href: 'https://pinterest.com/', label: 'Pinterest' },
 ];
 
-/** Порядок карточек на главной — Figma 1:285 (сетка превью, 1290px). */
+/** Порядок карточек на главной — Figma 1:285; те же 10 кейсов, что `CASE_STUDY_DISPLAY_ORDER` в `projects.js`. */
 const HOME_PROJECT_SLUGS = [
   'mail-nauki',
-  'mail-spetsproekty',
-  'drop',
-  'inkz',
-  'loochok',
-  'neural',
-  'retrash',
   'biohacking',
+  'mail-spetsproekty',
+  'neural',
+  'loochok',
+  'drop',
+  'retrash',
+  'mail-monetization',
+  'inkz',
   'racktables',
 ];
 

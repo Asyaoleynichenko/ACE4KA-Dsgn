@@ -162,6 +162,8 @@
     "nestedSubtitle": "Дополнительно",
     "toolsListAria": "Инструменты",
     "spyNavAria": "Разделы кейса",
+    "spyNavExpand": "Развернуть список разделов",
+    "spyNavCollapse": "Свернуть в компактную навигацию",
     "caseStudyNavAria": "К списку проектов и следующему кейсу",
     "nextCaseWithTitle": "Следующий: {{title}}",
     "cardsStripAria": "Карточки кейса: при прокрутке страницы полоса движется слева направо",

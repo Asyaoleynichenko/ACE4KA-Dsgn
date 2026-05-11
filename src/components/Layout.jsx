@@ -11,8 +11,9 @@ export default function Layout() {
   const basePath = stripLocaleFromPathname(pathname);
   const isProjectsListing = basePath === '/projects';
   const isProjectRoute = basePath.startsWith('/project/');
-  /** Полноэкранный snap-скролл — не на списке проектов и не на страницах кейсов */
-  const snapScreens = !isProjectsListing && !isProjectRoute;
+  const isAbout = basePath === '/about';
+  /** Полноэкранный snap: не на списке проектов, не на кейсах и не на «О себе» (там длинный контент + общий футер — mandatory snap обрезал бы футер). */
+  const snapScreens = !isProjectsListing && !isProjectRoute && !isAbout;
 
   useLayoutEffect(() => {
     const appRoot = document.getElementById('root');
@@ -57,7 +58,6 @@ export default function Layout() {
   const isProjectDetail = basePath.startsWith('/project/');
   const mainClass = isProjectDetail ? 'main main--project' : 'main';
   const isHome = basePath === '/';
-  const isAbout = basePath === '/about';
 
   /* Главная: шапка рендерится внутри HomePage (один родитель с героем) — иначе blur/blend
      часто упираются в body по бокам из-за max-width у .main. */
@@ -82,7 +82,7 @@ export default function Layout() {
       <main className={mainClass}>
         <PageTransition />
       </main>
-      {!isAbout && <Footer snapScreen={snapScreens} />}
+      <Footer snapScreen={snapScreens} />
     </div>
   );
 }

@@ -2,12 +2,30 @@
  * Фрейм Figma со всеми страницами проектов (подготовленные макеты):
  * https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=89-156&m=dev
  *
- * Тексты и структура кейсов сверены с макетами: Mail media redesign (300:104226),
- * SPECIAL PROJECTS (300:105976), Biohacking Invitro (300:106104), AI Special (300:106258), LÒÒCHOK (300:106697),
- * DROP (300:107189), RE*TRASH (300:107677), Monetization Mail (300:107857), INKZ (300:107466), RackTables (376:587).
+ * Тексты и структура кейсов сверены с макетами (порядок = `CASE_STUDY_DISPLAY_ORDER`):
+ * Mail Наука / медиа (300:104226), Biohacking Invitro (300:106104), SPECIAL PROJECTS (300:105976),
+ * Mail Hi-Tech «нейросети» (300:106258), LÒÒCHOK (300:106697), DROP (300:107189), RE*TRASH (300:107677),
+ * Monetization Mail (300:107857), INKZ (300:107466), RackTables (376:587).
  */
 export const FIGMA_PROJECT_PAGES_FRAME_URL =
-  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=89-156&m=dev';
+  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%83?node-id=89-156&m=dev';
+
+/**
+ * Порядок кейсов на сайте = порядок макетов в Figma (узлы 300-104226 … 376-587).
+ * См. `getCaseStudyNeighbors`, `getOrderedCaseStudies`, главная `HOME_PROJECT_SLUGS`.
+ */
+export const CASE_STUDY_DISPLAY_ORDER = [
+  'mail-nauki',
+  'biohacking',
+  'mail-spetsproekty',
+  'neural',
+  'loochok',
+  'drop',
+  'retrash',
+  'mail-monetization',
+  'inkz',
+  'racktables',
+];
 
 export const projects = [
   {
@@ -1421,9 +1439,18 @@ export function getProjectBySlug(slug) {
   return projects.find((p) => p.slug === slug);
 }
 
-/** Соседние страницы кейсов в порядке массива `projects` (только `layout: 'case-study'`). Соответствует ленте макетов в Figma 89-156. */
+/** Кейсы в порядке макетов Figma; проекты вне списка добавляются в конец. */
+export function getOrderedCaseStudies() {
+  const caseStudies = projects.filter((p) => p.layout === 'case-study');
+  const bySlug = Object.fromEntries(caseStudies.map((p) => [p.slug, p]));
+  const ordered = CASE_STUDY_DISPLAY_ORDER.map((slug) => bySlug[slug]).filter(Boolean);
+  const rest = caseStudies.filter((p) => !CASE_STUDY_DISPLAY_ORDER.includes(p.slug));
+  return [...ordered, ...rest];
+}
+
+/** Соседние страницы кейсов в порядке `CASE_STUDY_DISPLAY_ORDER` (лента Figma 89-156). */
 export function getCaseStudyNeighbors(currentSlug) {
-  const list = projects.filter((p) => p.layout === 'case-study');
+  const list = getOrderedCaseStudies();
   const idx = list.findIndex((p) => p.slug === currentSlug);
   if (idx === -1) return { prev: null, next: null };
   return {

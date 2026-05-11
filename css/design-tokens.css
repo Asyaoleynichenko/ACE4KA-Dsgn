@@ -126,7 +126,8 @@
   --project-hero-max-width: 1310px;
   --project-hero-aspect-w: 1310;
   --project-hero-aspect-h: 721;
-  --project-hero-radius: var(--radius-xl);
+  /* Figma 1-522 / 1-525 — hero 1310×721, radius 21px */
+  --project-hero-radius: 21px;
   --project-hero-bg: #000000;
   --project-hero-gradient: linear-gradient(135deg, #2b2b2b 0%, #1d1d1d 100%);
   --project-hero-placeholder-bg: #c4c4c4;
@@ -145,10 +146,11 @@
   --project-meta-card-padding: 24px;
   --project-meta-card-max-width: 415px;
   --project-meta-item-gap: 8px;
-  --project-meta-label-font-size: 14px;
-  --project-meta-label-line-height: 1.4;
-  --project-meta-label-letter-spacing: 0;
-  --project-meta-label-opacity: 1;
+  /* Figma 1-522 — мета-ряд: label 12px, 0.6px, uppercase, 40% */
+  --project-meta-label-font-size: 12px;
+  --project-meta-label-line-height: 16px;
+  --project-meta-label-letter-spacing: 0.6px;
+  --project-meta-label-opacity: 0.4;
   --project-meta-value-font-size: 18px;
   --project-meta-value-line-height: 1.5;
   --project-meta-value-letter-spacing: 0;
@@ -165,12 +167,13 @@
   --project-footer-label-mb: 8px;
   --project-card-bg: #0f0f0f;
   --project-card-radius: var(--radius-lg);
-  --project-card-padding: 32px;
+  /* Figma 1-556 — карточки блоков: padding 33px */
+  --project-card-padding: 33px;
   --project-card-gap: 16px;
-  --project-card-title-font-size: 14px;
-  --project-card-title-line-height: 1.4;
-  --project-card-title-letter-spacing: 0;
-  --project-card-title-opacity: 1;
+  --project-card-title-font-size: 12px;
+  --project-card-title-line-height: 16px;
+  --project-card-title-letter-spacing: 0.6px;
+  --project-card-title-opacity: 0.4;
   --project-card-text-font-size: 18px;
   --project-card-text-line-height: 1.5;
   --project-card-text-letter-spacing: 0;

@@ -2,7 +2,7 @@ import ProjectCard from '../components/ProjectCard';
 import FilterPills from '../components/FilterPills';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
-import { projects } from '../data/projects';
+import { getOrderedCaseStudies } from '../data/projects';
 
 export default function ProjectsPage() {
   const { t } = useI18n();
@@ -15,7 +15,7 @@ export default function ProjectsPage() {
       </div>
 
       <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">
-        {projects.map((p) => (
+        {getOrderedCaseStudies().map((p) => (
           <ProjectCard
             key={p.slug}
             slug={p.slug}

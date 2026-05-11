@@ -1832,7 +1832,7 @@ button:focus-visible,
     color: var(--color-text-muted);
 }
 
-/* Figma 300:104226 — Mail media redesign (case study): навигация, hero 1310×721 r32, intro, 2×2, секции */
+/* Figma 300:104226 / 1-522 — Mail media redesign (case study): навигация, hero 1310×721 r21, intro, 2×2, секции */
 .project-page-wrap--case-study {
     padding-bottom: var(--space-64);
 }
@@ -1855,6 +1855,29 @@ button:focus-visible,
     gap: var(--space-24);
     box-sizing: border-box;
     overflow-x: visible;
+}
+
+/* Figma 1-522 / 1-534 — контент кейса в колонке до 1310px, горизонтальные поля как у страницы проекта */
+.project-case-study-mail .container.container--case-study {
+    width: 100%;
+    max-width: var(--project-hero-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    box-sizing: border-box;
+}
+
+.project-page-wrap--case-study .project-back-wrap {
+    width: 100%;
+    max-width: var(--project-hero-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
 }
 
 /* Spy-scroll по кейсу: якоря + оглавление */
@@ -2046,7 +2069,7 @@ button:focus-visible,
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    border-radius: var(--radius-2xl);
+    border-radius: var(--project-hero-radius);
     overflow: hidden;
     background: #c4c4c4;
     display: block;
@@ -2097,7 +2120,7 @@ button:focus-visible,
     width: 100%;
     aspect-ratio: 16 / 9;
     background: #c4c4c4;
-    border-radius: var(--radius-2xl);
+    border-radius: var(--project-hero-radius);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2142,35 +2165,36 @@ button:focus-visible,
     display: flex;
     flex: 0 0 auto;
     width: 100%;
-    max-width: 25.9585rem; /* 415.34px */
-    padding: var(--space-24);
+    max-width: var(--project-meta-card-max-width);
+    padding: var(--project-meta-card-padding);
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-16);
-    border-radius: var(--radius-2xl);
-    background: #161616;
+    gap: var(--project-meta-card-gap);
+    border-radius: var(--project-meta-card-radius);
+    background: var(--project-meta-card-bg);
     box-sizing: border-box;
 }
 .project-case-study-mail .project-info__row {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--project-meta-item-gap);
     width: 100%;
 }
 .project-case-study-mail .project-info__label {
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 1px;
+    font-size: var(--project-meta-label-font-size);
+    line-height: var(--project-meta-label-line-height);
+    letter-spacing: var(--project-meta-label-letter-spacing);
     text-transform: uppercase;
-    color: var(--color-text);
-    opacity: 0.4;
+    color: var(--project-title-color);
+    opacity: var(--project-meta-label-opacity);
 }
 .project-case-study-mail .project-info__value {
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: -1px;
-    color: var(--color-text);
+    font-size: var(--project-meta-value-font-size);
+    line-height: var(--project-meta-value-line-height);
+    letter-spacing: var(--project-meta-value-letter-spacing);
+    color: var(--project-title-color);
     font-weight: 400;
+    opacity: var(--project-meta-value-opacity);
 }
 .project-case-study-mail .project-info__cta {
     display: inline-flex;
@@ -2252,11 +2276,11 @@ button:focus-visible,
     flex: 0 0 var(--scrub-card-basis);
     width: var(--scrub-card-basis);
     max-width: var(--scrub-card-basis);
-    background: #161616;
-    padding: var(--space-32);
+    background: var(--project-card-bg);
+    padding: var(--project-card-padding);
     /* Запас снизу под правую-нижнюю иконку */
-    padding-bottom: calc(var(--space-32) + 40px);
-    border-radius: var(--radius-2xl);
+    padding-bottom: calc(var(--project-card-padding) + 40px);
+    border-radius: var(--project-card-radius);
     border: 1px solid transparent;
     box-sizing: border-box;
     min-height: 280px;
@@ -2268,14 +2292,14 @@ button:focus-visible,
     min-height: 300px;
 }
 .project-case-study-mail .scroll-scrub-row--cards .card h3 {
-    font-size: 18px;
+    font-size: var(--project-card-title-font-size);
     font-weight: 500;
-    line-height: 16px;
+    line-height: var(--project-card-title-line-height);
     text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: var(--color-text);
-    opacity: 0.4;
-    margin: 0 0 var(--space-16);
+    letter-spacing: var(--project-card-title-letter-spacing);
+    color: var(--project-title-color);
+    opacity: var(--project-card-title-opacity);
+    margin: 0 0 var(--project-card-gap);
 }
 
 .project-case-study-mail .scroll-scrub-row--cards .card__corner-icon {
@@ -2291,18 +2315,34 @@ button:focus-visible,
     pointer-events: none;
 }
 .project-case-study-mail .scroll-scrub-row--cards .card p {
-    font-size: 21px;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    color: var(--color-text);
+    font-size: var(--project-card-text-font-size);
+    line-height: var(--project-card-text-line-height);
+    letter-spacing: var(--project-card-text-letter-spacing);
+    color: var(--project-title-color);
+    opacity: var(--project-card-text-opacity);
     margin: 0;
     white-space: pre-line;
 }
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:nth-child(4) p {
-    font-size: 28px;
-    line-height: 1.15;
-    letter-spacing: -1px;
+
+/* Узкая лента (по ширине viewport-контейнера scrub-cards): одна карта = 100cqi − gap; срабатывает и при узкой колонке на широком окне */
+@container scrub-cards (max-width: 900px) {
+    .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
+        --scrub-card-basis: calc(100cqi - var(--space-24));
+        flex: 0 0 var(--scrub-card-basis);
+        width: var(--scrub-card-basis);
+        max-width: var(--scrub-card-basis);
+    }
 }
+
+@container scrub-cards-rm (max-width: 900px) {
+    .project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
+        --scrub-card-basis: calc(100cqi - var(--space-24));
+        flex: 0 0 var(--scrub-card-basis);
+        width: var(--scrub-card-basis);
+        max-width: var(--scrub-card-basis);
+    }
+}
+
 .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__indicator {
     display: flex;
     align-items: center;
@@ -2442,8 +2482,8 @@ button:focus-visible,
     max-width: 1019px;
     margin: 0 auto;
     padding: 24px;
-    border-radius: var(--radius-2xl);
-    background: #161616;
+    border-radius: var(--project-card-radius);
+    background: var(--project-card-bg);
     min-height: 292px;
     box-sizing: border-box;
 }
@@ -2609,7 +2649,7 @@ button:focus-visible,
     margin: 0;
     padding: var(--space-8) var(--space-20);
     border-radius: var(--radius-full);
-    background: #161616;
+    background: #262626;
     font-size: 20px;
     line-height: normal;
     letter-spacing: -0.6px;
@@ -2741,7 +2781,7 @@ button:focus-visible,
     display: inline-block;
     padding: var(--space-8) var(--space-20);
     border-radius: var(--radius-full);
-    background: #161616;
+    background: #262626;
     font-size: 20px;
     line-height: 1.2;
     letter-spacing: -0.6px;
@@ -3101,12 +3141,6 @@ button:focus-visible,
 @media (max-width: 768px) {
     .project-case-study-mail .project-intro {
         flex-direction: column;
-    }
-    .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
-        --scrub-card-basis: min(643px, calc(100cqi - var(--space-16)));
-        flex: 0 0 var(--scrub-card-basis);
-        width: var(--scrub-card-basis);
-        max-width: var(--scrub-card-basis);
     }
     .project-case-study-mail .images {
         grid-template-columns: 1fr;
@@ -3789,7 +3823,7 @@ button:focus-visible,
     color: var(--color-text-primary);
 }
 
-/* Figma 140:12528 — «О себе»: контентная колонка + нижняя плашка (глобальный Footer на /about скрыт в Layout) */
+/* Figma 140:12528 — «О себе»: контентная колонка; общий Footer из Layout */
 .page-about .main:has(.about-page) {
     display: block;
     align-items: stretch;
@@ -3987,90 +4021,6 @@ button:focus-visible,
     color: rgba(182, 255, 0, 0.9);
 }
 
-.about-page__strip {
-    width: 100vw;
-    max-width: none;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    margin-top: var(--space-48);
-    background: #101010;
-    padding: var(--space-16) var(--space-24);
-    box-sizing: border-box;
-}
-
-.about-page__strip-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: var(--space-16);
-    max-width: 1310px;
-    margin: 0 auto;
-}
-
-.about-page__status {
-    display: flex;
-    align-items: center;
-    gap: var(--space-12);
-    padding: 0 var(--space-12);
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    color: var(--color-text-primary);
-}
-
-.about-page__status-dot {
-    display: inline-block;
-    flex-shrink: 0;
-    width: 19px;
-    height: 19px;
-    border-radius: 50%;
-    background: #b6ff00;
-}
-
-.about-page__strip-links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-16);
-}
-
-.about-page__strip-link {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--color-text-primary);
-    text-decoration: none;
-}
-
-.about-page__strip-link:hover {
-    text-decoration: underline;
-}
-
-.about-page__strip-note {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.35;
-    letter-spacing: -0.5px;
-    color: var(--color-text-primary);
-    max-width: 720px;
-    margin: var(--space-16) auto 0;
-    padding: 0 var(--space-24);
-}
-
-.about-page__strip-note a {
-    color: inherit;
-    text-decoration: underline;
-    text-decoration-skip-ink: none;
-}
-
-.about-page__strip-note a:hover {
-    opacity: 0.85;
-}
-
 @media (max-width: 900px) {
     .about-page__grid {
         grid-template-columns: 1fr;
@@ -4078,10 +4028,6 @@ button:focus-visible,
 
     .page-about .main:has(.about-page) {
         padding-top: 96px;
-    }
-
-    .about-page__status {
-        font-size: 20px;
     }
 }
 

@@ -162,6 +162,8 @@
     "nestedSubtitle": "More detail",
     "toolsListAria": "Tools",
     "spyNavAria": "Case sections",
+    "spyNavExpand": "Expand section list",
+    "spyNavCollapse": "Collapse to compact navigation",
     "caseStudyNavAria": "All projects and next case study",
     "nextCaseWithTitle": "Next: {{title}}",
     "cardsStripAria": "Case cards: the row moves left to right as you scroll the page",

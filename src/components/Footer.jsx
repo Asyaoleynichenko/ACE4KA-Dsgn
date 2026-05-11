@@ -23,7 +23,7 @@ export default function Footer({ snapScreen = false }) {
   return (
     <footer
       className={snapScreen ? 'footer snap-screen' : 'footer'}
-      data-node-id="420-21377"
+      data-node-id="433-32881"
       data-name="Footer"
     >
       {isHome ? (

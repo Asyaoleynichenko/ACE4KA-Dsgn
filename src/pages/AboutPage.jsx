@@ -1,23 +1,9 @@
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
-import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import SideScrollspyNav from '../components/SideScrollspyNav.jsx';
 
-const stripLinkDefs = [
-  { href: 'https://t.me/pnkprty', linkKey: 'telegram', external: true },
-  { href: 'https://pinterest.com/', linkKey: 'pinterest', external: true },
-  { href: 'https://behance.net/', linkKey: 'behance', external: true },
-  { href: '/resume', linkKey: 'resume', external: false },
-  { href: 'mailto:hello@example.com', linkKey: 'email', external: true },
-  { href: 'https://dribbble.com/', linkKey: 'dribbble', external: true },
-  { href: 'https://linkedin.com/', linkKey: 'linkedin', external: true },
-  { href: '/projects', linkKey: 'projects', external: false },
-  { href: '/contact', linkKey: 'contact', external: false },
-];
-
 export default function AboutPage() {
-  const { localizedPath, t, messages } = useI18n();
+  const { t, messages } = useI18n();
   const jobs = messages.about?.jobs ?? [];
   const skills = messages.about?.skills?.items ?? [];
   const eduItems = messages.about?.eduItems ?? [];
@@ -117,37 +103,6 @@ export default function AboutPage() {
         </h2>
         <p className="about-page__muted">{t('about.memes.body')}</p>
       </section>
-
-      <footer className="about-page__strip snap-screen" data-node-id="about-strip">
-        <div className="about-page__strip-row">
-          <div className="about-page__status">
-            <span className="about-page__status-dot" aria-hidden="true" />
-            <span>{t('about.strip.status')}</span>
-          </div>
-          <nav className="about-page__strip-links" aria-label={t('about.strip.linksAria')}>
-            {stripLinkDefs.map(({ href, linkKey, external }) => {
-              const label = t(`about.links.${linkKey}`);
-              return external ? (
-                <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="about-page__strip-link">
-                  {label}
-                </a>
-              ) : href === '/projects' ? (
-                <SeamlessProjectsLink key={href} to={localizedPath(href)} className="about-page__strip-link">
-                  {label}
-                </SeamlessProjectsLink>
-              ) : (
-                <Link key={href} to={localizedPath(href)} className="about-page__strip-link">
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-        <p className="about-page__strip-note">
-          {t('about.strip.note')}{' '}
-          <a href="mailto:hello@example.com">{t('about.strip.emailLink')}</a>.
-        </p>
-      </footer>
     </div>
   );
 }

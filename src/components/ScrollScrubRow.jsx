@@ -126,8 +126,11 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     if (!track || reducedMotion) return;
     const vh = window.innerHeight;
     const stickyH = stickyRef.current?.offsetHeight ?? 0;
-    const extra = Math.max(vh * 0.35, maxX * 1.08, 120);
-    track.style.minHeight = `${Math.max(stickyH + extra, vh + maxX)}px`;
+    /* Вертикальная «дорожка» под scroll-scrub: раньше было max(sticky+maxX*1.08, vh+maxX) —
+       при длинной горизонтали получались тысячи px пустоты. Ограничиваем бег по скроллу ~2.5–3 vh,
+       горизонтальный прогресс по-прежнему 0…maxX через updateFromScroll. */
+    const runway = Math.min(Math.max(vh * 0.5, maxX * 0.48 + vh * 0.28), vh * 2.9);
+    track.style.minHeight = `${Math.ceil(Math.max(stickyH + vh * 0.18, vh + runway))}px`;
   }, [maxX, reducedMotion, count]);
 
   useEffect(() => {

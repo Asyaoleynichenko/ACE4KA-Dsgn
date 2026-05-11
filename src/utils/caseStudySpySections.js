@@ -71,12 +71,12 @@ export function buildCaseStudySpySections(project) {
   const prefix = `case-${slug}`;
   const items = [];
 
-  items.push({ id: `${prefix}-hero`, label: 'Обложка' });
-  items.push({ id: `${prefix}-intro`, label: 'О проекте' });
-  items.push({ id: `${prefix}-overview`, label: 'В кейсе' });
+  items.push({ id: `${prefix}-hero`, label: 'Обложка', level: 1 });
+  items.push({ id: `${prefix}-intro`, label: 'О проекте', level: 1 });
+  items.push({ id: `${prefix}-overview`, label: 'В кейсе', level: 1 });
 
   if (project.showNarrative && (project.context || project.problem)) {
-    items.push({ id: `${prefix}-narrative`, label: 'Контекст' });
+    items.push({ id: `${prefix}-narrative`, label: 'Контекст', level: 1 });
   }
 
   const caseImages = project.caseStudyImages || {};
@@ -87,9 +87,10 @@ export function buildCaseStudySpySections(project) {
     items.push({
       id: `${prefix}-body-${i}`,
       label: sectionLabel(section, i),
+      level: 2,
     });
     if (i === 0 && hasCompare) {
-      items.push({ id: `${prefix}-compare`, label: 'До / после' });
+      items.push({ id: `${prefix}-compare`, label: 'До / после', level: 2 });
     }
   });
 
