@@ -5000,8 +5000,7 @@ p,
 .hero,
 .project-page,
 .section-projects,
-.section-nav,
-.site-footer {
+.section-nav {
     margin-bottom: var(--space-48);
 }
 
@@ -5140,8 +5139,7 @@ p,
 
     .hero,
     .project-page,
-    .section-projects,
-    .site-footer {
+    .section-projects {
         margin-bottom: var(--space-40);
     }
 
