@@ -76,11 +76,11 @@
   --effect-nav-link-hover: #222228;
   --effect-preview-overlay: rgba(22, 22, 25, 0.65);
   --effect-btn-show-all-border: #3a3a44;
-  /* Preview block 1-231 — CTA по макету */
-  --preview-cta-border: 1px solid #3a3a44;
-  --preview-cta-radius: var(--radius-xs);
-  --preview-cta-color: #f5f5f5;
-  --preview-cta-mix-blend: normal;
+  /* Preview Image (Figma 1:231 / 420:21377) — CTA по макету */
+  --preview-cta-border: 1px solid #f5f5f5;
+  --preview-cta-radius: 0.375rem;
+  --preview-cta-color: rgba(0, 0, 0, 0.5);
+  --preview-cta-mix-blend: plus-darker;
   --mix-blend-exclusion: normal;
 
   /* Spacing — сетка 4px (микро) / 8px (макро): 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 72.

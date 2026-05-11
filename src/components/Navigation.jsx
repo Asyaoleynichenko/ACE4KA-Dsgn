@@ -17,9 +17,7 @@ function itemIsActive(pathname, targetPath) {
   return base === targetPath;
 }
 
-/**
- * Навигация: внешнее стекло + вложенная активная капсула (макет).
- */
+/** Навигация: пилюля 1:230 / 300:107467 (стекло + активная капсула). */
 export function Navigation({ menuOpen, onItemClick }) {
   const { pathname } = useLocation();
   const { t, localizedPath } = useI18n();
@@ -27,7 +25,7 @@ export function Navigation({ menuOpen, onItemClick }) {
   return (
     <ul
       className={`nav-list${menuOpen ? ' open' : ''}`}
-      data-node-id="I300:104227;10:1530"
+      data-node-id="I300:107467;10:1530"
       aria-label="Основное меню"
     >
       {NAV_ROUTE_KEYS.map(({ path, labelKey }) => {

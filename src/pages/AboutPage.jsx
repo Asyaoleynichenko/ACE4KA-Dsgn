@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
+import SideScrollspyNav from '../components/SideScrollspyNav.jsx';
 
 const stripLinkDefs = [
   { href: 'https://t.me/pnkprty', linkKey: 'telegram', external: true },
@@ -20,9 +22,22 @@ export default function AboutPage() {
   const skills = messages.about?.skills?.items ?? [];
   const eduItems = messages.about?.eduItems ?? [];
 
+  const spyItems = useMemo(
+    () => [
+      { id: 'intro', label: t('about.spyNav.intro'), level: 1 },
+      { id: 'experience', label: t('about.spyNav.experience'), level: 1 },
+      { id: 'education', label: t('about.spyNav.education'), level: 1 },
+      { id: 'team', label: t('about.spyNav.team'), level: 2 },
+      { id: 'habitat', label: t('about.spyNav.habitat'), level: 2 },
+      { id: 'memes', label: t('about.spyNav.memes'), level: 2 },
+    ],
+    [t],
+  );
+
   return (
     <div className="about-page" data-node-id="140:12528" data-name="Background">
-      <header className="about-page__intro snap-screen">
+      <SideScrollspyNav items={spyItems} ariaLabel={t('about.spyNav.aria')} />
+      <header className="about-page__intro snap-screen" id="intro">
         <h1 className="about-page__name">{t('about.intro.name')}</h1>
         <div className="about-page__lead">
           <p>{t('about.intro.lead1')}</p>

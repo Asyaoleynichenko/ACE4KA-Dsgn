@@ -764,10 +764,10 @@ button:focus-visible,
     margin-bottom: 0;
 }
 
-/* Figma 89:347 — Header: горизонтальные отступы по сетке 8px */
+/* Figma 89:347 — Header на главной: те же краевые inset, что 1:230 master (≈21px) */
 .page-home .header .nav {
-    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
-    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
+    padding-left: max(21px, env(safe-area-inset-left, 0px));
+    padding-right: max(21px, env(safe-area-inset-right, 0px));
 }
 
 .header-items {
@@ -995,7 +995,16 @@ button:focus-visible,
     min-width: 0;
 }
 
-/* Figma 1:231 — Image Preview: 369×280; mac-window: фото на всю ширину под titlebar без тёмных полей */
+/* Figma Image Preview (420:21377 / компонент 1:231): карточка окна ~369×280, без лишних полей у контента */
+.preview-card-block.preview-card-block--mac-window {
+    border-radius: 10px;
+}
+
+.preview-card-block.preview-card-block--mac-window .preview-card-block__overlay--base,
+.preview-card-block.preview-card-block--mac-window .preview-card-block__overlay--blur {
+    border-radius: 10px;
+}
+
 .preview-card-block {
     display: block;
     position: relative;
@@ -1164,7 +1173,7 @@ button:focus-visible,
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.9),
         0 1px 0 rgba(255, 255, 255, 0.35);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-radius: 10px 10px 0 0;
     padding-left: 10px;
     padding-right: 10px;
     -webkit-backdrop-filter: blur(18px) saturate(1.2);
@@ -1181,6 +1190,10 @@ button:focus-visible,
     pointer-events: none;
     max-width: none;
     z-index: auto;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 16px;
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .preview-card-block--mac-window .preview-card-block__titlebar-start {
@@ -1273,7 +1286,7 @@ button:focus-visible,
     right: 0;
     bottom: 0;
     border: none;
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    border-radius: 0 0 10px 10px;
     background: transparent;
 }
 
@@ -1292,7 +1305,7 @@ button:focus-visible,
 .preview-card-block--mac-window .preview-card-block__image img {
     max-width: none;
     border: none;
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    border-radius: 0 0 10px 10px;
 }
 
 .hero__card .preview-card-block {
@@ -5069,13 +5082,16 @@ p,
     }
 }
 
-/* Figma parity: Header 300:104227 */
+/* Figma 1:230 Header (инстанс 300:107467): max 1358px, отступы 21px; пилюля gap 8 + flex-start; logo/lang — exclusion */
 .header .nav {
-    padding-top: max(var(--space-24), env(safe-area-inset-top, 0px));
-    padding-bottom: var(--space-24);
-    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
-    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
-    min-height: auto;
+    max-width: 1358px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: max(21px, env(safe-area-inset-top, 0px));
+    padding-bottom: 21px;
+    padding-left: max(21px, env(safe-area-inset-left, 0px));
+    padding-right: max(21px, env(safe-area-inset-right, 0px));
+    min-height: 88px;
     align-items: center;
     flex-wrap: nowrap;
     gap: 20px;
@@ -5087,7 +5103,7 @@ p,
     line-height: 32px;
     letter-spacing: -1px;
     color: #fafafa;
-    mix-blend-mode: difference !important;
+    mix-blend-mode: exclusion !important;
 }
 
 /* Переключатель языка: не сжимать и не терять под широким nav-list */
@@ -5095,7 +5111,7 @@ p,
     position: relative;
     z-index: 5;
     flex-shrink: 0;
-    min-width: min-content;
+    min-width: min(228px, 42vw);
 }
 
 .lang-switch__toggle-row {
@@ -5134,20 +5150,20 @@ p,
 
 .header .logo .blend-text,
 .header .lang-switch .blend-text {
-    mix-blend-mode: difference !important;
+    mix-blend-mode: exclusion !important;
 }
 
-.header .nav-list[data-node-id="I300:104227;10:1530"] {
+.header .nav-list[data-node-id="I300:107467;10:1530"] {
     display: inline-flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     padding: 4px;
     gap: 8px;
     border-radius: 9999px;
     height: 46px;
     box-sizing: border-box;
-    width: min(332px, max(0px, calc(100vw - 300px)));
-    max-width: 100%;
+    width: auto;
+    max-width: min(332px, max(0px, calc(100vw - 300px)));
     /* tint + blur на ::before — стабильнее в Chrome, чем backdrop на самом flex-контейнере */
     background: transparent !important;
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -5162,7 +5178,7 @@ p,
 }
 
 /* Слой матового стекла под пунктами меню (Chrome-friendly) */
-.header .nav-list[data-node-id="I300:104227;10:1530"]::before {
+.header .nav-list[data-node-id="I300:107467;10:1530"]::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -5189,7 +5205,7 @@ p,
     font-size: 14px;
     line-height: 20px;
     letter-spacing: -1px;
-    color: #ffffff !important;
+    color: #fafafa !important;
     padding: 8px 21px;
     border-radius: 100px;
     border: 1px solid transparent;
@@ -5199,18 +5215,20 @@ p,
 
 .header .nav-list .nav-link .blend-text {
     display: inline-block;
-    mix-blend-mode: difference !important;
-    color: #ffffff !important;
-    opacity: 0.72;
+    mix-blend-mode: normal !important;
+    color: inherit !important;
+    opacity: 0.92;
 }
 
 .header .nav-list .nav-link:not(.active) .blend-text {
-    mix-blend-mode: difference !important;
+    mix-blend-mode: normal !important;
 }
 
 .header .nav-list .nav-link.active {
     letter-spacing: 1px;
     border: 1px solid rgba(255, 255, 255, 0.48);
+    outline: 1px solid rgba(255, 255, 255, 0.2);
+    outline-offset: 0;
     background: rgba(0, 0, 0, 0.55);
     box-shadow: inset 1px -1px 1.6px 0 rgba(255, 255, 255, 0.51), inset 0 0 6.2px 0 rgba(255, 255, 255, 0.51);
     backdrop-filter: none !important;
@@ -5231,9 +5249,13 @@ p,
         padding-bottom: var(--space-24);
         padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
         padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
+        max-width: none;
+        min-height: auto;
+        margin-left: 0;
+        margin-right: 0;
     }
 
-    .header .nav-list[data-node-id="I300:104227;10:1530"] {
+    .header .nav-list[data-node-id="I300:107467;10:1530"] {
         width: min(280px, calc(100vw - 48px));
         border-radius: 0;
         background: transparent !important;
@@ -5245,7 +5267,7 @@ p,
         -webkit-backdrop-filter: none !important;
     }
 
-    .header .nav-list[data-node-id="I300:104227;10:1530"]::before {
+    .header .nav-list[data-node-id="I300:107467;10:1530"]::before {
         background: rgba(26, 26, 26, 0.72);
         box-shadow: none;
         border-radius: inherit;
@@ -5254,7 +5276,7 @@ p,
     }
 }
 
-/* Figma parity: Image Preview 1:231 — как референс: ~12px radius, обводка, тень */
+/* Figma 420:21377 Image Preview (= компонент 1:231): окно превью в hero */
 .hero__card .preview-card-block {
     width: 100%;
     max-width: 369px;
@@ -5262,7 +5284,7 @@ p,
     height: auto;
     min-height: 0;
     margin-bottom: 0;
-    border-radius: 12px;
+    border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.22);
     background: transparent;
     box-shadow:
@@ -5273,7 +5295,7 @@ p,
 
 .hero__card .preview-card-block__overlay--base,
 .hero__card .preview-card-block__overlay--blur {
-    border-radius: 12px;
+    border-radius: 10px;
 }
 
 .hero__card .preview-card-block__overlay--base {
@@ -5293,7 +5315,7 @@ p,
 }
 
 .hero__card .preview-card-block--mac-window .preview-card-block__titlebar {
-    border-radius: 12px 12px 0 0;
+    border-radius: 10px 10px 0 0;
 }
 
 .hero__card .preview-card-block__titlebar-start {
@@ -5306,7 +5328,7 @@ p,
     font-size: 13px;
     font-weight: 700;
     line-height: 16px;
-    color: rgba(0, 0, 0, 0.78);
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .hero__card .preview-card-block__trailing {
@@ -5317,16 +5339,23 @@ p,
 }
 
 .hero__card .preview-card-block__cta {
-    border: 1px solid rgba(0, 0, 0, 0.32);
-    border-radius: 6px;
+    border: 1px solid #f5f5f5;
+    border-radius: 0.375rem;
     padding: 3px 7px;
     font-family: 'SF Pro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 13px;
     font-weight: 400;
     line-height: 16px;
-    color: rgba(0, 0, 0, 0.62);
-    background: rgba(255, 255, 255, 0.35);
-    mix-blend-mode: normal;
+    color: rgba(0, 0, 0, 0.5);
+    background: transparent;
+    mix-blend-mode: plus-darker;
+}
+
+.hero__card .preview-card-block__cta:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.55);
+    mix-blend-mode: plus-darker;
 }
 
 .hero__card .preview-card-block__image {
@@ -5334,14 +5363,14 @@ p,
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 10px 10px;
     border: none;
     background: transparent;
 }
 
 .hero__card .preview-card-block__image img {
     max-width: none;
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 10px 10px;
     border: 0;
 }
 

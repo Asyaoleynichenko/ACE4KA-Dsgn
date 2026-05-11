@@ -1,6 +1,6 @@
 {
   "common": {
-    "brandName": "Asya Oleinichenko",
+    "brandName": "Asya\u00a0Oleinichenko",
     "caseStudy": {
       "task": "Challenge",
       "solution": "Solution",
@@ -201,6 +201,15 @@
     "memes": {
       "title": "Favorite memes by imaginary people",
       "body": "A stash of absurd images and quotes without context — a reminder that products live in culture, not only in dashboards."
+    },
+    "spyNav": {
+      "aria": "On this page",
+      "intro": "Intro",
+      "experience": "Experience",
+      "education": "Education",
+      "team": "Team",
+      "habitat": "Beyond work",
+      "memes": "Memes"
     },
     "strip": {
       "status": "Open to work",

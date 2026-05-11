@@ -4,6 +4,7 @@ import { useI18n } from '../i18n/I18nProvider.jsx';
 import LanguageSwitcher from './LanguageSwitcher.jsx';
 import { Navigation } from './Navigation';
 
+/** Верхняя панель по макету Figma **1-230** (`data-node-id` = инстанс **300:107467**). */
 export default function Header({ mode = 'default' }) {
   const { localizedPath, t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,7 +17,7 @@ export default function Header({ mode = 'default' }) {
   return (
     <header
       className={headerClass}
-      data-node-id="300:104227"
+      data-node-id="300:107467"
       data-name="Header"
     >
       <nav className="nav">

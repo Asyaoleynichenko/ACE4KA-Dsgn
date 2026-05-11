@@ -1,8 +1,9 @@
 import { publicUrl } from '../utils/publicUrl.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 
+/** Фрейм Image Preview в Figma (`node-id=420-21377`), совпадает по слоям с компонентом 1:231 */
 const FIGMA_PREVIEW_URL =
-  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=1-231&m=dev';
+  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=420-21377&m=dev';
 
 /** Декоративные traffic lights как в macOS (вся карточка — одна ссылка). */
 function MacTrafficLights({ t }) {
@@ -15,7 +16,7 @@ function MacTrafficLights({ t }) {
   );
 }
 
-/** Figma 1:231 — окно в стиле macOS: titlebar, светофоры, контент на всю ширину */
+/** Image Preview по макету Figma (420:21377 / совпадает с 1:231): светофоры, заголовок, CTA, превью */
 export default function PreviewCardBlock() {
   const { t } = useI18n();
   const previewImageSrc = publicUrl('/images/figma-impl-89-347/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.png');
@@ -26,7 +27,7 @@ export default function PreviewCardBlock() {
       target="_blank"
       rel="noopener noreferrer"
       className="preview-card-block preview-card-block--mac-window"
-      data-node-id="1:231"
+      data-node-id="420:21377"
       data-figma-url={FIGMA_PREVIEW_URL}
       aria-label={t('previewCard.aria')}
     >
