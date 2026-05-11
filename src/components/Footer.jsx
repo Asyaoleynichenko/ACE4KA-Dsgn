@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
+import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 
 const footerLinks = [
@@ -15,65 +16,78 @@ const footerLinks = [
 ];
 
 export default function Footer({ snapScreen = false }) {
+  const { pathname } = useLocation();
   const { localizedPath, t } = useI18n();
+  const isHome = stripLocaleFromPathname(pathname) === '/';
 
   return (
-    <footer className={snapScreen ? 'footer snap-screen' : 'footer'} data-node-id="16-170">
+    <footer
+      className={snapScreen ? 'footer snap-screen' : 'footer'}
+      data-node-id="420-21377"
+      data-name="Footer"
+    >
+      {isHome ? (
+        <p className="footer-ace4ka" data-node-id="16-171" aria-hidden="true">
+          ACE4KA
+        </p>
+      ) : null}
       <div className="footer-inner" data-node-id="16-172">
-        <div className="footer-top" data-node-id="16-173">
-          <div className="footer-top__row">
-            <div className="footer-status" data-node-id="16-174">
-              <span className="footer-dot" aria-hidden="true" data-node-id="16-175" />{' '}
-              <span data-node-id="16-176">{t('footer.openForWork')}</span>
-            </div>
-            <div className="footer-links-row" data-node-id="16-177">
-              {footerLinks.map(({ nodeId, href, linkKey }) => {
-                const label = t(`footer.links.${linkKey}`);
-                const isInternal = href.startsWith('/');
-                const isExternal = href.startsWith('http');
-                if (isInternal) {
-                  if (href === '/projects') {
+        <div className="footer__content">
+          <div className="footer-top" data-node-id="16-173">
+            <div className="footer-top__row">
+              <div className="footer-status" data-node-id="16-174">
+                <span className="footer-dot" aria-hidden="true" data-node-id="16-175" />{' '}
+                <span data-node-id="16-176">{t('footer.openForWork')}</span>
+              </div>
+              <div className="footer-links-row" data-node-id="16-177">
+                {footerLinks.map(({ nodeId, href, linkKey }) => {
+                  const label = t(`footer.links.${linkKey}`);
+                  const isInternal = href.startsWith('/');
+                  const isExternal = href.startsWith('http');
+                  if (isInternal) {
+                    if (href === '/projects') {
+                      return (
+                        <SeamlessProjectsLink
+                          key={nodeId}
+                          to={localizedPath(href)}
+                          className="footer-link"
+                          data-node-id={nodeId}
+                        >
+                          {label}
+                        </SeamlessProjectsLink>
+                      );
+                    }
                     return (
-                      <SeamlessProjectsLink
+                      <Link
                         key={nodeId}
                         to={localizedPath(href)}
                         className="footer-link"
                         data-node-id={nodeId}
                       >
                         {label}
-                      </SeamlessProjectsLink>
+                      </Link>
                     );
                   }
                   return (
-                    <Link
+                    <a
                       key={nodeId}
-                      to={localizedPath(href)}
+                      href={href}
                       className="footer-link"
                       data-node-id={nodeId}
+                      target={isExternal ? '_blank' : undefined}
+                      rel={isExternal ? 'noopener noreferrer' : undefined}
                     >
                       {label}
-                    </Link>
+                    </a>
                   );
-                }
-                return (
-                  <a
-                    key={nodeId}
-                    href={href}
-                    className="footer-link"
-                    data-node-id={nodeId}
-                    target={isExternal ? '_blank' : undefined}
-                    rel={isExternal ? 'noopener noreferrer' : undefined}
-                  >
-                    {label}
-                  </a>
-                );
-              })}
+                })}
+              </div>
             </div>
+            <p className="footer-note" data-node-id="16-183">
+              {t('footer.devNote')}{' '}
+              <a href="mailto:hello@example.com">{t('footer.emailLink')}</a>
+            </p>
           </div>
-          <p className="footer-note" data-node-id="16-183">
-            {t('footer.devNote')}{' '}
-            <a href="mailto:hello@example.com">{t('footer.emailLink')}</a>
-          </p>
         </div>
       </div>
     </footer>

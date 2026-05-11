@@ -5,7 +5,8 @@ import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } f
  * плюс индикатор-точки (как у горизонтальной галереи кейса).
  */
 export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel, className = '' }) {
-  const verticallyCenterSticky = variant === 'cards' || variant === 'hypothesis';
+  /** Гипотезы — только вертикальный стек, без горизонтального скролла и без scrub по скроллу */
+  const verticallyCenterSticky = variant === 'cards';
   const trackRef = useRef(null);
   const stickyRef = useRef(null);
   const viewportRef = useRef(null);
@@ -135,6 +136,16 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   }, [maxX, reducedMotion, updateFromScroll]);
 
   const rootClass = `scroll-scrub-row scroll-scrub-row__track scroll-scrub-row--${variant} ${className}`.trim();
+
+  if (variant === 'hypothesis') {
+    return (
+      <div className={`${rootClass} scroll-scrub-row--hypothesis-static`}>
+        <div className="hypothesis-stack" role="region" aria-label={ariaLabel}>
+          {children}
+        </div>
+      </div>
+    );
+  }
 
   if (reducedMotion) {
     return (

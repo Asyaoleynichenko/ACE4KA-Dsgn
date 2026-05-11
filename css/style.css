@@ -202,12 +202,6 @@ button:focus-visible,
     outline-offset: 2px;
 }
 
-/* Footer ACE4KA — только на главной */
-/* Блок ACE4KA в футере отключён */
-.footer-ace4ka {
-    display: none !important;
-}
-
 /* Figma 300:107467 — sticky; горизонтальный padding по сетке 8px (--space-24) */
 .header {
     position: sticky;
@@ -2254,7 +2248,7 @@ button:focus-visible,
     will-change: transform;
 }
 .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
-    --scrub-card-basis: clamp(260px, calc((100cqi - var(--space-24)) / 2), 560px);
+    --scrub-card-basis: min(643px, calc(100cqi - var(--space-24)));
     flex: 0 0 var(--scrub-card-basis);
     width: var(--scrub-card-basis);
     max-width: var(--scrub-card-basis);
@@ -2631,20 +2625,43 @@ button:focus-visible,
 .project-case-study-mail .scroll-scrub-row--hypothesis + .gallery {
     margin-top: var(--space-72);
 }
-.project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--hypothesis,
-.project-case-study-mail .scroll-scrub-row.scroll-scrub-row--hypothesis {
+
+/* Гипотезы — статичный столбец (без горизонтального скролла и без scrub) */
+.project-case-study-mail .scroll-scrub-row--hypothesis.scroll-scrub-row--hypothesis-static {
     position: relative;
     width: 100%;
     box-sizing: border-box;
 }
-.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__sticky {
+
+.project-case-study-mail .scroll-scrub-row--hypothesis-static .hypothesis-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.project-case-study-mail .scroll-scrub-row--hypothesis-static .hyp-card {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+}
+
+.project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static),
+.project-case-study-mail .scroll-scrub-row.scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+.project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__sticky {
     position: sticky;
     top: max(12px, env(safe-area-inset-top, 0px));
     z-index: 1;
     width: 100%;
     box-sizing: border-box;
 }
-.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__viewport {
+.project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__viewport {
     overflow: hidden;
     width: 100%;
     margin-left: calc(-1 * var(--project-page-padding-x));
@@ -2655,7 +2672,7 @@ button:focus-visible,
     container-type: inline-size;
     container-name: scrub-hyp;
 }
-.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__inner {
+.project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__inner {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -2664,14 +2681,14 @@ button:focus-visible,
     align-items: stretch;
     will-change: transform;
 }
-.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__inner > .hyp-card {
+.project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__inner > .hyp-card {
     --scrub-hyp-basis: clamp(260px, calc((100cqi - var(--space-20)) / 2), 560px);
     flex: 0 0 var(--scrub-hyp-basis);
     width: var(--scrub-hyp-basis);
     max-width: var(--scrub-hyp-basis);
     box-sizing: border-box;
 }
-.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__indicator {
+.project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__indicator {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2680,36 +2697,16 @@ button:focus-visible,
     width: 100%;
     box-sizing: border-box;
 }
-.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__dot {
+.project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__dot {
     width: var(--space-8);
     height: var(--space-8);
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.25);
     transition: transform var(--transition-fast), background var(--transition-fast);
 }
-.project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__dot.is-active {
+.project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__dot.is-active {
     background: rgba(255, 255, 255, 0.9);
     transform: scale(1.25);
-}
-.project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--hypothesis .scroll-scrub-row__viewport--reduced {
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    margin-left: calc(-1 * var(--project-page-padding-x));
-    margin-right: calc(-1 * var(--project-page-padding-x));
-    padding-left: var(--project-page-padding-x);
-    padding-right: var(--project-page-padding-x);
-    padding-bottom: var(--space-8);
-    -webkit-overflow-scrolling: touch;
-    container-type: inline-size;
-    container-name: scrub-hyp-rm;
-}
-.project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--hypothesis .scroll-scrub-row__inner {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: var(--space-20);
-    width: max-content;
 }
 .project-case-study-mail .hyp-card {
     display: flex;
@@ -3106,16 +3103,10 @@ button:focus-visible,
         flex-direction: column;
     }
     .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
-        --scrub-card-basis: min(340px, calc(100cqi - var(--space-16)));
+        --scrub-card-basis: min(643px, calc(100cqi - var(--space-16)));
         flex: 0 0 var(--scrub-card-basis);
         width: var(--scrub-card-basis);
         max-width: var(--scrub-card-basis);
-    }
-    .project-case-study-mail .scroll-scrub-row--hypothesis .scroll-scrub-row__inner > .hyp-card {
-        --scrub-hyp-basis: min(300px, calc(100cqi - var(--space-16)));
-        flex: 0 0 var(--scrub-hyp-basis);
-        width: var(--scrub-hyp-basis);
-        max-width: var(--scrub-hyp-basis);
     }
     .project-case-study-mail .images {
         grid-template-columns: 1fr;
@@ -4579,7 +4570,7 @@ button:focus-visible,
     justify-content: center;
 }
 
-/* Footer - Figma 16:170: 1358px, ACE4KA 330px, block #101010, row status + links, then note */
+/* Footer — Figma 420:21377 (главная: ACE4KA + тёмный блок; колонка max 1358 как шапка) */
 .footer {
     position: relative;
     z-index: 1;
@@ -4591,36 +4582,59 @@ button:focus-visible,
     max-width: none;
     margin: 0;
     padding: 0;
+    overflow-x: clip;
 }
 
-/* Figma 16:171 — ACE4KA: outline text, 20.625rem, semibold, stroke #101010, заливка белая */
+/* Figma 16:171 / 420:21377 — ACE4KA: горизонталь как у .header .nav (24px; на главной 34px) */
 .footer-ace4ka {
     align-self: stretch;
     color: var(--color-text-primary);
     -webkit-text-fill-color: var(--color-text-primary);
     text-align: center;
-    -webkit-text-stroke-width: 78px;
+    -webkit-text-stroke-width: 0.237em;
     -webkit-text-stroke-color: #101010;
+    paint-order: stroke fill;
     font-family: var(--font-body), Inter, sans-serif;
-    font-size: 20.625rem;
+    font-size: clamp(3.25rem, 14vw, 20.625rem);
     font-style: normal;
     font-weight: 600;
-    line-height: normal;
+    line-height: 0.9;
     letter-spacing: -0.0625rem;
     text-transform: uppercase;
     margin: 0;
-    padding: 0 var(--space-40);
+    padding: 0 max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px));
     box-sizing: border-box;
 }
 
-/* Figma 16:172 — Dark block: #101010, shared 24px page gutter */
+.page-home .footer-ace4ka {
+    padding-left: max(34px, env(safe-area-inset-left, 0px));
+    padding-right: max(34px, env(safe-area-inset-right, 0px));
+}
+
+/* Figma 16:172 — тёмная полоса на всю ширину; вертикаль только здесь (без двойного padding с контентом) */
 .footer-inner {
     width: 100%;
     background: #101010;
-    padding: var(--space-16) var(--space-24);
+    padding: var(--space-16) 0;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+}
+
+/* Как .header .nav: max-width 1358 + боковые inset внутри одной коробки (border-box) */
+.footer__content {
+    width: 100%;
+    max-width: 1358px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+}
+
+.page-home .footer__content {
+    padding-left: max(34px, env(safe-area-inset-left, 0px));
+    padding-right: max(34px, env(safe-area-inset-right, 0px));
 }
 
 .footer-inner > * {
@@ -4647,12 +4661,12 @@ button:focus-visible,
     gap: var(--space-16);
 }
 
-/* Figma 16:174–176 — Status: gap 12px, px 12px, dot ~19px, text 24px 1.2 -1px */
+/* Figma 16:174–176 — Status: gap 12px, горизонтальный inset 12px внутри строки */
 .footer-status {
     display: flex;
     align-items: center;
-    gap: var(--space-12);
-    padding: 0 var(--space-12);
+    gap: 12px;
+    padding: 0 12px;
     font-size: 24px;
     font-weight: 400;
     line-height: 1.2;
@@ -4671,14 +4685,16 @@ button:focus-visible,
     vertical-align: middle;
 }
 
-/* Figma 16:177 — Links row; 16:185–16:209 — отдельные ссылки (9 шт.) */
+/* Figma 16:177 — Links row; gap 14px в макете */
 .footer-links-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-start;
-    gap: var(--space-16);
+    justify-content: flex-end;
+    flex: 1 1 auto;
+    gap: 14px;
     margin: 0;
+    min-width: 0;
 }
 
 .footer-link,
@@ -4718,6 +4734,39 @@ button:focus-visible,
 
 .footer-note a:hover {
     text-decoration: none;
+}
+
+/* Поверх глобальной типографики (h3 / p / secondary) — размеры Figma 420:21377 / 16-170 */
+.footer .footer-status {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    color: var(--color-text-primary);
+}
+
+.footer .footer-note {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    color: var(--color-text-primary);
+    max-width: 661px;
+    margin: 0;
+}
+
+.footer .footer-link,
+.footer .footer-links-row a {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+}
+
+.footer .footer-note a {
+    color: inherit;
 }
 
 .footer-credits {
@@ -4778,11 +4827,28 @@ button:focus-visible,
     }
 
     .footer-ace4ka {
-        padding: 0 1.5rem;
+        padding-left: max(24px, env(safe-area-inset-left, 0px));
+        padding-right: max(24px, env(safe-area-inset-right, 0px));
+    }
+
+    .page-home .footer-ace4ka {
+        padding-left: max(34px, env(safe-area-inset-left, 0px));
+        padding-right: max(34px, env(safe-area-inset-right, 0px));
     }
 
     .footer-inner {
-        padding: 16px var(--space-24);
+        padding-top: var(--space-16);
+        padding-bottom: var(--space-16);
+    }
+
+    .footer__content {
+        padding-left: max(24px, env(safe-area-inset-left, 0px));
+        padding-right: max(24px, env(safe-area-inset-right, 0px));
+    }
+
+    .page-home .footer__content {
+        padding-left: max(34px, env(safe-area-inset-left, 0px));
+        padding-right: max(34px, env(safe-area-inset-right, 0px));
     }
 
     .footer-top__row {
@@ -5045,8 +5111,7 @@ p,
 
 .main,
 .hero,
-.project-page,
-.footer-inner {
+.project-page {
     padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
     padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
 }
@@ -5194,8 +5259,7 @@ p,
 @media (max-width: 900px) {
     .hero,
     .main,
-    .project-page,
-    .footer-inner {
+    .project-page {
         padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
         padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
     }
