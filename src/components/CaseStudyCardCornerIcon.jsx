@@ -6,10 +6,11 @@ import { getLedPatternCircles } from '../utils/caseStudyLedPatterns.js';
  * @param {{ kind: 'task' | 'solution' | 'influence' | 'metrics' | 'problem' | 'context', staggerIndex?: number }} props
  */
 export default function CaseStudyCardCornerIcon({ kind, staggerIndex = 0 }) {
-  const { viewBox, circles } = useMemo(() => getLedPatternCircles(kind), [kind]);
-  const staggerSec = (Number(staggerIndex) % 24) * 0.055;
+  const pattern = useMemo(() => (kind ? getLedPatternCircles(kind) : null), [kind]);
+  if (!pattern) return null;
 
-  if (!kind) return null;
+  const { viewBox, circles } = pattern;
+  const staggerSec = (Number(staggerIndex) % 24) * 0.055;
 
   return (
     <span className="card__corner-icon-led" style={{ '--led-card-stagger': `${staggerSec}s` }}>

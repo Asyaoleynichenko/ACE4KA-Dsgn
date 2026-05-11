@@ -105,10 +105,8 @@ function extractCells({ width, height, rgba }, grid, opts = {}) {
 const grid = 24;
 const map = {};
 for (const [file, key] of [
-  ['card-task.png', 'task'],
   ['card-solution.png', 'solution'],
   ['card-influence.png', 'influence'],
-  ['card-metrics.png', 'metrics'],
 ]) {
   const buf = fs.readFileSync(path.join(ROOT, file));
   map[key] = extractCells(decodePng(buf), grid, {});
@@ -117,15 +115,14 @@ for (const [file, key] of [
 const outPath = path.join(__dirname, '..', 'src', 'utils', 'caseStudyLedCellsFromPng.js');
 const body = `/**
  * Координаты «диодов» с макетных PNG (Figma-экспорт в public/images/icons).
+ * Остальные виды карточек — в \`caseStudyLedCirclesFromFigma.js\`.
  * Сетка ${grid}×${grid}: пересчёт — \`node scripts/generate-led-cells-data.mjs\`
  */
 export const LED_GRID = ${grid};
 
 export const LED_CELLS_FROM_PNG = {
-  task: ${JSON.stringify(map.task)},
   solution: ${JSON.stringify(map.solution)},
   influence: ${JSON.stringify(map.influence)},
-  metrics: ${JSON.stringify(map.metrics)},
 };
 `;
 fs.writeFileSync(outPath, body);
