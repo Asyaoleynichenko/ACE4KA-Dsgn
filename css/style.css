@@ -216,6 +216,67 @@ html.snap-pages #root.snap-pages-root {
     height: 80%;
 }
 
+/* Шапка кейса (страницы проектов): шевроны и заголовок — те же точки к центру */
+.icon-assemble-dots--chevron {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.icon-assemble-dots--chevron .icon-assemble-dots__dot {
+    animation-duration: 0.95s;
+}
+
+.icon-assemble-dots--chevron .icon-assemble-dots__media > * {
+    display: block;
+    transform-origin: center center;
+    animation: icon-assemble-media-chevron-in 0.95s cubic-bezier(0.33, 1, 0.32, 1) 0.08s backwards;
+}
+
+@keyframes icon-assemble-media-chevron-in {
+    from {
+        opacity: 0;
+        transform: scale(0.2);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.icon-assemble-dots--case-title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: min(380px, 46vw);
+    min-width: 0;
+}
+
+.icon-assemble-dots--case-title .icon-assemble-dots__media {
+    min-width: 0;
+    width: 100%;
+    justify-content: center;
+}
+
+.icon-assemble-dots--case-title .icon-assemble-dots__media > * {
+    transform-origin: center center;
+    animation: icon-assemble-media-title-in 1.15s cubic-bezier(0.33, 1, 0.32, 1) 0.12s backwards;
+}
+
+@keyframes icon-assemble-media-title-in {
+    from {
+        opacity: 0;
+        transform: scale(0.82);
+        filter: blur(5px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .icon-assemble-dots__dot {
         animation: none !important;
@@ -225,7 +286,9 @@ html.snap-pages #root.snap-pages-root {
 
     .icon-assemble-dots--folder .icon-assemble-dots__media > *,
     .icon-assemble-dots--well .icon-assemble-dots__media > *,
-    .header .nav-list .icon-assemble-dots--nav .icon-assemble-dots__media > * {
+    .header .nav-list .icon-assemble-dots--nav .icon-assemble-dots__media > *,
+    .icon-assemble-dots--chevron .icon-assemble-dots__media > *,
+    .icon-assemble-dots--case-title .icon-assemble-dots__media > * {
         animation: none !important;
         opacity: 1 !important;
         transform: none !important;
@@ -6124,6 +6187,10 @@ p,
 
 @media (max-width: 768px) {
     .header .nav-list .nav-link--case-title.nav-link.active {
+        max-width: min(240px, 62vw);
+    }
+
+    .header .nav-list--case-study > li:nth-child(2) .icon-assemble-dots--case-title {
         max-width: min(240px, 62vw);
     }
 }

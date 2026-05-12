@@ -63,7 +63,9 @@ export function Navigation({
         onClick={onItemClick}
         aria-label={prevFullTitle}
       >
-        <span className="nav-link__chevron nav-link__chevron--left" aria-hidden />
+        <IconAssembleFromDots className="icon-assemble-dots--chevron" ringRadiusPx={11} dotCount={10} dotPx={2.5}>
+          <span className="nav-link__chevron nav-link__chevron--left" aria-hidden />
+        </IconAssembleFromDots>
         <span className="blend-text">{prevLabel}</span>
       </Link>
     ) : (
@@ -73,7 +75,9 @@ export function Navigation({
         onClick={onItemClick}
         aria-label={prevFullTitle}
       >
-        <span className="nav-link__chevron nav-link__chevron--left" aria-hidden />
+        <IconAssembleFromDots className="icon-assemble-dots--chevron" ringRadiusPx={11} dotCount={10} dotPx={2.5}>
+          <span className="nav-link__chevron nav-link__chevron--left" aria-hidden />
+        </IconAssembleFromDots>
         <span className="blend-text">{prevLabel}</span>
       </SeamlessProjectsLink>
     );
@@ -82,13 +86,15 @@ export function Navigation({
       <ul className={listClass} data-node-id="433:30466" data-variant="Variant2" aria-label={t('projectDetail.caseStudyNavAria')}>
         <li>{prevLink}</li>
         <li>
-          <span
-            className="nav-link nav-link--case-title active blend-text"
-            aria-current="page"
-            title={currentFullTitle}
-          >
-            {currentShortTitle}
-          </span>
+          <IconAssembleFromDots className="icon-assemble-dots--case-title" ringRadiusPx={38} dotCount={22} dotPx={2.5}>
+            <span
+              className="nav-link nav-link--case-title active blend-text"
+              aria-current="page"
+              title={currentFullTitle}
+            >
+              {currentShortTitle}
+            </span>
+          </IconAssembleFromDots>
         </li>
         {nextTo && nextLabel ? (
           <li>
@@ -99,7 +105,9 @@ export function Navigation({
               aria-label={nextFullTitle ?? nextLabel}
             >
               <span className="blend-text">{nextLabel}</span>
-              <span className="nav-link__chevron nav-link__chevron--right" aria-hidden />
+              <IconAssembleFromDots className="icon-assemble-dots--chevron" ringRadiusPx={11} dotCount={10} dotPx={2.5}>
+                <span className="nav-link__chevron nav-link__chevron--right" aria-hidden />
+              </IconAssembleFromDots>
             </Link>
           </li>
         ) : null}
