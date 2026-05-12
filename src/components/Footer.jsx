@@ -1,6 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
-import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 
 const footerLinks = [
@@ -16,26 +15,22 @@ const footerLinks = [
 ];
 
 export default function Footer({ snapScreen = false }) {
-  const { pathname } = useLocation();
   const { localizedPath, t } = useI18n();
-  const isHome = stripLocaleFromPathname(pathname) === '/';
 
   const rootClass = snapScreen ? 'site-footer site-footer--snap' : 'site-footer';
 
   return (
     <footer className={rootClass} data-node-id="16-170" data-name="Footer">
       <div className="site-footer__surface" data-node-id="16-172">
-        {isHome ? (
-          <p className="site-footer__wordmark" data-node-id="16-171" aria-hidden="true">
-            <span className="site-footer__wordmark__track">
-              {'ACE4KA'.split('').map((ch, i) => (
-                <span key={`${ch}-${i}`} className="site-footer__wordmark__char">
-                  {ch}
-                </span>
-              ))}
-            </span>
-          </p>
-        ) : null}
+        <p className="site-footer__wordmark" data-node-id="16-171" aria-hidden="true">
+          <span className="site-footer__wordmark__track">
+            {'ACE4KA'.split('').map((ch, i) => (
+              <span key={`${ch}-${i}`} className="site-footer__wordmark__char">
+                {ch}
+              </span>
+            ))}
+          </span>
+        </p>
 
         <div className="site-footer__contain">
           <div className="site-footer__main" data-node-id="16-173">
