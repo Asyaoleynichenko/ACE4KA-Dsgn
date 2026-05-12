@@ -35,7 +35,7 @@ export function Navigation({
   caseStudy = null,
   menuOpen,
   onItemClick,
-  /** На главной (`Header` в режиме `in-hero`) — только подписи, без иконок в пилюлях. */
+  /** Для `variant="routes"`: показывать снежинку/иконку проектов в пилюлях (на главной /projects /about — выкл.). */
   showRouteIcons = true,
 }) {
   const { pathname } = useLocation();

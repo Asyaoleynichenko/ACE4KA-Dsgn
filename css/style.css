@@ -2188,7 +2188,7 @@ button:focus-visible,
     margin-top: 0;
 }
 
-/* «Все проекты» — верхний отступ как у главной и «О себе» (см. блок у .page-home__main). */
+/* «Все проекты» — верхний отступ контента задаёт общий `.main` (как главная и «О себе»). */
 .page-projects .logo-section {
     align-items: center;
     margin-bottom: 0;
@@ -3383,6 +3383,7 @@ button:focus-visible,
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    align-items: flex-start;
     gap: var(--space-24);
     width: max-content;
     will-change: transform;
@@ -4861,12 +4862,6 @@ button:focus-visible,
     }
 }
 
-@media (max-width: 768px) {
-    .page-projects .main {
-        padding-top: 64px;
-    }
-}
-
 /* =========================
    5) Secondary Pages (About / Contact / Resume / Education)
    ========================= */
@@ -5188,10 +5183,6 @@ button:focus-visible,
 @media (max-width: 900px) {
     .about-page__grid {
         grid-template-columns: 1fr;
-    }
-
-    .page-about .main:has(.about-page) {
-        padding-top: 96px;
     }
 }
 
@@ -6445,13 +6436,6 @@ p,
 
 /* ---- 8.1 Project shell consistency (gutters / type fallbacks) ---- */
 /* Project pages own their 24px gutter inside .project-page-wrap / case-study containers. */
-/* Главная / список проектов / «О себе» — одинаковый padding-top под sticky-шапку (базовый .main = 48px). */
-.page-home .main.page-home__main,
-.page-projects .main,
-.page-about .main:has(.about-page) {
-    padding-top: 48px;
-}
-
 .page-home__main {
     padding-left: 0;
     padding-right: 0;

@@ -65,8 +65,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const scrollRange = rect.height - vh;
     const denom = Math.max(1, scrollRange);
     const p = Math.min(1, Math.max(0, -rect.top / denom));
-    // Более плавный scrub: мягкий вход/выход вместо линейного "рывка".
-    const eased = p * p * (3 - 2 * p);
+    // Smootherstep: мягче smoothstep, меньше ощущения «рваного» scrub.
+    const eased = p * p * p * (p * (p * 6 - 15) + 10);
     const x = eased * mx;
     inner.style.transform = `translate3d(${-x}px,0,0)`;
 
@@ -123,15 +123,28 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
 
   useLayoutEffect(() => {
     const track = trackRef.current;
-    if (!track || reducedMotion) return;
-    const vh = window.innerHeight;
-    const stickyH = stickyRef.current?.offsetHeight ?? 0;
-    /* Вертикальная «дорожка» под scroll-scrub: раньше было max(sticky+maxX*1.08, vh+maxX) —
-       при длинной горизонтали получались тысячи px пустоты. Ограничиваем бег по скроллу ~2.5–3 vh,
-       горизонтальный прогресс по-прежнему 0…maxX через updateFromScroll. */
-    // Компактный scroll-runway: сохраняем scrub, но убираем чрезмерную "пустоту" после карточек.
-    const runway = Math.min(Math.max(72, maxX * 0.08), 160);
-    track.style.minHeight = `${Math.ceil(Math.max(vh + stickyEdgeOffset * 2, stickyH + stickyEdgeOffset * 2 + runway))}px`;
+    const sticky = stickyRef.current;
+    if (!track || reducedMotion) return undefined;
+
+    const measure = () => {
+      const vh = window.innerHeight;
+      const stickyH = sticky?.offsetHeight ?? 0;
+      const scrollRunway = Math.min(1600, Math.max(vh * 0.95, maxX * 0.52, 420));
+      const minTrack = Math.ceil(
+        Math.max(vh + scrollRunway, stickyH + scrollRunway + stickyEdgeOffset * 2),
+      );
+      track.style.minHeight = `${minTrack}px`;
+    };
+
+    measure();
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(track);
+    if (sticky) ro.observe(sticky);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
   }, [maxX, reducedMotion, count, stickyEdgeOffset]);
 
   useEffect(() => {

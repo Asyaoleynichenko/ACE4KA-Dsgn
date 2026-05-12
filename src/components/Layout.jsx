@@ -58,28 +58,14 @@ export default function Layout() {
   const isProjectDetail = basePath.startsWith('/project/');
   const mainClass = isProjectDetail ? 'main main--project' : 'main';
   const isHome = basePath === '/';
-
-  /* Главная: шапка рендерится внутри HomePage (один родитель с героем) — иначе blur/blend
-     часто упираются в body по бокам из-за max-width у .main. */
   const pageSnapClass = snapScreens ? 'page--snap' : '';
-
-  if (isHome) {
-    return (
-      <div className={`page page-home ${pageSnapClass}`.trim()}>
-        <ParallaxBackdrop />
-        <main className={`${mainClass} page-home__main`}>
-          <PageTransition />
-        </main>
-        <Footer snapScreen={snapScreens} />
-      </div>
-    );
-  }
+  const mainWithHomeShell = isHome ? `${mainClass} page-home__main` : mainClass;
 
   return (
     <div className={`page ${pageClass} ${pageSnapClass}`.trim()}>
       <ParallaxBackdrop />
       <Header />
-      <main className={mainClass}>
+      <main className={mainWithHomeShell}>
         <PageTransition />
       </main>
       <Footer snapScreen={snapScreens} />

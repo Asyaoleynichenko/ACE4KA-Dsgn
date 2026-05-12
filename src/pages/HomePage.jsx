@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
@@ -53,7 +52,6 @@ export default function HomePage() {
 
   return (
     <div className="home-page home-page--chrome" data-node-id="89:347" data-name="Главная">
-      <Header mode="in-hero" />
       <div className="home-page__scroll">
         <section className="hero snap-screen" data-node-id="1-202" data-figma-node="1-202">
         <div className="hero-first-screen" data-node-id="70:343" data-name="First screen">

@@ -8,8 +8,8 @@ import { projectCaseStudyNavLabel } from '../utils/projectCaseStudyNavLabel.js';
 import LanguageSwitcher from './LanguageSwitcher.jsx';
 import { Navigation } from './Navigation';
 
-/** Шапка с двумя состояниями — Figma 432:30376 (Default / Variant2 для кейсов). */
-export default function Header({ mode = 'default' }) {
+/** Шапка — Figma 432:30376 (Default / Variant2 для кейсов). */
+export default function Header() {
   const location = useLocation();
   const { slug } = useParams();
   const { localizedPath, t } = useI18n();
@@ -21,6 +21,10 @@ export default function Header({ mode = 'default' }) {
   const project =
     basePath.startsWith('/project/') && slug ? projects.find((p) => p.slug === slug) : null;
   const isCaseStudyHeader = project?.layout === 'case-study';
+
+  /** Главная, список проектов, «О себе» — только подписи в пилюлях, без иконок (как в in-hero). */
+  const showRouteIcons =
+    basePath !== '/' && basePath !== '/projects' && basePath !== '/about';
 
   const caseStudyNav =
     isCaseStudyHeader && slug
@@ -51,11 +55,8 @@ export default function Header({ mode = 'default' }) {
         })()
       : null;
 
-  const headerClass =
-    mode === 'in-hero' ? 'header header--in-hero' : 'header';
-
   return (
-    <header className={headerClass} data-node-id="432:30376" data-name="Header">
+    <header className="header" data-node-id="432:30376" data-name="Header">
       <nav className="nav">
         <Link to={localizedPath('/')} className="logo" data-node-id="432:30377">
           <span className="blend-text">{t('common.brandName')}</span>
@@ -65,7 +66,7 @@ export default function Header({ mode = 'default' }) {
           caseStudy={caseStudyNav}
           menuOpen={menuOpen}
           onItemClick={closeMenu}
-          showRouteIcons={mode !== 'in-hero'}
+          showRouteIcons={showRouteIcons}
         />
         <span className="lang-switch" data-node-id="432:30380">
           <LanguageSwitcher />
