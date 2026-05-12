@@ -84,7 +84,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const scrollSpan = getScrollSpan(mx, vh);
     const dwellPx = getReadDwellPx(vh);
     const trackH = track.offsetHeight;
-    const next = Math.ceil(scrollSpan + trackH + 12 + dwellPx);
+    const next = Math.ceil(trackH + dwellPx + scrollSpan + 12);
     setRunwayMin((prev) => (prev === next ? prev : next));
   }, []);
 

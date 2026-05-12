@@ -2803,12 +2803,14 @@ button:focus-visible,
 
 /* Figma 1-522 / 1-534 — контент кейса в колонке до 1310px, горизонтальные поля как у страницы проекта */
 .project-case-study-mail .container.container--case-study {
+    /* Ровно 24px по бокам на кейсе; локально фиксируем токен для full-bleed внутри ленты (margin ± padding) */
+    --project-page-padding-x: 24px;
     width: 100%;
     max-width: var(--case-content-max);
     margin-left: auto;
     margin-right: auto;
-    padding-left: var(--project-page-padding-x);
-    padding-right: var(--project-page-padding-x);
+    padding-left: 24px;
+    padding-right: 24px;
     box-sizing: border-box;
     /* Figma 1-522 / 1-534 — вертикальный ритм между hero, intro, секциями */
     display: flex;
@@ -3467,16 +3469,19 @@ button:focus-visible,
     width: 100%;
     box-sizing: border-box;
 }
-/* После relative: scroll-linked лента «прилипает»; top больше — блок ниже в окне, меньше «дыры» под точками */
+/* После relative: scroll-linked лента «прилипает»; умеренный top под шапку без лишней «дыры» */
 .project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards.scroll-scrub-row--scroll-linked {
     position: sticky;
-    top: clamp(96px, 22svh, 260px);
+    top: clamp(56px, 11svh, 120px);
     z-index: 1;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__shell,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
     width: 100%;
     box-sizing: border-box;
+}
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
+    padding-bottom: 0;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__viewport--native-x {
     overflow-x: auto;
@@ -3500,7 +3505,7 @@ button:focus-visible,
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: 0 0 var(--space-8);
+    padding: 0;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     container-type: inline-size;
@@ -3666,6 +3671,11 @@ button:focus-visible,
     flex-shrink: 0;
     width: 100%;
     box-sizing: border-box;
+}
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__indicator {
+    margin-top: var(--space-32);
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__dot,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__dot {
@@ -5743,13 +5753,16 @@ button:focus-visible,
 .project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row__track.scroll-scrub-row--scroll-linked,
 .project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row--contact.scroll-scrub-row--scroll-linked {
     position: sticky;
-    top: clamp(80px, 18svh, 200px);
+    top: clamp(56px, 11svh, 120px);
     z-index: 1;
 }
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__shell,
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
     width: 100%;
     box-sizing: border-box;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
+    padding-bottom: 0;
 }
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__viewport--native-x {
     overflow-x: auto;
@@ -5774,7 +5787,7 @@ button:focus-visible,
     margin-right: calc(-1 * var(--project-page-padding-x));
     padding-left: var(--project-page-padding-x);
     padding-right: var(--project-page-padding-x);
-    padding-bottom: var(--space-8);
+    padding-bottom: 0;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
 }
@@ -5805,6 +5818,11 @@ button:focus-visible,
     justify-content: center;
     gap: var(--space-8);
     margin-top: var(--space-12);
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__indicator {
+    margin-top: var(--space-32);
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__dot,
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__dot {
