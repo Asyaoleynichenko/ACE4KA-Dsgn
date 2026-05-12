@@ -23,6 +23,7 @@
     "about": "About",
     "caseStudyBack": "Back",
     "caseStudyNext": "Next",
+    "caseStudyStripAria": "Case study: previous and next project",
     "nav": {
       "home": "Home",
       "projects": "Projects",
@@ -377,7 +378,7 @@
         ]
       },
       "loochok": {
-        "navShortTitle": "LÒÒCHOK",
+        "navShortTitle": "Loochok",
         "title": "LÒÒCHOK — customization & DIY community",
         "meta": "UX/UI · Product · 2023–2024",
         "desc": "0→1: DIY platform, community, web + iOS, pitch",

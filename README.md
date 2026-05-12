@@ -14,7 +14,7 @@ npm install
 npm run dev
 ```
 
-Откройте [http://localhost:5173](http://localhost:5173).
+Откройте [http://localhost:5174](http://localhost:5174).
 
 ## Сборка
 

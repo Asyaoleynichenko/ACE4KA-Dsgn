@@ -11,7 +11,7 @@ if (!existsSync(vitePkg)) {
   console.error('    npm install\n');
   console.error('  Если ошибка повторяется, переустановите зависимости:\n');
   console.error('    rm -rf node_modules && npm install\n');
-  console.error('  Затем: npm run dev  →  обычно http://localhost:5173/');
+  console.error('  Затем: npm run dev  →  обычно http://localhost:5174/');
   console.error(
     '  Проверку можно обойти (если зависимости точно есть, но путь нестандартный): npm run dev --ignore-scripts\n',
   );

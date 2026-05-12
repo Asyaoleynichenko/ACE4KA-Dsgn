@@ -52,7 +52,8 @@ export default defineConfig(({ command }) => {
     base,
     plugins: [react(), prefixPublicUrlsInCssPlugin(baseRoot)],
     server: {
-      port: 5173,
+      /** 5174 — чтобы совпадало с типичным URL в браузере Cursor / закладками; при занятом порту Vite возьмёт следующий (strictPort: false). */
+      port: 5174,
       strictPort: false,
       /** 0.0.0.0 — если «не открывается» только localhost или нужен доступ из сети/WSL */
       host: true,

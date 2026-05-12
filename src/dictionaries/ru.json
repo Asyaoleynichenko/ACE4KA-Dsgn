@@ -23,6 +23,7 @@
     "about": "О\u00a0себе",
     "caseStudyBack": "Назад",
     "caseStudyNext": "Следующий",
+    "caseStudyStripAria": "Кейс: предыдущий и следующий проект",
     "nav": {
       "home": "Главная",
       "projects": "Проекты",
@@ -312,10 +313,10 @@
     },
     "cards": {
       "mail-nauki": { "navShortTitle": "Mail Наука" },
-      "biohacking": { "navShortTitle": "Biohacking" },
+      "biohacking": { "navShortTitle": "Биохакинг" },
       "mail-spetsproekty": { "navShortTitle": "Спецпроекты" },
       "neural": { "navShortTitle": "Нейросети" },
-      "loochok": { "navShortTitle": "LÒÒCHOK" },
+      "loochok": { "navShortTitle": "Loochok" },
       "drop": { "navShortTitle": "DROP" },
       "retrash": { "navShortTitle": "RE*TRASH" },
       "mail-monetization": { "navShortTitle": "Монетизация Mail" },
