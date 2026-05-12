@@ -5,6 +5,29 @@ import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 import IconAssembleFromDots from './IconAssembleFromDots.jsx';
 import { publicUrl } from '../utils/publicUrl.js';
 
+/** Шевроны навигации кейса — линейные стрелки (без декоративного кольца из точек). */
+function CaseNavChevron({ direction }) {
+  const d = direction === 'prev' ? 'M10,2 L2,8 L10,14' : 'M2,2 L10,8 L2,14';
+  return (
+    <svg
+      className={`nav-link__case-chevron nav-link__case-chevron--${direction}`}
+      width="12"
+      height="16"
+      viewBox="0 0 12 16"
+      aria-hidden
+    >
+      <path
+        d={d}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 /** Маршруты основной шапки (Figma 432:30376, свойство Default). */
 export const NAV_ROUTE_KEYS = [
   { path: '/', labelKey: 'header.nav.home' },
@@ -63,9 +86,7 @@ export function Navigation({
         onClick={onItemClick}
         aria-label={prevFullTitle}
       >
-        <IconAssembleFromDots className="icon-assemble-dots--chevron" ringRadiusPx={11} dotCount={10} dotPx={2.5}>
-          <span className="nav-link__chevron nav-link__chevron--left" aria-hidden />
-        </IconAssembleFromDots>
+        <CaseNavChevron direction="prev" />
         <span className="blend-text">{prevLabel}</span>
       </Link>
     ) : (
@@ -75,9 +96,7 @@ export function Navigation({
         onClick={onItemClick}
         aria-label={prevFullTitle}
       >
-        <IconAssembleFromDots className="icon-assemble-dots--chevron" ringRadiusPx={11} dotCount={10} dotPx={2.5}>
-          <span className="nav-link__chevron nav-link__chevron--left" aria-hidden />
-        </IconAssembleFromDots>
+        <CaseNavChevron direction="prev" />
         <span className="blend-text">{prevLabel}</span>
       </SeamlessProjectsLink>
     );
@@ -86,15 +105,13 @@ export function Navigation({
       <ul className={listClass} data-node-id="433:30466" data-variant="Variant2" aria-label={t('projectDetail.caseStudyNavAria')}>
         <li>{prevLink}</li>
         <li>
-          <IconAssembleFromDots className="icon-assemble-dots--case-title" ringRadiusPx={38} dotCount={22} dotPx={2.5}>
-            <span
-              className="nav-link nav-link--case-title active blend-text"
-              aria-current="page"
-              title={currentFullTitle}
-            >
-              {currentShortTitle}
-            </span>
-          </IconAssembleFromDots>
+          <span
+            className="nav-link nav-link--case-title active blend-text"
+            aria-current="page"
+            title={currentFullTitle}
+          >
+            {currentShortTitle}
+          </span>
         </li>
         {nextTo && nextLabel ? (
           <li>
@@ -105,9 +122,7 @@ export function Navigation({
               aria-label={nextFullTitle ?? nextLabel}
             >
               <span className="blend-text">{nextLabel}</span>
-              <IconAssembleFromDots className="icon-assemble-dots--chevron" ringRadiusPx={11} dotCount={10} dotPx={2.5}>
-                <span className="nav-link__chevron nav-link__chevron--right" aria-hidden />
-              </IconAssembleFromDots>
+              <CaseNavChevron direction="next" />
             </Link>
           </li>
         ) : null}

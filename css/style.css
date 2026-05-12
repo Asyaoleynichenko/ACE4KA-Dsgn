@@ -846,9 +846,27 @@ button:focus-visible,
     background: var(--color-text);
 }
 
+/* Затемнение фона при открытом мобильном меню (клик — закрыть) */
+.nav-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(0, 0, 0, 0.52);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
 /* ---- 8.2 Header consistency override pack (Figma 432:30376) ---- */
 /* Figma 432:30376 Header — одна строка: логотип | Navigation | язык (max 1358, px 24 py 12, space-between) */
 .header .nav {
+    position: relative;
+    z-index: 1;
     max-width: min(1358px, 100%);
     margin-left: auto;
     margin-right: auto;
@@ -1050,6 +1068,13 @@ button:focus-visible,
     gap: 8px;
 }
 
+.header .nav-list .nav-link__case-chevron {
+    flex-shrink: 0;
+    display: block;
+    color: rgba(255, 255, 255, 0.92);
+    opacity: 0.95;
+}
+
 .header .nav-list .nav-link__chevron {
     display: inline-block;
     flex-shrink: 0;
@@ -1117,7 +1142,7 @@ button:focus-visible,
     justify-content: center;
 }
 
-.header .nav-list--case-study > li:nth-child(2) .icon-assemble-dots--case-title {
+.header .nav-list--case-study > li:nth-child(2) .nav-link--case-title {
     width: 100%;
     max-width: min(380px, 46vw);
     min-width: 0;
@@ -1138,18 +1163,21 @@ button:focus-visible,
         max-width: min(240px, 62vw);
     }
 
-    .header .nav-list--case-study > li:nth-child(2) .icon-assemble-dots--case-title {
+    .header .nav-list--case-study > li:nth-child(2) .nav-link--case-title {
         max-width: min(240px, 62vw);
     }
 }
 
 @media (max-width: 900px) {
     .header .nav {
+        width: 100%;
         padding-top: max(12px, env(safe-area-inset-top, 0px));
         padding-bottom: 12px;
         padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
         padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
-        max-width: none;
+        max-width: 100vw;
+        box-sizing: border-box;
+        overflow-x: clip;
         min-height: auto;
         margin-left: 0;
         margin-right: 0;
@@ -1157,10 +1185,20 @@ button:focus-visible,
         gap: clamp(8px, 2vw, 16px);
     }
 
+    .header .nav > .logo {
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: calc(100vw - 11.5rem);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     .header .lang-switch {
         flex: 0 1 auto;
         width: auto;
-        max-width: min(228px, 42vw);
+        min-width: 0;
+        max-width: min(228px, 38vw);
         margin-left: auto;
     }
 
@@ -1601,8 +1639,10 @@ button:focus-visible,
 
     .page-home .hero-first-screen .header-items--figma {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 20px 16px;
+        align-items: start;
+        justify-items: center;
         position: relative;
         height: auto;
         min-height: 0;
@@ -1610,24 +1650,18 @@ button:focus-visible,
         pointer-events: auto;
     }
 
-    .page-home .hero-first-screen .header-items--figma .header-item--folder {
-        position: absolute;
-        left: var(--hi-left, 0);
-        top: var(--hi-top, 0);
-        width: 93.94px;
-        max-width: min(93.94px, 22vw);
-        justify-self: auto;
-        z-index: 4;
-        pointer-events: auto;
-    }
-
+    /* Папки и wells: координаты Figma только на широком экране; в сетке — обычный поток */
+    .page-home .hero-first-screen .header-items--figma .header-item--folder,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well {
         position: relative;
         left: auto !important;
         top: auto !important;
         width: auto;
-        max-width: 100%;
+        max-width: min(200px, 100%);
+        min-width: 0;
         justify-self: center;
+        z-index: auto;
+        pointer-events: auto;
     }
 
     .page-home .hero-first-screen .section-nav--overlay {
@@ -2111,9 +2145,6 @@ button:focus-visible,
     z-index: 1;
     box-sizing: border-box;
     background: rgba(0, 0, 0, 0.06);
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .preview-card-block--mac-window .preview-card-block__image {
@@ -2128,9 +2159,11 @@ button:focus-visible,
 }
 
 .preview-card-block__image img {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    max-width: 353px;
     height: 100%;
+    max-width: none;
     object-fit: cover;
     object-position: center;
     display: block;
@@ -2140,7 +2173,6 @@ button:focus-visible,
 }
 
 .preview-card-block--mac-window .preview-card-block__image img {
-    max-width: none;
     border: none;
     border-radius: var(--preview-image-inner-radius);
 }
@@ -6001,7 +6033,7 @@ button:focus-visible,
 
     .nav-toggle {
         display: flex;
-        z-index: 101;
+        z-index: 3;
     }
 
     .nav-toggle.active span:nth-child(1) {
@@ -6018,6 +6050,89 @@ button:focus-visible,
 
     .nav-toggle span {
         transition: var(--transition);
+    }
+
+    /* Кейс-стади: шторка снизу вместо выезда справа */
+    .header .nav-list--case-study {
+        top: auto;
+        right: 0 !important;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: none;
+        height: auto !important;
+        min-height: 0;
+        max-height: min(72dvh, calc(100dvh - env(safe-area-inset-top, 0px) - 52px));
+        margin: 0;
+        padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        justify-content: flex-start;
+        border-radius: 20px 20px 0 0;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 -16px 56px rgba(0, 0, 0, 0.55);
+        transform: translate3d(0, 105%, 0);
+        transition: transform var(--dur-smart-base) var(--ease-smart);
+        z-index: 2;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+        pointer-events: none;
+    }
+
+    .header .nav-list--case-study.open {
+        right: 0 !important;
+        transform: translate3d(0, 0, 0);
+        pointer-events: auto;
+    }
+
+    .header .nav-list--case-study > li {
+        width: 100%;
+    }
+
+    .header .nav-list--case-study .nav-link--case-title.nav-link.active {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .header .nav-list--case-study > li:nth-child(2) {
+        order: 0;
+        padding: 8px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        justify-content: center;
+    }
+
+    .header .nav-list--case-study .nav-link--case-with-chevron {
+        width: 100%;
+        justify-content: flex-start;
+        box-sizing: border-box;
+        border-radius: 14px;
+        white-space: normal;
+        text-align: left;
+        min-height: 44px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .header .nav-list--case-study .nav-link--case-next {
+        justify-content: space-between;
+    }
+
+    .header .nav-list--case-study .nav-link--case-title {
+        display: block;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 }
 
@@ -6570,7 +6685,13 @@ p,
 }
 
 .hero__card .preview-card-block__image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     max-width: none;
+    object-fit: cover;
+    object-position: center;
     border-radius: var(--preview-image-inner-radius);
     border: 0;
 }

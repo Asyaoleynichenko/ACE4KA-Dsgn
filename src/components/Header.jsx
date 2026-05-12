@@ -1,5 +1,5 @@
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import { tWithFallback } from '../i18n/tWithFallback.js';
@@ -16,6 +16,15 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [menuOpen]);
 
   const basePath = stripLocaleFromPathname(location.pathname);
   const project =
@@ -57,6 +66,14 @@ export default function Header() {
 
   return (
     <header className="header" data-node-id="432:30376" data-name="Header">
+      {menuOpen ? (
+        <button
+          type="button"
+          className="nav-scrim"
+          aria-label={t('header.closeMenu')}
+          onClick={closeMenu}
+        />
+      ) : null}
       <nav className="nav">
         <Link to={localizedPath('/')} className="logo" data-node-id="432:30377">
           <span className="blend-text">{t('common.brandName')}</span>

@@ -18,6 +18,7 @@
   },
   "header": {
     "menuAria": "Menu",
+    "closeMenu": "Close menu",
     "navListAria": "Main navigation",
     "about": "About",
     "caseStudyBack": "Back",

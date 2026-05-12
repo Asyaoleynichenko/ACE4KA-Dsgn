@@ -18,6 +18,7 @@
   },
   "header": {
     "menuAria": "Меню",
+    "closeMenu": "Закрыть меню",
     "navListAria": "Основное меню",
     "about": "О\u00a0себе",
     "caseStudyBack": "Назад",
