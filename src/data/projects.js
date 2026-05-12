@@ -35,8 +35,8 @@ export const projects = [
     desc: 'Единая платформа тематических медиа VK: редизайн, Mail Наука, масштабирование',
     image: '/images/figma-sync-20260205-mail-nauki-1777996685113/9404630b674c18da58918ad26aa18f10cd092161.png',
     heroImages: [
-      '/images/figma-sync-20260205-mail-nauki-1777996685113/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png',
       '/images/figma-sync-20260205-mail-nauki-1777996685113/9404630b674c18da58918ad26aa18f10cd092161.png',
+      '/images/figma-sync-20260205-mail-nauki-1777996685113/e076ef97274807b1134b88c0ed26e7eee6fd1429.png',
     ],
     lead:
       'Редизайн медиапроектов Mail — это проект по обновлению контентной платформы VK, объединяющей несколько тематических медиа (Наука, Hi-Tech, Леди, Кино и др.).',
@@ -167,7 +167,7 @@ export const projects = [
           'взаимодействовала с разработчиками при внедрении решений',
         ],
         galleryImages: [
-          '/images/figma-sync-20260205-mail-nauki-1777996685113/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png',
+          '/images/figma-sync-20260205-mail-nauki-1777996685113/9404630b674c18da58918ad26aa18f10cd092161.png',
           '/images/figma-sync-20260205-mail-nauki-1777996685113/e076ef97274807b1134b88c0ed26e7eee6fd1429.png',
           '/images/figma-sync-20260205-mail-nauki-1777996685113/ef40cddf2ee53f9fb672ad5d27022a08b0589c21.png',
         ],
@@ -515,7 +515,6 @@ export const projects = [
     desc: 'Location-based нетворкинг: iOS-концепция и Telegram-MVP',
     image: '/images/figma-sync-20260205-drop-1777996703808/e7ca6d9ef4722fbd73934f9beb0938c9a49e3838.png',
     heroImages: [
-      '/images/figma-sync-20260205-drop-1777996703808/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png',
       '/images/figma-sync-20260205-drop-1777996703808/a7ed9c87197b67f34e55c6504edd5b0278fb32d1.png',
       '/images/figma-sync-20260205-drop-1777996703808/05105f53ab912699e5c4137254415252ea76fb80.png',
       '/images/figma-sync-20260205-drop-1777996703808/e7ca6d9ef4722fbd73934f9beb0938c9a49e3838.png',
@@ -916,8 +915,8 @@ export const projects = [
     desc: 'Интерактивный лендинг о нейросетях: визуальный сторителлинг, AI-графика и новый формат спецпроектов',
     image: '/images/figma-sync-20260205-neural-1777996694634/fe778ffa49a547f00c22cdd97ebaac5e2f37b05b.png',
     heroImages: [
-      '/images/figma-sync-20260205-neural-1777996694634/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png',
       '/images/figma-sync-20260205-neural-1777996694634/fe778ffa49a547f00c22cdd97ebaac5e2f37b05b.png',
+      '/images/figma-sync-20260205-neural-1777996694634/d9bb5cd0634af13795e3e9cf5fd1c6a8ac0787ff.png',
     ],
     lead:
       'Рыночный интерес к нейросетям рос, но стандартные текстовые материалы в медиа не обеспечивали должного вовлечения из-за высокой сложности темы и отсутствия визуального сторителлинга. Это приводило к низкому времени взаимодействия и слабой глубине просмотра',
@@ -996,7 +995,7 @@ export const projects = [
             outcome: 'ускоряет продакшн и усиливает визуальный стиль',
           },
         ],
-        galleryImage: '/images/figma-sync-20260205-neural-1777996694634/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png',
+        galleryImage: '/images/figma-sync-20260205-neural-1777996694634/fe778ffa49a547f00c22cdd97ebaac5e2f37b05b.png',
       },
       {
         title: 'Использование AI',
@@ -1015,7 +1014,6 @@ export const projects = [
     desc: 'Двухмесячный 0→1: исследование, MVP, монетизация мастеров',
     image: '/images/figma-sync-20260205-inkz-1777996709805/b2b5e754958f2bcda2e96b9190ec16097cb49e9f.png',
     heroImages: [
-      '/images/figma-sync-20260205-inkz-1777996709805/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png',
       '/images/figma-sync-20260205-inkz-1777996709805/fe778ffa49a547f00c22cdd97ebaac5e2f37b05b.png',
       '/images/figma-sync-20260205-inkz-1777996709805/b2b5e754958f2bcda2e96b9190ec16097cb49e9f.png',
     ],
@@ -1085,7 +1083,7 @@ export const projects = [
           'Проработала модель монетизации',
         ],
         galleryBeforeHypotheses:
-          '/images/figma-sync-20260205-inkz-1777996709805/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png',
+          '/images/figma-sync-20260205-inkz-1777996709805/fe778ffa49a547f00c22cdd97ebaac5e2f37b05b.png',
         hypotheses: [
           {
             title: 'Гипотеза 1',
@@ -1269,8 +1267,8 @@ export const projects = [
     desc: 'Продукт + бренд: sustainability без морализаторства',
     image: '/images/figma-sync-20260205-retrash-1777996712906/9133bd526a48cf677a0867a77342e2ca95b4ed6c.png',
     heroImages: [
-      '/images/figma-sync-20260205-retrash-1777996712906/7f12ea1300756f144a0fb5daaf68dbfc01103a46.png',
       '/images/figma-sync-20260205-retrash-1777996712906/9133bd526a48cf677a0867a77342e2ca95b4ed6c.png',
+      '/images/figma-sync-20260205-retrash-1777996712906/f80e1683ed343d884a2d494290a006b42715c194.png',
     ],
     lead:
       'Медиа-сервис, направленный на упрощение перехода к осознанному потреблению через структурированный контент, инструкции и визуальную систему. Работала на пересечении продукта, контента и брендинга',

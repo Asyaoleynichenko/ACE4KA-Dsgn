@@ -5,29 +5,6 @@ import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 import IconAssembleFromDots from './IconAssembleFromDots.jsx';
 import { publicUrl } from '../utils/publicUrl.js';
 
-/** Шевроны навигации кейса — линейные стрелки (без декоративного кольца из точек). */
-function CaseNavChevron({ direction }) {
-  const d = direction === 'prev' ? 'M10,2 L2,8 L10,14' : 'M2,2 L10,8 L2,14';
-  return (
-    <svg
-      className={`nav-link__case-chevron nav-link__case-chevron--${direction}`}
-      width="12"
-      height="16"
-      viewBox="0 0 12 16"
-      aria-hidden
-    >
-      <path
-        d={d}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 /** Маршруты основной шапки (Figma 432:30376, свойство Default). */
 export const NAV_ROUTE_KEYS = [
   { path: '/', labelKey: 'header.nav.home' },
@@ -52,83 +29,11 @@ function itemIsActive(pathname, targetPath) {
   return base === targetPath;
 }
 
-/** Навигация: Figma 432:30376 — Default (маркетинг) | Variant2 (кейс: Назад | заголовок | Следующий). */
-export function Navigation({
-  variant = 'routes',
-  caseStudy = null,
-  menuOpen,
-  onItemClick,
-  /** Для `variant="routes"`: показывать снежинку/иконку проектов в пилюлях (на главной /projects /about — выкл.). */
-  showRouteIcons = true,
-}) {
+/** Навигация: Figma 432:30376 — маршруты в пилюлях (на всех страницах, включая кейсы). */
+export function Navigation({ menuOpen, onItemClick, showRouteIcons = true }) {
   const { pathname } = useLocation();
   const { t, localizedPath } = useI18n();
-  const listClass =
-    `${menuOpen ? 'nav-list open' : 'nav-list'}${variant === 'case-study' ? ' nav-list--case-study' : ''}`.trim();
-
-  if (variant === 'case-study' && caseStudy) {
-    const {
-      currentShortTitle,
-      currentFullTitle,
-      prevTo,
-      prevLabel,
-      prevFullTitle,
-      prevIsProject,
-      nextTo,
-      nextLabel,
-      nextFullTitle,
-    } = caseStudy;
-
-    const prevLink = prevIsProject ? (
-      <Link
-        to={prevTo}
-        className="nav-link nav-link--case-aux nav-link--case-with-chevron"
-        onClick={onItemClick}
-        aria-label={prevFullTitle}
-      >
-        <CaseNavChevron direction="prev" />
-        <span className="blend-text">{prevLabel}</span>
-      </Link>
-    ) : (
-      <SeamlessProjectsLink
-        to={prevTo}
-        className="nav-link nav-link--case-aux nav-link--case-with-chevron"
-        onClick={onItemClick}
-        aria-label={prevFullTitle}
-      >
-        <CaseNavChevron direction="prev" />
-        <span className="blend-text">{prevLabel}</span>
-      </SeamlessProjectsLink>
-    );
-
-    return (
-      <ul className={listClass} data-node-id="433:30466" data-variant="Variant2" aria-label={t('projectDetail.caseStudyNavAria')}>
-        <li>{prevLink}</li>
-        <li>
-          <span
-            className="nav-link nav-link--case-title active blend-text"
-            aria-current="page"
-            title={currentFullTitle}
-          >
-            {currentShortTitle}
-          </span>
-        </li>
-        {nextTo && nextLabel ? (
-          <li>
-            <Link
-              to={nextTo}
-              className="nav-link nav-link--case-aux nav-link--case-next nav-link--case-with-chevron"
-              onClick={onItemClick}
-              aria-label={nextFullTitle ?? nextLabel}
-            >
-              <span className="blend-text">{nextLabel}</span>
-              <CaseNavChevron direction="next" />
-            </Link>
-          </li>
-        ) : null}
-      </ul>
-    );
-  }
+  const listClass = `${menuOpen ? 'nav-list open' : 'nav-list'}`.trim();
 
   return (
     <ul
