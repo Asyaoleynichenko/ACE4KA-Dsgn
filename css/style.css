@@ -6175,6 +6175,12 @@ p,
     justify-content: center;
 }
 
+.header .nav-list--case-study > li:nth-child(2) .icon-assemble-dots--case-title {
+    width: 100%;
+    max-width: min(380px, 46vw);
+    min-width: 0;
+}
+
 .header .nav-list .nav-link--case-title.nav-link.active {
     width: 100%;
     max-width: min(380px, 46vw);
