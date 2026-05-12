@@ -4,6 +4,7 @@ import { useI18n } from '../i18n/I18nProvider.jsx';
 import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import { getCaseStudyNeighbors, projects } from '../data/projects.js';
+import { projectCaseStudyNavLabel } from '../utils/projectCaseStudyNavLabel.js';
 import LanguageSwitcher from './LanguageSwitcher.jsx';
 import { Navigation } from './Navigation';
 
@@ -23,10 +24,31 @@ export default function Header({ mode = 'default' }) {
 
   const caseStudyNav =
     isCaseStudyHeader && slug
-      ? {
-          displayTitle: tWithFallback(t, `projects.cards.${slug}.title`, project.title),
-          neighbors: getCaseStudyNeighbors(slug),
-        }
+      ? (() => {
+          const neighbors = getCaseStudyNeighbors(slug);
+          const projectsListingTo = localizedPath('/projects');
+          const prevTo = neighbors.prev
+            ? localizedPath(`/project/${neighbors.prev.slug}`)
+            : projectsListingTo;
+          const nextTo = neighbors.next ? localizedPath(`/project/${neighbors.next.slug}`) : null;
+          return {
+            currentShortTitle: projectCaseStudyNavLabel(t, slug),
+            currentFullTitle: tWithFallback(t, `projects.cards.${slug}.title`, project.title),
+            prevTo,
+            prevLabel: neighbors.prev
+              ? projectCaseStudyNavLabel(t, neighbors.prev.slug)
+              : t('header.nav.projects'),
+            prevFullTitle: neighbors.prev
+              ? tWithFallback(t, `projects.cards.${neighbors.prev.slug}.title`, neighbors.prev.title)
+              : t('header.nav.projects'),
+            prevIsProject: !!neighbors.prev,
+            nextTo,
+            nextLabel: neighbors.next ? projectCaseStudyNavLabel(t, neighbors.next.slug) : null,
+            nextFullTitle: neighbors.next
+              ? tWithFallback(t, `projects.cards.${neighbors.next.slug}.title`, neighbors.next.title)
+              : null,
+          };
+        })()
       : null;
 
   const headerClass =
@@ -43,6 +65,7 @@ export default function Header({ mode = 'default' }) {
           caseStudy={caseStudyNav}
           menuOpen={menuOpen}
           onItemClick={closeMenu}
+          showRouteIcons={mode !== 'in-hero'}
         />
         <span className="lang-switch" data-node-id="432:30380">
           <LanguageSwitcher />

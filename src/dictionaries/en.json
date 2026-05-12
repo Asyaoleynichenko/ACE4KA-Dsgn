@@ -292,51 +292,61 @@
   "projects": {
     "cards": {
       "mail-nauki": {
+        "navShortTitle": "Mail Science",
         "title": "Mail Science launch & a systematic Mail media redesign",
         "meta": "Media · Mail",
         "desc": "One thematic media platform across VK: redesign, Mail Science, and scaling the experience"
       },
       "mail-spetsproekty": {
+        "navShortTitle": "Special projects",
         "title": "Growing the special-projects stream",
         "meta": "Mail Media · 2025",
         "desc": "Branded specials: tighter process, AI in the workflow, less outsourcing"
       },
       "mail-monetization": {
+        "navShortTitle": "Mail monetization",
         "title": "Mail monetization",
         "meta": "Mail · Cloud & Mail · 2025 — present",
         "desc": "Mail Space subscription: pricing tiers, experiments, freemium features"
       },
       "drop": {
+        "navShortTitle": "DROP",
         "title": "DROP — networking for city life",
         "meta": "UX/UI · 2024–2025",
         "desc": "Location-based networking: iOS concept and a Telegram MVP"
       },
       "loochok": {
+        "navShortTitle": "LÒÒCHOK",
         "title": "LÒÒCHOK — customization & DIY community",
         "meta": "UX/UI · Product · 2023–2024",
         "desc": "0→1: DIY platform, community, web + iOS, pitch"
       },
       "neural": {
+        "navShortTitle": "Neural networks",
         "title": "Mail Hi-Tech feature — a landing on neural networks",
         "meta": "Mail Hi-Tech · 2024",
         "desc": "Interactive NN landing: visual storytelling, AI graphics, and a fresh special-project format"
       },
       "inkz": {
+        "navShortTitle": "INKZ",
         "title": "INKZ — find your tattoo artist",
         "meta": "UX/UI · HSE · Sep — Oct 2023",
         "desc": "Two-month 0→1: research, MVP, monetization for artists"
       },
       "biohacking": {
+        "navShortTitle": "Biohacking",
         "title": "Immersive ad mechanics: “Biohacking” for Invitro",
         "meta": "Mail Media · 2024",
         "desc": "Readymag + Spline: a native brand inside an editorial longread"
       },
       "retrash": {
+        "navShortTitle": "RE*TRASH",
         "title": "RE*TRASH — media about mindful consumption",
         "meta": "Media · HSE · 2022–2023",
         "desc": "Product + brand: sustainability without the lecture"
       },
       "racktables": {
+        "navShortTitle": "RackTables",
         "title": "RackTables: redesigning infrastructure management",
         "meta": "UX/UI · Yandex Fast Track · 2026",
         "desc": "Fast Track: from a passive database to solution support in two days"

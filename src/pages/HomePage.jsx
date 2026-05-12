@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
+import IconAssembleFromDots from '../components/IconAssembleFromDots.jsx';
 import PreviewCardBlock from '../components/PreviewCardBlock';
 import ProjectCard from '../components/ProjectCard';
 import FilterPills from '../components/FilterPills';
@@ -79,7 +80,9 @@ export default function HomePage() {
                   style={headerItemPlacementStyle(placement)}
                 >
                   <div className="header-item__icon-wrap">
-                    <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} />
+                    <IconAssembleFromDots className="icon-assemble-dots--folder" ringRadiusPx={44} dotCount={20} dotPx={3}>
+                      <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} />
+                    </IconAssembleFromDots>
                   </div>
                   <span className="header-item__label">{t(labelKey)}</span>
                 </FolderLink>
@@ -94,7 +97,9 @@ export default function HomePage() {
                   style={headerItemPlacementStyle(placement)}
                 >
                   <div className="header-item__well">
-                    <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" />
+                    <IconAssembleFromDots className="icon-assemble-dots--well" ringRadiusPx={16} dotCount={14} dotPx={2.5}>
+                      <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" />
+                    </IconAssembleFromDots>
                   </div>
                   <span className="header-item__label">{t(labelKey)}</span>
                 </Link>

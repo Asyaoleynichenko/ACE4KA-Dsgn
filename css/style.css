@@ -88,7 +88,150 @@ html.snap-pages #root.snap-pages-root {
     animation: page-transition-in var(--page-transition-duration) var(--ease-page) both;
 }
 
+/* Главная: лёгкое проявление страницы (без сдвига — движение оставляем иконкам) */
+@keyframes page-transition-in-home {
+    from {
+        opacity: 0.42;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.page-home .page-transition {
+    animation: page-transition-in-home 0.55s cubic-bezier(0.33, 1, 0.32, 1) both;
+}
+
+/* Сборка иконки из точек к центру + появление медиа из центра (шапка, герой) */
+.icon-assemble-dots {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.icon-assemble-dots__burst {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.icon-assemble-dots__dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--icon-assemble-dot, 3px);
+    height: var(--icon-assemble-dot, 3px);
+    margin: calc(-0.5 * var(--icon-assemble-dot, 3px));
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
+    transform: rotate(var(--ang)) translateX(var(--icon-assemble-r));
+    transform-origin: center center;
+    animation: icon-assemble-dot-in 1.05s cubic-bezier(0.33, 1, 0.32, 1) backwards;
+}
+
+@keyframes icon-assemble-dot-in {
+    from {
+        transform: rotate(var(--ang)) translateX(var(--icon-assemble-r)) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: rotate(var(--ang)) translateX(0) scale(0.12);
+        opacity: 0;
+    }
+}
+
+.icon-assemble-dots__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.icon-assemble-dots--folder .icon-assemble-dots__media > *,
+.icon-assemble-dots--well .icon-assemble-dots__media > * {
+    transform-origin: center center;
+    animation: icon-assemble-media-in 1.12s cubic-bezier(0.33, 1, 0.32, 1) 0.14s backwards;
+}
+
+.header .nav-list .icon-assemble-dots--nav .icon-assemble-dots__media > * {
+    transform-origin: center center;
+    animation: icon-assemble-media-nav-in 1.12s cubic-bezier(0.33, 1, 0.32, 1) 0.14s backwards;
+}
+
+@keyframes icon-assemble-media-nav-in {
+    from {
+        opacity: 0;
+        transform: scale(0.18);
+        filter: blur(10px) brightness(1.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1.22) contrast(1.03) drop-shadow(0 0 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 1px 12px rgba(255, 255, 255, 0.24));
+    }
+}
+
+@keyframes icon-assemble-media-in {
+    from {
+        opacity: 0;
+        transform: scale(0.18);
+        filter: blur(10px) brightness(1.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0) brightness(1);
+    }
+}
+
+.icon-assemble-dots--nav {
+    width: 22px;
+    height: 22px;
+}
+
+.icon-assemble-dots--nav-led {
+    width: 23px;
+    height: 23px;
+}
+
+.icon-assemble-dots--folder {
+    width: 100%;
+    height: 100%;
+}
+
+.icon-assemble-dots--well {
+    position: absolute;
+    inset: 10%;
+    width: 80%;
+    height: 80%;
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .icon-assemble-dots__dot {
+        animation: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    .icon-assemble-dots--folder .icon-assemble-dots__media > *,
+    .icon-assemble-dots--well .icon-assemble-dots__media > *,
+    .header .nav-list .icon-assemble-dots--nav .icon-assemble-dots__media > * {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .page-home .page-transition,
     .page-transition {
         animation: none;
     }
@@ -931,13 +1074,19 @@ button:focus-visible,
     text-decoration: none;
     color: inherit;
     transition:
-        opacity 0.2s var(--ease-micro-out),
-        transform var(--duration-micro) var(--ease-micro-out);
+        opacity 0.85s cubic-bezier(0.33, 1, 0.32, 1),
+        transform 0.85s cubic-bezier(0.33, 1, 0.32, 1);
 }
 
 .header-item:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.header-item:hover .header-item__icon-wrap img,
+.header-item:hover .header-item__well .icon-assemble-dots__media img {
+    transform: scale(1.028);
+    filter: brightness(1.22) drop-shadow(0 0 2px rgba(0, 0, 0, 0.38)) drop-shadow(0 2px 14px rgba(255, 255, 255, 0.22));
 }
 
 .header-item:active {
@@ -963,6 +1112,8 @@ button:focus-visible,
     width: 100%;
     height: 100%;
     object-fit: contain;
+    filter: brightness(1.14) drop-shadow(0 1px 8px rgba(0, 0, 0, 0.28));
+    transition: transform 0.9s cubic-bezier(0.33, 1, 0.32, 1), filter 0.9s cubic-bezier(0.33, 1, 0.32, 1), opacity 0.9s cubic-bezier(0.33, 1, 0.32, 1);
 }
 
 /* Вариант «Image Well» — 44×44px, рамка и внутренняя тень (Figma 1:212, 1:215, 1:218, 1:221) */
@@ -982,13 +1133,15 @@ button:focus-visible,
     overflow: hidden;
 }
 
-.header-item__well img {
-    position: absolute;
-    inset: 10%;
-    width: 80%;
-    height: 80%;
+.header-item__well .icon-assemble-dots__media img {
+    position: static;
+    inset: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     display: block;
+    filter: brightness(1.2) drop-shadow(0 0 1px rgba(0, 0, 0, 0.32)) drop-shadow(0 1px 8px rgba(255, 255, 255, 0.18));
+    transition: transform 0.9s cubic-bezier(0.33, 1, 0.32, 1), filter 0.9s cubic-bezier(0.33, 1, 0.32, 1), opacity 0.9s cubic-bezier(0.33, 1, 0.32, 1);
 }
 
 /* Подпись: 13.22px, по центру, тень (Figma 1:208, 1:211 и др.) */
@@ -5885,21 +6038,71 @@ p,
     background: rgba(255, 255, 255, 0.06);
 }
 
+.header .nav-list .nav-link--case-with-chevron {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header .nav-list .nav-link__chevron {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    box-sizing: border-box;
+    opacity: 1;
+    filter: brightness(1.35);
+}
+
+.header .nav-list .nav-link__chevron--left {
+    border-left: 2px solid rgba(255, 255, 255, 0.88);
+    border-top: 2px solid rgba(255, 255, 255, 0.88);
+    transform: rotate(-45deg);
+}
+
+.header .nav-list .nav-link__chevron--right {
+    border-right: 2px solid rgba(255, 255, 255, 0.88);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.88);
+    transform: rotate(-45deg);
+}
+
 .header .nav-list .nav-link__snow,
 .header .nav-list .nav-link__pill-icon {
     display: block;
-    width: 18px;
-    height: 18px;
     flex-shrink: 0;
-    opacity: 0.92;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    opacity: 1;
+    mix-blend-mode: normal;
+    filter: brightness(1.22) contrast(1.03) drop-shadow(0 0 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 1px 12px rgba(255, 255, 255, 0.24));
+    transition:
+        opacity 0.85s cubic-bezier(0.33, 1, 0.32, 1),
+        transform 0.85s cubic-bezier(0.33, 1, 0.32, 1),
+        filter 0.85s cubic-bezier(0.33, 1, 0.32, 1);
+}
+
+.header .nav-list .nav-link__pill-icon--led {
+    width: 23px;
+    height: 23px;
+}
+
+.header .nav-list .nav-link:hover:not(.active) .nav-link__snow,
+.header .nav-list .nav-link:hover:not(.active) .nav-link__pill-icon {
+    transform: scale(1.042);
+    filter: brightness(1.28) contrast(1.04) drop-shadow(0 0 2px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 16px rgba(255, 255, 255, 0.3));
 }
 
 .header .nav-list .nav-link__snow--flip {
     transform: scaleX(-1);
 }
 
+.header .nav-list .nav-link:hover:not(.active) .nav-link__snow--flip {
+    transform: scaleX(-1) scale(1.042);
+}
+
 .header .nav-list .nav-link--case-next {
-    padding: 8px 12px 8px 21px;
+    padding: 8px 16px 8px 21px;
 }
 
 .header .nav-list--case-study > li:nth-child(2) {

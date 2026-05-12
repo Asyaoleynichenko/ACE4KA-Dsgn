@@ -290,6 +290,17 @@
     }
   },
   "projects": {
-    "cards": {}
+    "cards": {
+      "mail-nauki": { "navShortTitle": "Mail Наука" },
+      "biohacking": { "navShortTitle": "Biohacking" },
+      "mail-spetsproekty": { "navShortTitle": "Спецпроекты" },
+      "neural": { "navShortTitle": "Нейросети" },
+      "loochok": { "navShortTitle": "LÒÒCHOK" },
+      "drop": { "navShortTitle": "DROP" },
+      "retrash": { "navShortTitle": "RE*TRASH" },
+      "mail-monetization": { "navShortTitle": "Монетизация Mail" },
+      "inkz": { "navShortTitle": "INKZ" },
+      "racktables": { "navShortTitle": "RackTables" }
+    }
   }
 }
