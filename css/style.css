@@ -102,49 +102,13 @@ html.snap-pages #root.snap-pages-root {
     animation: page-transition-in-home 0.55s cubic-bezier(0.33, 1, 0.32, 1) both;
 }
 
-/* Сборка иконки из точек к центру + появление медиа из центра (шапка, герой) */
+/* Единая анимация иконок: мягкое появление из центра (без точек) */
 .icon-assemble-dots {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     vertical-align: middle;
-}
-
-.icon-assemble-dots__burst {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.icon-assemble-dots__dot {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: var(--icon-assemble-dot, 3px);
-    height: var(--icon-assemble-dot, 3px);
-    margin: calc(-0.5 * var(--icon-assemble-dot, 3px));
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
-    transform: rotate(var(--ang)) translateX(var(--icon-assemble-r));
-    transform-origin: center center;
-    animation: icon-assemble-dot-in 1.05s cubic-bezier(0.33, 1, 0.32, 1) backwards;
-}
-
-@keyframes icon-assemble-dot-in {
-    from {
-        transform: rotate(var(--ang)) translateX(var(--icon-assemble-r)) scale(1);
-        opacity: 1;
-    }
-    to {
-        transform: rotate(var(--ang)) translateX(0) scale(0.12);
-        opacity: 0;
-    }
 }
 
 .icon-assemble-dots__media {
@@ -160,19 +124,19 @@ html.snap-pages #root.snap-pages-root {
 .icon-assemble-dots--folder .icon-assemble-dots__media > *,
 .icon-assemble-dots--well .icon-assemble-dots__media > * {
     transform-origin: center center;
-    animation: icon-assemble-media-in 1.12s cubic-bezier(0.33, 1, 0.32, 1) 0.14s backwards;
+    animation: icon-assemble-media-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 .header .nav-list .icon-assemble-dots--nav .icon-assemble-dots__media > * {
     transform-origin: center center;
-    animation: icon-assemble-media-nav-in 1.12s cubic-bezier(0.33, 1, 0.32, 1) 0.14s backwards;
+    animation: icon-assemble-media-nav-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 @keyframes icon-assemble-media-nav-in {
     from {
         opacity: 0;
-        transform: scale(0.18);
-        filter: blur(10px) brightness(1.85);
+        transform: scale(0.7);
+        filter: brightness(1.2);
     }
     to {
         opacity: 1;
@@ -184,8 +148,8 @@ html.snap-pages #root.snap-pages-root {
 @keyframes icon-assemble-media-in {
     from {
         opacity: 0;
-        transform: scale(0.18);
-        filter: blur(10px) brightness(1.85);
+        transform: scale(0.72);
+        filter: brightness(1.18);
     }
     to {
         opacity: 1;
@@ -216,27 +180,23 @@ html.snap-pages #root.snap-pages-root {
     height: 80%;
 }
 
-/* Шапка кейса (страницы проектов): шевроны и заголовок — те же точки к центру */
+/* Шапка кейса (страницы проектов): шевроны и заголовок — мягкое появление из центра */
 .icon-assemble-dots--chevron {
     width: 14px;
     height: 14px;
     flex-shrink: 0;
 }
 
-.icon-assemble-dots--chevron .icon-assemble-dots__dot {
-    animation-duration: 0.95s;
-}
-
 .icon-assemble-dots--chevron .icon-assemble-dots__media > * {
     display: block;
     transform-origin: center center;
-    animation: icon-assemble-media-chevron-in 0.95s cubic-bezier(0.33, 1, 0.32, 1) 0.08s backwards;
+    animation: icon-assemble-media-chevron-in 0.62s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 @keyframes icon-assemble-media-chevron-in {
     from {
         opacity: 0;
-        transform: scale(0.2);
+        transform: scale(0.72);
     }
     to {
         opacity: 1;
@@ -261,14 +221,14 @@ html.snap-pages #root.snap-pages-root {
 
 .icon-assemble-dots--case-title .icon-assemble-dots__media > * {
     transform-origin: center center;
-    animation: icon-assemble-media-title-in 1.15s cubic-bezier(0.33, 1, 0.32, 1) 0.12s backwards;
+    animation: icon-assemble-media-title-in 0.78s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 @keyframes icon-assemble-media-title-in {
     from {
         opacity: 0;
-        transform: scale(0.82);
-        filter: blur(5px);
+        transform: scale(0.88);
+        filter: blur(1px);
     }
     to {
         opacity: 1;
@@ -278,12 +238,6 @@ html.snap-pages #root.snap-pages-root {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .icon-assemble-dots__dot {
-        animation: none !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-    }
-
     .icon-assemble-dots--folder .icon-assemble-dots__media > *,
     .icon-assemble-dots--well .icon-assemble-dots__media > *,
     .header .nav-list .icon-assemble-dots--nav .icon-assemble-dots__media > *,
@@ -2797,10 +2751,10 @@ button:focus-visible,
     overflow: hidden;
     width: 100%;
     max-width: none;
-    margin-left: calc(-1 * var(--project-page-padding-x));
-    margin-right: calc(-1 * var(--project-page-padding-x));
-    padding-left: var(--project-page-padding-x);
-    padding-right: var(--project-page-padding-x);
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
     box-sizing: border-box;
     /* Ширина ленты без max-content-петли: задаём базис карточкам через cqi (~2 экранные карты) */
     container-type: inline-size;
@@ -2832,7 +2786,7 @@ button:focus-visible,
     box-sizing: border-box;
     min-height: 280px;
     position: relative;
-    overflow: hidden; /* prevents icon overflow affecting scrub calculations */
+    overflow: visible;
 }
 .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:nth-child(3),
 .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:nth-child(4) {
@@ -2981,10 +2935,10 @@ button:focus-visible,
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
-    margin-left: calc(-1 * var(--project-page-padding-x));
-    margin-right: calc(-1 * var(--project-page-padding-x));
-    padding-left: var(--project-page-padding-x);
-    padding-right: var(--project-page-padding-x);
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
     padding-bottom: var(--space-8);
     -webkit-overflow-scrolling: touch;
     container-type: inline-size;
@@ -3318,10 +3272,10 @@ button:focus-visible,
 .project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__viewport {
     overflow: hidden;
     width: 100%;
-    margin-left: calc(-1 * var(--project-page-padding-x));
-    margin-right: calc(-1 * var(--project-page-padding-x));
-    padding-left: var(--project-page-padding-x);
-    padding-right: var(--project-page-padding-x);
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
     box-sizing: border-box;
     container-type: inline-size;
     container-name: scrub-hyp;

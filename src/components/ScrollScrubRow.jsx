@@ -7,6 +7,7 @@ import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } f
 export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel, className = '' }) {
   /** Гипотезы — только вертикальный стек, без горизонтального скролла и без scrub по скроллу */
   const verticallyCenterSticky = variant === 'cards';
+  const stickyEdgeOffset = 72;
   const trackRef = useRef(null);
   const stickyRef = useRef(null);
   const viewportRef = useRef(null);
@@ -64,7 +65,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const scrollRange = rect.height - vh;
     const denom = Math.max(1, scrollRange);
     const p = Math.min(1, Math.max(0, -rect.top / denom));
-    const x = p * mx;
+    // Более плавный scrub: мягкий вход/выход вместо линейного "рывка".
+    const eased = p * p * (3 - 2 * p);
+    const x = eased * mx;
     inner.style.transform = `translate3d(${-x}px,0,0)`;
 
     const idx =
@@ -78,10 +81,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     if (!sticky) return undefined;
 
     const applyStickyTop = () => {
-      const h = sticky.offsetHeight;
-      const vh = window.innerHeight;
-      const top = Math.max(12, (vh - h) / 2);
-      sticky.style.top = `${top}px`;
+      sticky.style.top = `${stickyEdgeOffset}px`;
     };
 
     applyStickyTop();
@@ -129,9 +129,10 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     /* Вертикальная «дорожка» под scroll-scrub: раньше было max(sticky+maxX*1.08, vh+maxX) —
        при длинной горизонтали получались тысячи px пустоты. Ограничиваем бег по скроллу ~2.5–3 vh,
        горизонтальный прогресс по-прежнему 0…maxX через updateFromScroll. */
-    const runway = Math.min(Math.max(vh * 0.5, maxX * 0.48 + vh * 0.28), vh * 2.9);
-    track.style.minHeight = `${Math.ceil(Math.max(stickyH + vh * 0.18, vh + runway))}px`;
-  }, [maxX, reducedMotion, count]);
+    // Компактный scroll-runway: сохраняем scrub, но убираем чрезмерную "пустоту" после карточек.
+    const runway = Math.min(Math.max(72, maxX * 0.08), 160);
+    track.style.minHeight = `${Math.ceil(Math.max(vh + stickyEdgeOffset * 2, stickyH + stickyEdgeOffset * 2 + runway))}px`;
+  }, [maxX, reducedMotion, count, stickyEdgeOffset]);
 
   useEffect(() => {
     if (reducedMotion) return;
