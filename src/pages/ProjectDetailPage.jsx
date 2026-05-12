@@ -395,7 +395,7 @@ export default function ProjectDetailPage() {
                 const iconKind = caseStudyStripIconKind(item.title);
                 const cardTitle = translateCaseCardTitle(item.title, t);
                 return (
-                  <div key={`${cardIdx}-${item.title}`} className="card">
+                  <div key={`${cardIdx}-${item.title}`} className="card" data-strip-kind={iconKind ?? undefined}>
                     <h3>{cardTitle}</h3>
                     <p>{item.value}</p>
                     {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
@@ -598,7 +598,7 @@ export default function ProjectDetailPage() {
                         {sectionCards.map((item, cardIdx) => {
                           const iconKind = caseStudyStripIconKind(item.title);
                           return (
-                            <div key={item.title} className="card">
+                            <div key={item.title} className="card" data-strip-kind={iconKind ?? undefined}>
                               <h3>{item.title}</h3>
                               <p>{item.value}</p>
                               {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}

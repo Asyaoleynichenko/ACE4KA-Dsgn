@@ -78,8 +78,8 @@
   --color-surface-light: #222228;
   --color-text: #f5f5f5;
   --color-text-primary: #f5f5f5;
-  --color-text-muted: #a3a3a3;
-  --color-text-extra-muted: #737373;
+  --color-text-muted: #b4b4b8;
+  --color-text-extra-muted: #8a8a90;
   --color-text-label: #a3a3a3;
   --color-text-on-inverse: #0a0a0a;
   --color-bg-inverse: #f5f5f5;
@@ -115,8 +115,9 @@
   --radius: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 16px;
-  --radius-2xl: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 22px;
+  --radius-card-premium: 22px;
   --radius-full: 9999px;
   --color-surface-border: #2a2a31;
   --color-elevated-mid: #262626;
@@ -131,9 +132,11 @@
   --shadow-nav-pill-rim: 0 1px 2px rgba(0, 0, 0, 0.36);
   --shadow-nav-active-liquid: 0 1px 2px rgba(0, 0, 0, 0.45);
   --shadow-btn-show-all: 0 1px 2px rgba(0, 0, 0, 0.36);
-  --shadow-preview-card: 0 8px 24px rgba(0, 0, 0, 0.32);
-  --shadow-preview-card-hover: 0 12px 28px rgba(0, 0, 0, 0.45);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-preview-card: 0 10px 32px rgba(0, 0, 0, 0.22);
+  --shadow-preview-card-hover: 0 14px 40px rgba(0, 0, 0, 0.28);
+  --shadow-card-hover: 0 12px 36px rgba(0, 0, 0, 0.26);
+  --shadow-case-card: 0 10px 36px rgba(0, 0, 0, 0.2);
+  --shadow-case-card-hover: 0 14px 44px rgba(0, 0, 0, 0.26);
   --shadow-nav-drawer: -8px 0 24px rgba(0, 0, 0, 0.5);
 
   --blur-nav: 0px;
@@ -160,6 +163,8 @@
   --preview-cta-mix-blend: plus-darker;
   --mix-blend-exclusion: normal;
 
+  /* 8pt spacing scale (4 = half-step) */
+  --space-2: 4px;
   --space-4: 8px;
   --space-8: 8px;
   --space-12: 16px;
@@ -169,8 +174,10 @@
   --space-32: 32px;
   --space-40: 40px;
   --space-48: 48px;
+  --space-56: 56px;
   --space-64: 64px;
-  --space-72: 64px;
+  --space-72: 72px;
+  --space-80: 80px;
   --card-gap: 8px;
   --preview-card-media-body-gap: 16px;
   --grid-row-gap: 24px;
@@ -179,27 +186,34 @@
   --hero-content-max: 896px;
   --hero-card-width: 369px;
   --hero-row-gap: 24px;
-  --hero-lead-max: 661px;
+  --hero-lead-max: min(52rem, 100%);
   --hero-section-gap: 64px;
 
-  --project-page-max-width: 1290px;
+  --case-prose-max: min(52.5rem, 100%);
+  --case-content-max: min(1240px, 100%);
+  --case-section-rhythm: clamp(48px, 6vw, 80px);
+  --case-divider: rgba(255, 255, 255, 0.075);
+  --ease-premium-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-premium: 200ms;
+
+  --project-page-max-width: 1240px;
   --project-page-padding-y: 48px;
   --project-page-padding-x: 24px;
   --project-page-padding-bottom: 64px;
   --project-page-gap: 48px;
   --project-detail-pt: 32px;
-  --project-detail-gap: 32px;
+  --project-detail-gap: 48px;
   --project-detail-top-gap: 24px;
   --project-title-color: #fafafa;
-  --project-hero-max-width: 1310px;
+  --project-hero-max-width: 1240px;
   --project-hero-aspect-w: 1310;
   --project-hero-aspect-h: 721;
-  --project-hero-radius: 21px;
+  --project-hero-radius: var(--radius-card-premium);
   --project-hero-bg: #000000;
   --project-hero-gradient: linear-gradient(135deg, #2b2b2b 0%, #1d1d1d 100%);
   --project-hero-placeholder-bg: #c4c4c4;
   --project-heading-gap: 12px;
-  --project-heading-max-width: 720px;
+  --project-heading-max-width: min(52rem, 100%);
   --project-title-font-size: 32px;
   --project-title-line-height: 1.2;
   --project-title-letter-spacing: -0.02em;
@@ -209,14 +223,14 @@
   --project-lead-color: #737373;
   --project-meta-card-gap: 16px;
   --project-meta-card-bg: #0f0f0f;
-  --project-meta-card-radius: var(--radius-lg);
-  --project-meta-card-padding: 24px;
+  --project-meta-card-radius: var(--radius-card-premium);
+  --project-meta-card-padding: 28px 32px;
   --project-meta-card-max-width: 415px;
   --project-meta-item-gap: 8px;
   --project-meta-label-font-size: 12px;
   --project-meta-label-line-height: 16px;
   --project-meta-label-letter-spacing: 0.6px;
-  --project-meta-label-opacity: 0.4;
+  --project-meta-label-opacity: 0.55;
   --project-meta-value-font-size: 18px;
   --project-meta-value-line-height: 28px;
   --project-meta-value-letter-spacing: -1px;
@@ -232,17 +246,17 @@
   --project-footer-label-opacity: 1;
   --project-footer-label-mb: 8px;
   --project-card-bg: #0f0f0f;
-  --project-card-radius: var(--radius-lg);
-  --project-card-padding: 33px;
+  --project-card-radius: var(--radius-card-premium);
+  --project-card-padding: 32px;
   --project-card-gap: 16px;
   --project-card-title-font-size: 12px;
   --project-card-title-line-height: 16px;
   --project-card-title-letter-spacing: 0.6px;
-  --project-card-title-opacity: 0.4;
+  --project-card-title-opacity: 0.52;
   --project-card-text-font-size: 18px;
-  --project-card-text-line-height: 29.25px;
-  --project-card-text-letter-spacing: -0.44px;
-  --project-card-text-opacity: 0.8;
+  --project-card-text-line-height: 1.68;
+  --project-card-text-letter-spacing: -0.02em;
+  --project-card-text-opacity: 0.92;
   --project-tools-gap: 8px;
   --project-tools-pill-padding: 8px 16px;
   --project-tools-pill-font-size: 14px;
@@ -262,8 +276,8 @@
   --text-89-756-lead-font-size: 18px;
   --text-89-756-lead-line-height: 1.5;
   --text-89-756-lead-letter-spacing: 0;
-  --text-89-756-lead-color: #737373;
-  --text-89-756-lead-max-width: 720px;
+  --text-89-756-lead-color: #9a9aa0;
+  --text-89-756-lead-max-width: min(52.5rem, 100%);
   --text-89-756-label-font-size: 14px;
   --text-89-756-label-line-height: 1.4;
   --text-89-756-label-letter-spacing: 0;
@@ -304,13 +318,16 @@
 
 @media (max-width: 640px) {
     :root {
-        --layout-page-pad-x: 16px;
-        --project-page-padding-x: 16px;
+        --layout-page-pad-x: 20px;
+        --project-page-padding-x: 22px;
         --layout-page-pad-y-top: 36px;
         --layout-page-pad-y-bottom: 48px;
         --project-page-padding-y: 36px;
         --project-page-padding-bottom: 48px;
         --hero-section-gap: 48px;
+        --project-detail-gap: 40px;
+        --project-card-padding: 24px;
+        --case-section-rhythm: clamp(36px, 8vw, 56px);
     }
 }
 
@@ -833,11 +850,17 @@ button:focus-visible,
 .nav-toggle {
     display: none;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: var(--space-8);
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    padding: 8px 6px;
+    box-sizing: border-box;
+    overflow: visible;
+    min-width: 44px;
+    min-height: 44px;
 }
 
 .nav-toggle span {
@@ -872,8 +895,8 @@ button:focus-visible,
     margin-right: auto;
     padding-top: max(12px, env(safe-area-inset-top, 0px));
     padding-bottom: 12px;
-    padding-left: max(24px, env(safe-area-inset-left, 0px));
-    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    padding-left: max(var(--layout-page-pad-x), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--layout-page-pad-x), env(safe-area-inset-right, 0px));
     min-height: 0;
     box-sizing: border-box;
     display: flex;
@@ -1177,7 +1200,8 @@ button:focus-visible,
         padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
         max-width: 100vw;
         box-sizing: border-box;
-        overflow-x: clip;
+        /* Не clip: иначе по правилам overflow связанная ось режет крестик .nav-toggle (transform выходит за кнопку) */
+        overflow-x: visible;
         min-height: auto;
         margin-left: 0;
         margin-right: 0;
@@ -1668,6 +1692,12 @@ button:focus-visible,
         position: relative;
         inset: auto;
         pointer-events: auto;
+    }
+
+    /* Вектор: убираем горизонтальный «перелив» Figma — картинка в ровной колонке с hero/шапкой */
+    .page-home .hero-vector__inner {
+        left: 0;
+        right: 0;
     }
 
     .header-items {
@@ -2774,7 +2804,7 @@ button:focus-visible,
 /* Figma 1-522 / 1-534 — контент кейса в колонке до 1310px, горизонтальные поля как у страницы проекта */
 .project-case-study-mail .container.container--case-study {
     width: 100%;
-    max-width: var(--project-hero-max-width);
+    max-width: var(--case-content-max);
     margin-left: auto;
     margin-right: auto;
     padding-left: var(--project-page-padding-x);
@@ -2784,7 +2814,23 @@ button:focus-visible,
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: var(--project-detail-gap);
+    gap: clamp(44px, 5vw, 72px);
+}
+
+/* Крупные блоки кейса: разделители + дополнительный «воздух» (сканирование без смены контента) */
+.project-case-study-mail .container--case-study > section.case-study-narrative,
+.project-case-study-mail .container--case-study > section.section[id*='body'],
+.project-case-study-mail .container--case-study > section.images {
+    padding-top: var(--case-section-rhythm);
+    margin-top: 0;
+    border-top: 1px solid var(--case-divider);
+}
+
+.project-case-study-mail .container--case-study > section.hero,
+.project-case-study-mail .container--case-study > section.project-intro,
+.project-case-study-mail .container--case-study > section.cards-section {
+    border-top: none;
+    padding-top: 0;
 }
 
 /* Оглавление кейса: фикс. справа по центру вьюпорта (портал в body — иначе transform у .page-transition ломает fixed) */
@@ -3307,28 +3353,28 @@ button:focus-visible,
 .project-case-study-mail .project-intro .title {
     flex: 1 1 auto;
     min-width: 0;
-    max-width: 53.916rem; /* ~862px */
+    max-width: var(--case-prose-max); /* ~862px */
 }
 .project-case-study-mail .project-intro .title h1 {
-    font-size: clamp(2rem, 4.5vw, 3.75rem); /* до 60px */
-    margin: 0 0 var(--space-16);
-    font-weight: 500;
-    line-height: 0.9;
-    letter-spacing: -2px;
+    font-size: clamp(2.75rem, 5vw, 4rem);
+    margin: 0 0 var(--space-24);
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
     color: var(--color-text);
     white-space: pre-line;
 }
 .project-case-study-mail .project-intro .title p {
-    /* Figma 1-522 — лид под заголовком: 24px, max 661px (как hero lead) */
-    color: rgba(250, 250, 250, 0.8);
-    font-size: 24px;
-    line-height: 1.25;
-    letter-spacing: -0.5px;
-    max-width: var(--hero-lead-max);
+    /* Лид кейса: читабельная ширина и межстрочный интервал для длинных абзацев */
+    color: rgba(245, 245, 245, 0.88);
+    font-size: clamp(17px, 1.35vw, 19px);
+    line-height: 1.68;
+    letter-spacing: -0.01em;
+    max-width: var(--case-prose-max);
     margin: 0;
 }
 .project-case-study-mail .project-intro .title p + p {
-    margin-top: 1em;
+    margin-top: 1.25em;
 }
 .project-case-study-mail .section--media-only .gallery {
     margin-top: 0;
@@ -3344,6 +3390,8 @@ button:focus-visible,
     gap: var(--project-meta-card-gap);
     border-radius: var(--project-meta-card-radius);
     background: var(--project-meta-card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: var(--shadow-case-card);
     box-sizing: border-box;
 }
 .project-case-study-mail .project-info__row {
@@ -3391,15 +3439,15 @@ button:focus-visible,
     margin-bottom: 0;
 }
 .project-case-study-mail .case-study-narrative {
-    max-width: 53.916rem;
+    max-width: var(--case-prose-max);
     margin: 0;
 }
 .project-case-study-mail .case-study-narrative__p {
-    margin: 0 0 var(--space-16);
-    font-size: var(--project-card-text-font-size);
-    line-height: var(--project-card-text-line-height);
+    margin: 0 0 var(--space-24);
+    font-size: clamp(17px, 1.2vw, 18px);
+    line-height: 1.72;
     letter-spacing: var(--project-card-text-letter-spacing);
-    color: rgba(250, 250, 250, 0.8);
+    color: rgba(245, 245, 245, 0.88);
 }
 .project-case-study-mail .case-study-narrative__p:last-child {
     margin-bottom: 0;
@@ -3409,11 +3457,21 @@ button:focus-visible,
     margin: 0;
     width: 100%;
 }
+.project-case-study-mail .scroll-scrub-row__runway {
+    width: 100%;
+    box-sizing: border-box;
+}
 .project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards,
 .project-case-study-mail .scroll-scrub-row.scroll-scrub-row--cards {
     position: relative;
     width: 100%;
     box-sizing: border-box;
+}
+/* После relative: scroll-linked лента «прилипает»; top больше — блок ниже в окне, меньше «дыры» под точками */
+.project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards.scroll-scrub-row--scroll-linked {
+    position: sticky;
+    top: clamp(96px, 22svh, 260px);
+    z-index: 1;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__shell,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
@@ -3477,13 +3535,57 @@ button:focus-visible,
     /* Запас снизу под правую-нижнюю иконку — в тон адаптивному размеру иконки */
     padding-bottom: calc(var(--project-card-padding) + (var(--case-corner-icon) * 0.95));
     border-radius: var(--project-card-radius);
-    border: 1px solid transparent;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: var(--shadow-case-card);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     min-height: 300px;
     position: relative;
     overflow: visible;
+    transition:
+        transform var(--dur-premium) var(--ease-premium-out),
+        box-shadow var(--dur-premium) var(--ease-premium-out),
+        border-color var(--dur-premium) var(--ease-premium-out),
+        background-color var(--dur-premium) var(--ease-premium-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card:hover,
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: var(--shadow-case-card-hover);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
+        transition: none;
+    }
+
+    .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:hover {
+        transform: none;
+    }
+}
+
+/* Метрики (NDA): визуальный акцент без смены копирайта */
+.project-case-study-mail .scroll-scrub-row--cards .card[data-strip-kind='metrics'] {
+    background: linear-gradient(165deg, rgba(24, 24, 28, 0.98) 0%, rgba(14, 14, 16, 1) 100%);
+    border-color: rgba(245, 245, 245, 0.14);
+}
+
+.project-case-study-mail .scroll-scrub-row--cards .card[data-strip-kind='metrics'] h3 {
+    opacity: 0.72;
+    letter-spacing: 0.08em;
+}
+
+.project-case-study-mail .scroll-scrub-row--cards .card[data-strip-kind='metrics'] p {
+    font-size: clamp(17px, 1.4vw, 19px);
+    line-height: 1.62;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.025em;
+    opacity: 0.98;
 }
 
 @supports (width: 1cqw) {
@@ -3610,16 +3712,16 @@ button:focus-visible,
 
 .project-case-study-mail .dual-outcomes__title {
     margin: 0;
-    font-size: clamp(2rem, 3.5vw, 3.75rem);
-    font-weight: 500;
-    line-height: 0.9;
-    letter-spacing: -2px;
+    font-size: clamp(1.875rem, 2.6vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.03em;
     color: var(--color-text);
 }
 
 .project-case-study-mail .dual-outcomes__col--title-md .dual-outcomes__title {
-    font-size: 36px;
-    letter-spacing: -2px;
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    letter-spacing: -0.025em;
 }
 
 .project-case-study-mail .dual-outcomes__pills {
@@ -3627,11 +3729,11 @@ button:focus-visible,
 }
 
 .project-case-study-mail .dual-outcomes__footnote {
-    margin: var(--space-8) 0 0;
-    font-size: 13px;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    color: #87898f;
+    margin: var(--space-12) 0 0;
+    font-size: 14px;
+    line-height: 1.45;
+    letter-spacing: 0;
+    color: rgba(180, 180, 184, 0.95);
     max-width: 100%;
 }
 
@@ -3644,7 +3746,7 @@ button:focus-visible,
 /* Вложенный блок «Решение» после pills (MVP) — Figma 328:24083 */
 .project-case-study-mail .section__nested-after-pills {
     margin-top: 0;
-    max-width: 53.916rem;
+    max-width: var(--case-prose-max);
 }
 
 .project-case-study-mail .section__nested-after-pills > p {
@@ -3652,11 +3754,11 @@ button:focus-visible,
 }
 
 .project-case-study-mail .section__subheading {
-    margin: 0 0 var(--space-16);
-    font-size: 36px;
-    font-weight: 500;
-    line-height: 0.9;
-    letter-spacing: -2px;
+    margin: 0 0 var(--space-20);
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.22;
+    letter-spacing: -0.025em;
     color: var(--color-text);
 }
 
@@ -3675,16 +3777,30 @@ button:focus-visible,
 
 .project-case-study-mail .title-info-card {
     display: flex;
-    gap: 21px;
+    gap: var(--space-24);
     align-items: stretch;
     width: 100%;
-    max-width: 1019px;
+    max-width: min(1019px, 100%);
     margin: 0 auto;
-    padding: 24px;
+    padding: var(--space-32);
     border-radius: var(--project-card-radius);
     background: var(--project-card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: var(--shadow-case-card);
     min-height: 292px;
     box-sizing: border-box;
+    transition:
+        transform var(--dur-premium) var(--ease-premium-out),
+        box-shadow var(--dur-premium) var(--ease-premium-out),
+        border-color var(--dur-premium) var(--ease-premium-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .project-case-study-mail .title-info-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-case-card-hover);
+        border-color: rgba(255, 255, 255, 0.11);
+    }
 }
 
 .project-case-study-mail .title-info-card__content {
@@ -3699,25 +3815,25 @@ button:focus-visible,
 .project-case-study-mail .title-info-card__text-group {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--space-20);
 }
 
 .project-case-study-mail .title-info-card__text-group h2 {
     margin: 0;
-    font-size: 48px;
-    font-weight: 500;
-    line-height: 0.9;
-    letter-spacing: -2px;
+    font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
     color: var(--project-title-color);
 }
 
 .project-case-study-mail .title-info-card__text-group p {
     margin: 0;
-    font-size: var(--project-card-text-font-size);
+    font-size: clamp(17px, 1.15vw, 18px);
     font-weight: 400;
-    line-height: var(--project-card-text-line-height);
+    line-height: 1.68;
     letter-spacing: var(--project-card-text-letter-spacing);
-    color: rgba(250, 250, 250, 0.8);
+    color: rgba(245, 245, 245, 0.88);
     max-width: none;
 }
 
@@ -3744,7 +3860,7 @@ button:focus-visible,
     width: 408px;
     max-width: 100%;
     aspect-ratio: 16 / 9;
-    border-radius: 12px;
+    border-radius: var(--radius-card-premium);
     overflow: hidden;
     flex-shrink: 0;
     background: #1fbcb1;
@@ -3772,39 +3888,47 @@ button:focus-visible,
 }
 
 .project-case-study-mail .section .gallery + h2 {
-    margin-top: var(--space-24);
+    margin-top: var(--space-32);
 }
 .project-case-study-mail .section h2 {
-    font-size: clamp(1.75rem, 3.5vw, 3.75rem); /* до 60px */
-    margin: 0 0 var(--space-24);
-    font-weight: 500;
-    line-height: 0.9;
-    letter-spacing: -2px;
+    font-size: clamp(1.875rem, 2.8vw, 2.5rem);
+    margin: 0 0 var(--space-20);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.03em;
     color: var(--color-text);
-    max-width: 100%;
+    max-width: var(--case-prose-max);
     white-space: pre-line;
 }
 .project-case-study-mail .section__tasks-heading {
-    max-width: 53.916rem;
-    color: var(--color-text);
-    margin: 0 0 var(--space-16);
-    font-size: 20px;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    opacity: 0.95;
+    max-width: var(--case-prose-max);
+    color: rgba(245, 245, 245, 0.92);
+    margin: 0 0 var(--space-20);
+    font-size: clamp(15px, 1.2vw, 17px);
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.85;
     white-space: pre-line;
 }
+.project-case-study-mail .section .scroll-scrub-row__runway {
+    margin-top: var(--space-56);
+}
+.project-case-study-mail .section .scroll-scrub-row__runway .scroll-scrub-row__track {
+    margin-top: 0;
+}
 .project-case-study-mail .section .scroll-scrub-row__track {
-    margin-top: var(--space-72);
+    margin-top: var(--space-56);
 }
 .project-case-study-mail .section p,
 .project-case-study-mail .section-desc {
     /* Figma 1-556 — текст в блоках кейса */
-    max-width: 53.916rem;
-    color: rgba(250, 250, 250, 0.8);
+    max-width: var(--case-prose-max);
+    color: rgba(245, 245, 245, 0.88);
     margin: 0 0 var(--space-24);
-    font-size: var(--project-card-text-font-size);
-    line-height: var(--project-card-text-line-height);
+    font-size: clamp(17px, 1.15vw, 18px);
+    line-height: 1.72;
     letter-spacing: var(--project-card-text-letter-spacing);
     white-space: pre-line;
 }
@@ -3814,12 +3938,12 @@ button:focus-visible,
     margin-bottom: 0;
 }
 .project-case-study-mail .section-footnote {
-    max-width: 53.916rem;
-    margin: var(--space-16) 0 0;
-    font-size: 13px;
-    line-height: 1.35;
-    letter-spacing: -0.5px;
-    color: rgba(250, 250, 250, 0.45);
+    max-width: var(--case-prose-max);
+    margin: var(--space-20) 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: rgba(245, 245, 245, 0.52);
 }
 .project-case-study-mail .section__pills + .section-footnote {
     margin-top: var(--space-24);
@@ -3846,23 +3970,24 @@ button:focus-visible,
 .project-case-study-mail .section ul.section__pills li {
     list-style: none;
     margin: 0;
-    padding: var(--space-8) var(--space-20);
+    padding: 10px 20px;
     border-radius: var(--radius-full);
-    background: var(--color-elevated-mid);
-    font-size: 20px;
-    line-height: normal;
-    letter-spacing: -0.6px;
-    color: #87898f;
+    background: rgba(38, 38, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 17px;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: rgba(200, 200, 206, 0.95);
 }
 .project-case-study-mail .section__pills ~ .scroll-scrub-row--hypothesis,
 .project-case-study-mail .gallery--before-hypotheses ~ .scroll-scrub-row--hypothesis {
-    margin-top: var(--space-72);
+    margin-top: var(--space-56);
 }
 .project-case-study-mail .section__pills + .gallery--before-hypotheses {
-    margin-top: var(--space-72);
+    margin-top: var(--space-56);
 }
 .project-case-study-mail .scroll-scrub-row--hypothesis + .gallery {
-    margin-top: var(--space-72);
+    margin-top: var(--space-56);
 }
 
 /* Гипотезы — статичный столбец (без горизонтального скролла и без scrub) */
@@ -3875,7 +4000,7 @@ button:focus-visible,
 .project-case-study-mail .scroll-scrub-row--hypothesis-static .hypothesis-stack {
     display: flex;
     flex-direction: column;
-    gap: var(--space-32);
+    gap: clamp(28px, 6vw, 40px);
     width: 100%;
     box-sizing: border-box;
 }
@@ -3915,13 +4040,13 @@ button:focus-visible,
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    gap: var(--space-20);
+    gap: var(--space-24);
     width: max-content;
     align-items: stretch;
     will-change: transform;
 }
 .project-case-study-mail .scroll-scrub-row--hypothesis:not(.scroll-scrub-row--hypothesis-static) .scroll-scrub-row__inner > .hyp-card {
-    --scrub-hyp-basis: clamp(260px, calc((100cqi - var(--space-20)) / 2), 560px);
+    --scrub-hyp-basis: clamp(260px, calc((100cqi - var(--space-24)) / 2), 560px);
     flex: 0 0 var(--scrub-hyp-basis);
     width: var(--scrub-hyp-basis);
     max-width: var(--scrub-hyp-basis);
@@ -3950,41 +4075,71 @@ button:focus-visible,
 .project-case-study-mail .hyp-card {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 0;
-    border-radius: 0;
+    align-items: flex-start;
+    gap: clamp(14px, 3.5vw, 22px);
+    padding: clamp(22px, 5.5vw, 36px) clamp(20px, 5vw, 40px) clamp(24px, 5.5vw, 40px);
+    border-radius: var(--project-card-radius);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(15, 15, 16, 0.92);
+    box-shadow: var(--shadow-case-card);
     min-width: 0;
     align-self: stretch;
+    transition:
+        transform var(--dur-premium) var(--ease-premium-out),
+        box-shadow var(--dur-premium) var(--ease-premium-out),
+        border-color var(--dur-premium) var(--ease-premium-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .project-case-study-mail .hyp-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: var(--shadow-case-card-hover);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-case-study-mail .hyp-card {
+        transition: none;
+    }
+
+    .project-case-study-mail .hyp-card:hover {
+        transform: none;
+    }
 }
 .project-case-study-mail .hyp-card h4 {
-    font-size: 36px;
-    font-weight: 500;
-    line-height: 0.9;
-    letter-spacing: -2px;
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
     color: var(--color-text);
-    margin: 0 0 10px;
+    margin: 0;
+    max-width: 100%;
 }
 .project-case-study-mail .hyp-card p {
-    font-size: var(--project-card-text-font-size);
-    line-height: var(--project-card-text-line-height);
+    font-size: clamp(16px, 1.1vw, 17px);
+    line-height: 1.72;
     letter-spacing: var(--project-card-text-letter-spacing);
-    color: rgba(250, 250, 250, 0.8);
+    color: rgba(245, 245, 245, 0.88);
     margin: 0;
+    max-width: 100%;
     white-space: pre-line;
 }
 .project-case-study-mail .hyp-card__outcome {
     margin-top: auto;
-    padding-top: 10px;
+    width: 100%;
+    padding-top: clamp(16px, 3.5vw, 24px);
 }
 .project-case-study-mail .hyp-card__outcome span {
     display: inline-block;
-    padding: var(--space-8) var(--space-20);
+    padding: 10px 18px;
     border-radius: var(--radius-full);
-    background: var(--color-elevated-mid);
-    font-size: 20px;
-    line-height: 1.2;
-    letter-spacing: -0.6px;
-    color: #87898f;
+    background: rgba(38, 38, 42, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: clamp(14px, 3.2vw, 15px);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: rgba(220, 220, 224, 0.95);
 }
 .project-case-study-mail .images {
     display: grid;
@@ -3996,7 +4151,7 @@ button:focus-visible,
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-card-premium);
 }
 .project-case-study-mail .gallery {
     margin-top: var(--space-32);
@@ -4009,7 +4164,7 @@ button:focus-visible,
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-card-premium);
     display: block;
 }
 
@@ -4025,8 +4180,8 @@ button:focus-visible,
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: 32px;
-    padding: 10px;
+    border-radius: var(--radius-card-premium);
+    padding: 8px;
     background: #c4c4c4;
     display: block;
 }
@@ -4836,11 +4991,12 @@ button:focus-visible,
     font-size: var(--text-89-756-link-font-size);
     line-height: var(--text-89-756-link-line-height);
     letter-spacing: var(--text-89-756-link-letter-spacing);
-    color: var(--text-89-756-link-color);
+    color: rgba(245, 245, 245, 0.88);
     text-decoration: underline;
+    text-underline-offset: 3px;
 }
 .project-page-wrap--layout-89 .ext-link:hover {
-    text-decoration: none;
+    color: var(--color-text-primary);
 }
 
 /* Legacy project-detail h2/h3/description for pages without cards */
@@ -5572,12 +5728,23 @@ button:focus-visible,
     align-items: center;
     text-align: center;
 }
+.project-page-wrap--layout-89 .scroll-scrub-row__runway {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+}
 .project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row__track,
 .project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row--contact {
     position: relative;
     width: 100%;
     max-width: none;
     box-sizing: border-box;
+}
+.project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row__track.scroll-scrub-row--scroll-linked,
+.project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row--contact.scroll-scrub-row--scroll-linked {
+    position: sticky;
+    top: clamp(80px, 18svh, 200px);
+    z-index: 1;
 }
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__shell,
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
@@ -5697,6 +5864,85 @@ button:focus-visible,
 }
 .project-page-wrap--layout-89 .project-detail-footer--centered .tools-list {
     justify-content: center;
+}
+
+/* Страница проекта (layout-89): тёмная тема, типографика и ширина как у кейса */
+.project-page-wrap.project-page-wrap--layout-89 {
+    max-width: var(--case-content-max);
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.project-page-wrap--layout-89 .page-contact__wrap--project {
+    width: 100%;
+    max-width: var(--case-content-max);
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    box-sizing: border-box;
+}
+
+.project-page-wrap--layout-89 .page-header {
+    margin-bottom: clamp(40px, 6vw, 64px);
+    max-width: var(--case-prose-max);
+}
+
+.project-page-wrap--layout-89 .page-header h1 {
+    font-size: clamp(2.25rem, 4.2vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-20);
+    color: var(--color-text-primary);
+}
+
+.project-page-wrap--layout-89 .page-header p {
+    font-size: clamp(17px, 1.2vw, 18px);
+    line-height: 1.68;
+    letter-spacing: -0.01em;
+    color: rgba(245, 245, 245, 0.82);
+    max-width: var(--case-prose-max);
+}
+
+.project-page-wrap--layout-89 .contact-item {
+    min-height: 52px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(15, 15, 16, 0.85);
+    box-shadow: var(--shadow-case-card);
+    transition:
+        transform var(--dur-premium) var(--ease-premium-out),
+        background-color var(--dur-premium) var(--ease-premium-out),
+        border-color var(--dur-premium) var(--ease-premium-out),
+        box-shadow var(--dur-premium) var(--ease-premium-out);
+}
+
+.project-page-wrap--layout-89 .contact-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.11);
+    box-shadow: var(--shadow-case-card-hover);
+    transform: translateY(-1px);
+}
+
+.project-page-wrap--layout-89 .contact-item strong {
+    color: rgba(245, 245, 245, 0.55);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+}
+
+.project-page-wrap--layout-89 .contact-item > div > span,
+.project-page-wrap--layout-89 .contact-item--text > div > p {
+    color: rgba(245, 245, 245, 0.9);
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-page-wrap--layout-89 .contact-item {
+        transition: none;
+    }
+
+    .project-page-wrap--layout-89 .contact-item:hover {
+        transform: none;
+    }
 }
 
 /* =========================
@@ -6037,7 +6283,7 @@ button:focus-visible,
     }
 
     .nav-toggle.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
+        transform: translateY(10px) rotate(45deg);
     }
 
     .nav-toggle.active span:nth-child(2) {
@@ -6045,7 +6291,7 @@ button:focus-visible,
     }
 
     .nav-toggle.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
+        transform: translateY(-10px) rotate(-45deg);
     }
 
     .nav-toggle span {
