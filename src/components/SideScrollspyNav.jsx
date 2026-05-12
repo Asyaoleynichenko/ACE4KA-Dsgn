@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useIntersectionScrollSpy } from '../hooks/useIntersectionScrollSpy.js';
-
-const spring = { type: 'spring', stiffness: 380, damping: 32, mass: 0.85 };
+import { smartTween, smartTweenReduced } from '../motion/smartAnimate.js';
 
 function dashWidths(level, isActive) {
   const parent = level <= 1;
@@ -59,7 +58,7 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
                       backgroundColor: isActive ? '#ffffff' : 'rgba(255,255,255,0.28)',
                       opacity: isActive ? 1 : 0.55,
                     }}
-                    transition={reduceMotion ? { duration: 0.12 } : spring}
+                    transition={reduceMotion ? smartTweenReduced() : smartTween(0.28)}
                   />
                   <motion.span
                     className="min-w-0 truncate text-left text-[11px] font-medium uppercase tracking-[0.14em] text-white"
@@ -67,7 +66,7 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
                     animate={{
                       opacity: isActive ? 1 : 0.4,
                     }}
-                    transition={reduceMotion ? { duration: 0.12 } : spring}
+                    transition={reduceMotion ? smartTweenReduced() : smartTween(0.28)}
                   >
                     {label}
                   </motion.span>

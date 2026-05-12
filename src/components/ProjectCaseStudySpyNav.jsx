@@ -2,6 +2,7 @@ import { createPortal } from 'react-dom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useI18n } from '../i18n/I18nProvider.jsx';
+import { smartTween, smartTweenReduced } from '../motion/smartAnimate.js';
 
 const COLLAPSED_STORAGE = 'ace4ka:caseSpyNavCollapsed';
 
@@ -78,10 +79,10 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
     el.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
   };
 
-  const spring = reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 460, damping: 30, mass: 0.32 };
-  const panelTransition = reduceMotion
-    ? { duration: 0 }
-    : { type: 'spring', stiffness: 380, damping: 32, mass: 0.4 };
+  const ui = reduceMotion ? smartTweenReduced() : smartTween(0.28);
+  const panel = reduceMotion ? smartTweenReduced() : smartTween(0.34);
+  const layout = reduceMotion ? smartTweenReduced() : smartTween(0.24);
+  const micro = reduceMotion ? smartTweenReduced() : smartTween(0.16);
 
   const dashStagger = {
     hidden: {},
@@ -95,7 +96,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
 
   const dashRow = {
     hidden: reduceMotion ? {} : { opacity: 0, x: 10 },
-    show: reduceMotion ? {} : { opacity: 1, x: 0, transition: spring },
+    show: { opacity: 1, x: 0, transition: ui },
   };
 
   if (!sections?.length) return null;
@@ -146,8 +147,8 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
             initial={reduceMotion ? false : { opacity: 0, x: 18, scale: 0.985 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={reduceMotion ? undefined : { opacity: 0, x: 12, scale: 0.985 }}
-            transition={panelTransition}
-            whileHover={reduceMotion || canHoverOpen ? undefined : { y: -2 }}
+            transition={panel}
+            whileHover={reduceMotion || canHoverOpen ? undefined : { y: -2, transition: micro }}
           >
             <motion.button
               type="button"
@@ -156,7 +157,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
               aria-label={t('projectDetail.spyNavCollapse')}
               onClick={handleCollapseClick}
               whileTap={reduceMotion ? undefined : { scale: 0.9 }}
-              transition={spring}
+              transition={micro}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
                 <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -171,7 +172,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
                       className="case-study-rail__chapter"
                       initial={reduceMotion ? false : { opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.02 }}
+                      transition={{ ...ui, delay: reduceMotion ? 0 : index * 0.02 }}
                     >
                       <span className="case-study-rail__chapter-dash" aria-hidden />
                       <span className="case-study-rail__chapter-text">{entry.chapterTitle}</span>
@@ -191,7 +192,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
                       key={id}
                       initial={reduceMotion ? false : { opacity: 0, x: 8 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.018 }}
+                      transition={{ ...ui, delay: reduceMotion ? 0 : index * 0.018 }}
                     >
                       <motion.a
                         href={`#${id}`}
@@ -204,13 +205,13 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
                         }}
                         whileHover={reduceMotion ? undefined : { x: -3 }}
                         whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-                        transition={spring}
+                        transition={ui}
                       >
                         <motion.span
                           className="case-study-rail__dash"
                           style={{ width: `${dashWidthPx(lv, isActive)}px`, transformOrigin: 'right center' }}
                           layout={!reduceMotion}
-                          transition={{ layout: spring }}
+                          transition={{ layout }}
                           aria-hidden
                           whileHover={reduceMotion ? undefined : { scaleX: 1.1 }}
                         />
@@ -225,7 +226,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
                     key={id}
                     initial={reduceMotion ? false : { opacity: 0, x: 8 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.018 }}
+                    transition={{ ...ui, delay: reduceMotion ? 0 : index * 0.018 }}
                   >
                     <motion.a
                       href={`#${id}`}
@@ -238,7 +239,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
                       }}
                       whileHover={reduceMotion ? undefined : { x: -2 }}
                       whileTap={reduceMotion ? undefined : { scale: 0.995 }}
-                      transition={spring}
+                      transition={ui}
                     >
                       <span className="case-study-rail__kw">{keyword ?? label}</span>
                       {isRich ? <span className="case-study-rail__cap">{caption}</span> : null}
@@ -255,8 +256,8 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
             initial={reduceMotion ? false : { opacity: 0, x: 16, scale: 0.97 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={reduceMotion ? undefined : { opacity: 0, x: 10, scale: 0.97 }}
-            transition={panelTransition}
-            whileHover={reduceMotion || canHoverOpen ? undefined : { x: -6, transition: spring }}
+            transition={panel}
+            whileHover={reduceMotion || canHoverOpen ? undefined : { x: -6, transition: micro }}
           >
             <motion.div
               className="case-study-rail__dashes"
@@ -283,13 +284,13 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
                       scrollToId(id);
                     }}
                     whileTap={reduceMotion ? undefined : { scale: 0.94 }}
-                    transition={spring}
+                    transition={ui}
                   >
                     <motion.span
                       className="case-study-rail__dash"
                       style={{ width: `${w}px`, transformOrigin: 'right center' }}
                       layout={!reduceMotion}
-                      transition={{ layout: spring }}
+                      transition={{ layout }}
                       aria-hidden
                       whileHover={reduceMotion ? undefined : { scaleX: 1.22, scaleY: 1.35 }}
                     />
@@ -306,7 +307,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
                 onClick={() => setCollapsed(false)}
                 whileHover={reduceMotion ? undefined : { scale: 1.06 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.9 }}
-                transition={spring}
+                transition={micro}
               >
                 <span className="case-study-rail__burger" aria-hidden>
                   <span />

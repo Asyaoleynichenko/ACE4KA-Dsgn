@@ -91,14 +91,25 @@
   --color-preview-titlebar-text: #a3a3a3;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --transition: 0.25s ease;
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.25s ease;
-  --transition-slow: 0.4s ease;
-  --ease-page: cubic-bezier(0.22, 1, 0.36, 1);
-  --page-transition-duration: 420ms;
-  --ease-micro-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-micro: 240ms;
+  /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
+  --ease-smart: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-page: var(--ease-smart);
+  --ease-micro-out: var(--ease-smart);
+  --dur-smart-xs: 100ms;
+  --dur-smart-fast: 140ms;
+  --dur-smart-nav: 180ms;
+  --dur-smart-base: 260ms;
+  --dur-smart-slow: 400ms;
+  --dur-smart-page-home: 500ms;
+  --dur-smart-reveal: 640ms;
+  --dur-smart-image: 720ms;
+  --transition: var(--dur-smart-base) var(--ease-smart);
+  --transition-fast: var(--dur-smart-fast) var(--ease-smart);
+  --transition-base: var(--dur-smart-base) var(--ease-smart);
+  --transition-slow: var(--dur-smart-slow) var(--ease-smart);
+  --page-transition-duration: 380ms;
+  --page-project-sheet-duration: 520ms;
+  --duration-micro: 220ms;
 
   --radius-xs: 8px;
   --radius: 8px;
@@ -276,6 +287,31 @@
   --layout-89-756-item-gap: 24px;
   --layout-89-756-item-radius: var(--radius-lg);
   --layout-89-756-item-inner-gap: 4px;
+
+  /* Горизонтальные/вертикальные отступы контента страницы (переопределяются в @media ниже) */
+  --layout-page-pad-x: 24px;
+  --layout-page-pad-y-top: 48px;
+  --layout-page-pad-y-bottom: 64px;
+}
+
+/* Адаптив: плотнее на планшетах и телефонах */
+@media (max-width: 1024px) {
+    :root {
+        --layout-page-pad-x: 20px;
+        --project-page-padding-x: 20px;
+    }
+}
+
+@media (max-width: 640px) {
+    :root {
+        --layout-page-pad-x: 16px;
+        --project-page-padding-x: 16px;
+        --layout-page-pad-y-top: 36px;
+        --layout-page-pad-y-bottom: 48px;
+        --project-page-padding-y: 36px;
+        --project-page-padding-bottom: 48px;
+        --hero-section-gap: 48px;
+    }
 }
 
 /* =========================
@@ -377,13 +413,35 @@ html.snap-pages #root.snap-pages-root {
 }
 
 .page-home .page-transition {
-    animation: page-transition-in-home 0.55s cubic-bezier(0.33, 1, 0.32, 1) both;
+    animation: page-transition-in-home var(--dur-smart-page-home) var(--ease-smart) both;
+}
+
+/* Страница проекта: контент main «выезжает» снизу как окно / bottom sheet (шапка и фон остаются). */
+@keyframes page-transition-project-sheet-in {
+    from {
+        opacity: 0.94;
+        transform: translate3d(0, min(88vh, 820px), 0);
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -28px 72px rgba(0, 0, 0, 0.55);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+.page-project .page-transition {
+    animation: page-transition-project-sheet-in var(--page-project-sheet-duration) var(--ease-smart) both;
+    transform-origin: 50% 100%;
+    background: #0a0a0a;
 }
 
 /* Иконки: спокойный UI-reveal — opacity + лёгкий rise (без scale/blur) */
 .icon-assemble-dots {
-    --icon-reveal-dur: 280ms;
-    --icon-reveal-ease: cubic-bezier(0.2, 0.82, 0.14, 1);
+    --icon-reveal-dur: 260ms;
+    --icon-reveal-ease: var(--ease-smart);
 
     position: relative;
     display: inline-flex;
@@ -487,6 +545,7 @@ html.snap-pages #root.snap-pages-root {
     }
 
     .page-home .page-transition,
+    .page-project .page-transition,
     .page-transition {
         animation: none;
     }
@@ -496,8 +555,8 @@ html.snap-pages #root.snap-pages-root {
 @supports (view-transition-name: none) {
     ::view-transition-old(root),
     ::view-transition-new(root) {
-        animation-duration: 0.38s;
-        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        animation-duration: 380ms;
+        animation-timing-function: var(--ease-smart);
     }
 }
 
@@ -564,7 +623,7 @@ a {
     font-size: 14px;
     font-weight: 500;
     border-radius: var(--radius);
-    transition: top 0.2s ease;
+    transition: top var(--dur-smart-nav) var(--ease-smart);
 }
 .skip-link:focus {
     top: 24px;
@@ -608,7 +667,7 @@ button:focus-visible,
     top: 0;
     z-index: 100;
     background: transparent;
-    transition: background 0.25s ease;
+    transition: background var(--transition-base);
     mix-blend-mode: normal !important;
     /* Chrome: isolation здесь часто отрезает backdrop-filter от контента под sticky header */
     isolation: auto !important;
@@ -627,8 +686,8 @@ button:focus-visible,
     flex-shrink: 0;
     text-decoration: none;
     transition:
-        opacity var(--transition-base) var(--ease-micro-out),
-        transform var(--duration-micro) var(--ease-micro-out);
+        opacity var(--transition-base),
+        transform var(--duration-micro) var(--ease-smart);
 }
 
 .logo:hover {
@@ -712,10 +771,10 @@ button:focus-visible,
     border-radius: var(--radius-full);
     border: 1px solid transparent;
     transition:
-        background 0.2s var(--ease-micro-out),
-        border-color 0.2s var(--ease-micro-out),
-        letter-spacing 0.2s var(--ease-micro-out),
-        transform var(--duration-micro) var(--ease-micro-out);
+        background var(--dur-smart-nav) var(--ease-smart),
+        border-color var(--dur-smart-nav) var(--ease-smart),
+        letter-spacing var(--dur-smart-nav) var(--ease-smart),
+        transform var(--duration-micro) var(--ease-smart);
     mix-blend-mode: var(--mix-blend-exclusion, exclusion);
 }
 
@@ -1022,9 +1081,9 @@ button:focus-visible,
     mix-blend-mode: normal;
     filter: brightness(1.06) contrast(1.02);
     transition:
-        opacity 0.85s cubic-bezier(0.33, 1, 0.32, 1),
-        transform 0.85s cubic-bezier(0.33, 1, 0.32, 1),
-        filter 0.85s cubic-bezier(0.33, 1, 0.32, 1);
+        opacity var(--dur-smart-reveal) var(--ease-smart),
+        transform var(--dur-smart-reveal) var(--ease-smart),
+        filter var(--dur-smart-reveal) var(--ease-smart);
 }
 
 .header .nav-list .nav-link__pill-icon--led {
@@ -1135,10 +1194,10 @@ button:focus-visible,
     flex: 1;
     max-width: none;
     margin: 0;
-    padding-top: 48px;
-    padding-bottom: 64px;
-    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
-    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
+    padding-top: var(--layout-page-pad-y-top);
+    padding-bottom: var(--layout-page-pad-y-bottom);
+    padding-left: max(var(--layout-page-pad-x), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--layout-page-pad-x), env(safe-area-inset-right, 0px));
     width: 100%;
     position: relative;
     z-index: 1;
@@ -1216,8 +1275,8 @@ button:focus-visible,
     min-height: 100dvh;
     padding-top: max(48px, env(safe-area-inset-top, 0px));
     padding-bottom: 120px;
-    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
-    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
+    padding-left: max(var(--layout-page-pad-x), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--layout-page-pad-x), env(safe-area-inset-right, 0px));
     max-width: none;
     margin-left: 0;
     margin-right: 0;
@@ -1672,8 +1731,8 @@ button:focus-visible,
     text-decoration: none;
     color: inherit;
     transition:
-        opacity 0.85s cubic-bezier(0.33, 1, 0.32, 1),
-        transform 0.85s cubic-bezier(0.33, 1, 0.32, 1);
+        opacity var(--dur-smart-reveal) var(--ease-smart),
+        transform var(--dur-smart-reveal) var(--ease-smart);
 }
 
 .header-item:hover {
@@ -1711,7 +1770,10 @@ button:focus-visible,
     height: 100%;
     object-fit: contain;
     filter: brightness(1.06);
-    transition: transform 0.9s cubic-bezier(0.33, 1, 0.32, 1), filter 0.9s cubic-bezier(0.33, 1, 0.32, 1), opacity 0.9s cubic-bezier(0.33, 1, 0.32, 1);
+    transition:
+        transform var(--dur-smart-image) var(--ease-smart),
+        filter var(--dur-smart-image) var(--ease-smart),
+        opacity var(--dur-smart-image) var(--ease-smart);
 }
 
 /* Вариант «Image Well» — 44×44px, рамка и внутренняя тень (Figma 1:212, 1:215, 1:218, 1:221) */
@@ -1739,7 +1801,10 @@ button:focus-visible,
     object-fit: contain;
     display: block;
     filter: brightness(1.06);
-    transition: transform 0.9s cubic-bezier(0.33, 1, 0.32, 1), filter 0.9s cubic-bezier(0.33, 1, 0.32, 1), opacity 0.9s cubic-bezier(0.33, 1, 0.32, 1);
+    transition:
+        transform var(--dur-smart-image) var(--ease-smart),
+        filter var(--dur-smart-image) var(--ease-smart),
+        opacity var(--dur-smart-image) var(--ease-smart);
 }
 
 /* Подпись: 13.22px, по центру, тень (Figma 1:208, 1:211 и др.) */
@@ -1897,7 +1962,7 @@ button:focus-visible,
     line-height: 1;
     color: rgba(70, 30, 30, 0.55);
     opacity: 0;
-    transition: opacity 0.12s ease;
+    transition: opacity var(--dur-smart-xs) var(--ease-smart);
     pointer-events: none;
 }
 
@@ -2178,30 +2243,29 @@ button:focus-visible,
     width: 100%;
 }
 
-/* Figma 1:289 — заголовок «Проекты»: 60px, semibold, -2px, uppercase */
+/* Figma 1:289 — заголовок «Проекты»: десктоп 60px; ниже — плавное масштабирование */
 .projects-header .projects-title-main,
 .projects-title-main {
-    font-size: 60px;
     font-weight: 600;
     line-height: 1;
-    letter-spacing: -2px;
     text-transform: uppercase;
     color: var(--color-text-primary);
     margin: 0;
+    font-size: clamp(1.75rem, 2.2vw + 1.25rem, 3.75rem);
+    letter-spacing: -0.03em;
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 1025px) {
     .projects-header .projects-title-main,
     .projects-title-main {
-        font-size: clamp(36px, 6.5vw, 52px);
-        letter-spacing: -0.03em;
+        font-size: 60px;
+        letter-spacing: -2px;
     }
-
 }
 
-@media (max-width: 768px) {
-    .projects-header .projects-title-main,
-    .projects-title-main { font-size: 40px; }
+/* «Все проекты»: больше воздуха под шапкой на крупных экранах */
+.page-projects .main {
+    padding-top: clamp(var(--layout-page-pad-y-top), 4vw + 32px, 120px);
 }
 
 /* Figma 89:347 / 1-290 — табы фильтра: gap 8px, pill-обёртка с blur 27.5px */
@@ -2241,9 +2305,9 @@ button:focus-visible,
     text-decoration: none;
     box-sizing: border-box;
     transition:
-        background var(--transition-fast) var(--ease-micro-out),
-        border-color var(--transition-fast) var(--ease-micro-out),
-        color var(--transition-fast) var(--ease-micro-out),
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast),
         transform var(--duration-micro) var(--ease-micro-out);
 }
 
@@ -2496,9 +2560,9 @@ button:focus-visible,
     -webkit-backdrop-filter: blur(var(--blur-btn-show-all-liquid)) saturate(1.45);
     box-shadow: var(--shadow-btn-show-all), 0 4px 28px rgba(0, 0, 0, 0.32);
     transition:
-        background-color var(--transition-fast) var(--ease-micro-out),
-        border-color var(--transition-fast) var(--ease-micro-out),
-        box-shadow var(--transition-fast) var(--ease-micro-out),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
         transform var(--duration-micro) var(--ease-micro-out);
     text-decoration: none;
     isolation: isolate;
@@ -2755,8 +2819,8 @@ button:focus-visible,
     color: var(--color-text-muted);
     cursor: pointer;
     transition:
-        color var(--transition-fast) var(--ease-micro-out),
-        background var(--transition-fast) var(--ease-micro-out),
+        color var(--transition-fast),
+        background var(--transition-fast),
         transform var(--duration-micro) var(--ease-micro-out);
 }
 
@@ -2823,7 +2887,7 @@ button:focus-visible,
     text-decoration: none;
     border-radius: var(--radius-xs);
     color: inherit;
-    transition: background var(--transition-fast) var(--ease-micro-out), transform var(--duration-micro) var(--ease-micro-out);
+    transition: background var(--transition-fast), transform var(--duration-micro) var(--ease-smart);
 }
 
 .case-study-rail__link:focus-visible {
@@ -3434,15 +3498,6 @@ button:focus-visible,
     opacity: 0.7;
     transform: scale(1);
     animation: none;
-}
-
-.project-case-study-mail .scroll-scrub-row--cards .case-strip-corner-led-img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    opacity: 0.7;
-    pointer-events: none;
 }
 
 .project-case-study-mail .scroll-scrub-row--cards .card p {
@@ -4073,7 +4128,10 @@ button:focus-visible,
     cursor: pointer;
     backdrop-filter: blur(12px) saturate(1.15);
     -webkit-backdrop-filter: blur(12px) saturate(1.15);
-    transition: opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition:
+        opacity var(--dur-smart-nav) var(--ease-smart),
+        border-color var(--dur-smart-nav) var(--ease-smart),
+        background var(--dur-smart-nav) var(--ease-smart);
 }
 
 .project-case-study-mail .mvp-slider__chev span {
@@ -4182,7 +4240,10 @@ button:focus-visible,
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.28);
     cursor: pointer;
-    transition: transform var(--transition-fast), background var(--transition-fast), box-shadow 0.2s ease;
+    transition:
+        transform var(--transition-fast),
+        background var(--transition-fast),
+        box-shadow var(--dur-smart-nav) var(--ease-smart);
 }
 
 .project-case-study-mail .mvp-slider__dot:hover {
@@ -5774,8 +5835,8 @@ button:focus-visible,
     text-underline-offset: 0.18em;
     text-decoration-thickness: 1px;
     transition:
-        opacity var(--transition-base) var(--ease-micro-out),
-        color var(--transition-base) var(--ease-micro-out),
+        opacity var(--transition-base),
+        color var(--transition-base),
         text-decoration-color var(--duration-micro) var(--ease-micro-out),
         text-underline-offset var(--duration-micro) var(--ease-micro-out);
 }
@@ -6089,7 +6150,7 @@ body {
     line-height: var(--type-body-line);
 }
 
-h1:not(.hero-title) {
+h1:not(.hero-title):not(.projects-title-main) {
     font-size: var(--type-h1-size);
     line-height: var(--type-h1-line);
     font-weight: var(--type-h1-weight);
@@ -6105,7 +6166,6 @@ h1:not(.hero-title) {
 }
 
 h2,
-.projects-title-main,
 .section-projects-title,
 .project-title {
     font-size: var(--type-h2-size);
@@ -6168,8 +6228,8 @@ p,
 .main,
 .hero,
 .project-page {
-    padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
-    padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
+    padding-left: max(var(--layout-page-pad-x), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--layout-page-pad-x), env(safe-area-inset-right, 0px));
 }
 
 .hero,
@@ -6308,8 +6368,8 @@ p,
     .hero,
     .main,
     .project-page {
-        padding-left: max(var(--space-24), env(safe-area-inset-left, 0px));
-        padding-right: max(var(--space-24), env(safe-area-inset-right, 0px));
+        padding-left: max(var(--layout-page-pad-x), env(safe-area-inset-left, 0px));
+        padding-right: max(var(--layout-page-pad-x), env(safe-area-inset-right, 0px));
     }
 
     .hero,
@@ -6332,7 +6392,6 @@ p,
         letter-spacing: -0.04em;
     }
 
-    .projects-title-main,
     .section-projects-title,
     .project-title,
     .text-89-756-title {
@@ -6376,8 +6435,8 @@ p,
 }
 
 .page-home .section-projects {
-    padding-left: var(--space-24);
-    padding-right: var(--space-24);
+    padding-left: max(var(--layout-page-pad-x), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--layout-page-pad-x), env(safe-area-inset-right, 0px));
 }
 
 .main--project {
@@ -6516,7 +6575,7 @@ p,
 /* ---- 8.4 Final responsive polish layer ---- */
 /* ---------- Респонсивы: все типичные экраны ---------- */
 
-html {
+html:not(.snap-pages) {
     overflow-x: clip;
 }
 
@@ -6549,6 +6608,18 @@ canvas {
     .logo-section {
         gap: var(--space-12);
         margin-bottom: var(--space-32);
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        max-width: none;
+        justify-items: center;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: var(--space-8);
     }
 
     .skills-grid {
