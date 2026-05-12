@@ -1,5 +1,14 @@
 import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+/** Прогресс 0…1 и длина вертикального «хода» для полного сдвига ленты (общие для скролла и клика по точкам). */
+function linkedStripMetrics(rectTop, mx, vh) {
+  const scrollSpan = Math.min(960, Math.max(320, mx * 0.52 + vh * 0.22));
+  const enter = vh * 0.88;
+  const denom = Math.max(1, scrollSpan);
+  const p = Math.min(1, Math.max(0, (enter - rectTop) / denom));
+  return { p, scrollSpan };
+}
+
 /**
  * Лента карточек / контактов:
  * — обычный режим: горизонталь сдвигается **автоматически** при вертикальном скролле страницы
@@ -49,7 +58,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return () => ro.disconnect();
   }, [recalcMaxX]);
 
-  /** Прогресс 0…1 по вертикали страницы: «вход» трека снизу → полный сдвиг mx. */
+  /** Прогресс 0…1 по вертикали страницы: «вход» трека снизу → полный сдвиг mx (слева направо по контенту). */
   const progressFromViewport = useCallback(() => {
     const track = trackRef.current;
     const viewport = viewportRef.current;
@@ -57,11 +66,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const mx = Math.max(0, innerRef.current ? innerRef.current.scrollWidth - viewport.clientWidth : 0);
     const rect = track.getBoundingClientRect();
     const vh = window.innerHeight;
-    const scrollSpan = Math.min(520, Math.max(140, mx * 0.17 + vh * 0.05));
-    const enter = vh * 0.88;
-    const leave = enter - scrollSpan;
-    const denom = Math.max(1, enter - leave);
-    return Math.min(1, Math.max(0, (enter - rect.top) / denom));
+    return linkedStripMetrics(rect.top, mx, vh).p;
   }, []);
 
   const updateFromPageScroll = useCallback(() => {
@@ -207,11 +212,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       const targetP = count <= 1 ? 0 : index / (count - 1);
       const rect = track.getBoundingClientRect();
       const vh = window.innerHeight;
-      const scrollSpan = Math.min(520, Math.max(140, mx * 0.17 + vh * 0.05));
-      const enter = vh * 0.88;
-      const leave = enter - scrollSpan;
-      const denom = Math.max(1, enter - leave);
-      const currentP = Math.min(1, Math.max(0, (enter - rect.top) / denom));
+      const { p: currentP, scrollSpan } = linkedStripMetrics(rect.top, mx, vh);
       const delta = (targetP - currentP) * scrollSpan;
       window.scrollTo({ top: window.scrollY + delta, behavior: 'smooth' });
     },

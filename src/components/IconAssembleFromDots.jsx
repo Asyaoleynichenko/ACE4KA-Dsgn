@@ -1,6 +1,6 @@
 /**
- * Мягкое появление иконки из центра.
- * Пропсы `ringRadiusPx/dotCount/dotPx` оставлены для обратной совместимости.
+ * Спокойное появление иконки: fade + лёгкий rise (см. `icon-ui-reveal-in` в `style.css`).
+ * Пропсы `ringRadiusPx/dotCount/dotPx` игнорируются — оставлены для совместимости вызовов.
  */
 export default function IconAssembleFromDots({ children, className = '' }) {
   return (

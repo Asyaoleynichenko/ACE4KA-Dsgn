@@ -380,8 +380,11 @@ html.snap-pages #root.snap-pages-root {
     animation: page-transition-in-home 0.55s cubic-bezier(0.33, 1, 0.32, 1) both;
 }
 
-/* Единая анимация иконок: мягкое появление из центра (без точек) */
+/* Иконки: спокойный UI-reveal — opacity + лёгкий rise (без scale/blur) */
 .icon-assemble-dots {
+    --icon-reveal-dur: 280ms;
+    --icon-reveal-ease: cubic-bezier(0.2, 0.82, 0.14, 1);
+
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -401,38 +404,21 @@ html.snap-pages #root.snap-pages-root {
 
 .icon-assemble-dots--folder .icon-assemble-dots__media > *,
 .icon-assemble-dots--well .icon-assemble-dots__media > * {
-    transform-origin: center center;
-    animation: icon-assemble-media-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation: icon-ui-reveal-in var(--icon-reveal-dur) var(--icon-reveal-ease) both;
 }
 
 .header .nav-list .icon-assemble-dots--nav .icon-assemble-dots__media > * {
-    transform-origin: center center;
-    animation: icon-assemble-media-nav-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation: icon-ui-reveal-in var(--icon-reveal-dur) var(--icon-reveal-ease) both;
 }
 
-@keyframes icon-assemble-media-nav-in {
+@keyframes icon-ui-reveal-in {
     from {
         opacity: 0;
-        transform: scale(0.7);
-        filter: brightness(1.2);
+        transform: translate3d(0, 5px, 0);
     }
     to {
         opacity: 1;
-        transform: scale(1);
-        filter: brightness(1.22) contrast(1.03) drop-shadow(0 0 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 1px 12px rgba(255, 255, 255, 0.24));
-    }
-}
-
-@keyframes icon-assemble-media-in {
-    from {
-        opacity: 0;
-        transform: scale(0.72);
-        filter: brightness(1.18);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0) brightness(1);
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -458,7 +444,7 @@ html.snap-pages #root.snap-pages-root {
     height: 80%;
 }
 
-/* Шапка кейса (страницы проектов): шевроны и заголовок — мягкое появление из центра */
+/* Шапка кейса: шевроны и заголовок — тот же reveal, чуть быстрее у стрелок */
 .icon-assemble-dots--chevron {
     width: 14px;
     height: 14px;
@@ -467,19 +453,7 @@ html.snap-pages #root.snap-pages-root {
 
 .icon-assemble-dots--chevron .icon-assemble-dots__media > * {
     display: block;
-    transform-origin: center center;
-    animation: icon-assemble-media-chevron-in 0.62s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-
-@keyframes icon-assemble-media-chevron-in {
-    from {
-        opacity: 0;
-        transform: scale(0.72);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    animation: icon-ui-reveal-in 220ms var(--icon-reveal-ease) both;
 }
 
 .icon-assemble-dots--case-title {
@@ -498,21 +472,7 @@ html.snap-pages #root.snap-pages-root {
 }
 
 .icon-assemble-dots--case-title .icon-assemble-dots__media > * {
-    transform-origin: center center;
-    animation: icon-assemble-media-title-in 0.78s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-
-@keyframes icon-assemble-media-title-in {
-    from {
-        opacity: 0;
-        transform: scale(0.88);
-        filter: blur(1px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0);
-    }
+    animation: icon-ui-reveal-in 320ms var(--icon-reveal-ease) 40ms both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1037,7 +997,6 @@ button:focus-visible,
     height: 7px;
     box-sizing: border-box;
     opacity: 1;
-    filter: brightness(1.35);
 }
 
 .header .nav-list .nav-link__chevron--left {
@@ -1061,7 +1020,7 @@ button:focus-visible,
     object-fit: contain;
     opacity: 1;
     mix-blend-mode: normal;
-    filter: brightness(1.22) contrast(1.03) drop-shadow(0 0 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 1px 12px rgba(255, 255, 255, 0.24));
+    filter: brightness(1.06) contrast(1.02);
     transition:
         opacity 0.85s cubic-bezier(0.33, 1, 0.32, 1),
         transform 0.85s cubic-bezier(0.33, 1, 0.32, 1),
@@ -1076,7 +1035,7 @@ button:focus-visible,
 .header .nav-list .nav-link:hover:not(.active) .nav-link__snow,
 .header .nav-list .nav-link:hover:not(.active) .nav-link__pill-icon {
     transform: scale(1.042);
-    filter: brightness(1.28) contrast(1.04) drop-shadow(0 0 2px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 16px rgba(255, 255, 255, 0.3));
+    filter: brightness(1.1) contrast(1.03);
 }
 
 .header .nav-list .nav-link__snow--flip {
@@ -1725,7 +1684,7 @@ button:focus-visible,
 .header-item:hover .header-item__icon-wrap img,
 .header-item:hover .header-item__well .icon-assemble-dots__media img {
     transform: scale(1.028);
-    filter: brightness(1.22) drop-shadow(0 0 2px rgba(0, 0, 0, 0.38)) drop-shadow(0 2px 14px rgba(255, 255, 255, 0.22));
+    filter: brightness(1.08);
 }
 
 .header-item:active {
@@ -1751,7 +1710,7 @@ button:focus-visible,
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: brightness(1.14) drop-shadow(0 1px 8px rgba(0, 0, 0, 0.28));
+    filter: brightness(1.06);
     transition: transform 0.9s cubic-bezier(0.33, 1, 0.32, 1), filter 0.9s cubic-bezier(0.33, 1, 0.32, 1), opacity 0.9s cubic-bezier(0.33, 1, 0.32, 1);
 }
 
@@ -1779,7 +1738,7 @@ button:focus-visible,
     height: 100%;
     object-fit: contain;
     display: block;
-    filter: brightness(1.2) drop-shadow(0 0 1px rgba(0, 0, 0, 0.32)) drop-shadow(0 1px 8px rgba(255, 255, 255, 0.18));
+    filter: brightness(1.06);
     transition: transform 0.9s cubic-bezier(0.33, 1, 0.32, 1), filter 0.9s cubic-bezier(0.33, 1, 0.32, 1), opacity 0.9s cubic-bezier(0.33, 1, 0.32, 1);
 }
 
@@ -3471,55 +3430,21 @@ button:focus-visible,
 .project-case-study-mail .scroll-scrub-row--cards .case-strip-led-svg__dot {
     transform-box: fill-box;
     transform-origin: center;
-    fill: rgba(200, 215, 240, 0.28);
-    opacity: 0.62;
-    /* Дольше цикл + плавная кривая между ключевыми кадрами */
-    animation: case-led-dot-pulse 2.85s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-    animation-delay: calc(var(--led-idx, 0) * 0.038s + var(--led-card-stagger, 0s));
+    fill: rgba(188, 200, 224, 0.34);
+    opacity: 0.7;
+    transform: scale(1);
+    animation: none;
 }
 
-@keyframes case-led-dot-pulse {
-    0%,
-    100% {
-        fill: rgba(175, 192, 222, 0.22);
-        opacity: 0.52;
-        transform: scale(0.7);
-    }
-    18% {
-        fill: rgba(198, 210, 235, 0.38);
-        opacity: 0.68;
-        transform: scale(0.88);
-    }
-    42% {
-        fill: rgba(238, 244, 255, 0.88);
-        opacity: 0.96;
-        transform: scale(1.12);
-    }
-    50% {
-        fill: rgba(252, 253, 255, 0.98);
-        opacity: 1;
-        transform: scale(1.16);
-    }
-    62% {
-        fill: rgba(215, 226, 250, 0.52);
-        opacity: 0.82;
-        transform: scale(0.94);
-    }
-    82% {
-        fill: rgba(188, 202, 228, 0.3);
-        opacity: 0.6;
-        transform: scale(0.78);
-    }
+.project-case-study-mail .scroll-scrub-row--cards .case-strip-corner-led-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.7;
+    pointer-events: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .project-case-study-mail .scroll-scrub-row--cards .case-strip-led-svg__dot {
-        animation: none;
-        fill: rgba(220, 228, 245, 0.48);
-        opacity: 0.75;
-        transform: scale(1);
-    }
-}
 .project-case-study-mail .scroll-scrub-row--cards .card p {
     font-size: var(--project-card-text-font-size);
     line-height: var(--project-card-text-line-height);
