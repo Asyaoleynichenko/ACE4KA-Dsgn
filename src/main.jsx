@@ -9,7 +9,6 @@ import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 import '@fontsource/inter/900.css';
 
-import './styles/tailwind.css';
 import '../css/style.css';
 import RootErrorBoundary from './RootErrorBoundary.jsx';
 
