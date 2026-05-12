@@ -1,0 +1,101 @@
+{
+  "mail-nauki": {
+    "chapterTitle": "Mail Science launch & systematic media redesign",
+    "items": [
+      { "keyword": "Tension", "caption": "Core product conflict", "target": "body:0" },
+      { "keyword": "Hypotheses", "caption": "Hypotheses & approach", "target": "body:2:hyp" },
+      { "keyword": "System", "caption": "Modular homepage system", "target": "body:3" },
+      { "keyword": "Scale", "caption": "MVP launch & scaling to other verticals", "target": "body:4" },
+      { "keyword": "Impact", "caption": "System-wide impact", "target": "body:9" }
+    ]
+  },
+  "biohacking": {
+    "chapterTitle": "“Biohacking” special project (Invitro)",
+    "items": [
+      { "keyword": "Brief", "caption": "Goals & impact", "target": "intro" },
+      { "keyword": "Landing", "caption": "Building the landing", "target": "body:0" },
+      { "keyword": "Hypotheses", "caption": "Interaction & 3D motion", "target": "body:0:hyp" },
+      { "keyword": "AI production", "caption": "AI-driven production", "target": "body:1" },
+      { "keyword": "Results", "caption": "Business results & metrics", "target": "overview" }
+    ]
+  },
+  "mail-spetsproekty": {
+    "chapterTitle": "Growing Mail special projects",
+    "items": [
+      { "keyword": "Brief", "caption": "Problem before the redesign & metrics", "target": "intro" },
+      { "keyword": "System", "caption": "Scalable production system", "target": "body:0" },
+      { "keyword": "Hypotheses", "caption": "Structure & workflows", "target": "body:0:hyp" },
+      { "keyword": "Guide", "caption": "AI workflow guide", "target": "body:1" },
+      { "keyword": "Impact", "caption": "Speed & cost impact", "target": "overview" }
+    ]
+  },
+  "neural": {
+    "chapterTitle": "“Neural networks” special (Mail Hi-Tech)",
+    "items": [
+      { "keyword": "Brief", "caption": "Goals & hypotheses", "target": "intro" },
+      { "keyword": "Solution", "caption": "Solution & impact", "target": "body:0" },
+      { "keyword": "AI production", "caption": "AI-driven production", "target": "body:1" },
+      { "keyword": "Collaboration", "caption": "Cross-functional collaboration", "target": "body:0:hyp" },
+      { "keyword": "Results", "caption": "Business results & strategy", "target": "overview" }
+    ]
+  },
+  "loochok": {
+    "chapterTitle": "LÒÒCHOK (customization media)",
+    "items": [
+      { "keyword": "Problem", "caption": "Problem & audience", "target": "body:2" },
+      { "keyword": "MVP", "caption": "MVP & community", "target": "body:4" },
+      { "keyword": "Business", "caption": "Business model", "target": "body:6" },
+      { "keyword": "Identity", "caption": "Style guide & design system", "target": "body:12" },
+      { "keyword": "Roadmap", "caption": "Roadmap & launch", "target": "body:10" }
+    ]
+  },
+  "drop": {
+    "chapterTitle": "DROP (city networking app)",
+    "items": [
+      { "keyword": "Context", "caption": "Product context", "target": "body:0" },
+      { "keyword": "Hypotheses", "caption": "Six product hypotheses", "target": "body:2:hyp" },
+      { "keyword": "Solution", "caption": "Solution & onboarding", "target": "body:4" },
+      { "keyword": "System", "caption": "Style guide & design system", "target": "body:6" },
+      { "keyword": "Research", "caption": "Research study", "target": "body:8" }
+    ]
+  },
+  "retrash": {
+    "chapterTitle": "RE*TRASH (conscious consumption media)",
+    "items": [
+      { "keyword": "Brief", "caption": "Goals & metrics", "target": "overview" },
+      { "keyword": "Research", "caption": "Audience barrier research", "target": "body:1" },
+      { "keyword": "Hypotheses", "caption": "Hypotheses & approach", "target": "body:1:hyp" },
+      { "keyword": "Visual", "caption": "Visual language & design system", "target": "body:4" },
+      { "keyword": "Landing", "caption": "Promo landing", "target": "body:3" }
+    ]
+  },
+  "mail-monetization": {
+    "chapterTitle": "Mail monetization (Growth)",
+    "items": [
+      { "keyword": "Approach", "caption": "Approach & hypotheses", "target": "body:0:hyp" },
+      { "keyword": "Segmentation", "caption": "Launching “Mail Space for work”", "target": "body:1" },
+      { "keyword": "Constraints", "caption": "Multi-account limits & trade-offs", "target": "body:3" },
+      { "keyword": "Upsell", "caption": "Upsell inside core flows", "target": "body:5" },
+      { "keyword": "Freemium", "caption": "Freemium: AI photo enhancement", "target": "body:6" }
+    ]
+  },
+  "inkz": {
+    "chapterTitle": "INKZ (tattoo artist marketplace)",
+    "items": [
+      { "keyword": "Problem", "caption": "Problem & brief", "target": "body:1" },
+      { "keyword": "Research", "caption": "Research & hypotheses", "target": "body:3" },
+      { "keyword": "Solution", "caption": "Product solution", "target": "body:4" },
+      { "keyword": "Business", "caption": "Business model & data model", "target": "body:7" },
+      { "keyword": "Landing", "caption": "Promo landing", "target": "body:10" }
+    ]
+  },
+  "racktables": {
+    "chapterTitle": "RackTables (Yandex system redesign)",
+    "items": [
+      { "keyword": "Problem", "caption": "Problem & brief", "target": "body:1" },
+      { "keyword": "Solution", "caption": "Solution & impact", "target": "body:3" },
+      { "keyword": "Vibe-coding", "caption": "Rapid prototyping (vibe-coding)", "target": "body:0" },
+      { "keyword": "Outcome", "caption": "Metrics & results", "target": "body:4" }
+    ]
+  }
+}

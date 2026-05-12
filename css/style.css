@@ -878,6 +878,7 @@ button:focus-visible,
     letter-spacing: -1px;
     color: var(--project-title-color);
     mix-blend-mode: exclusion !important;
+    text-transform: none; /* имя из `common.brandName` — нормальный регистр, не ALL CAPS */
 }
 
 /* Переключатель языка — Figma 432:30380 / 16:168: фиксированная колонка 228px справа */
@@ -5773,6 +5774,7 @@ button:focus-visible,
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    align-self: flex-start;
     gap: clamp(12px, 2vw, 20px);
     min-width: 0;
 }
@@ -5940,6 +5942,7 @@ button:focus-visible,
 
     .site-footer__left {
         max-width: none;
+        align-self: stretch;
         align-items: center;
         text-align: center;
     }

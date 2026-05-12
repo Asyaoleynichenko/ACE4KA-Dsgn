@@ -7,7 +7,8 @@ import {
   useState,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import en from '../dictionaries/en.json';
+import enBase from '../dictionaries/en.json';
+import enCaseStudyOutlines from '../dictionaries/en.caseStudyOutlines.json';
 import ruBase from '../dictionaries/ru.json';
 import { mergeProjectCardsIntoRu } from './mergeProjectCardsIntoRu.js';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from './constants.js';
@@ -21,6 +22,13 @@ import {
 import { resolveMessage } from './resolveMessage.js';
 
 const ru = mergeProjectCardsIntoRu(ruBase);
+const en = {
+  ...enBase,
+  projects: {
+    ...enBase.projects,
+    outlines: enCaseStudyOutlines,
+  },
+};
 const dictionaries = { ru, en };
 
 function normalizeLocale(value) {

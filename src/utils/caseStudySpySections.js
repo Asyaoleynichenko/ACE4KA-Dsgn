@@ -23,18 +23,21 @@ export function resolveCaseSpyTargetId(slug, target) {
   return `${prefix}-intro`;
 }
 
-function sectionLabel(section, index) {
+function sectionLabel(section, index, tr) {
+  const t = typeof tr === 'function' ? tr : (k) => k;
   if (section.title && !section.hideTitle) {
     return truncateSpyLabel(section.title.replace(/:\s*$/, ''));
   }
   if (section.layout === 'dual-outcomes' && section.columns?.length) {
-    const t = section.columns.map((c) => c.title).filter(Boolean)[0];
-    if (t) return truncateSpyLabel(t);
+    const colTitle = section.columns.map((c) => c.title).filter(Boolean)[0];
+    if (colTitle) return truncateSpyLabel(colTitle);
   }
-  if (section.hypotheses?.length) return 'Гипотезы';
-  if (section.mvpSlides?.length > 0) return 'Слайды';
-  if (section.layout === 'title-info') return truncateSpyLabel(section.title ?? 'Раздел');
-  return `Раздел ${index + 1}`;
+  if (section.hypotheses?.length) return t('projects.spy.hypotheses');
+  if (section.mvpSlides?.length > 0) return t('projects.spy.slides');
+  if (section.layout === 'title-info') {
+    return truncateSpyLabel(section.title ?? t('projects.spy.unnamedSection'));
+  }
+  return t('projects.spy.section', { n: index + 1 });
 }
 
 function buildFromOutline(slug, outline) {
@@ -59,11 +62,13 @@ function buildFromOutline(slug, outline) {
 
 /**
  * Пункты оглавления в порядке следования в DOM (совпадает с разметкой ProjectDetailPage).
- * Для кейсов из CASE_STUDY_NAV_OUTLINES — структура «глава + ключ — пояснение».
+ * Для EN подставляется `messages.projects.outlines` (см. `en.caseStudyOutlines.json`).
  */
-export function buildCaseStudySpySections(project) {
+export function buildCaseStudySpySections(project, i18n = {}) {
+  const { t = (k) => k, locale, messages } = i18n;
   const slug = project.slug;
-  const outline = CASE_STUDY_NAV_OUTLINES[slug];
+  const outlineEn = locale === 'en' && messages?.projects?.outlines?.[slug];
+  const outline = outlineEn || CASE_STUDY_NAV_OUTLINES[slug];
   if (outline) {
     return buildFromOutline(slug, outline);
   }
@@ -71,12 +76,12 @@ export function buildCaseStudySpySections(project) {
   const prefix = `case-${slug}`;
   const items = [];
 
-  items.push({ id: `${prefix}-hero`, label: 'Обложка', level: 1 });
-  items.push({ id: `${prefix}-intro`, label: 'О проекте', level: 1 });
-  items.push({ id: `${prefix}-overview`, label: 'В кейсе', level: 1 });
+  items.push({ id: `${prefix}-hero`, label: t('projects.spy.cover'), level: 1 });
+  items.push({ id: `${prefix}-intro`, label: t('projects.spy.about'), level: 1 });
+  items.push({ id: `${prefix}-overview`, label: t('projects.spy.inCase'), level: 1 });
 
   if (project.showNarrative && (project.context || project.problem)) {
-    items.push({ id: `${prefix}-narrative`, label: 'Контекст', level: 1 });
+    items.push({ id: `${prefix}-narrative`, label: t('projects.spy.narrative'), level: 1 });
   }
 
   const caseImages = project.caseStudyImages || {};
@@ -86,11 +91,11 @@ export function buildCaseStudySpySections(project) {
   sections.forEach((section, i) => {
     items.push({
       id: `${prefix}-body-${i}`,
-      label: sectionLabel(section, i),
+      label: sectionLabel(section, i, t),
       level: 2,
     });
     if (i === 0 && hasCompare) {
-      items.push({ id: `${prefix}-compare`, label: 'До / после', level: 2 });
+      items.push({ id: `${prefix}-compare`, label: t('projects.spy.compare'), level: 2 });
     }
   });
 

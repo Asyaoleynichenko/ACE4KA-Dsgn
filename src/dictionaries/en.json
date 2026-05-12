@@ -1,6 +1,6 @@
 {
   "common": {
-    "brandName": "Asya\u00a0Oleinichenko",
+    "brandName": "Asya\u00a0Oleynichenko",
     "caseStudy": {
       "task": "Challenge",
       "solution": "Solution",
@@ -11,7 +11,7 @@
       "result": "Outcome",
       "category": "Category",
       "hypothesis": "Hypothesis {{n}}",
-      "problemFallback": "The main constraints are spelled out in the project brief."
+      "problemFallback": "The main constraints are spelled out in the project brief"
     },
     "altBefore": "Before",
     "altAfter": "After"
@@ -29,7 +29,7 @@
     }
   },
   "hero": {
-    "title": "Asya Oleinichenko",
+    "title": "Asya Oleynichenko",
     "role": "Product designer, Mail Cloud & Mail (VK)",
     "text": "Five years shipping and evolving digital products. I know how teams work, how products behave in the wild, and how to keep craft simple and solid.",
     "moreAbout": "More about me",
@@ -115,31 +115,31 @@
   },
   "resume": {
     "title": "Résumé",
-    "subtitle": "Experience and core skills.",
+    "subtitle": "Experience and core skills",
     "experienceTitle": "Experience",
-    "experienceText": "Product designer at Mail, Cloud, and VK — launching and growing digital products.",
+    "experienceText": "Product designer at Mail, Cloud, and VK — launching and growing digital products",
     "skillsTitle": "Skills",
-    "skillsText": "UX/UI, design systems, prototyping, user research.",
+    "skillsText": "UX/UI, design systems, prototyping, user research",
     "educationTitle": "Education",
-    "educationText": "HSE, Design & Programming track.",
+    "educationText": "HSE, Design & Programming track",
     "downloadTitle": "Download",
     "downloadLink": "Résumé (PDF)"
   },
   "education": {
     "title": "Education",
-    "subtitle": "Studies and professional growth.",
+    "subtitle": "Studies and professional growth",
     "hseTitle": "HSE University",
-    "hseText": "Design & Programming, undergraduate programme.",
+    "hseText": "Design & Programming, undergraduate programme",
     "coursesTitle": "Courses & workshops",
-    "coursesText": "Advanced training in product design and UX.",
+    "coursesText": "Advanced training in product design and UX",
     "languagesTitle": "Languages",
-    "languagesText": "Russian — native. English — working proficiency."
+    "languagesText": "Russian — native. English — working proficiency"
   },
   "draftPage": {
     "title": "Page {{id}}",
-    "subtitle": "Content for Figma layout {{id}}.",
+    "subtitle": "Content for Figma layout {{id}}",
     "blockTitle": "Block {{n}}",
-    "blockText": "Placeholder copy for this layout."
+    "blockText": "Placeholder copy for this layout"
   },
   "projectDetail": {
     "mvpHelp": "Use the side arrows, the dots below, or the left and right keys to change slides. On mobile, swipe left or right.",
@@ -147,7 +147,7 @@
     "heroPlaceholder": "Project preview",
     "toolsHeading": "Tools",
     "linksHeading": "Links",
-    "notFound": "Project not found.",
+    "notFound": "Project not found",
     "sliderRole": "carousel",
     "prevSlide": "Previous slide",
     "nextSlide": "Next slide",
@@ -176,7 +176,7 @@
   },
   "about": {
     "intro": {
-      "name": "Asya Oleinichenko",
+      "name": "Asya Oleynichenko",
       "lead1": "Product designer at Mail (VK): monetization, personalization, and shipping features across mail and cloud. Five years in product — from research and prototypes to releases and metric-led experiments.",
       "lead2": "I care about growth systems, AI in interfaces, and design that works for both people and the business. Open to new roles and collaborations."
     },
@@ -202,15 +202,15 @@
     },
     "team": {
       "title": "Team",
-      "body": "I work in cross-functional teams with PMs, analytics, engineering, and researchers — from hypothesis to experiment readout."
+      "body": "I work in cross-functional teams with PMs, analytics, engineering, and researchers — from hypothesis to experiment readout"
     },
     "habitat": {
       "title": "Beyond work",
-      "body": "City life, music, internet visual noise, and an endless stream of references — where I recharge for interfaces and art direction."
+      "body": "City life, music, internet visual noise, and an endless stream of references — where I recharge for interfaces and art direction"
     },
     "memes": {
       "title": "Favorite memes by imaginary people",
-      "body": "A stash of absurd images and quotes without context — a reminder that products live in culture, not only in dashboards."
+      "body": "A stash of absurd images and quotes without context — a reminder that products live in culture, not only in dashboards"
     },
     "spyNav": {
       "aria": "On this page",
@@ -232,19 +232,19 @@
         "title": "Product designer",
         "org": "VK · Mail Cloud & Mail",
         "period": "2022 — present",
-        "text": "Monetization and personalization across Mail: upsell flows, subscriptions, LTV scenarios, close work with analytics and research."
+        "text": "Monetization and personalization across Mail: upsell flows, subscriptions, LTV scenarios, close work with analytics and research"
       },
       {
         "title": "Head of Product Design",
         "org": "Bang Bang Education",
         "period": "2024 — 2025",
-        "text": "Led product design for edtech: process, release quality, tying design to metrics and content."
+        "text": "Led product design for edtech: process, release quality, tying design to metrics and content"
       },
       {
         "title": "Special projects & content",
         "org": "Mail",
         "period": "Earlier",
-        "text": "Built the special-projects stream from zero: dozens of concepts, AI in the pipeline, scaling production."
+        "text": "Built the special-projects stream from zero: dozens of concepts, AI in the pipeline, scaling production"
       }
     ],
     "eduItems": [
@@ -290,66 +290,145 @@
     }
   },
   "projects": {
+    "metaLabels": {
+      "team": "Team",
+      "year": "Year",
+      "role": "Role"
+    },
+    "cta": {
+      "visitSite": "Visit site"
+    },
+    "spy": {
+      "cover": "Cover",
+      "about": "About",
+      "inCase": "In the case",
+      "narrative": "Context",
+      "compare": "Before / after",
+      "hypotheses": "Hypotheses",
+      "slides": "Slides",
+      "unnamedSection": "Section",
+      "section": "Section {{n}}"
+    },
+    "toolStrings": {
+      "Figma": "Figma",
+      "Media UI": "Media UI",
+      "Компоненты и дизайн-система": "Components & design system",
+      "Прототипирование": "Prototyping",
+      "Нейросети": "Neural networks",
+      "Гайдлайны и процессы": "Guidelines & process",
+      "Mail Space": "Mail Space",
+      "A/B-тесты": "A/B testing",
+      "Web / iOS / Android": "Web / iOS / Android",
+      "User research": "User research",
+      "Telegram Mini Apps": "Telegram Mini Apps",
+      "Atomic Design": "Atomic Design",
+      "Pitch deck": "Pitch deck",
+      "iOS": "iOS",
+      "Web": "Web",
+      "Арт-дирекшн": "Art direction",
+      "Визуальный сторителлинг": "Visual storytelling",
+      "Photoshop": "Photoshop",
+      "Исследования": "Research",
+      "Readymag": "Readymag",
+      "Spline": "Spline",
+      "Adobe Illustrator": "Adobe Illustrator",
+      "3D": "3D",
+      "SMM": "SMM",
+      "Cursor": "Cursor",
+      "Прототипирование в коде": "Code-based prototyping"
+    },
     "cards": {
       "mail-nauki": {
         "navShortTitle": "Mail Science",
         "title": "Mail Science launch & a systematic Mail media redesign",
         "meta": "Media · Mail",
-        "desc": "One thematic media platform across VK: redesign, Mail Science, and scaling the experience"
+        "desc": "One thematic media platform across VK: redesign, Mail Science, and scaling the experience",
+        "introParas": [
+          "The Mail media redesign is a project to refresh VK’s content platform that brings together several thematic verticals (Science, Hi-Tech, Lady, Cinema, and more).",
+          "The main goal was to move from fragmented interfaces to one scalable design approach that improves content navigation, lifts engagement, and integrates ad formats effectively."
+        ]
       },
       "mail-spetsproekty": {
         "navShortTitle": "Special projects",
         "title": "Growing the special-projects stream",
         "meta": "Mail Media · 2025",
-        "desc": "Branded specials: tighter process, AI in the workflow, less outsourcing"
+        "desc": "Branded specials: tighter process, AI in the workflow, less outsourcing",
+        "introParas": [
+          "I led the special-projects stream and built a scalable system for producing branded content—faster launches, higher throughput, and less reliance on contractors."
+        ]
       },
       "mail-monetization": {
         "navShortTitle": "Mail monetization",
         "title": "Mail monetization",
         "meta": "Mail · Cloud & Mail · 2025 — present",
-        "desc": "Mail Space subscription: pricing tiers, experiments, freemium features"
+        "desc": "Mail Space subscription: pricing tiers, experiments, freemium features",
+        "introParas": [
+          "I worked at the intersection of product, design, and business—making metric-backed decisions with revenue impact. The team owns the subscription model and monetization for core Mail products. The work spanned promoting new plans, maintaining the Mail Space landing page, experiments with subscription entry points, churn, and launching and promoting new features. I focused on monetization UI, experiments, and improving purchase flows for Mail Space."
+        ]
       },
       "drop": {
         "navShortTitle": "DROP",
         "title": "DROP — networking for city life",
         "meta": "UX/UI · 2024–2025",
-        "desc": "Location-based networking: iOS concept and a Telegram MVP"
+        "desc": "Location-based networking: iOS concept and a Telegram MVP",
+        "introParas": [
+          "DROP is a digital service for city networking: people leave anonymous notes pinned to real places. A note can be text, a voice clip, or a small 3D object tied to a location. Anyone nearby can discover it, react, or start a conversation—adding a digital layer on top of the city where physical spots become anchors for unexpected social interactions."
+        ]
       },
       "loochok": {
         "navShortTitle": "LÒÒCHOK",
         "title": "LÒÒCHOK — customization & DIY community",
         "meta": "UX/UI · Product · 2023–2024",
-        "desc": "0→1: DIY platform, community, web + iOS, pitch"
+        "desc": "0→1: DIY platform, community, web + iOS, pitch",
+        "introParas": [
+          "The core idea is a dedicated space where people can find customization ideas, follow step-by-step guides, and share what they make.",
+          "The project grew as a media ecosystem—content, community, and tools for participants to connect."
+        ]
       },
       "neural": {
         "navShortTitle": "Neural networks",
         "title": "Mail Hi-Tech feature — a landing on neural networks",
         "meta": "Mail Hi-Tech · 2024",
-        "desc": "Interactive NN landing: visual storytelling, AI graphics, and a fresh special-project format"
+        "desc": "Interactive NN landing: visual storytelling, AI graphics, and a fresh special-project format",
+        "introParas": [
+          "Interest in neural networks was rising, but standard text-led editorial formats didn’t drive enough engagement—the topic felt too complex and lacked visual storytelling. That meant weak time-on-page and shallow reading depth."
+        ]
       },
       "inkz": {
         "navShortTitle": "INKZ",
         "title": "INKZ — find your tattoo artist",
         "meta": "UX/UI · HSE · Sep — Oct 2023",
-        "desc": "Two-month 0→1: research, MVP, monetization for artists"
+        "desc": "Two-month 0→1: research, MVP, monetization for artists",
+        "introParas": [
+          "INKZ is a tattoo-artist discovery platform concept built from zero in two months. The hypothesis: reviews, ratings, and style-based search make it easier to pick an artist and build trust. The goal was an MVP that makes finding an artist transparent and straightforward."
+        ]
       },
       "biohacking": {
         "navShortTitle": "Biohacking",
         "title": "Immersive ad mechanics: “Biohacking” for Invitro",
         "meta": "Mail Media · 2024",
-        "desc": "Readymag + Spline: a native brand inside an editorial longread"
+        "desc": "Readymag + Spline: a native brand inside an editorial longread",
+        "introParas": [
+          "I designed an interactive special project for Invitro—editorial content, 3D motion, and native brand integration in one experience."
+        ]
       },
       "retrash": {
         "navShortTitle": "RE*TRASH",
         "title": "RE*TRASH — media about mindful consumption",
         "meta": "Media · HSE · 2022–2023",
-        "desc": "Product + brand: sustainability without the lecture"
+        "desc": "Product + brand: sustainability without the lecture",
+        "introParas": [
+          "A media concept to make mindful consumption easier through structured content, how-tos, and a visual system—spanning product, editorial, and brand."
+        ]
       },
       "racktables": {
         "navShortTitle": "RackTables",
         "title": "RackTables: redesigning infrastructure management",
         "meta": "UX/UI · Yandex Fast Track · 2026",
-        "desc": "Fast Track: from a passive database to solution support in two days"
+        "desc": "Fast Track: from a passive database to solution support in two days",
+        "introParas": [
+          "Shipped in two days as part of Yandex Fast Track. RackTables had behaved like a passive database: information was structured linearly with no clear priority. During incidents and outages that meant critical delay—engineers spent time manually searching and interpreting object state."
+        ]
       }
     }
   }

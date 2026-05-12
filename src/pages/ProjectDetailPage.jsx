@@ -1,8 +1,18 @@
-import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
+import {
+  getLocalizedCaseStudyIntroParas,
+  hypothesisCardHeading,
+  translateCaseCardTitle,
+  translateExtLinkLabel,
+  translateMetaLabel,
+  translateToolLine,
+} from '../i18n/projectFieldTranslate.js';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import { projects } from '../data/projects';
+import { applyCaseStudyEnglishOverlay } from '../i18n/mergeCaseStudyEnOverlay.js';
+import { CASE_STUDY_EN_OVERLAYS } from '../i18n/caseStudyEnOverlays/index.js';
 import { publicUrl } from '../utils/publicUrl.js';
 import { caseStudyStripIconKind } from '../utils/caseStudyStripIcons.js';
 import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
@@ -273,10 +283,15 @@ function HorizontalGallery({ images }) {
 
 export default function ProjectDetailPage() {
   const { slug } = useParams();
-  const { t } = useI18n();
-  const project = projects.find((p) => p.slug === slug);
+  const { t, locale, messages } = useI18n();
+  const rawProject = projects.find((p) => p.slug === slug);
+  const project = useMemo(
+    () => (rawProject ? applyCaseStudyEnglishOverlay(rawProject, locale, CASE_STUDY_EN_OVERLAYS) : null),
+    [rawProject, locale],
+  );
 
-  const spySections = project?.layout === 'case-study' ? buildCaseStudySpySections(project) : [];
+  const spySections =
+    project?.layout === 'case-study' ? buildCaseStudySpySections(project, { t, locale, messages }) : [];
   const spySectionIds = spySections.map((s) => s.id).filter(Boolean);
   const activeSpyId = useScrollSpy(spySectionIds);
 
@@ -292,6 +307,7 @@ export default function ProjectDetailPage() {
   const ct = (key) => t(`common.caseStudy.${key}`);
 
   const lead = project.lead ?? project.desc;
+  const caseStudyIntroParas = getLocalizedCaseStudyIntroParas(project, locale, messages);
   const metaItems = project.metaItems ?? [{ label: t('common.caseStudy.category'), value: project.meta }];
   const isCaseStudy = project.layout === 'case-study';
   const hasHero = Boolean(project.image);
@@ -349,14 +365,14 @@ export default function ProjectDetailPage() {
           <section className="project-intro" id={`case-${project.slug}-intro`}>
             <div className="title">
               <h1>{displayTitle}</h1>
-              {(project.intro?.length ? project.intro : [project.lead]).map((para, idx) => (
+              {caseStudyIntroParas.map((para, idx) => (
                 <p key={idx}>{para}</p>
               ))}
             </div>
             <div className="project-info">
               {metaItems.map((item) => (
                 <div key={item.label} className="project-info__row">
-                  <span className="project-info__label">{item.label}</span>
+                  <span className="project-info__label">{translateMetaLabel(item.label, t)}</span>
                   <span className="project-info__value">{item.value}</span>
                 </div>
               ))}
@@ -367,7 +383,7 @@ export default function ProjectDetailPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {project.extLink.label}
+                  {translateExtLinkLabel(project.extLink.label, t)}
                 </a>
               ) : null}
             </div>
@@ -377,9 +393,10 @@ export default function ProjectDetailPage() {
             <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
               {topCards.map((item, cardIdx) => {
                 const iconKind = caseStudyStripIconKind(item.title);
+                const cardTitle = translateCaseCardTitle(item.title, t);
                 return (
-                  <div key={item.title} className="card">
-                    <h3>{item.title}</h3>
+                  <div key={`${cardIdx}-${item.title}`} className="card">
+                    <h3>{cardTitle}</h3>
                     <p>{item.value}</p>
                     {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
                   </div>
@@ -539,7 +556,7 @@ export default function ProjectDetailPage() {
                   <ScrollScrubRow variant="hypothesis" ariaLabel={t('projectDetail.hypothesisStripAria')}>
                     {section.hypotheses.map((h, j) => (
                       <div key={j} className="hyp-card">
-                        <h4>{h.title ?? t('common.caseStudy.hypothesis', { n: j + 1 })}</h4>
+                        <h4>{hypothesisCardHeading(h, j, locale, t)}</h4>
                         <p>{h.text}</p>
                         {h.outcome ? (
                           <div className="hyp-card__outcome">
@@ -634,16 +651,16 @@ export default function ProjectDetailPage() {
             <div key={item.label} className="contact-item">
               <span className="contact-item__icon" aria-hidden="true">•</span>
               <div>
-                <strong>{item.label}</strong>
+                <strong>{translateMetaLabel(item.label, t)}</strong>
                 <span>{item.value}</span>
               </div>
             </div>
           ))}
-          {topCards.map((item) => (
-            <div key={item.title} className="contact-item contact-item--text">
+          {topCards.map((item, idx) => (
+            <div key={`${idx}-${item.title}`} className="contact-item contact-item--text">
               <span className="contact-item__icon" aria-hidden="true">•</span>
               <div>
-                <strong>{item.title}</strong>
+                <strong>{translateCaseCardTitle(item.title, t)}</strong>
                 <p>{item.value}</p>
               </div>
             </div>
@@ -657,7 +674,7 @@ export default function ProjectDetailPage() {
                 <ul className="tools-list" aria-label={t('projectDetail.toolsListAria')}>
                   {project.tools.map((tool) => (
                     <li key={tool}>
-                      <span className="tools-list__pill">{tool}</span>
+                      <span className="tools-list__pill">{translateToolLine(tool, locale, messages)}</span>
                     </li>
                   ))}
                 </ul>
@@ -667,7 +684,7 @@ export default function ProjectDetailPage() {
               <div>
                 <h3 className="project-detail-footer__label">{t('projectDetail.linksHeading')}</h3>
                 <a href={project.extLink.href} className="ext-link" target="_blank" rel="noopener noreferrer">
-                  {project.extLink.label}
+                  {translateExtLinkLabel(project.extLink.label, t)}
                 </a>
               </div>
             ) : null}
