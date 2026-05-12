@@ -1,20 +1,19 @@
 import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 /**
- * Горизонтальная полоса карточек: смещение слева направо при прокрутке страницы вниз,
- * плюс индикатор-точки (как у горизонтальной галереи кейса).
+ * Лента карточек / контактов:
+ * — обычный режим: горизонталь сдвигается **автоматически** при вертикальном скролле страницы
+ *   (прогресс от положения блока во viewport, без искусственной min-height трека — нет «пустого хвоста»).
+ * — prefers-reduced-motion: нативный overflow-x + свайп/полоса, точки по scrollLeft.
+ *
+ * variant="hypothesis" — статичный вертикальный стек.
  */
 export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel, className = '' }) {
-  /** Гипотезы — только вертикальный стек, без горизонтального скролла и без scrub по скроллу */
-  const verticallyCenterSticky = variant === 'cards';
-  const stickyEdgeOffset = 72;
+  const count = Children.count(children);
   const trackRef = useRef(null);
-  const stickyRef = useRef(null);
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
   const rafRef = useRef(null);
-
-  const count = Children.count(children);
   const [activeIdx, setActiveIdx] = useState(0);
   const [maxX, setMaxX] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(
@@ -33,8 +32,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const inner = innerRef.current;
     const viewport = viewportRef.current;
     if (!inner || !viewport) return;
-    const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
-    setMaxX(mx);
+    setMaxX(Math.max(0, inner.scrollWidth - viewport.clientWidth));
   }, []);
 
   useLayoutEffect(() => {
@@ -51,58 +49,42 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return () => ro.disconnect();
   }, [recalcMaxX]);
 
-  const updateFromScroll = useCallback(() => {
-    if (reducedMotion) return;
+  /** Прогресс 0…1 по вертикали страницы: «вход» трека снизу → полный сдвиг mx. */
+  const progressFromViewport = useCallback(() => {
     const track = trackRef.current;
-    const inner = innerRef.current;
     const viewport = viewportRef.current;
-    if (!track || !inner || !viewport) return;
-
-    const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
+    if (!track || !viewport) return 0;
+    const mx = Math.max(0, innerRef.current ? innerRef.current.scrollWidth - viewport.clientWidth : 0);
     const rect = track.getBoundingClientRect();
     const vh = window.innerHeight;
-    // Прогресс через положение трека во viewport — корректно при sticky-блоке внутри
-    const scrollRange = rect.height - vh;
-    const denom = Math.max(1, scrollRange);
-    const p = Math.min(1, Math.max(0, -rect.top / denom));
-    // Smootherstep: мягче smoothstep, меньше ощущения «рваного» scrub.
-    const eased = p * p * p * (p * (p * 6 - 15) + 10);
-    const x = eased * mx;
-    inner.style.transform = `translate3d(${-x}px,0,0)`;
+    const scrollSpan = Math.min(520, Math.max(140, mx * 0.17 + vh * 0.05));
+    const enter = vh * 0.88;
+    const leave = enter - scrollSpan;
+    const denom = Math.max(1, enter - leave);
+    return Math.min(1, Math.max(0, (enter - rect.top) / denom));
+  }, []);
 
+  const updateFromPageScroll = useCallback(() => {
+    if (reducedMotion) return;
+    const inner = innerRef.current;
+    const viewport = viewportRef.current;
+    if (!inner || !viewport) return;
+    const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
+    const p = progressFromViewport();
+    const x = p * mx;
+    inner.style.transform = `translate3d(${-x}px,0,0)`;
     const idx =
       count <= 1 || mx <= 1 ? 0 : Math.min(count - 1, Math.round((x / mx) * (count - 1)));
     setActiveIdx(idx);
-  }, [count, reducedMotion]);
-
-  useLayoutEffect(() => {
-    if (reducedMotion || !verticallyCenterSticky) return undefined;
-    const sticky = stickyRef.current;
-    if (!sticky) return undefined;
-
-    const applyStickyTop = () => {
-      sticky.style.top = `${stickyEdgeOffset}px`;
-    };
-
-    applyStickyTop();
-    const ro = new ResizeObserver(() => applyStickyTop());
-    ro.observe(sticky);
-    window.addEventListener('resize', applyStickyTop);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', applyStickyTop);
-      sticky.style.removeProperty('top');
-    };
-  }, [reducedMotion, verticallyCenterSticky, children, maxX]);
+  }, [count, reducedMotion, progressFromViewport]);
 
   useEffect(() => {
-    if (reducedMotion) return undefined;
+    if (reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
 
     const tick = () => {
       rafRef.current = null;
-      updateFromScroll();
+      updateFromPageScroll();
     };
-
     const onScrollOrResize = () => {
       if (rafRef.current != null) return;
       rafRef.current = requestAnimationFrame(() => {
@@ -119,38 +101,122 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       window.removeEventListener('scroll', onScrollOrResize);
       window.removeEventListener('resize', onScrollOrResize);
     };
-  }, [updateFromScroll, reducedMotion]);
-
-  useLayoutEffect(() => {
-    const track = trackRef.current;
-    const sticky = stickyRef.current;
-    if (!track || reducedMotion) return undefined;
-
-    const measure = () => {
-      const vh = window.innerHeight;
-      const stickyH = sticky?.offsetHeight ?? 0;
-      const scrollRunway = Math.min(1600, Math.max(vh * 0.95, maxX * 0.52, 420));
-      const minTrack = Math.ceil(
-        Math.max(vh + scrollRunway, stickyH + scrollRunway + stickyEdgeOffset * 2),
-      );
-      track.style.minHeight = `${minTrack}px`;
-    };
-
-    measure();
-    const ro = new ResizeObserver(() => measure());
-    ro.observe(track);
-    if (sticky) ro.observe(sticky);
-    window.addEventListener('resize', measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', measure);
-    };
-  }, [maxX, reducedMotion, count, stickyEdgeOffset]);
+  }, [updateFromPageScroll, reducedMotion, variant]);
 
   useEffect(() => {
-    if (reducedMotion) return;
-    updateFromScroll();
-  }, [maxX, reducedMotion, updateFromScroll]);
+    if (reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    updateFromPageScroll();
+  }, [maxX, reducedMotion, variant, updateFromPageScroll]);
+
+  const syncDotsFromViewportScroll = useCallback(() => {
+    const vp = viewportRef.current;
+    const inner = innerRef.current;
+    if (!vp || !inner || count <= 1) {
+      setActiveIdx(0);
+      return;
+    }
+    const slides = inner.querySelectorAll(':scope > *');
+    if (!slides.length) {
+      setActiveIdx(0);
+      return;
+    }
+    const maxScroll = Math.max(0, vp.scrollWidth - vp.clientWidth);
+    if (maxScroll <= 1) {
+      setActiveIdx(0);
+      return;
+    }
+    const t = Math.min(1, Math.max(0, vp.scrollLeft / maxScroll));
+    const idx = Math.min(slides.length - 1, Math.round(t * (slides.length - 1)));
+    setActiveIdx(idx);
+  }, [count]);
+
+  useLayoutEffect(() => {
+    if (!reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    syncDotsFromViewportScroll();
+    return undefined;
+  }, [children, reducedMotion, variant, syncDotsFromViewportScroll]);
+
+  useEffect(() => {
+    if (!reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    const vp = viewportRef.current;
+    const inner = innerRef.current;
+    if (!vp || !inner) return undefined;
+    let raf = null;
+    const schedule = () => {
+      if (raf != null) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        syncDotsFromViewportScroll();
+      });
+    };
+    schedule();
+    vp.addEventListener('scroll', schedule, { passive: true });
+    const ro = new ResizeObserver(() => schedule());
+    ro.observe(vp);
+    ro.observe(inner);
+    return () => {
+      if (raf != null) cancelAnimationFrame(raf);
+      vp.removeEventListener('scroll', schedule);
+      ro.disconnect();
+    };
+  }, [reducedMotion, variant, syncDotsFromViewportScroll]);
+
+  useEffect(() => {
+    if (!reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    const vp = viewportRef.current;
+    if (!vp) return undefined;
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      const max = vp.scrollWidth - vp.clientWidth;
+      if (max <= 0) return;
+      const atStart = vp.scrollLeft <= 0;
+      const atEnd = vp.scrollLeft >= max - 1;
+      if ((atStart && e.deltaY < 0) || (atEnd && e.deltaY > 0)) return;
+      e.preventDefault();
+      vp.scrollLeft += e.deltaY;
+    };
+    vp.addEventListener('wheel', onWheel, { passive: false });
+    return () => vp.removeEventListener('wheel', onWheel);
+  }, [reducedMotion, variant]);
+
+  const scrollToSlideReduced = useCallback(
+    (index) => {
+      const vp = viewportRef.current;
+      const inner = innerRef.current;
+      if (!vp || !inner) return;
+      const slides = inner.querySelectorAll(':scope > *');
+      const el = slides[index];
+      if (!el) return;
+      el.scrollIntoView({
+        behavior: reducedMotion ? 'auto' : 'smooth',
+        block: 'nearest',
+        inline: 'nearest',
+      });
+    },
+    [reducedMotion],
+  );
+
+  const scrollToSlideLinked = useCallback(
+    (index) => {
+      const track = trackRef.current;
+      const inner = innerRef.current;
+      const viewport = viewportRef.current;
+      if (!track || !inner || !viewport) return;
+      const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
+      if (mx <= 1) return;
+      const targetP = count <= 1 ? 0 : index / (count - 1);
+      const rect = track.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollSpan = Math.min(520, Math.max(140, mx * 0.17 + vh * 0.05));
+      const enter = vh * 0.88;
+      const leave = enter - scrollSpan;
+      const denom = Math.max(1, enter - leave);
+      const currentP = Math.min(1, Math.max(0, (enter - rect.top) / denom));
+      const delta = (targetP - currentP) * scrollSpan;
+      window.scrollTo({ top: window.scrollY + delta, behavior: 'smooth' });
+    },
+    [count],
+  );
 
   const rootClass = `scroll-scrub-row scroll-scrub-row__track scroll-scrub-row--${variant} ${className}`.trim();
 
@@ -164,43 +230,71 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     );
   }
 
-  if (reducedMotion) {
+  if (variant === 'cards' || variant === 'contact') {
+    if (reducedMotion) {
+      return (
+        <div className={`${rootClass} scroll-scrub-row--native-x scroll-scrub-row--reduced-motion`.trim()}>
+          <div className="scroll-scrub-row__shell">
+            <div
+              ref={viewportRef}
+              className="scroll-scrub-row__viewport scroll-scrub-row__viewport--native-x"
+              role="region"
+              aria-label={ariaLabel}
+            >
+              <div ref={innerRef} className="scroll-scrub-row__inner">
+                {children}
+              </div>
+            </div>
+            {count > 1 ? (
+              <div className="scroll-scrub-row__indicator">
+                {Array.from({ length: count }, (_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-current={i === activeIdx ? 'true' : undefined}
+                    aria-label={`${i + 1} / ${count}`}
+                    className={`scroll-scrub-row__dot${i === activeIdx ? ' is-active' : ''}`}
+                    onClick={() => scrollToSlideReduced(i)}
+                  />
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className={`${rootClass} scroll-scrub-row--reduced-motion`}>
-        <div className="scroll-scrub-row__sticky scroll-scrub-row__sticky--reduced">
+      <div ref={trackRef} className={`${rootClass} scroll-scrub-row--scroll-linked`.trim()}>
+        <div className="scroll-scrub-row__shell">
           <div
-            className="scroll-scrub-row__viewport scroll-scrub-row__viewport--reduced"
+            ref={viewportRef}
+            className="scroll-scrub-row__viewport scroll-scrub-row__viewport--linked"
             role="region"
             aria-label={ariaLabel}
           >
-            <div className="scroll-scrub-row__inner">{children}</div>
+            <div ref={innerRef} className="scroll-scrub-row__inner">
+              {children}
+            </div>
           </div>
+          {count > 1 ? (
+            <div className="scroll-scrub-row__indicator">
+              {Array.from({ length: count }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-current={i === activeIdx ? 'true' : undefined}
+                  aria-label={`${i + 1} / ${count}`}
+                  className={`scroll-scrub-row__dot${i === activeIdx ? ' is-active' : ''}`}
+                  onClick={() => scrollToSlideLinked(i)}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     );
   }
 
-  return (
-    <div ref={trackRef} className={rootClass}>
-      <div ref={stickyRef} className="scroll-scrub-row__sticky">
-        <div
-          ref={viewportRef}
-          className="scroll-scrub-row__viewport"
-          role="region"
-          aria-label={ariaLabel}
-        >
-          <div ref={innerRef} className="scroll-scrub-row__inner">
-            {children}
-          </div>
-        </div>
-        {count > 1 ? (
-          <div className="scroll-scrub-row__indicator" aria-hidden="true">
-            {Array.from({ length: count }, (_, i) => (
-              <span key={i} className={`scroll-scrub-row__dot${i === activeIdx ? ' is-active' : ''}`} />
-            ))}
-          </div>
-        ) : null}
-      </div>
-    </div>
-  );
+  return null;
 }

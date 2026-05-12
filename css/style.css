@@ -3348,7 +3348,7 @@ button:focus-visible,
 .project-case-study-mail .case-study-narrative__p:last-child {
     margin-bottom: 0;
 }
-/* Карточки кейса — вертикальный скролл страницы двигает полосу слева направо (ScrollScrubRow) */
+/* Карточки кейса — горизонтальный scroll внутри ленты (ScrollScrubRow native-x), точки + клик по точке */
 .project-case-study-mail .cards-section {
     margin: 0;
     width: 100%;
@@ -3359,40 +3359,59 @@ button:focus-visible,
     width: 100%;
     box-sizing: border-box;
 }
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__sticky {
-    position: sticky;
-    top: max(12px, env(safe-area-inset-top, 0px));
-    z-index: 1;
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__shell,
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
     width: 100%;
     box-sizing: border-box;
 }
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__viewport {
-    overflow: hidden;
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__viewport--native-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
     width: 100%;
     max-width: none;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
+    margin: 0;
+    padding: 0 0 var(--space-8);
     box-sizing: border-box;
-    /* Ширина ленты без max-content-петли: задаём базис карточкам через cqi (~2 экранные карты) */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     container-type: inline-size;
     container-name: scrub-cards;
 }
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner {
+/* Та же лента, но горизонтальное смещение через transform от вертикального скролла страницы */
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__viewport--linked {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    overscroll-behavior-x: none;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 0 var(--space-8);
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    container-type: inline-size;
+    container-name: scrub-cards;
+}
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner,
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: flex-start;
+    align-items: stretch;
     gap: var(--space-24);
     width: max-content;
+}
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
     will-change: transform;
 }
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
     --scrub-card-basis: min(643px, calc(100cqi - var(--space-24)));
     flex: 0 0 var(--scrub-card-basis);
     width: var(--scrub-card-basis);
     max-width: var(--scrub-card-basis);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
     container-type: inline-size;
     container-name: case-card;
     /* Fallback без cqw; при поддержке — доля ширины карточки + ограничение по vw */
@@ -3404,17 +3423,16 @@ button:focus-visible,
     border-radius: var(--project-card-radius);
     border: 1px solid transparent;
     box-sizing: border-box;
-    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
     position: relative;
     overflow: visible;
 }
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:nth-child(3),
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card:nth-child(4) {
-    min-height: 300px;
-}
 
 @supports (width: 1cqw) {
-    .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
         --case-corner-icon: clamp(40px, min(16cqw, 11vw), 96px);
     }
 }
@@ -3512,9 +3530,10 @@ button:focus-visible,
     white-space: pre-line;
 }
 
-/* Узкая лента (по ширине viewport-контейнера scrub-cards): одна карта = 100cqi − gap; срабатывает и при узкой колонке на широком окне */
+/* Узкая лента (по ширине viewport-контейнера scrub-cards): одна карта = 100cqi − gap */
 @container scrub-cards (max-width: 900px) {
-    .project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
         --scrub-card-basis: calc(100cqi - var(--space-24));
         flex: 0 0 var(--scrub-card-basis);
         width: var(--scrub-card-basis);
@@ -3522,54 +3541,33 @@ button:focus-visible,
     }
 }
 
-@container scrub-cards-rm (max-width: 900px) {
-    .project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--cards .scroll-scrub-row__inner > .card {
-        --scrub-card-basis: calc(100cqi - var(--space-24));
-        flex: 0 0 var(--scrub-card-basis);
-        width: var(--scrub-card-basis);
-        max-width: var(--scrub-card-basis);
-    }
-}
-
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__indicator {
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__indicator,
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__indicator {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-8);
-    margin-top: var(--space-12);
+    margin-top: var(--space-8);
+    flex-shrink: 0;
     width: 100%;
     box-sizing: border-box;
 }
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__dot {
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__dot,
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__dot {
+    display: block;
     width: var(--space-8);
     height: var(--space-8);
+    padding: 0;
+    border: 0;
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
     transition: transform var(--transition-fast), background var(--transition-fast);
 }
-.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__dot.is-active {
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__dot.is-active,
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__dot.is-active {
     background: rgba(255, 255, 255, 0.9);
     transform: scale(1.25);
-}
-.project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--cards .scroll-scrub-row__viewport--reduced {
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: var(--space-8);
-    -webkit-overflow-scrolling: touch;
-    container-type: inline-size;
-    container-name: scrub-cards-rm;
-}
-.project-case-study-mail .scroll-scrub-row--reduced-motion.scroll-scrub-row--cards .scroll-scrub-row__inner {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: var(--space-24);
-    width: max-content;
 }
 .project-case-study-mail .section {
     margin: 0;
@@ -5562,71 +5560,82 @@ button:focus-visible,
     max-width: none;
     box-sizing: border-box;
 }
-.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__sticky {
-    position: sticky;
-    top: max(12px, env(safe-area-inset-top, 0px));
-    z-index: 1;
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__shell,
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
     width: 100%;
     box-sizing: border-box;
 }
-.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__viewport {
-    overflow: hidden;
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__viewport--native-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
     width: 100%;
     margin-left: calc(-1 * var(--project-page-padding-x));
     margin-right: calc(-1 * var(--project-page-padding-x));
     padding-left: var(--project-page-padding-x);
     padding-right: var(--project-page-padding-x);
+    padding-bottom: var(--space-8);
     box-sizing: border-box;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
 }
-.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__inner {
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__viewport--linked {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    overscroll-behavior-x: none;
+    width: 100%;
+    margin-left: calc(-1 * var(--project-page-padding-x));
+    margin-right: calc(-1 * var(--project-page-padding-x));
+    padding-left: var(--project-page-padding-x);
+    padding-right: var(--project-page-padding-x);
+    padding-bottom: var(--space-8);
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__inner,
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     gap: var(--layout-89-756-grid-gap);
     width: max-content;
+}
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
     will-change: transform;
 }
-.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__inner > .contact-item {
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__inner > .contact-item,
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .contact-item {
     flex: 0 0 min(280px, min(var(--layout-89-756-grid-max-width), 88vw));
     width: min(280px, min(var(--layout-89-756-grid-max-width), 88vw));
     max-width: min(280px, min(var(--layout-89-756-grid-max-width), 88vw));
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
     box-sizing: border-box;
 }
-.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__indicator {
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__indicator,
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__indicator {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-8);
     margin-top: var(--space-12);
 }
-.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__dot {
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__dot,
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__dot {
+    display: block;
     width: var(--space-8);
     height: var(--space-8);
+    padding: 0;
+    border: 0;
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.22);
+    cursor: pointer;
     transition: transform var(--transition-fast), background var(--transition-fast);
 }
-.project-page-wrap--layout-89 .scroll-scrub-row--contact .scroll-scrub-row__dot.is-active {
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__dot.is-active,
+.project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__dot.is-active {
     background: rgba(255, 255, 255, 0.88);
     transform: scale(1.25);
-}
-.project-page-wrap--layout-89 .scroll-scrub-row--reduced-motion.scroll-scrub-row--contact .scroll-scrub-row__viewport--reduced {
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    margin-left: calc(-1 * var(--project-page-padding-x));
-    margin-right: calc(-1 * var(--project-page-padding-x));
-    padding-left: var(--project-page-padding-x);
-    padding-right: var(--project-page-padding-x);
-    padding-bottom: var(--space-8);
-    -webkit-overflow-scrolling: touch;
-}
-.project-page-wrap--layout-89 .scroll-scrub-row--reduced-motion.scroll-scrub-row--contact .scroll-scrub-row__inner {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: var(--layout-89-756-grid-gap);
-    width: max-content;
 }
 .project-page-wrap--layout-89 .contact-item {
     flex-direction: column;
