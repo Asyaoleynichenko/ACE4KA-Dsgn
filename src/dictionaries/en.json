@@ -32,8 +32,8 @@
   },
   "hero": {
     "title": "Asya Oleynichenko",
-    "role": "Product designer, Mail Cloud & Mail (VK)",
-    "text": "Five years shipping and evolving digital products. I know how teams work, how products behave in the wild, and how to keep craft simple and solid.",
+    "role": "Product Designer · VK",
+    "text": "Five years in product design. Now on upsell and offer personalization at VK: monetization for Mail Space, Cloud, and Mail. Previously ~1.5 years on Mail media (Mail Science, Hi-Tech, Cinema, Lady, Pets). Work spans research, hypotheses, A/B tests, design, and impact on LTV, conversion, retention, and ARPPU. DAFES AWARDS finalist & winner · HSE red diploma, GPA 8.82 (Design & Programming). Open to Senior Product Designer roles.",
     "moreAbout": "More about me",
     "sectionNavAria": "Sections",
     "projectsSectionTitle": "Projects",
@@ -77,7 +77,7 @@
   "footer": {
     "navAria": "Footer links",
     "openForWork": "Open to work",
-    "devNote": "Site is a work in progress. Something broke —",
+    "devNote": "If something on the site doesn’t work —",
     "emailLink": "email me",
     "links": {
       "resume": "Résumé",
@@ -143,6 +143,58 @@
     "blockTitle": "Block {{n}}",
     "blockText": "Placeholder copy for this layout"
   },
+  "page89": {
+    "89_811": {
+      "title": "Process",
+      "subtitle": "How I work, from research to release",
+      "cards": [
+        { "title": "Research", "text": "Interviews, analytics, product and user context" },
+        { "title": "Hypotheses", "text": "Frame and prioritise hypotheses against goals" },
+        { "title": "Prototype", "text": "Quick mocks, validating flows and interactions" },
+        { "title": "Release", "text": "Handoff to engineering, QA and metrics" }
+      ]
+    },
+    "89_772": {
+      "title": "Approach",
+      "subtitle": "Principles and values in product design",
+      "cards": [
+        { "title": "Systemic", "text": "Design tokens, patterns and reusable components" },
+        { "title": "Accessible", "text": "Contrast, keyboard and screen readers from day one" },
+        { "title": "Clear", "text": "Clean hierarchy, plain copy, obvious actions" },
+        { "title": "Fast", "text": "Tight iterations, early prototypes, measure in production" }
+      ]
+    },
+    "89_909": {
+      "title": "Services",
+      "subtitle": "What you can bring me and how we work",
+      "cards": [
+        { "title": "Product design", "text": "Web and mobile: new products and redesigns" },
+        { "title": "Design systems", "text": "Building and maintaining component libraries" },
+        { "title": "Research", "text": "Usability tests, interviews, diary studies" },
+        { "title": "Consulting", "text": "UI audits, recommendations, design mentoring" }
+      ]
+    },
+    "89_915": {
+      "title": "Engagement",
+      "subtitle": "How we can collaborate",
+      "cards": [
+        { "title": "Project", "text": "Fixed scope with phases, deadlines and price" },
+        { "title": "Retainer", "text": "Ongoing hours per month for a product team" },
+        { "title": "Sprint", "text": "A focused 1–2 week sprint for a specific goal" },
+        { "title": "Embedded", "text": "Augmenting your team for the duration of a project" }
+      ]
+    },
+    "89_920": {
+      "title": "Context",
+      "subtitle": "Where I've worked and what I brought to product",
+      "cards": [
+        { "title": "Mail.ru", "text": "Special projects, monetisation and education services" },
+        { "title": "Startups", "text": "MVPs, product hypotheses and early UI" },
+        { "title": "Internal tools", "text": "Admin panels, dashboards, B2B interfaces" },
+        { "title": "Brand & graphics", "text": "Identity, illustration and project packaging" }
+      ]
+    }
+  },
   "projectDetail": {
     "mvpHelp": "Use the side arrows, the dots below, or the left and right keys to change slides. On mobile, swipe left or right.",
     "mvpRegion": "MVP slides",
@@ -179,8 +231,8 @@
   "about": {
     "intro": {
       "name": "Asya Oleynichenko",
-      "lead1": "Product designer at Mail (VK): monetization, personalization, and shipping features across mail and cloud. Five years in product — from research and prototypes to releases and metric-led experiments.",
-      "lead2": "I care about growth systems, AI in interfaces, and design that works for both people and the business. Open to new roles and collaborations."
+      "lead1": "Product designer at VK: monetization for Mail Space, Cloud, and Mail; before that — Mail media (Science, Hi-Tech, special projects). Five years across research, hypotheses, A/B tests, launches, and metrics.",
+      "lead2": "DAFES AWARDS finalist & winner; HSE red diploma (GPA 8.82). Open to Senior Product Designer roles and strong product teams."
     },
     "experience": {
       "title": "Experience"
@@ -188,15 +240,12 @@
     "skills": {
       "title": "Skills",
       "items": [
-        "UX/UI",
-        "Product design",
-        "Design systems",
-        "Research",
-        "A/B and product experiments",
-        "Monetization",
-        "Personalization",
-        "AI in production",
-        "Figma"
+        "Product: research through hypothesis testing and metric impact",
+        "Hypotheses & experiments: A/B, analytics, data-informed decisions",
+        "Research: competitors, depth interviews, scenarios, growth points",
+        "Art direction: led Mail Media special projects",
+        "AI in production: Cursor, Midjourney in the pipeline, editorial training",
+        "Engineering literacy: basic coding (HSE), layout, partnering with dev"
       ]
     },
     "education": {
@@ -226,27 +275,33 @@
     "strip": {
       "status": "Open to work",
       "linksAria": "Links",
-      "note": "Site in progress. Some layout was drafted with AI and finished by hand. Something broke —",
+      "note": "Site in progress. If something doesn’t work —",
       "emailLink": "email me"
     },
     "jobs": [
       {
         "title": "Product designer",
-        "org": "VK · Mail Cloud & Mail",
-        "period": "2022 — present",
-        "text": "Monetization and personalization across Mail: upsell flows, subscriptions, LTV scenarios, close work with analytics and research"
+        "org": "VK · monetization",
+        "period": "2025 — present",
+        "text": "Upsell & offer personalization team: Mail Space, Cloud, Mail. A/B experiments with tens of millions of ₽ incremental LTV (NDA)."
       },
       {
-        "title": "Head of Product Design",
-        "org": "Bang Bang Education",
-        "period": "2024 — 2025",
-        "text": "Led product design for edtech: process, release quality, tying design to metrics and content"
+        "title": "Product designer",
+        "org": "Mail · media",
+        "period": "Oct 16, 2023 — May 20, 2025",
+        "text": "Mail Science launch, Media UI, redesigns for Hi-Tech, Cinema, Lady, Pets. Led special projects: 23 launches in 3 months."
       },
       {
-        "title": "Special projects & content",
-        "org": "Mail",
-        "period": "Earlier",
-        "text": "Built the special-projects stream from zero: dozens of concepts, AI in the pipeline, scaling production"
+        "title": "Marketing intern",
+        "org": "SOGAZ",
+        "period": "",
+        "text": "Worked on the mobile app design system."
+      },
+      {
+        "title": "Freelance",
+        "org": "",
+        "period": "",
+        "text": "Web pages, startups, front-end development."
       }
     ],
     "eduItems": [
@@ -261,7 +316,7 @@
         "school": "Bang Bang Education",
         "years": "2025",
         "line": "Head of Product Design",
-        "detail": "Intensive on product design and leadership",
+        "detail": "Product approach to leadership: metrics, goals, scoping, process",
         "extra": ""
       },
       {
@@ -342,9 +397,9 @@
     "cards": {
       "mail-nauki": {
         "navShortTitle": "Mail Science",
-        "title": "Mail Science launch & a systematic Mail media redesign",
+        "title": "Mail media redesign & Mail Science launch",
         "meta": "Media · Mail",
-        "desc": "One thematic media platform across VK: redesign, Mail Science, and scaling the experience",
+        "desc": "New Mail Science vertical + Media UI foundation for platform-wide redesign",
         "introParas": [
           "The Mail media redesign is a project to refresh VK’s content platform that brings together several thematic verticals (Science, Hi-Tech, Lady, Cinema, and more).",
           "The main goal was to move from fragmented interfaces to one scalable design approach that improves content navigation, lifts engagement, and integrates ad formats effectively."
@@ -362,10 +417,10 @@
       "mail-monetization": {
         "navShortTitle": "Mail monetization",
         "title": "Mail monetization",
-        "meta": "Mail · Cloud & Mail · 2025 — present",
-        "desc": "Mail Space subscription: pricing tiers, experiments, freemium features",
+        "meta": "Growth · Mail Space, Mail, Cloud · 2025 — present",
+        "desc": "Experiments: plans, contextual upsell, sharing limits, ML freemium",
         "introParas": [
-          "I worked at the intersection of product, design, and business—making metric-backed decisions with revenue impact. The team owns the subscription model and monetization for core Mail products. The work spanned promoting new plans, maintaining the Mail Space landing page, experiments with subscription entry points, churn, and launching and promoting new features. I focused on monetization UI, experiments, and improving purchase flows for Mail Space."
+          "Scope: monetization scenarios, A/B tests, analytics, engineering and research. Surfaces: Mail Space, Mail, and Cloud—plans, subscription entry points, ML freemium, multi-device limits."
         ]
       },
       "drop": {
@@ -389,9 +444,9 @@
       },
       "neural": {
         "navShortTitle": "Neural networks",
-        "title": "Mail Hi-Tech feature — a landing on neural networks",
+        "title": "Neural networks — Mail Hi-Tech editorial special",
         "meta": "Mail Hi-Tech · 2024",
-        "desc": "Interactive NN landing: visual storytelling, AI graphics, and a fresh special-project format",
+        "desc": "Interactive landing that proved the format and kicked off branded specials",
         "introParas": [
           "Interest in neural networks was rising, but standard text-led editorial formats didn’t drive enough engagement—the topic felt too complex and lacked visual storytelling. That meant weak time-on-page and shallow reading depth."
         ]

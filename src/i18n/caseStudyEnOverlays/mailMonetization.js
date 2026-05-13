@@ -1,37 +1,38 @@
 export const mailMonetizationEn = {
   metaItems: [
-    { value: 'Mail Cloud, Mail, Mail Space' },
+    {
+      value:
+        'Upsell & offer personalization · Mail Space, Mail, Cloud (PM, analytics, engineering, research)',
+    },
     { value: '2025 — present' },
-    { value: 'Product designer' },
+    { value: 'Product Designer (Growth & Monetization)' },
   ],
   context:
-    'Mail products run on freemium with a large free audience and limited paid conversion.\nCore business tension:\nusers hit free-tier limits\ndo not convert to paid\nor work around limits (multi-account usage)\n→ that capped LTV and revenue growth.',
+    'Mail products run on freemium: a large free base and limited paid conversion. The core gap is between the moment a user feels a need and the moment we offer the right plan.',
   problem:
-    'At the start it was unclear whether:\nusers do not see subscription value\nor the purchase path does not fit real tasks\nor pricing tiers miss key segments\n\nAdditionally:\nrevenue leaked to multi-account usage\nfreemium features did not drive upsell',
+    'We needed to close that gap systematically—not hide monetization in settings, but embed upsell in real journeys while balancing revenue and user backlash.',
   task:
-    'Grow revenue:\nimprove core user journeys\nship product features that encourage subscription\nadd features that trigger upgrades\nevolve the freemium model',
+    'Design monetization scenarios, run A/B tests, work with product analytics, and partner with engineering and research.',
   solution:
-    'Rather than one-off tweaks, I built a systemic monetization approach:\nEmbed upsell in key user journeys\nMake limits transparent and understandable\nUse features as proof of subscription value',
+    'A systemic playbook:\n• contextual upsell at the moment of need\n• transparent limits embedded in the journey\n• product features as proof of subscription value before the paywall, not instead of it',
   influence:
-    'LTV grew by tens of millions of rubles\nrevenue leakage dropped significantly\nthe work became a core monetization driver',
-  metrics:
-    'User LTV, subscription purchase conversion, simpler path to buying a plan\nperceived value of paid features\nfreemium model: trial uptake, feature adoption\nretention, incremental revenue',
+    'A series of experiments became a core monetization driver: tens of millions of ₽ incremental LTV over the period (NDA), reduced revenue leakage from sharing, unified upsell UX across web / iOS / Android.',
+  metrics: 'Subscription purchase conversion · LTV (12 mo) · Retention · ARPPU · Churn rate',
   topCards: [
     {
       value:
-        'Mail products run on freemium with a large free audience and limited paid conversion.\nCore business tension:\nusers hit free-tier limits\ndo not convert to paid\nor work around limits (multi-account usage)\n→ that capped LTV and revenue growth.',
+        'Mail products run on freemium: a large free base and limited paid conversion. The core gap is between the moment a user feels a need and the moment we offer the right plan.',
     },
     {
       value:
-        'At the start it was unclear whether:\nusers do not see subscription value\nor the purchase path does not fit real tasks\nor pricing tiers miss key segments\n\nAdditionally:\nrevenue leaked to multi-account usage\nfreemium features did not drive upsell',
+        'We needed to close that gap systematically—not hide monetization in settings, but embed upsell in real journeys while balancing revenue and user backlash.',
     },
     {
       value:
-        'Grow revenue:\nimprove core user journeys\nship product features that encourage subscription\nadd features that trigger upgrades\nevolve the freemium model',
+        'Design monetization scenarios, run A/B tests, work with product analytics, and partner with engineering and research.',
     },
     {
-      value:
-        'User LTV, subscription purchase conversion, simpler path to buying a plan\nperceived value of paid features\nfreemium model: trial uptake, feature adoption\nretention, incremental revenue',
+      value: 'Subscription purchase conversion · LTV (12 mo) · Retention · ARPPU · Churn rate',
     },
   ],
   caseSections: [
@@ -46,37 +47,45 @@ export const mailMonetizationEn = {
       ],
       hypotheses: [
         {
-          text: 'If monetization touchpoints sit inside core journeys,\nconversion to subscription should rise',
-          outcome: '↑ checkout-to-paid and LTV',
+          title: 'H1',
+          text: 'Monetization touchpoints inside core journeys lift subscription conversion',
+          outcome:
+            'Confirmed: measurable lift in C2P (conversion to pay) and LTV in winning variants (details under NDA)',
         },
         {
-          text: 'If we clearly communicate plan limits, misuse drops and upsell improves',
-          outcome: 'Expected: higher LTV',
+          title: 'H2',
+          text: 'Transparent plan limits and clear messaging reduce abuse and drive upsell without churn spikes',
+          outcome:
+            'Confirmed on multiple tests: LTV and ARPPU up with churn controlled; the strict multi-device flow was chosen after a soft-warning experiment failed',
         },
         {
-          text: 'If pricing maps to real user scenarios,\nthe paying audience expands',
-          outcome: '↑ conversion and revenue',
+          title: 'H3',
+          text: 'Pricing that maps to real scenarios (including “for work”) expands the paying audience',
+          outcome: 'Confirmed: positive impact on LTV and conversion (NDA)',
         },
       ],
     },
     {
-      title: 'A tailored plan\nfor work',
+      title: 'Experiment 1 · “Mail Space for work” plan',
       description:
-        'For Mail Space’s “work” tier, the goal was to grow paid users with a segment that did not fit existing plans. I designed the new tier and integrated it into the landing, reworked comparison, and added micro-motion. It opened a new monetization segment and delivered +NDA million ₽ LTV.',
-      tasksHeading: 'Pain points for the work tier:',
-      pillsLabel: 'Audience pain points',
+        'Mail Space lacked an offer for individuals and small teams using mail and cloud for work—they hit base-plan limits but were not ready for heavy B2B UX. Hypothesis: a dedicated work tier plus landing integration would grow paid users.',
+      tasksHeading: 'What shipped',
+      pillsLabel: 'Deliverables',
       tasks: [
-        'not ready for heavy enterprise UX',
-        'bumping into base-plan limits',
-        'high monetization potential',
+        'Designed the new tier UI',
+        'Reworked the comparison table for scanning',
+        'Added micro-interactions on plan cards',
+        'Web and touch variants',
+        'Partnered with engineering through release',
       ],
       blockCards: {
         task:
-          'Cover the “work” segment: launch the new Mail Space tier in product and landing without breaking the existing lineup',
+          'Cover the “work” segment: launch the new Mail Space tier in product and landing without breaking the lineup',
         solution:
-          'I designed the new tier UI and embedded it into the landing structure.\nDelivered:\nnew tier presentation for web and touch\nmicro-animations for faster scanning',
-        influence: 'The experiment showed a strong business outcome:\ntens of millions of ₽ additional LTV over 12 months',
-        metrics: '+10.8 million ₽ additional LTV over 12 months',
+          'I designed the tier UI and embedded it into the landing.\nShipped:\nweb and touch presentations\nmicro-interactions for faster scanning',
+        influence: 'Positive impact on LTV and conversion (metrics under NDA).',
+        metrics:
+          'Trade-off: we deliberately avoided complex B2B UX to keep checkout simple; cannibalization risk was assessed and accepted.',
       },
     },
     {
@@ -84,14 +93,16 @@ export const mailMonetizationEn = {
       description: 'We avoided heavy enterprise UX → kept purchase flows simple and fast.',
     },
     {
-      title: 'Limiting multi-account usage',
+      title: 'Experiment 3 · Multi-device limits',
       description:
-        'A flagship case was limiting multi-person use of one plan. The hypothesis: transparent explanation plus an alternative plan offer would lift upgrade conversion. I replaced a generic modal with a blocking screen that explains the limit and embeds upsell—clarity for users and stronger business metrics (+NDA million ₽ LTV).\n\nI chose a blocking flow over a soft warning because soft limits did not curb abuse.\n\nTrade-offs\nhard limits → risk of backlash\nfrequent upsell → annoyance risk\nnew tiers → cannibalization risk',
+        'Some accounts used mail on too many devices at once—against the plan logic and revenue. A prior limit experiment underperformed, so we reframed the hypothesis: a blocking screen with a clear “why” plus a relevant upsell beats repeating a soft warning.',
       blockCards: {
-        task: 'Stop revenue loss from multiple people sharing one plan',
-        solution: 'blocking screen on mail sign-in\nexplains why the limit exists\noffers a relevant plan',
-        influence: 'The experiment succeeded',
-        metrics: 'LTV, ARPPU, churn',
+        task: 'Stop revenue loss from multi-person / multi-device misuse of one plan',
+        solution:
+          'blocking sign-in screen\nexplains the limit\noffers a relevant plan\nillustration to accelerate release',
+        influence: 'Significant business impact (NDA): LTV and ARPPU up, churn not materially worse.',
+        metrics:
+          'Trade-off: hard limits risk backlash and churn; soft warnings had already been tested and did not work—choosing the strict path was deliberate.',
       },
     },
     {
@@ -99,39 +110,40 @@ export const mailMonetizationEn = {
       description: 'User frustration becomes a clear choice → upgrade.',
     },
     {
-      title: 'Upsell inside core journeys',
+      title: 'Experiment 2 · Contextual upsell',
       description:
-        'Hypothesis: embedding upsell directly in user journeys lifts conversion. I placed subscription prompts inside key Mail flows and unified UX across platforms—simpler path to purchase and +7 million ₽ LTV.',
+        'Users hit limits but did not see the value of the business tier; the path to purchase was unclear. I unified entry points across platforms, embedded upsell into key Mail flows (vanity address, read receipts, send later/undo, AI compose, etc.), aligned checkouts and modals, and synced copy across web, iOS, and Android. An A/B test favored the bundle: trial / vanity address / business features.',
       blockCards: {
         task: 'Move upsell to the moment users already feel the need for paid features',
         solution:
-          'Moved upsell to the moment of need\nembedded prompts across Mail and Cloud flows\nunified web / iOS / Android UX\naligned copy and UI patterns',
+          'Unified entry points into the business tier\nembedded upsell across Mail and Cloud\nweb / iOS / Android UX alignment\naligned copy and UI',
         influence:
-          'It worked because users were already in-task → lower friction to purchase',
+          'Double-digit lift in business-plan purchase conversion; tens of millions of ₽ LTV impact (NDA). Trade-off: many entry points can annoy users—we balanced via research and A/B.',
         metrics: 'CR into business plan purchase, LTV',
       },
     },
     {
-      title: 'Freemium feature: AI photo enhancement',
+      title: 'Experiment 4 · AI photo enhancement (freemium)',
       description:
-        'Another track was a freemium ML photo-enhancement feature meant to demonstrate subscription value. I designed a before/after comparison flow and placed it in key product surfaces. Freemium limits nudged free users toward paid. The work lifted conversion, repeat usage, and LTV.',
+        'Cloud freemium needed features that demonstrate subscription value. Hypothesis: an ML feature with visible before/after works better as an upsell driver than a blunt paywall.',
       blockCards: {
         task:
           'Ship a freemium photo feature that:\n• shows subscription value in the moment of use\n• lifts conversion from free to paid\n• increases repeat usage\n\nAlso:\navoid a harsh paywall that could hurt engagement',
-        solution: 'instead of an early paywall—let users see the result first, then offer upgrade',
+        solution: 'Instead of an early paywall—let users see the result first, then offer upgrade',
         influence:
-          'the feature became an in-product subscription entry inside freemium flows\nstrengthened perceived value of paid capabilities\nraised engagement and usage frequency\ncontributed to LTV through in-product journeys, not external promo alone',
+          'Higher subscription conversion, repeat usage, positive LTV movement for cohorts that engaged (NDA).',
         metrics:
-          'first-use activation, repeat feature usage, double-digit lift in trial/pay conversion from the flow, positive LTV movement for cohorts that engaged with the feature',
+          'Activation, repeat usage, double-digit lift in trial/pay conversion from the flow, LTV dynamics for engaged cohorts',
       },
     },
     {
       title: 'Results',
       pillsLabel: 'Summary',
       tasks: [
-        'LTV grew by tens of millions of rubles',
-        'revenue leakage dropped significantly',
-        'the program became a core monetization driver',
+        'Tens of millions of ₽ incremental LTV over the period (NDA)',
+        'Reduced revenue leakage from sharing',
+        'Unified upsell UX across web / iOS / Android',
+        'The experiment program became a core monetization driver',
       ],
       pillsFootnote: '*Metrics are summarized under NDA',
     },
@@ -139,11 +151,11 @@ export const mailMonetizationEn = {
       title: 'My role',
       pillsLabel: 'Responsibilities',
       tasks: [
-        'worked with analytics, PM, and engineering',
-        'owned product and UX decisions',
-        'shaped scenario-level monetization patterns',
-        'initiated and prioritized hypotheses',
-        'influenced the monetization roadmap',
+        'End-to-end monetization scenario design',
+        'A/B experiments with PM and analytics',
+        'Initiated and prioritized product hypotheses',
+        'Influenced the team roadmap',
+        'Data-driven decisions at the journey level—not one-off UI tweaks',
       ],
     },
   ],

@@ -1,7 +1,11 @@
 /** Английские оверрайды для компактных кейсов (структура = частичный патч к `projects.js`). */
 
 export const mailSpetsproektyEn = {
-  metaItems: [{ value: 'Mail Media' }, { value: '2025' }, { value: 'Designer / Art Director' }],
+  metaItems: [
+    { value: 'Mail Media (design, editorial, sales)' },
+    { value: '2025' },
+    { value: 'Lead Designer / Art Director' },
+  ],
   task:
     'Before the overhaul, special projects ran in a “handmade” mode: each deliverable was treated as a one-off artifact, which drove heavy reliance on external vendors, bloated operational cost, and a long time-to-market.',
   solution: 'A system for rapidly assembling visual concepts for advertisers.',
@@ -59,56 +63,49 @@ export const mailSpetsproektyEn = {
 };
 
 export const neuralEn = {
-  metaItems: [{ value: 'Mail Hi-Tech' }, { value: '2024' }, { value: 'Product Designer / Art Director' }],
+  metaItems: [{ value: 'Mail Hi-Tech (editorial + engineering)' }, { value: '2024' }, { value: 'Art Director / Designer' }],
   task:
-    'Validate the hypothesis that moving from classic longreads to interactive visual storytelling would multiply audience engagement and unlock new ways to monetize content.',
+    'Test whether interactive visual storytelling can explain neural networks to a broad audience better than long reads—and prove a format for commercial special projects.',
   solution:
-    'Instead of a wall of text, I designed an interactive structure where imagery and interaction explain the technology more effectively than words alone.',
+    'A sequential visual story: imagery and interaction carry the narrative; key art was AI-generated for speed and a distinct look.',
   influence:
-    '▪ became the foundation for the special-projects stream\n▪ the format scaled into branded integrations\n▪ opened a new channel for content monetization',
-  metrics: 'time on page\nscroll depth, Hi-Tech traffic growth\nengagement, sharing',
+    '▪ strong audience response to the format\n▪ higher time on page and sharing\n▪ the format became the foundation for branded specials (see Biohacking and Special projects stream)',
+  metrics: 'Time on page · scroll depth · Hi-Tech traffic · engagement · social shares',
   topCards: [
     {
       value:
-        'Validate the hypothesis that moving from classic longreads to interactive visual storytelling would multiply audience engagement and unlock new ways to monetize content.',
+        'Test whether interactive visual storytelling can explain neural networks to a broad audience better than long reads—and prove a format for commercial special projects.',
     },
     {
       value:
-        'Instead of a wall of text, I designed an interactive structure where imagery and interaction explain the technology more effectively than words alone.',
+        'A sequential visual story: imagery and interaction carry the narrative; key art was AI-generated for speed and a distinct look.',
     },
     {
       value:
-        '▪ became the foundation for the special-projects stream\n▪ the format scaled into branded integrations\n▪ opened a new channel for content monetization',
+        '▪ strong audience response to the format\n▪ higher time on page and sharing\n▪ the format became the foundation for branded specials (see Biohacking and Special projects stream)',
     },
-    { value: 'time on page\nscroll depth, Hi-Tech traffic growth\nengagement, sharing' },
+    { value: 'Time on page · scroll depth · Hi-Tech traffic · engagement · social shares' },
   ],
   caseSections: [
     {
-      title: 'Scope of work:',
+      title: 'Scope',
       tasks: [
-        'Defined the visual concept',
-        'Owned visual production',
-        'Designed navigation between modules',
-        'Structured the landing experience:',
-        'Partnered with editorial:',
-        'Partnered with engineering:',
-        'Adapted content for the landing',
-        'Supported implementation:',
-        'delivered layouts',
-        'guarded visual quality',
+        'visual concept for the landing and AI-generated hero illustrations',
+        'screen structure and visual composition',
+        'with editorial—restructuring the material for a landing narrative',
+        'engineering partnership: layouts, interactions, quality control',
       ],
       hypotheses: [
         {
-          text: 'Visual storytelling instead of text-only articles',
-          outcome: '↑ engagement and time on page',
+          title: 'H1',
+          text: 'A complex tech topic lands better through visual storytelling and interaction than through a long article',
+          outcome:
+            'Confirmed: higher time on page, depth, and active shares; the format worked for explaining tech topics',
         },
         {
-          text: 'Interactive landing',
-          outcome: '↑ comprehension of a complex topic',
-        },
-        {
-          text: 'AI-generated graphics',
-          outcome: 'faster production and a stronger visual language',
+          title: 'H2',
+          text: 'Generative AI in production speeds graphics and creates a recognizable visual language',
+          outcome: 'Confirmed: faster illustration cycles and differentiation from standard Hi-Tech pieces',
         },
       ],
     },
@@ -121,7 +118,7 @@ export const neuralEn = {
 };
 
 export const biohackingEn = {
-  metaItems: [{ value: 'Mail Media, Invitro' }, { value: '2024' }, { value: 'Product Designer' }],
+  metaItems: [{ value: 'Mail Media × Invitro' }, { value: '2024' }, { value: 'Designer — concept, UI, 3D, build, brand fit' }],
   task:
     'Move beyond standard branding and build a native integration where Invitro feels like part of the reading experience—not an interruption. Package dense medical content in a light, engaging format that drives depth and brand recall.',
   solution:
@@ -165,17 +162,19 @@ export const biohackingEn = {
       ],
       hypotheses: [
         {
-          text: 'An interactive landing with visual storytelling will lift engagement',
-          outcome: '↑ time on page and scroll depth',
+          title: 'H1',
+          text: 'A landing with sequential storytelling and visual scenes increases time on page and scroll depth',
+          outcome: 'Confirmed: stronger retention in the story and depth (aggregated; details under NDA)',
         },
         {
-          text: '3D animation and interactive elements increase content engagement',
-          outcome: '↑ interactions',
+          title: 'H2',
+          text: 'Interaction and 3D animation increase interest and moves into articles',
+          outcome: 'Confirmed: higher engagement with Spline scenes and content',
         },
         {
-          text:
-            'If ad blocks are woven into the content structure rather than bolted on separately, sponsored placements perform better',
-          outcome: '↑ sponsored placement CTR',
+          title: 'H3',
+          text: 'Native ad placements inside the content structure outperform isolated ad blocks',
+          outcome: 'Confirmed: higher CTR on branded blocks vs standard placements (NDA)',
         },
       ],
     },
@@ -263,15 +262,40 @@ export const retrashEn = {
 };
 
 export const racktablesEn = {
-  metaItems: [{ value: 'Yandex, Fast Track' }, { value: '2026' }, { value: 'Product Designer' }],
+  metaItems: [
+    {
+      value: 'Yandex Fast Track · expert review — Yandex Infrastructure, Yandex Cloud',
+    },
+    { value: 'Apr 19, 2026' },
+    { value: 'Product Designer — solo, 2 days' },
+  ],
   task:
-    'Turn the object database into a decision-support tool. Remove the flat hierarchy that slowed engineers during incidents.',
+    'Redesign RackTables “Objects” for on-call engineers: find an object, understand state, act fast.',
   solution:
-    'Visual priority: a Critical/Healthy status system as the first signal for instant system readouts.\n\nData hierarchy: a “Primary → Details → Context” model that keeps information dense yet scannable.\n\nSpecialized views: Rack Overview and Network Topology flows to localize failures quickly.\n\nVibe-coding: rapid code prototypes to validate incident-management logic.',
+    'Visual priority: Critical / Warning / Healthy as the primary signal.\n\nInformation hierarchy: State → Key parameters → Details → Context while keeping data density.\n\nSpecialized views: Rack Overview, Network, warning-rack scenario.\n\nCode-based prototyping (vibe-coding) to validate flows in two days.',
   influence:
-    'A paradigm shift: from an interface where users hunt for answers to a system that surfaces problems proactively—reducing human error and cognitive load for engineers.',
+    'Reviewed by Yandex Infrastructure and Cloud; the concept aligns with standards for operating cloud infrastructure.',
   metrics:
-    'Shorter TTDI (time to detect) and TTA (time to act), plus a lower onboarding bar for new team members.',
+    'Expected impact (concept, not validated in prod): ↓ time to detect, ↓ time to action, ↓ cognitive load, ↑ incident response speed',
+  topCards: [
+    {
+      value:
+        'Redesign RackTables “Objects” for on-call engineers: find an object, understand state, act fast.',
+    },
+    {
+      value:
+        'Status-first hierarchy, Critical/Warning/Healthy signals, Rack Overview and Network views, code prototypes in two days.',
+    },
+    {
+      value:
+        'Reviewed by Yandex Infrastructure and Cloud; the concept aligns with standards for operating cloud infrastructure.',
+    },
+    {
+      title: 'Expected impact',
+      value:
+        '↓ time to detect · ↓ time to action · ↓ cognitive load · ↑ incident response speed (concept, not validated in prod)',
+    },
+  ],
   caseSections: [
     {
       title: 'Vibe-coding',
@@ -287,7 +311,7 @@ export const racktablesEn = {
     {
       title: 'Solution',
       description:
-        'I moved to decision-support by making current object state the primary visual signal. I reorganized information as Status → Key parameters → Details—dense but scannable. Specialized diagnostics (Rack Overview for racks, Network Topology for relationships), combined with vibe-coded prototypes to validate flows, produced an interface that points engineers to hotspots and shortens time-to-action.',
+        'I moved to decision-support by making current object state the primary visual signal. I reorganized information as Status → Key parameters → Details—dense but scannable. Specialized diagnostics (Rack Overview for racks, Network Topology for relationships), combined with code-based prototypes to validate flows, produced an interface that points engineers to hotspots and shortens Time-to-Action.',
     },
     {
       title: 'Outcome',

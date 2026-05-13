@@ -1,5 +1,12 @@
 export const mailNaukiEn = {
-  metaItems: [{ value: 'Mail Media verticals' }, { value: '2024–2025' }, { value: 'Product Designer' }],
+  metaItems: [
+    { value: 'Mail Media (editorial, engineering, ads)' },
+    { value: 'Oct 16, 2023 — May 20, 2025' },
+    {
+      value:
+        'Product Designer — Mail Science end-to-end, Media UI design system, supporting other vertical redesigns',
+    },
+  ],
   problem:
     'Fragmented page layouts weakened predictable user flows, made content harder to scan, and let ad integrations break reading and lose effectiveness. The team spent too long launching new media properties.',
   task:
@@ -48,16 +55,20 @@ export const mailNaukiEn = {
     {
       hypotheses: [
         {
-          text: 'Structuring the homepage around thematic blocks lowers cognitive load and simplifies navigation',
-          outcome: '↑ card CTR and reading depth',
+          title: 'H1',
+          text: 'Thematic homepage blocks improve navigation and lift card CTR',
+          outcome:
+            'Confirmed: higher homepage card CTR and reading depth (metrics summarized under NDA)',
         },
         {
-          text: 'Adding recommendation and dynamic modules',
-          outcome: '↑ time on site and opened articles',
+          title: 'H2',
+          text: 'Recommendation and dynamic modules lift engagement and time on site',
+          outcome: 'Confirmed: higher time on site and engagement on product metrics (NDA)',
         },
         {
-          text: 'Placing ad blocks inside the content stream',
-          outcome: '↑ ad CTR and visibility',
+          title: 'H3',
+          text: 'Ads embedded in the content structure deliver better viewability than isolated ad units',
+          outcome: 'Confirmed: better viewability and performance of ad integrations (NDA)',
         },
       ],
     },
@@ -131,10 +142,11 @@ export const mailNaukiEn = {
     {
       title: 'My role',
       tasks: [
-        'championed the shift to a systemic approach',
-        'designed the modular architecture',
-        'validated decisions through the Mail Science launch',
-        'helped scale to other products',
+        'Mail Science end-to-end—from concept to release',
+        'Media UI design system: components, tokens, widgets',
+        'Concepts and architecture for Mail Cinema as a major track',
+        'Adapted the approach and supported Hi-Tech Mail, Mail Lady, Mail Pets redesigns',
+        'Partnered with editorial, engineering, and ads throughout',
       ],
     },
   ],
