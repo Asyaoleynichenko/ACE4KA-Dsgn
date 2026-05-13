@@ -132,6 +132,22 @@ export default function HomeCompetenciesScrub({
 
   const activeSlugs = slugRows[activeIdx] ?? [];
   const activeProjects = activeSlugs.map(resolveProject).filter(Boolean);
+  const leftProject = activeProjects[0] ?? null;
+  const rightProject = activeProjects[1] ?? null;
+
+  const projectCard = (item) =>
+    item ? (
+      <div key={item.slug} className="home-competencies-scrub__card-wrap">
+        <ProjectCard
+          slug={item.slug}
+          title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
+          meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}
+          desc=""
+          image={item.image}
+          isDemo={false}
+        />
+      </div>
+    ) : null;
 
   if (reducedMotion) {
     return (
@@ -141,26 +157,21 @@ export default function HomeCompetenciesScrub({
             {lines.map((line, i) => {
               const slugs = slugRows[i] ?? [];
               const rowProjects = slugs.map(resolveProject).filter(Boolean);
+              const rp0 = rowProjects[0] ?? null;
+              const rp1 = rowProjects[1] ?? null;
               return (
                 <div key={i} className="home-competencies-scrub__static-step">
-                  <div className="home-competencies-scrub__lines home-competencies-scrub__lines--static">
-                    <p className="home-competencies__line home-competencies-scrub__line--static">{line}</p>
-                  </div>
-                  {rowProjects.length ? (
-                    <div className="home-competencies-scrub__previews home-competencies-scrub__previews--static">
-                      {rowProjects.map((item) => (
-                        <ProjectCard
-                          key={item.slug}
-                          slug={item.slug}
-                          title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
-                          meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}
-                          desc=""
-                          image={item.image}
-                          isDemo={false}
-                        />
-                      ))}
+                  <div className="home-competencies-scrub__static-stage">
+                    <div className="home-competencies-scrub__static-side home-competencies-scrub__static-side--left">
+                      {rp0 ? projectCard(rp0) : null}
                     </div>
-                  ) : null}
+                    <div className="home-competencies-scrub__static-center">
+                      <p className="home-competencies__line home-competencies-scrub__line--static">{line}</p>
+                    </div>
+                    <div className="home-competencies-scrub__static-side home-competencies-scrub__static-side--right">
+                      {rp1 ? projectCard(rp1) : null}
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -180,38 +191,30 @@ export default function HomeCompetenciesScrub({
       <div ref={stickyRef} className="home-competencies-scrub__sticky">
         <div className="home-competencies__panel">
           <div className="home-competencies__inner home-competencies__inner--scrub">
-            <div
-              className="home-competencies-scrub__stack"
-              role="region"
-              aria-label={ariaLabel}
-            >
-              <div className="home-competencies-scrub__lines">
-                {lines.map((line, i) => (
-                  <div
-                    key={i}
-                    className={`home-competencies-scrub__line-wrap${i === activeIdx ? ' is-active' : ''}`}
-                    aria-current={i === activeIdx ? 'true' : undefined}
-                  >
-                    <p className="home-competencies__line home-competencies-scrub__line">{line}</p>
+            <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
+              <div className="home-competencies-scrub__stage">
+                <div className="home-competencies-scrub__side home-competencies-scrub__side--left">
+                  {leftProject ? projectCard(leftProject) : null}
+                </div>
+                <div className="home-competencies-scrub__center">
+                  <div className="home-competencies-scrub__lines">
+                    {lines.map((line, i) => (
+                      <div
+                        key={i}
+                        className={`home-competencies-scrub__line-wrap${i === activeIdx ? ' is-active' : ''}`}
+                        aria-current={i === activeIdx ? 'true' : undefined}
+                      >
+                        <p className="home-competencies__line home-competencies-scrub__line">{line}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <div className="home-competencies-scrub__previews" aria-label={t('hero.competencies.previewStripAria')}>
-                {activeProjects.length ? (
-                  activeProjects.map((item) => (
-                    <ProjectCard
-                      key={item.slug}
-                      slug={item.slug}
-                      title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
-                      meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}
-                      desc=""
-                      image={item.image}
-                      isDemo={false}
-                    />
-                  ))
-                ) : (
-                  <p className="home-competencies-scrub__previews-empty">{t('hero.competencies.previewEmpty')}</p>
-                )}
+                  {!leftProject && !rightProject ? (
+                    <p className="home-competencies-scrub__previews-empty">{t('hero.competencies.previewEmpty')}</p>
+                  ) : null}
+                </div>
+                <div className="home-competencies-scrub__side home-competencies-scrub__side--right">
+                  {rightProject ? projectCard(rightProject) : null}
+                </div>
               </div>
             </div>
             {n > 1 ? (

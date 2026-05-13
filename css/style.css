@@ -1516,7 +1516,8 @@ button:focus-visible,
 
 .home-competencies-scrub__sticky {
     position: sticky;
-    top: max(72px, calc(env(safe-area-inset-top, 0px) + 56px));
+    /* Ниже липкой шапки (логотип ~32px + nav — иначе текст уезжает под прозрачный header) */
+    top: max(104px, calc(env(safe-area-inset-top, 0px) + 88px));
     z-index: 2;
     width: 100%;
     box-sizing: border-box;
@@ -1524,8 +1525,9 @@ button:focus-visible,
 
 .home-competencies__inner--scrub {
     position: relative;
-    min-height: min(520px, 78vh);
-    padding: clamp(56px, 14vw, 160px) clamp(16px, 3vw, 24px) clamp(40px, 8vw, 120px);
+    min-height: min(480px, 70vh);
+    /* Запас под шапку: даже когда блок только входит в вьюпорт, строки не должны совпадать с логотипом */
+    padding: max(104px, clamp(88px, 15vw, 200px)) clamp(16px, 3vw, 24px) clamp(40px, 8vw, 120px);
     box-sizing: border-box;
 }
 
@@ -1539,29 +1541,163 @@ button:focus-visible,
 .home-competencies-scrub__stack {
     position: relative;
     z-index: 1;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(20px, 4vw, 32px);
-    align-items: start;
     width: 100%;
     max-width: 100%;
     margin-bottom: clamp(8px, 2vw, 16px);
 }
 
-@media (min-width: 720px) {
-    .home-competencies-scrub__stack {
-        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-        gap: clamp(16px, 3vw, 28px);
-        align-items: center;
+/* Центр — типографика; по бокам — превью (z-index выше, могут наезжать на текст) */
+.home-competencies-scrub__stage {
+    position: relative;
+    width: 100%;
+    max-width: min(896px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+    min-height: min(560px, 68vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: clamp(8px, 2.5vw, 20px);
+    padding-right: clamp(8px, 2.5vw, 20px);
+    box-sizing: border-box;
+}
+
+.home-competencies-scrub__center {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: min(520px, 78%);
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    pointer-events: none;
+}
+
+.home-competencies-scrub__center .home-competencies-scrub__lines {
+    pointer-events: auto;
+}
+
+.home-competencies-scrub__side {
+    position: absolute;
+    top: 50%;
+    width: min(338px, 42vw);
+    max-width: 338px;
+    z-index: 4;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.home-competencies-scrub__side .home-competencies-scrub__card-wrap {
+    pointer-events: auto;
+}
+
+/* Сдвиг к центру — визуальный наезд на колонку надписей (как плавающие карточки в макете) */
+.home-competencies-scrub__side--left {
+    left: 0;
+    transform: translate(calc(-1 * min(20%, 200px)), -50%);
+}
+
+.home-competencies-scrub__side--right {
+    right: 0;
+    transform: translate(min(20%, 200px), -50%);
+}
+
+.home-competencies-scrub__card-wrap {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5.621697px 16.865093px rgba(0, 16, 61, 0.28);
+}
+
+.home-competencies-scrub__card-wrap .preview-card {
+    max-width: 100%;
+}
+
+.home-competencies-scrub__card-wrap .preview-card__title {
+    font-size: clamp(14px, 3.2vw, 17px);
+}
+
+.home-competencies-scrub__card-wrap .preview-card__meta {
+    font-size: clamp(11px, 2.6vw, 13px);
+}
+
+.home-competencies-scrub__card-wrap .preview-image {
+    aspect-ratio: 16 / 10;
+}
+
+@media (max-width: 520px) {
+    .home-competencies-scrub__side {
+        width: min(260px, 46vw);
+        max-width: 260px;
     }
+
+    .home-competencies-scrub__side--left {
+        transform: translate(calc(-1 * min(10%, 72px)), -50%);
+    }
+
+    .home-competencies-scrub__side--right {
+        transform: translate(min(10%, 72px), -50%);
+    }
+
+    .home-competencies-scrub__center {
+        max-width: min(420px, 88%);
+    }
+}
+
+/* prefers-reduced-motion: та же композиция, без sticky-runway */
+.home-competencies-scrub__static-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: min(200px, 40vw);
+    width: 100%;
+    max-width: min(896px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(8px, 2.5vw, 20px);
+    padding-right: clamp(8px, 2.5vw, 20px);
+    box-sizing: border-box;
+}
+
+.home-competencies-scrub__static-center {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    max-width: min(520px, 72%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.home-competencies-scrub__static-side {
+    position: absolute;
+    top: 50%;
+    width: min(300px, 40vw);
+    max-width: 300px;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.home-competencies-scrub__static-side .home-competencies-scrub__card-wrap {
+    pointer-events: auto;
+}
+
+.home-competencies-scrub__static-side--left {
+    left: 0;
+    transform: translate(calc(-1 * min(16%, 140px)), -50%);
+}
+
+.home-competencies-scrub__static-side--right {
+    right: 0;
+    transform: translate(min(16%, 140px), -50%);
 }
 
 .home-competencies-scrub__lines {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(4px, 1.2vw, 10px);
+    gap: clamp(2px, 0.8vw, 8px);
     text-align: center;
+    min-height: 0;
 }
 
 .home-competencies-scrub__line-wrap {
@@ -1576,13 +1712,19 @@ button:focus-visible,
 }
 
 .home-competencies-scrub__line-wrap:not(.is-active) {
-    opacity: 0.26;
-    transform: scale(0.96);
+    opacity: 0.32;
+    /* scale не уменьшает геометрию в layout — «башня» из строк оставалась слишком высокой */
+    transform: none;
+    max-height: 3.1em;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .home-competencies-scrub__line-wrap.is-active {
     opacity: 1;
-    transform: scale(1);
+    transform: none;
+    max-height: none;
+    overflow: visible;
 }
 
 .home-competencies-scrub__line.home-competencies__line {
@@ -1594,32 +1736,8 @@ button:focus-visible,
     font-size: clamp(32px, 9.5vw, 96px);
 }
 
-.home-competencies-scrub__previews {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    min-height: 120px;
-}
-
-.home-competencies-scrub__previews .preview-card {
-    max-width: 100%;
-}
-
-.home-competencies-scrub__previews .preview-card__title {
-    font-size: clamp(15px, 3.6vw, 18px);
-}
-
-.home-competencies-scrub__previews .preview-card__meta {
-    font-size: clamp(12px, 2.8vw, 14px);
-}
-
-.home-competencies-scrub__previews .preview-image {
-    aspect-ratio: 16 / 10;
-}
-
 .home-competencies-scrub__previews-empty {
-    margin: 0;
+    margin: 12px auto 0;
     padding: 16px;
     font-size: 14px;
     line-height: 1.45;
@@ -1627,6 +1745,8 @@ button:focus-visible,
     text-align: center;
     border-radius: 12px;
     border: 1px dashed rgba(250, 250, 250, 0.2);
+    max-width: 28rem;
+    pointer-events: auto;
 }
 
 .home-competencies-scrub__dots {
@@ -1653,6 +1773,7 @@ button:focus-visible,
 
 .home-competencies-scrub--reduced-motion .home-competencies-scrub__static-step {
     margin-bottom: clamp(32px, 8vw, 56px);
+    min-height: min(200px, 36vw);
 }
 
 .home-competencies-scrub--reduced-motion .home-competencies-scrub__static-step:last-of-type {
@@ -1660,11 +1781,7 @@ button:focus-visible,
 }
 
 .home-competencies-scrub__line--static {
-    margin-bottom: clamp(12px, 3vw, 20px);
-}
-
-.home-competencies-scrub__previews--static {
-    margin-bottom: 8px;
+    margin: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
