@@ -32,6 +32,33 @@ function chunkSlugsForLines(lineCount, homeSlugs) {
   return out;
 }
 
+/** Прогресс скролла t∈[0,1] → активная строка и «растяжение» активной надписи внутри сегмента. */
+function activeLineStretchFromScroll(n, t) {
+  if (n < 1) return { idx: 0, scaleX: 1, scaleY: 1 };
+  const clampedT = Math.min(1, Math.max(0, t));
+  if (n === 1) {
+    const wave = Math.sin(Math.PI * clampedT);
+    return {
+      idx: 0,
+      scaleX: 1 + 0.1 * wave,
+      scaleY: 0.86 + 0.28 * wave,
+    };
+  }
+  const denom = n - 1;
+  const raw = clampedT * denom;
+  const idx = Math.min(n - 1, Math.max(0, Math.floor(raw + 1e-9)));
+  const localT =
+    idx >= n - 1
+      ? Math.min(1, Math.max(0, raw - (n - 2)))
+      : Math.min(1, Math.max(0, raw - idx));
+  const wave = Math.sin(Math.PI * localT);
+  return {
+    idx,
+    scaleX: 1 + 0.12 * wave,
+    scaleY: 0.82 + 0.36 * wave,
+  };
+}
+
 /**
  * Главная — блок компетенций: вертикальный скролл «прокручивает» активную строку;
  * для строки показываются превью проектов (см. `lineProjectSlugs` в словарях).
@@ -47,6 +74,7 @@ export default function HomeCompetenciesScrub({
   const { t } = useI18n();
   const runwayRef = useRef(null);
   const stickyRef = useRef(null);
+  const stageRef = useRef(null);
   const rafRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [runwayMin, setRunwayMin] = useState(0);
@@ -110,8 +138,13 @@ export default function HomeCompetenciesScrub({
     const scrolled = -rect.top;
     const span = Math.max(1, runway.offsetHeight - vh * 0.28);
     const t = Math.min(1, Math.max(0, scrolled / span));
-    const idx = n <= 1 ? 0 : Math.min(n - 1, Math.max(0, Math.floor((n - 1) * t + 1e-6)));
+    const { idx, scaleX, scaleY } = activeLineStretchFromScroll(n, t);
     setActiveIdx((prev) => (prev === idx ? prev : idx));
+    const stage = stageRef.current;
+    if (stage) {
+      stage.style.setProperty('--comp-active-scale-x', scaleX.toFixed(4));
+      stage.style.setProperty('--comp-active-scale-y', scaleY.toFixed(4));
+    }
   }, [n, reducedMotion]);
 
   useEffect(() => {
@@ -192,7 +225,7 @@ export default function HomeCompetenciesScrub({
         <div className="home-competencies__panel">
           <div className="home-competencies__inner home-competencies__inner--scrub">
             <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
-              <div className="home-competencies-scrub__stage">
+              <div ref={stageRef} className="home-competencies-scrub__stage">
                 <div className="home-competencies-scrub__side home-competencies-scrub__side--left">
                   {leftProject ? projectCard(leftProject) : null}
                 </div>

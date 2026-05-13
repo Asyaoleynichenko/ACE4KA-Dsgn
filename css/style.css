@@ -1560,6 +1560,8 @@ button:focus-visible,
     padding-left: clamp(8px, 2.5vw, 20px);
     padding-right: clamp(8px, 2.5vw, 20px);
     box-sizing: border-box;
+    --comp-active-scale-x: 1;
+    --comp-active-scale-y: 1;
 }
 
 .home-competencies-scrub__center {
@@ -1734,6 +1736,20 @@ button:focus-visible,
 
 .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
     font-size: clamp(32px, 9.5vw, 96px);
+    transform: scale(var(--comp-active-scale-x, 1), var(--comp-active-scale-y, 1));
+    transform-origin: center center;
+    will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
+        transform: none;
+    }
+
+    .home-competencies-scrub__line-wrap,
+    .home-competencies-scrub__line.home-competencies__line {
+        transition: none;
+    }
 }
 
 .home-competencies-scrub__previews-empty {
@@ -1782,13 +1798,6 @@ button:focus-visible,
 
 .home-competencies-scrub__line--static {
     margin: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .home-competencies-scrub__line-wrap,
-    .home-competencies-scrub__line.home-competencies__line {
-        transition: none;
-    }
 }
 
 .home-competencies__floats {
