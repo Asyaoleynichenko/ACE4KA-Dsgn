@@ -48,12 +48,39 @@
       "education": "Education",
       "educationValueLine1": "HSE Design",
       "educationValueLine2": "& programming",
+      "awards": "DAFES",
+      "awardsValue": "DAFES AWARDS finalist & winner",
       "contacts": "Contacts",
       "contactsValue": "@pnkprty"
     },
     "links": {
       "resume": "Résumé",
       "mail": "Mail"
+    },
+    "competencies": {
+      "aria": "Core focus areas",
+      "badge": "For work",
+      "lines": [
+        "Product Design",
+        "AI & vibe coding",
+        "Research and UX/UI",
+        "Processes",
+        "Branding"
+      ],
+      "cardImages": {
+        "tl": "",
+        "br": ""
+      },
+      "cards": {
+        "tl": {
+          "title": "@pnkprty",
+          "subtitle": "Telegram & email — reach out to discuss a project"
+        },
+        "br": {
+          "title": "Senior Product Designer",
+          "subtitle": "Product, metrics, design systems, and launches"
+        }
+      }
     }
   },
   "sectionNav": {
@@ -100,7 +127,21 @@
     "cta": "Message me"
   },
   "projectsPage": {
-    "title": "All projects"
+    "title": "All projects",
+    "groups": {
+      "product": {
+        "title": "Product work",
+        "intro": "Cases in shipping products with measurable impact: monetization, media, and engineering tools."
+      },
+      "vkSpecials": {
+        "title": "VK / Mail special projects",
+        "intro": "Native ads, interactive landings, and scaling a specials pipeline—one through-line from editorial formats to commercial work."
+      },
+      "fromScratch": {
+        "title": "From-scratch projects",
+        "intro": "Personal and academic work: research, concept, MVP, and hypothesis validation."
+      }
+    }
   },
   "contact": {
     "title": "Contact",
@@ -222,7 +263,8 @@
     "nextCaseWithTitle": "Next: {{title}}",
     "cardsStripAria": "Case cards: the row moves left to right as you scroll the page",
     "hypothesisStripAria": "Hypotheses: the row moves left to right as you scroll the page",
-    "projectMetaStripAria": "Project blocks: the row moves left to right as you scroll the page"
+    "projectMetaStripAria": "Project blocks: the row moves left to right as you scroll the page",
+    "relatedCasesLabel": "Related cases"
   },
   "errors": {
     "rootTitle": "Couldn’t render the app",
@@ -275,7 +317,7 @@
     "strip": {
       "status": "Open to work",
       "linksAria": "Links",
-      "note": "Site in progress. If something doesn’t work —",
+      "note": "Spotted an issue on the site —",
       "emailLink": "email me"
     },
     "jobs": [
@@ -401,8 +443,8 @@
         "meta": "Media · Mail",
         "desc": "New Mail Science vertical + Media UI foundation for platform-wide redesign",
         "introParas": [
-          "The Mail media redesign is a project to refresh VK’s content platform that brings together several thematic verticals (Science, Hi-Tech, Lady, Cinema, and more).",
-          "The main goal was to move from fragmented interfaces to one scalable design approach that improves content navigation, lifts engagement, and integrates ad formats effectively."
+          "Mail Media is five thematic products combining editorial, recommendations, and ads.",
+          "The goal was to launch Mail Science and use it as the base architecture for a systematic platform redesign."
         ]
       },
       "mail-spetsproekty": {

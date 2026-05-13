@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import {
   getLocalizedCaseStudyIntroParas,
@@ -283,7 +283,7 @@ function HorizontalGallery({ images }) {
 
 export default function ProjectDetailPage() {
   const { slug } = useParams();
-  const { t, locale, messages } = useI18n();
+  const { t, locale, messages, localizedPath } = useI18n();
   const rawProject = projects.find((p) => p.slug === slug);
   const project = useMemo(
     () => (rawProject ? applyCaseStudyEnglishOverlay(rawProject, locale, CASE_STUDY_EN_OVERLAYS) : null),
@@ -368,6 +368,22 @@ export default function ProjectDetailPage() {
               {caseStudyIntroParas.map((para, idx) => (
                 <p key={idx}>{para}</p>
               ))}
+              {project.relatedCaseSlugs?.length ? (
+                <p className="project-intro__related">
+                  <span className="project-intro__related-label">{t('projectDetail.relatedCasesLabel')}: </span>
+                  {project.relatedCaseSlugs.map((relatedSlug, idx) => {
+                    const rp = projects.find((p) => p.slug === relatedSlug);
+                    if (!rp) return null;
+                    const label = tWithFallback(t, `projects.cards.${relatedSlug}.navShortTitle`, rp.title);
+                    return (
+                      <Fragment key={relatedSlug}>
+                        {idx > 0 ? ' · ' : null}
+                        <Link to={localizedPath(`/projects/${relatedSlug}`)}>{label}</Link>
+                      </Fragment>
+                    );
+                  })}
+                </p>
+              ) : null}
             </div>
             <div className="project-info">
               {metaItems.map((item) => (

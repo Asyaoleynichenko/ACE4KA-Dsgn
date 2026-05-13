@@ -23,6 +23,13 @@ function headerItemPlacementStyle(placement) {
   };
 }
 
+/** Путь для плавающего img: пустой / null / undefined из данных не считаем за картинку. */
+function competencyCardImageSrc(raw) {
+  const s = String(raw ?? '').trim();
+  if (!s || /^null$/i.test(s) || /^undefined$/i.test(s)) return '';
+  return s;
+}
+
 const heroLinks = [
   { href: 'https://t.me/pnkprty', label: 'Telegram' },
   { href: 'https://behance.net/', label: 'Behance' },
@@ -47,8 +54,18 @@ const HOME_PROJECT_SLUGS = [
 
 const homeProjects = HOME_PROJECT_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(Boolean);
 
+const HOME_COMPETENCIES_FIGMA_URL =
+  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=418-21263&m=dev';
+
 export default function HomePage() {
-  const { t, localizedPath } = useI18n();
+  const { t, localizedPath, messages } = useI18n();
+  const competencyLines = messages.hero?.competencies?.lines ?? [];
+  const competencyBadge = messages.hero?.competencies?.badge ?? '';
+  const competencyCardTl = messages.hero?.competencies?.cards?.tl;
+  const competencyCardBr = messages.hero?.competencies?.cards?.br;
+  const cardImgTl = competencyCardImageSrc(messages.hero?.competencies?.cardImages?.tl);
+  const cardImgBr = competencyCardImageSrc(messages.hero?.competencies?.cardImages?.br);
+  const showCompetencyTextCards = !cardImgTl || !cardImgBr;
 
   return (
     <div className="home-page home-page--chrome" data-node-id="89:347" data-name="Главная">
@@ -139,6 +156,10 @@ export default function HomePage() {
                 </span>
               </div>
               <div className="info-card">
+                <span className="info-label">{t('hero.info.awards')}</span>
+                <span className="info-value">{t('hero.info.awardsValue')}</span>
+              </div>
+              <div className="info-card">
                 <span className="info-label">{t('hero.info.contacts')}</span>
                 <span className="info-value">{t('hero.info.contactsValue')}</span>
               </div>
@@ -160,6 +181,114 @@ export default function HomePage() {
         </div>
       </section>
 
+      {competencyLines.length ? (
+        <section
+          className="home-competencies"
+          data-node-id="418:21263"
+          data-figma-url={HOME_COMPETENCIES_FIGMA_URL}
+          aria-label={t('hero.competencies.aria')}
+        >
+          <div className="home-competencies__panel">
+            <div className="home-competencies__inner">
+              <div className="home-competencies__type">
+                {competencyLines.map((line, idx) => (
+                  <div key={idx} className="home-competencies__line-wrap">
+                    <p className="home-competencies__line">{line}</p>
+                  </div>
+                ))}
+              </div>
+              {cardImgTl || cardImgBr ? (
+                <div className="home-competencies__floats">
+                  {cardImgTl ? (
+                    <a
+                      className="home-competencies__float home-competencies__float--tl"
+                      href="https://t.me/pnkprty"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={publicUrl(cardImgTl)}
+                        alt=""
+                        width={338}
+                        height={199}
+                        className="home-competencies__float-img"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  ) : null}
+                  {cardImgBr ? (
+                    <img
+                      src={publicUrl(cardImgBr)}
+                      alt=""
+                      width={338}
+                      height={199}
+                      className="home-competencies__float home-competencies__float-img home-competencies__float--br"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : null}
+                </div>
+              ) : null}
+              {showCompetencyTextCards ? (
+                <div className="home-competencies__cards">
+                  {!cardImgTl ? (
+                    <a
+                      className="home-competencies__card home-competencies__card--tl"
+                      href="https://t.me/pnkprty"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {competencyBadge ? (
+                        <span className="home-competencies__badge">{competencyBadge}</span>
+                      ) : null}
+                      <div className="home-competencies__card-bg" aria-hidden="true" />
+                      <div className="home-competencies__spark home-competencies__spark--1" aria-hidden="true" />
+                      <div className="home-competencies__spark home-competencies__spark--2" aria-hidden="true" />
+                      {competencyCardTl?.title || competencyCardTl?.subtitle ? (
+                        <div className="home-competencies__card-body">
+                          {competencyCardTl?.title ? (
+                            <p className="home-competencies__card-title">{competencyCardTl.title}</p>
+                          ) : null}
+                          {competencyCardTl?.subtitle ? (
+                            <p className="home-competencies__card-subtitle">{competencyCardTl.subtitle}</p>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </a>
+                  ) : null}
+                  {!cardImgBr ? (
+                    <div className="home-competencies__card home-competencies__card--br">
+                      {competencyBadge ? (
+                        <span className="home-competencies__badge">{competencyBadge}</span>
+                      ) : null}
+                      <div className="home-competencies__card-bg" aria-hidden="true" />
+                      <div className="home-competencies__spark home-competencies__spark--1" aria-hidden="true" />
+                      <div className="home-competencies__spark home-competencies__spark--2" aria-hidden="true" />
+                      {competencyCardBr?.title || competencyCardBr?.subtitle ? (
+                        <div className="home-competencies__card-body">
+                          {competencyCardBr?.title ? (
+                            <p className="home-competencies__card-title">{competencyCardBr.title}</p>
+                          ) : null}
+                          {competencyCardBr?.subtitle ? (
+                            <p className="home-competencies__card-subtitle">{competencyCardBr.subtitle}</p>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+            <div className="home-competencies__cta">
+              <SeamlessProjectsLink to={localizedPath('/projects')} className="btn-show-all">
+                {t('hero.allProjects')}
+              </SeamlessProjectsLink>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section className="section section-projects snap-screen" data-node-id="1:285" data-figma-node="1-285">
         <div className="logo-section" data-node-id="1:286">
           <h2 className="projects-title-main" data-node-id="1:289">{t('hero.projectsSectionTitle')}</h2>
@@ -177,11 +306,6 @@ export default function HomePage() {
               isDemo={false}
             />
           ))}
-        </div>
-        <div className="show-all-wrap" data-node-id="1:397" data-figma-node="1-397">
-          <SeamlessProjectsLink to={localizedPath('/projects')} className="btn-show-all">
-            {t('hero.allProjects')}
-          </SeamlessProjectsLink>
         </div>
         </section>
       </div>

@@ -8,145 +8,136 @@ export const mailNaukiEn = {
     },
   ],
   problem:
-    'Fragmented page layouts weakened predictable user flows, made content harder to scan, and let ad integrations break reading and lose effectiveness. The team spent too long launching new media properties.',
+    'Historically each media property evolved separately without a shared systemic approach—hurting navigation at scale, support for diverse formats, and effective ad placements.',
   task:
-    'Create a scalable design approach for the media platform, improve content structure across verticals, improve navigation, lift engagement and reading depth, and attract new advertisers.',
+    'Launch Mail Science as a new product and use it as the base architecture to scale across the rest of the media portfolio. Build a scalable design approach for the platform.',
   solution:
-    'Instead of static templates, I built a system of reusable content blocks and widgets.\n\nI designed a responsive grid so editorial can assemble unique pages for any brief—from longreads to news feeds—without pulling designers or front-end engineers.\n\nI launched Mail Science as an MVP to prove the new architecture, then scaled the solution to Hi-Tech, Lady, and Cinema.',
+    'Media UI widgets and content blocks, native ads inside feed structure, Mail Science as the first vertical to validate hypotheses—then iterative scaling to Hi-Tech Mail, Mail Lady, Mail Cinema, and Mail Pets.',
   influence:
-    'Double-digit growth in card and ad CTR, higher reading depth and time on site, stronger visibility and performance of commercial placements. *Metrics are summarized under NDA.',
-  metrics:
-    'Changes lifted card CTR, reading depth, time on site, and visibility of ad integrations.',
+    'A new media product shipped, interfaces unified, the design system expanded; higher card CTR, reading depth, time on site, and ad performance (metrics summarized under NDA).',
+  metrics: 'Card CTR · reading depth · time on site · viewability and performance of ad integrations',
   topCards: [
     {
+      title: 'Context',
       value:
-        'Fragmented page layouts weakened predictable user flows, made content harder to scan, and let ad integrations break reading and lose effectiveness. The team spent too long launching new media properties.',
+        'Mail Media is five thematic products (Mail News, Hi-Tech Mail, Mail Lady, Mail Cinema, Mail Pets): editorial, recommendations, and ads. The interface must work at large content volumes, support multiple formats, and embed ads effectively.',
     },
     {
+      title: 'Challenge',
       value:
-        'Create a scalable design approach for the media platform, improve content structure across verticals, improve navigation, lift engagement and reading depth, and attract new advertisers.',
+        'Launch Mail Science and establish an architecture that scales to other media products without redesigning from scratch each time.',
     },
     {
+      title: 'Outcome',
       value:
-        'Instead of static templates, I built a system of reusable content blocks and widgets.\n\nI designed a responsive grid so editorial can assemble unique pages for any brief—from longreads to news feeds—without pulling designers or front-end engineers.\n\nI launched Mail Science as an MVP to prove the new architecture, then scaled the solution to Hi-Tech, Lady, and Cinema.',
-    },
-    {
-      value:
-        'Changes lifted card CTR, reading depth, time on site, and visibility of ad integrations.',
+        'A new vertical on the platform, expanded Media UI, redesigns for key properties; measurable lift in product and ad metrics (NDA).',
     },
   ],
   caseSections: [
     {
-      title: 'Core product tension:',
+      title: 'Context',
       description:
-        'Growing ad load hurts the reading experience, yet it is required for revenue growth.',
+        'Mail Media is five thematic products: Mail News, Hi-Tech Mail, Mail Lady, Mail Cinema, and Mail Pets. They combine editorial content, recommendation mechanics, and ad integrations.\n\nThe interface must solve three jobs at once:\n• help people navigate large volumes of material\n• support different content formats\n• embed ad placements effectively\n\nHistorically each product evolved separately without a shared systemic approach.',
     },
     {
-      title: 'Approach',
+      title: 'Brief',
       description:
-        'I treated the work not as a one-off redesign but as building a scalable system of media products:',
-      tasks: [
-        'standardize content structure',
-        'unify user journeys',
-        'use one vertical as an MVP template for scaling',
-        'embed advertising natively in the reading flow',
-      ],
+        'Design and launch a new media product—Mail Science—and use it as the base architecture that scales to the rest of the portfolio. Define a scalable design approach applicable across products on the platform.',
     },
     {
+      hideTitle: true,
       hypotheses: [
         {
           title: 'H1',
-          text: 'Thematic homepage blocks improve navigation and lift card CTR',
+          text: 'Thematic homepage blocks improve navigation and lift card CTR; we expected higher reading depth.',
           outcome:
-            'Confirmed: higher homepage card CTR and reading depth (metrics summarized under NDA)',
+            'Confirmed: higher homepage card CTR and reading depth (metrics summarized under NDA).',
         },
         {
           title: 'H2',
-          text: 'Recommendation and dynamic modules lift engagement and time on site',
-          outcome: 'Confirmed: higher time on site and engagement on product metrics (NDA)',
+          text: 'Recommendation and dynamic modules lift engagement and time on site.',
+          outcome: 'Confirmed: higher time on site and engagement on product metrics (NDA).',
         },
         {
           title: 'H3',
-          text: 'Ads embedded in the content structure deliver better viewability than isolated ad units',
-          outcome: 'Confirmed: better viewability and performance of ad integrations (NDA)',
+          text: 'Ads embedded in the content structure deliver better viewability than isolated ad units.',
+          outcome: 'Confirmed: better viewability and performance of ad integrations (NDA).',
         },
       ],
     },
     {
-      title: 'Modular homepage system',
-      description: 'The goal was a modern homepage that can:',
+      title: '1. Mail Science as a new product (end-to-end)',
+      tasksHeading: 'What shipped',
+      taskLayout: 'pills',
       tasks: [
-        'structure large volumes of material cleanly',
-        'support different content types',
-        'make user behavior predictable',
-        'sustain high engagement',
-        'flexibly integrate ad blocks',
+        'Partnered with editorial on requirements',
+        'Multiple homepage interface concepts',
+        'Homepage architecture',
+        'Widget system for different editorial content types',
+        'Ad and partner blocks natively embedded in the content structure',
+        'Responsive layouts for breakpoints',
       ],
+      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/dbcf3dac5b54ac3b4f5867a8f59020fd2f6f5131.png',
     },
     {
-      title: 'Mail Science as MVP and template',
+      title: '2. Media UI design system',
       description:
-        'I led the new media property end-to-end, benchmarking modern media patterns and covering everything from the editors’ admin to ad and partner modules.',
-      tasks: ['homepage structure', 'widget system', 'ad integrations', 'became the base for further scaling'],
-      nestedAfterPills: {
-        subtitle: 'Solution',
-        description: 'I launched Mail Science as the first vertical on the new system:',
-        tasks: ['tested the structure', 'validated hypotheses', 'documented patterns'],
-      },
+        'I added components and design tokens tailored to Mail Science, then made them reusable so patterns could scale to other products without redesigning from scratch—that was the systemic payoff.',
+      taskLayout: 'pills',
+      tasks: ['Components and tokens for Mail Science', 'Reusable patterns for other verticals'],
+      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/cf98e803597a562a1364e57730730ebaa8cf9c55.png',
     },
     {
-      title: 'Scaling design\nto other media',
-      description:
-        'After Mail Science launched, the design approach proved successful\nand became the foundation for redesigning other properties:',
+      title: '3. Scaling the approach',
+      description: 'After Mail Science launched, we applied the approach iteratively, product by product:',
+      taskLayout: 'pills',
       tasks: [
-        'kept interfaces consistent',
-        'designed additional ad-integration blocks',
-        'adapted layouts for different breakpoints',
-        'partnered with engineering during rollout',
+        'Hi-Tech Mail: homepage structure and additional ad formats',
+        'Mail Lady: homepage structure and ad blocks',
+        'Mail Pets: widgets, ad and promo blocks, full-text page improvements',
+        'Partnered with engineering through rollout',
+      ],
+      galleryImages: [
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/9404630b674c18da58918ad26aa18f10cd092161.png',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/e076ef97274807b1134b88c0ed26e7eee6fd1429.png',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/ef40cddf2ee53f9fb672ad5d27022a08b0589c21.png',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/b60e28466089ffcf3b2c07f497b0e1828d4cc526.png',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/1f955d3fa6908535d0cebf61abc365f22b278f3c.png',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/efa2a6648cb549303029341d74e937a16ef784b6.png',
       ],
     },
     {
-      title: 'Mail Hi-Tech redesign',
-      tasks: ['Updated key blocks', 'concepted future interface evolution'],
-    },
-    {
-      title: 'Mail Cinema redesign',
-      tasks: ['Built new widgets', 'video recommendation block', 'cast section and user flows'],
-    },
-    {
-      title: 'Mail Pets redesign',
-      tasks: ['Adapted widgets', 'designed ad blocks', 'improved full-text article pages'],
-    },
-    {
-      layout: 'dual-outcomes',
-      columns: [
-        {
-          title: 'Outcome',
-          tasks: [
-            'double-digit growth in card and ad CTR',
-            'higher reading depth and time on site',
-            'stronger visibility and performance of commercial placements',
-          ],
-          footnote: '*Metrics are summarized under NDA',
-        },
-        {
-          title: 'Systemic effect',
-          tasks: [
-            'a shared foundation for scaling media products',
-            'shorter time to launch new verticals',
-            'more predictable monetization',
-          ],
-        },
+      title: '4. Mail Cinema — a major track',
+      description:
+        'Site architecture review, new interface concepts, widgets for editorial and recommendation blocks, cast section, user-review mechanic, refreshed video section, responsive versions.',
+      taskLayout: 'pills',
+      tasks: [
+        'Widgets for editorial and recommendation blocks',
+        'Cast section and user reviews',
+        'Updated video section',
       ],
+      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/72850e55a24457d5e847395b353284c4e766082b.png',
+    },
+    {
+      title: 'Trade-offs',
+      description:
+        'We traded unique art direction per product for systemic consistency—less vertical individuality, much faster platform evolution.\n\nWe did not redesign all five products at once: Mail Science was the first proof; after launch we scaled iteratively, product by product.',
+    },
+    {
+      title: 'Results',
+      description:
+        'Product:\n• Mail Science launched\n• approach scaled to Hi-Tech Mail, Mail Lady, Mail Cinema, Mail Pets\n\nSystem:\n• Media UI expanded with new components, tokens, and widgets\n• interfaces unified across media\n• faster evolution—new verticals and redesigns build on shared patterns\n\nBusiness (NDA):\n• higher homepage card CTR\n• higher reading depth and time on site\n• higher viewability and effectiveness of ad integrations',
     },
     {
       title: 'My role',
+      taskLayout: 'pills',
+      pillsLabel: 'Responsibilities',
       tasks: [
         'Mail Science end-to-end—from concept to release',
         'Media UI design system: components, tokens, widgets',
         'Concepts and architecture for Mail Cinema as a major track',
         'Adapted the approach and supported Hi-Tech Mail, Mail Lady, Mail Pets redesigns',
-        'Partnered with editorial, engineering, and ads throughout',
+        'Ongoing work with editorial, engineering, and ads at every stage',
       ],
     },
   ],
