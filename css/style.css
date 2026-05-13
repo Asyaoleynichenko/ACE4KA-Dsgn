@@ -39,6 +39,8 @@
   --color-focus-ring-soft: rgba(245, 245, 245, 0.28);
   --color-preview-titlebar-text: #a3a3a3;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Figma 418:21263 — Suisse Intl 600 в макете; при отсутствии файлов в `public/fonts` — Inter 600. */
+  --font-competencies-display: 'Suisse Intl', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
   --ease-smart: cubic-bezier(0.32, 0.72, 0, 1);
@@ -65,6 +67,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
+  --surface-2: rgba(10, 10, 10, 0.04);
   --radius-2xl: 22px;
   --radius-card-premium: 22px;
   --radius-full: 9999px;
@@ -1432,6 +1435,276 @@ button:focus-visible,
     width: 100%;
 }
 
+/* Figma 418:21263 — главная: стек компетенций на чёрном + карточки + CTA «Все проекты» */
+.page-home .home-competencies {
+    width: 100%;
+    margin-top: var(--hero-section-gap);
+    margin-bottom: var(--space-48);
+    padding-left: var(--layout-edge-left);
+    padding-right: var(--layout-edge-right);
+    box-sizing: border-box;
+}
+
+.home-competencies__panel {
+    position: relative;
+    width: 100%;
+    max-width: min(896px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 24px;
+    background: #000000;
+    color: #fafafa;
+    box-sizing: border-box;
+    /* Figma: карточки вылезают за края панели — overflow:hidden обрезал их как «битый блок с картинкой» */
+    overflow: visible;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.home-competencies__inner {
+    position: relative;
+    min-height: min(640px, 92vw);
+    padding: clamp(72px, 18vw, 240px) clamp(16px, 3vw, 24px);
+    box-sizing: border-box;
+}
+
+.home-competencies__type {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+}
+
+.home-competencies__line-wrap {
+    align-self: stretch;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: clamp(16px, 5.15vw, 46px);
+    padding-right: clamp(16px, 5.15vw, 46px);
+    box-sizing: border-box;
+}
+
+.home-competencies__line {
+    margin: 0;
+    max-width: 100%;
+    font-family: var(--font-competencies-display);
+    font-size: clamp(32px, 9.5vw, 96px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+    text-align: center;
+    color: #ffffff;
+}
+
+.home-competencies__floats {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.home-competencies__float {
+    position: absolute;
+    pointer-events: auto;
+    width: min(338px, 42vw);
+    max-width: 338px;
+    box-sizing: border-box;
+    line-height: 0;
+}
+
+.home-competencies__float-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 338 / 199;
+    border-radius: 16px;
+    border: 1px solid transparent;
+    box-shadow: 0 5.621697px 16.865093px rgba(0, 16, 61, 0.28);
+    object-fit: cover;
+}
+
+/* Figma 418:21263 — позиции img: left −186.98 / 896, top 197 / 1008 и left 727 / 896, top 473 / 1008 */
+.home-competencies__float--tl {
+    top: 19.54%;
+    left: -20.86%;
+}
+
+.home-competencies__float--br {
+    top: 46.92%;
+    left: 81.14%;
+}
+
+.home-competencies__cards {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.home-competencies__card {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    width: min(338px, 42vw);
+    max-width: 338px;
+    min-height: 199px;
+    height: auto;
+    padding: 10px 12px 12px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    background: linear-gradient(145deg, #1a1a1f 0%, #0d0d10 55%, #121218 100%);
+    box-shadow: 0 5.621697px 16.865093px rgba(0, 16, 61, 0.28);
+    pointer-events: auto;
+    text-decoration: none;
+    color: inherit;
+    box-sizing: border-box;
+}
+
+.home-competencies__card--tl {
+    top: 19.54%;
+    left: -20.86%;
+}
+
+.home-competencies__card--br {
+    top: 46.92%;
+    left: 81.14%;
+}
+
+.home-competencies__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #0a0a0c;
+    background: linear-gradient(135deg, #5fffd4 0%, #2ee6ff 100%);
+    box-shadow: 0 2px 8px rgba(46, 230, 255, 0.35);
+}
+
+.home-competencies__card-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse 120% 80% at 20% 90%, rgba(80, 90, 120, 0.35), transparent 55%),
+        radial-gradient(circle at 78% 22%, rgba(46, 230, 255, 0.12), transparent 42%),
+        radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.06), transparent 35%);
+    opacity: 0.95;
+}
+
+.home-competencies__card-bg::after {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    background: radial-gradient(ellipse at 60% 70%, rgba(255, 255, 255, 0.04), transparent 50%);
+    transform: rotate(-12deg);
+}
+
+.home-competencies__card-body {
+    position: relative;
+    z-index: 2;
+    padding-top: 22px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.home-competencies__card-title {
+    margin: 0 0 4px;
+    font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+    font-size: clamp(12px, 2.8vw, 15px);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #fafafa;
+}
+
+.home-competencies__card-subtitle {
+    margin: 0;
+    font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: rgba(250, 250, 250, 0.72);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+.home-competencies__spark {
+    position: absolute;
+    z-index: 1;
+    width: 22px;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, rgba(46, 230, 255, 0.95), transparent);
+    opacity: 0.85;
+}
+
+.home-competencies__spark--1 {
+    right: 14%;
+    bottom: 28%;
+    transform: rotate(-35deg);
+}
+
+.home-competencies__spark--2 {
+    right: 10%;
+    bottom: 22%;
+    width: 14px;
+    transform: rotate(12deg);
+    opacity: 0.65;
+}
+
+.home-competencies__cta {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    padding: 0 clamp(20px, 4vw, 40px) clamp(28px, 5vw, 40px);
+    pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+    .home-competencies__card,
+    .home-competencies__float {
+        width: min(260px, 48vw);
+        max-width: min(260px, 48vw);
+    }
+
+    .home-competencies__card--tl,
+    .home-competencies__float--tl {
+        left: -8%;
+        top: 14%;
+    }
+
+    .home-competencies__card--br,
+    .home-competencies__float--br {
+        left: auto;
+        right: -6%;
+        top: 48%;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-competencies__inner {
+        min-height: 400px;
+        padding-top: 48px;
+        padding-bottom: 48px;
+    }
+}
+
 /* Hero — Figma 89:347 / 1-202: первый экран + блок вводного текста (1:232) */
 .hero {
     position: relative;
@@ -2358,7 +2631,7 @@ button:focus-visible,
     padding-bottom: 0;
 }
 
-/* Figma 1:285 — колонка: logo block + сетка + CTA с gap 48px */
+/* Figma 1-202 / 1-232: между hero и блоком компетенций отступ задаёт .home-competencies; до сетки проектов — margin блока */
 .home-page .section.section-projects {
     display: flex;
     flex-direction: column;
@@ -2366,6 +2639,7 @@ button:focus-visible,
     gap: var(--space-48);
     width: 100%;
     box-sizing: border-box;
+    padding-top: 0;
 }
 
 .home-page .section.section-projects .logo-section {
@@ -2411,6 +2685,38 @@ button:focus-visible,
     padding-left: var(--layout-edge-left);
     padding-right: var(--layout-edge-right);
     box-sizing: border-box;
+}
+
+.projects-page__groups {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.25rem, 5vw, 3.75rem);
+    width: 100%;
+    margin-top: var(--space-24);
+}
+
+.projects-page__group {
+    width: 100%;
+}
+
+.projects-page__group-title {
+    font-weight: 600;
+    font-size: clamp(1.125rem, 1.1vw + 0.85rem, 1.5rem);
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+    color: var(--color-text-primary);
+}
+
+.projects-page__group-intro {
+    max-width: 52rem;
+    margin: 0 0 var(--space-24);
+    font-size: clamp(15px, 0.9vw + 13px, 17px);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+}
+
+.page-projects .projects-page__group .preview-grid {
+    margin-top: 0;
 }
 
 /* Figma 1:289 — заголовок «Проекты»: десктоп 60px; ниже — плавное масштабирование */
@@ -2819,7 +3125,8 @@ button:focus-visible,
     border-radius: var(--radius);
     color: var(--color-text-muted);
     cursor: pointer;
-    transition: all var(--transition);
+    transition: background-color var(--transition), color var(--transition),
+        border-color var(--transition);
 }
 
 .filter-btn:hover,
@@ -3503,6 +3810,22 @@ button:focus-visible,
 }
 .project-case-study-mail .project-intro .title p + p {
     margin-top: 1.25em;
+}
+.project-case-study-mail .project-intro .title .project-intro__related {
+    margin-top: 1.25em;
+    font-size: calc(var(--type-case-study-lead) * 0.92);
+    line-height: 1.65;
+}
+.project-case-study-mail .project-intro .title .project-intro__related-label {
+    color: rgba(245, 245, 245, 0.55);
+}
+.project-case-study-mail .project-intro .title .project-intro__related a {
+    color: rgba(245, 245, 245, 0.95);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+}
+.project-case-study-mail .project-intro .title .project-intro__related a:hover {
+    color: #fff;
 }
 .project-case-study-mail .section--media-only .gallery {
     margin-top: 0;
@@ -6134,7 +6457,8 @@ button:focus-visible,
     max-width: none;
     margin: 0;
     padding: 0;
-    overflow-x: clip;
+    /* вордмарк на 100vw — не обрезаем по горизонтали */
+    overflow-x: visible;
     box-sizing: border-box;
 }
 
@@ -6160,31 +6484,36 @@ button:focus-visible,
 .site-footer__wordmark {
     container-name: foot-wm;
     container-type: inline-size;
-    margin: 0 0 clamp(1.75rem, 4vw, 3rem);
-    padding: 0 var(--layout-edge-right) 0 var(--layout-edge-left);
-    box-sizing: border-box;
-    width: 100%;
+    width: 100vw;
     max-width: none;
+    margin-top: 0;
+    margin-bottom: clamp(1.75rem, 4vw, 3rem);
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 0 max(env(safe-area-inset-right, 0px), clamp(8px, 2.4vw, 20px)) 0
+        max(env(safe-area-inset-left, 0px), clamp(8px, 2.4vw, 20px));
+    box-sizing: border-box;
     color: #fff;
     -webkit-text-fill-color: #fff;
     -webkit-text-stroke-width: 0;
     paint-order: normal;
 }
 
-/* Кегль от ширины строки (cqi) и от вьюпорта (vw); space-between тянет буквы на всю ширину */
+/* Шесть колонок на всю ширину экрана — буквы равномерно по вьюпорту (см. padding у .site-footer__wordmark) */
 .site-footer__wordmark__track {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     width: 100%;
     max-width: none;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    align-items: baseline;
     font-family: var(--font-body), Inter, sans-serif;
-    font-size: clamp(1.25rem, min(8cqi, 5vw), 3rem);
+    font-size: clamp(1.25rem, min(calc(100cqw / 5.5), 5vw), 3.25rem);
     font-style: normal;
     font-weight: 600;
-    line-height: 0.88;
+    line-height: 0.92;
     letter-spacing: 0;
     text-transform: uppercase;
     color: inherit;
@@ -6192,13 +6521,14 @@ button:focus-visible,
 
 @supports (font-size: 1cqi) {
     .site-footer__wordmark__track {
-        font-size: clamp(1.25rem, min(10cqi, 6vw), 3rem);
+        font-size: clamp(1.25rem, min(calc(100cqw / 5.5), 5vw), 3.25rem);
     }
 }
 
 .site-footer__wordmark__char {
-    flex: 0 0 auto;
     display: block;
+    width: 100%;
+    text-align: center;
     line-height: inherit;
 }
 
@@ -6345,17 +6675,17 @@ button:focus-visible,
 
     .site-footer__wordmark {
         margin-bottom: clamp(1.25rem, 4vw, 2rem);
-        padding-left: var(--layout-edge-left);
-        padding-right: var(--layout-edge-right);
+        padding-left: max(env(safe-area-inset-left, 0px), clamp(8px, 2.4vw, 16px));
+        padding-right: max(env(safe-area-inset-right, 0px), clamp(8px, 2.4vw, 16px));
     }
 
     .site-footer__wordmark__track {
-        font-size: clamp(1.125rem, min(10cqi, 6vw), 2.5rem);
+        font-size: clamp(2rem, min(calc(100cqw / 5.55), 15vw), 6.5rem);
     }
 
     @supports (font-size: 1cqi) {
         .site-footer__wordmark__track {
-            font-size: clamp(1.125rem, min(14cqi, 8vw), 2.5rem);
+            font-size: clamp(2rem, min(calc(100cqw / 5.25), 16vw), 6.5rem);
         }
     }
 
@@ -7237,5 +7567,15 @@ canvas {
 @media (max-width: 640px) {
     .page89-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .page89-wrap {
+        padding-inline: var(--space-16);
+    }
+
+    .page89-grid__item {
+        padding: var(--space-16);
     }
 }

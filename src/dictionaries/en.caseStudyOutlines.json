@@ -1,12 +1,17 @@
 {
   "mail-nauki": {
-    "chapterTitle": "Mail Science launch & systematic media redesign",
+    "chapterTitle": "Mail Science & media platform redesign",
     "items": [
-      { "keyword": "Tension", "caption": "Core product conflict", "target": "body:0" },
-      { "keyword": "Hypotheses", "caption": "Hypotheses & approach", "target": "body:2:hyp" },
-      { "keyword": "System", "caption": "Modular homepage system", "target": "body:3" },
-      { "keyword": "Scale", "caption": "MVP launch & scaling to other verticals", "target": "body:4" },
-      { "keyword": "Impact", "caption": "System-wide impact", "target": "body:9" }
+      { "keyword": "Context", "caption": "Platform context", "target": "body:0" },
+      { "keyword": "Brief", "caption": "Project brief", "target": "body:1" },
+      { "keyword": "Hypotheses", "caption": "Hypotheses & validation", "target": "body:2:hyp" },
+      { "keyword": "Science", "caption": "Mail Science end-to-end", "target": "body:3" },
+      { "keyword": "Media UI", "caption": "Media UI design system", "target": "body:4" },
+      { "keyword": "Scale", "caption": "Scaling to verticals", "target": "body:5" },
+      { "keyword": "Cinema", "caption": "Mail Cinema", "target": "body:6" },
+      { "keyword": "Trade-offs", "caption": "Trade-offs", "target": "body:7" },
+      { "keyword": "Results", "caption": "Results", "target": "body:8" },
+      { "keyword": "Role", "caption": "My role", "target": "body:9" }
     ]
   },
   "biohacking": {
@@ -72,11 +77,13 @@
   "mail-monetization": {
     "chapterTitle": "Mail monetization (Growth)",
     "items": [
-      { "keyword": "Approach", "caption": "Approach & hypotheses", "target": "body:0:hyp" },
-      { "keyword": "Segmentation", "caption": "Launching “Mail Space for work”", "target": "body:1" },
-      { "keyword": "Constraints", "caption": "Multi-account limits & trade-offs", "target": "body:3" },
-      { "keyword": "Upsell", "caption": "Upsell inside core flows", "target": "body:5" },
-      { "keyword": "Freemium", "caption": "Freemium: AI photo enhancement", "target": "body:6" }
+      { "keyword": "Approach", "caption": "Systemic approach", "target": "body:0" },
+      { "keyword": "Experiment 1", "caption": "“Mail Space for work” plan", "target": "body:1" },
+      { "keyword": "Experiment 2", "caption": "Contextual upsell in journeys", "target": "body:2" },
+      { "keyword": "Experiment 3", "caption": "Multi-device limits", "target": "body:3" },
+      { "keyword": "Experiment 4", "caption": "AI photo enhancement (freemium)", "target": "body:4" },
+      { "keyword": "Overall", "caption": "Overall outcome", "target": "body:5" },
+      { "keyword": "Role", "caption": "My role", "target": "body:6" }
     ]
   },
   "inkz": {

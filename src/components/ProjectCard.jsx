@@ -16,6 +16,8 @@ export default function ProjectCard({ slug, title, meta, desc, image, isDemo }) 
             <img
               src={imageSrc}
               alt=""
+              loading="lazy"
+              decoding="async"
               ref={(el) => setProjectHeroVtName(el, slug)}
             />
           ) : (

@@ -22,6 +22,24 @@ function productionBase() {
   return '/';
 }
 
+/** Подсказка: закладка на :5174 не сработает, если порт занят и Vite поднял другой. */
+function devListenHintPlugin() {
+  return {
+    name: 'dev-listen-hint',
+    configureServer(server) {
+      server.httpServer?.once('listening', () => {
+        const addr = server.httpServer?.address();
+        const port = addr && typeof addr === 'object' ? addr.port : null;
+        if (port && port !== 5174) {
+          console.log(
+            `\n  [vite] Порт 5174 занят — сервер на http://localhost:${port}/ (откройте этот URL, не 5174).\n`,
+          );
+        }
+      });
+    },
+  };
+}
+
 function prefixPublicUrlsInCssPlugin(baseRoot) {
   return {
     name: 'prefix-absolute-public-urls-in-css',
@@ -50,7 +68,7 @@ export default defineConfig(({ command }) => {
   return {
     clearScreen: false,
     base,
-    plugins: [react(), prefixPublicUrlsInCssPlugin(baseRoot)],
+    plugins: [react(), devListenHintPlugin(), prefixPublicUrlsInCssPlugin(baseRoot)],
     server: {
       /** 5174 — чтобы совпадало с типичным URL в браузере Cursor / закладками; при занятом порту Vite возьмёт следующий (strictPort: false). */
       port: 5174,

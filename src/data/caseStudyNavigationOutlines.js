@@ -4,13 +4,18 @@
  */
 export const CASE_STUDY_NAV_OUTLINES = {
   'mail-nauki': {
-    chapterTitle: 'Запуск Mail Наука и системный редизайн',
+    chapterTitle: 'Mail Наука и редизайн медиапроектов',
     items: [
-      { keyword: 'Конфликт', caption: 'Ключевой конфликт продукта', target: 'body:0' },
-      { keyword: 'Гипотезы', caption: 'Гипотезы и подход', target: 'body:2:hyp' },
-      { keyword: 'Система', caption: 'Модульная система главной страницы', target: 'body:3' },
-      { keyword: 'Масштабирование', caption: 'Запуск как MVP и масштабирование на другие проекты', target: 'body:4' },
-      { keyword: 'Эффект', caption: 'Системный эффект', target: 'body:9' },
+      { keyword: 'Контекст', caption: 'Контекст платформы', target: 'body:0' },
+      { keyword: 'Задача', caption: 'Задача проекта', target: 'body:1' },
+      { keyword: 'Гипотезы', caption: 'Гипотезы и проверка', target: 'body:2:hyp' },
+      { keyword: 'Mail Наука', caption: 'Mail Наука end-to-end', target: 'body:3' },
+      { keyword: 'Media UI', caption: 'Дизайн-система Media UI', target: 'body:4' },
+      { keyword: 'Масштабирование', caption: 'Масштабирование на вертикали', target: 'body:5' },
+      { keyword: 'Кино', caption: 'Mail Кино', target: 'body:6' },
+      { keyword: 'Trade-off', caption: 'Компромиссы', target: 'body:7' },
+      { keyword: 'Результат', caption: 'Результат', target: 'body:8' },
+      { keyword: 'Роль', caption: 'Моя роль', target: 'body:9' },
     ],
   },
   biohacking: {
@@ -76,11 +81,13 @@ export const CASE_STUDY_NAV_OUTLINES = {
   'mail-monetization': {
     chapterTitle: 'Монетизация Mail.ru (Growth)',
     items: [
-      { keyword: 'Подход', caption: 'Подход и гипотезы', target: 'body:0:hyp' },
-      { keyword: 'Сегментация', caption: 'Запуск тарифа «Mail Space для работы»', target: 'body:1' },
-      { keyword: 'Ограничения', caption: 'Ограничение многоаккаунтовости и Trade-off', target: 'body:3' },
-      { keyword: 'Апсейл', caption: 'Апсейл внутри пользовательских сценариев', target: 'body:5' },
-      { keyword: 'Freemium', caption: 'Freemium-фича: улучшение фото нейросетью', target: 'body:6' },
+      { keyword: 'Подход', caption: 'Системный подход', target: 'body:0' },
+      { keyword: 'Эксперимент 1', caption: 'Тариф «Mail Space для работы»', target: 'body:1' },
+      { keyword: 'Эксперимент 2', caption: 'Contextual upsell в сценариях', target: 'body:2' },
+      { keyword: 'Эксперимент 3', caption: 'Ограничение multi-device', target: 'body:3' },
+      { keyword: 'Эксперимент 4', caption: 'AI-улучшение фото (freemium)', target: 'body:4' },
+      { keyword: 'Общий', caption: 'Общий результат', target: 'body:5' },
+      { keyword: 'Моя роль', caption: 'Моя роль', target: 'body:6' },
     ],
   },
   inkz: {
