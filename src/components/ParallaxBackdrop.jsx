@@ -8,6 +8,11 @@ export default function ParallaxBackdrop() {
     const root = rootRef.current;
     if (!root) return;
 
+    const appRoot = document.getElementById('root');
+    const scrollPassive = { passive: true };
+    /** Скролл на #root (snap-pages-root) часто не поднимается до window — ловим в capture на document */
+    const scrollCapture = { passive: true, capture: true };
+
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     /** Плавное следование за скроллом: τ секунд — чем больше, тем мягче движение слоёв */
     const TAU_SEC = 0.32;
@@ -24,12 +29,9 @@ export default function ParallaxBackdrop() {
       root.style.removeProperty('--parallax-y3');
     };
 
-    const scrollParent = () => document.getElementById('root');
-
     const getScrollY = () => {
-      const appRoot = scrollParent();
       if (appRoot?.classList.contains('snap-pages-root')) return appRoot.scrollTop;
-      return window.scrollY || document.documentElement.scrollTop || 0;
+      return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
     };
 
     const applyParallaxFromY = (y) => {
@@ -82,13 +84,17 @@ export default function ParallaxBackdrop() {
     targetY = smoothY = getScrollY();
     if (!mq.matches) applyParallaxFromY(smoothY);
     mq.addEventListener('change', onMotionChange);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    scrollParent()?.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, scrollPassive);
+    document.addEventListener('scroll', onScroll, scrollCapture);
+    appRoot?.addEventListener('scroll', onScroll, scrollPassive);
+    window.addEventListener('resize', onScroll, scrollPassive);
 
     return () => {
       mq.removeEventListener('change', onMotionChange);
-      window.removeEventListener('scroll', onScroll);
-      scrollParent()?.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll, scrollPassive);
+      document.removeEventListener('scroll', onScroll, scrollCapture);
+      appRoot?.removeEventListener('scroll', onScroll, scrollPassive);
+      window.removeEventListener('resize', onScroll, scrollPassive);
       if (tickRaf != null) window.cancelAnimationFrame(tickRaf);
       clearVars();
     };

@@ -12,6 +12,7 @@ export default function Layout() {
   const isProjectsListing = basePath === '/projects';
   const isProjectRoute = basePath.startsWith('/project/');
   const isAbout = basePath === '/about';
+  const isHome = basePath === '/';
   /** Полноэкранный snap: не на списке проектов, не на кейсах и не на «О себе» (там длинный контент + общий футер — mandatory snap обрезал бы футер). */
   const snapScreens = !isProjectsListing && !isProjectRoute && !isAbout;
 
@@ -23,6 +24,8 @@ export default function Layout() {
       const enabled = snapScreens && !mq.matches;
       document.documentElement.classList.toggle('snap-pages', enabled);
       appRoot?.classList.toggle('snap-pages-root', enabled);
+      /** На главной между hero и projects блок компетенций — при y mandatory браузер часто «перескакивал» его. */
+      appRoot?.classList.toggle('snap-pages-root--home', enabled && isHome);
     };
     sync();
     mq.addEventListener('change', sync);
@@ -30,8 +33,9 @@ export default function Layout() {
       mq.removeEventListener('change', sync);
       document.documentElement.classList.remove('snap-pages');
       appRoot?.classList.remove('snap-pages-root');
+      appRoot?.classList.remove('snap-pages-root--home');
     };
-  }, [snapScreens]);
+  }, [snapScreens, isHome]);
   const figmaPages = {
     '/page-811': 'page-811',
     '/page-772': 'page-772',
@@ -57,7 +61,6 @@ export default function Layout() {
                   : figmaPages[basePath] || '';
   const isProjectDetail = basePath.startsWith('/project/');
   const mainClass = isProjectDetail ? 'main main--project' : 'main';
-  const isHome = basePath === '/';
   const pageSnapClass = snapScreens ? 'page--snap' : '';
   const mainWithHomeShell = isHome ? `${mainClass} page-home__main` : mainClass;
 
