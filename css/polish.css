@@ -266,18 +266,9 @@
             transform: scaleY(1.15);
         }
     }
+    /* Подвальный знак стал компактным — анимация растяжки больше не нужна. */
     [data-scale="footer-mega"] {
-        animation: polish-scale-footer linear both;
-        animation-timeline: view();
-        animation-range: entry 0% cover 80%;
-    }
-    @keyframes polish-scale-footer {
-        from {
-            transform: scaleY(0.85);
-        }
-        to {
-            transform: scaleY(1.15);
-        }
+        animation: none;
     }
     [data-scale="section-title"] {
         animation: polish-scale-section linear both;
