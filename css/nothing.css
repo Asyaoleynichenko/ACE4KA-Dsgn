@@ -111,6 +111,14 @@ body {
     }
 }
 
+/* ---------- Kill default hover-underline on project card titles ---------- */
+.preview-card__title,
+.preview-content h3,
+.preview-card__link:hover .preview-card__title,
+.preview-card__link:hover .preview-content h3 {
+    text-decoration: none;
+}
+
 /* ---------- Card lift (translateY only, no shadow) ---------- */
 .preview-card {
     background: var(--bg-surface);
@@ -216,6 +224,96 @@ body {
     font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
     letter-spacing: 0.12em;
     border-radius: var(--radius-md);
+}
+
+/* ---------- Scrollspy: vertical dot-progress on right edge ---------- */
+.cs-dotnav {
+    position: fixed;
+    top: 50%;
+    right: max(16px, env(safe-area-inset-right, 16px));
+    transform: translateY(-50%);
+    z-index: 60;
+    pointer-events: none;
+}
+.cs-dotnav__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.cs-dotnav__item {
+    margin: 0;
+}
+.cs-dotnav__link {
+    position: relative;
+    display: block;
+    width: 6px;
+    height: 6px;
+    padding: 8px 0;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: color var(--dur-base) ease;
+}
+.cs-dotnav__dot {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: background var(--dur-base) ease, transform var(--dur-fast) var(--ease-out);
+}
+.cs-dotnav__link:hover .cs-dotnav__dot {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.4);
+}
+.cs-dotnav__link.is-active {
+    color: var(--text-primary);
+}
+.cs-dotnav__link.is-active .cs-dotnav__dot {
+    background: var(--accent);
+    animation: nothing-pulse 1.4s ease-in-out infinite;
+}
+.cs-dotnav__label {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%) translateX(8px);
+    font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+    color: var(--text-primary);
+    pointer-events: none;
+}
+.cs-dotnav__link:hover .cs-dotnav__label,
+.cs-dotnav__link:focus-visible .cs-dotnav__label,
+.cs-dotnav__link.is-active .cs-dotnav__label {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+@media (hover: none), (max-width: 768px) {
+    /* On touch / narrow screens: dots-only, no label slide-out */
+    .cs-dotnav__link:hover .cs-dotnav__label,
+    .cs-dotnav__link.is-active .cs-dotnav__label {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cs-dotnav__dot,
+    .cs-dotnav__label {
+        transition: none;
+    }
+    .cs-dotnav__link.is-active .cs-dotnav__dot {
+        animation: none;
+    }
 }
 
 /* ---------- Polish-layer monospace usage neutralized via --font-mono var,
