@@ -10,10 +10,10 @@
     "dev": "vite",
     "dev:host": "vite --host",
     "start": "vite",
-    "build": "node scripts/check-project-assets.mjs && vite build && node -e \"const fs=require('fs');fs.copyFileSync('dist/index.html','dist/404.html');fs.writeFileSync('dist/.nojekyll','')\"",
-    "build:local": "vite build --base / && node -e \"const fs=require('fs');fs.copyFileSync('dist/index.html','dist/404.html');fs.writeFileSync('dist/.nojekyll','')\"",
+    "build": "node scripts/check-project-assets.mjs && vite build && node scripts/post-build.mjs",
+    "build:local": "vite build --base / && node scripts/post-build.mjs",
     "preview": "vite preview",
-    "build:root": "VITE_BASE=root vite build && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
+    "build:root": "VITE_BASE=root vite build && node scripts/post-build.mjs",
     "export:images": "node scripts/export-all-images.mjs"
   },
   "dependencies": {
