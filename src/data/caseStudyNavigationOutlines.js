@@ -1,112 +1,170 @@
 /**
- * Оглавление кейсов: заголовок раздела + пункты «ключ — пояснение».
+ * Оглавление кейсов: короткие 1–3-слова подписи, нумерация 01/02 даёт ритм.
  * target: hero | intro | overview | narrative | compare | body:N | body:N:hyp
+ *
+ * Маппинг target → каркасу страницы кейса:
+ *   hero      → шапка кейса (название, год, роль, команда)
+ *   intro     → блок «О проекте»
+ *   overview  → блок верхних карточек (контекст / задача / результат)
+ *   body:N    → N-й блок caseSections (см. projects.js)
+ *   body:N:hyp→ блок гипотез внутри body:N
+ *
+ * Если каркас секций в projects.js не совпадает с пунктом — клик по пункту прокрутит
+ * к ближайшему якорю, а highlight подсветится только когда якорь попадёт в вьюпорт.
  */
 export const CASE_STUDY_NAV_OUTLINES = {
-  'mail-nauki': {
-    chapterTitle: 'Mail Наука и редизайн медиапроектов',
-    items: [
-      { keyword: 'Контекст', caption: 'Контекст платформы', target: 'body:0' },
-      { keyword: 'Задача', caption: 'Задача проекта', target: 'body:1' },
-      { keyword: 'Гипотезы', caption: 'Гипотезы и проверка', target: 'body:2:hyp' },
-      { keyword: 'Mail Наука', caption: 'Mail Наука end-to-end', target: 'body:3' },
-      { keyword: 'Media UI', caption: 'Дизайн-система Media UI', target: 'body:4' },
-      { keyword: 'Масштабирование', caption: 'Масштабирование на вертикали', target: 'body:5' },
-      { keyword: 'Кино', caption: 'Mail Кино', target: 'body:6' },
-      { keyword: 'Trade-off', caption: 'Компромиссы', target: 'body:7' },
-      { keyword: 'Результат', caption: 'Результат', target: 'body:8' },
-      { keyword: 'Роль', caption: 'Моя роль', target: 'body:9' },
-    ],
-  },
-  biohacking: {
-    chapterTitle: 'Спецпроект «Биохакинг» (Invitro)',
-    items: [
-      { keyword: 'Задача', caption: 'Задача и влияние', target: 'intro' },
-      { keyword: 'Лендинг', caption: 'Создание лендинга', target: 'body:0' },
-      { keyword: 'Гипотезы', caption: 'Интерактив и 3D-анимация', target: 'body:0:hyp' },
-      { keyword: 'AI-Production', caption: 'AI-Driven Production', target: 'body:1' },
-      { keyword: 'Результаты', caption: 'Бизнес-результаты и метрики', target: 'overview' },
-    ],
-  },
-  'mail-spetsproekty': {
-    chapterTitle: 'Развитие направления спецпроектов (Mail.ru)',
-    items: [
-      { keyword: 'Задача', caption: 'Задача до реформирования и метрики', target: 'intro' },
-      { keyword: 'Система', caption: 'Масштабируемая система производства', target: 'body:0' },
-      { keyword: 'Гипотезы', caption: 'Систематизация и процессы', target: 'body:0:hyp' },
-      { keyword: 'Гайд', caption: 'Создание гайда по работе с нейросетями', target: 'body:1' },
-      { keyword: 'Влияние', caption: 'Влияние на скорость и затраты', target: 'overview' },
-    ],
-  },
-  neural: {
-    chapterTitle: 'Спецпроект /Н#ЙРОСЕТИ (Mail Hi-Tech)',
-    items: [
-      { keyword: 'Задача', caption: 'Задача и гипотезы', target: 'intro' },
-      { keyword: 'Решение', caption: 'Решение и влияние', target: 'body:0' },
-      { keyword: 'AI-Production', caption: 'AI-Driven Production', target: 'body:1' },
-      { keyword: 'Взаимодействие', caption: 'Кросс-функциональное взаимодействие', target: 'body:0:hyp' },
-      { keyword: 'Результаты', caption: 'Бизнес-результаты и стратегический эффект', target: 'overview' },
-    ],
-  },
-  loochok: {
-    chapterTitle: 'LOOCHOK (Медиа кастомизации)',
-    items: [
-      { keyword: 'Проблема', caption: 'Проблема и целевая аудитория', target: 'body:2' },
-      { keyword: 'MVP', caption: 'MVP продукта и комьюнити', target: 'body:4' },
-      { keyword: 'Бизнес', caption: 'Бизнес-модель', target: 'body:6' },
-      { keyword: 'Айдентика', caption: 'Стайл-гайд и дизайн-система', target: 'body:12' },
-      { keyword: 'Роадмап', caption: 'Роадмап развития и запуск', target: 'body:10' },
-    ],
-  },
-  drop: {
-    chapterTitle: 'DROP (Приложение для нетворкинга)',
-    items: [
-      { keyword: 'Контекст', caption: 'Контекст продукта', target: 'body:0' },
-      { keyword: 'Гипотезы', caption: '6 продуктовых гипотез', target: 'body:2:hyp' },
-      { keyword: 'Решение', caption: 'Решение и регистрация', target: 'body:4' },
-      { keyword: 'Система', caption: 'Стайлгайд и дизайн-система', target: 'body:6' },
-      { keyword: 'Исследование', caption: 'Научное исследование', target: 'body:8' },
-    ],
-  },
-  retrash: {
-    chapterTitle: 'RE*TRASH (Медиа-сервис)',
-    items: [
-      { keyword: 'Задача', caption: 'Задача и метрики', target: 'overview' },
-      { keyword: 'Исследование', caption: 'Исследование барьеров аудитории', target: 'body:1' },
-      { keyword: 'Гипотезы', caption: 'Гипотезы и подход', target: 'body:1:hyp' },
-      { keyword: 'Визуал', caption: 'Визуальный стиль и дизайн-система', target: 'body:4' },
-      { keyword: 'Лендинг', caption: 'Промо лендинг', target: 'body:3' },
-    ],
-  },
   'mail-monetization': {
-    chapterTitle: 'Монетизация Mail.ru (Growth)',
+    chapterTitle: 'Mail Монетизация',
     items: [
-      { keyword: 'Подход', caption: 'Системный подход', target: 'body:0' },
-      { keyword: 'Эксперимент 1', caption: 'Тариф «Mail Space для работы»', target: 'body:1' },
-      { keyword: 'Эксперимент 2', caption: 'Contextual upsell в сценариях', target: 'body:2' },
-      { keyword: 'Эксперимент 3', caption: 'Ограничение multi-device', target: 'body:3' },
-      { keyword: 'Эксперимент 4', caption: 'AI-улучшение фото (freemium)', target: 'body:4' },
-      { keyword: 'Общий', caption: 'Общий результат', target: 'body:5' },
-      { keyword: 'Моя роль', caption: 'Моя роль', target: 'body:6' },
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Контекст', target: 'overview' },
+      { keyword: 'Подход', target: 'body:0' },
+      { keyword: 'Эксперимент 1', target: 'body:1' },
+      { keyword: 'Эксперимент 2', target: 'body:2' },
+      { keyword: 'Эксперимент 3', target: 'body:3' },
+      { keyword: 'Эксперимент 4', target: 'body:4' },
+      { keyword: 'Результат', target: 'body:5' },
+      { keyword: 'Моя роль', target: 'body:6' },
     ],
   },
-  inkz: {
-    chapterTitle: 'INKZ (Платформа для тату-мастеров)',
+  'mail-nauki': {
+    chapterTitle: 'Mail Наука',
     items: [
-      { keyword: 'Проблема', caption: 'Проблема и задача', target: 'body:1' },
-      { keyword: 'Исследование', caption: 'Исследование и гипотезы', target: 'body:3' },
-      { keyword: 'Решение', caption: 'Продуктовое решение', target: 'body:4' },
-      { keyword: 'Бизнес', caption: 'Бизнес-модель и модель данных', target: 'body:7' },
-      { keyword: 'Лендинг', caption: 'Промо лендинг', target: 'body:10' },
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Контекст', target: 'body:0' },
+      { keyword: 'Задача', target: 'body:1' },
+      { keyword: 'Гипотезы', target: 'body:2:hyp' },
+      { keyword: 'Mail Наука', target: 'body:3' },
+      { keyword: 'Media UI', target: 'body:4' },
+      { keyword: 'Масштабирование', target: 'body:5' },
+      { keyword: 'Mail Кино', target: 'body:6' },
+      { keyword: 'Результат', target: 'body:8' },
+      { keyword: 'Моя роль', target: 'body:9' },
     ],
   },
   racktables: {
-    chapterTitle: 'Rack Tables (Редизайн системы Yandex)',
+    chapterTitle: 'RackTables',
     items: [
-      { keyword: 'Проблема', caption: 'Проблема и задача', target: 'body:1' },
-      { keyword: 'Решение', caption: 'Решение и влияние', target: 'body:3' },
-      { keyword: 'Vibe-coding', caption: 'Скоростное прототипирование (Vibe-coding)', target: 'body:0' },
-      { keyword: 'Результат', caption: 'Метрики и итоговый результат', target: 'body:4' },
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Задача', target: 'overview' },
+      { keyword: 'Сценарий', target: 'body:0' },
+      { keyword: 'Проблема', target: 'body:1' },
+      { keyword: 'Решение', target: 'body:2' },
+      { keyword: 'Vibe-coding', target: 'body:3' },
+      { keyword: 'Парадигма', target: 'body:4' },
+      { keyword: 'Ожидаемое влияние', target: 'body:5' },
+      { keyword: 'Результат', target: 'body:6' },
+    ],
+  },
+  'mail-spetsproekty': {
+    chapterTitle: 'Спецпроекты Mail',
+    items: [
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Контекст', target: 'overview' },
+      { keyword: 'Задача', target: 'body:0' },
+      { keyword: 'Метрики', target: 'body:1' },
+      { keyword: 'Концепции', target: 'body:2' },
+      { keyword: 'AI в продакшн', target: 'body:3' },
+      { keyword: 'Процесс', target: 'body:4' },
+      { keyword: 'Trade-off', target: 'body:5' },
+      { keyword: 'Результат', target: 'body:6' },
+      { keyword: 'Моя роль', target: 'body:7' },
+    ],
+  },
+  neural: {
+    chapterTitle: 'Нейросети Hi-Tech',
+    items: [
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Контекст', target: 'overview' },
+      { keyword: 'Проблема', target: 'body:0' },
+      { keyword: 'Гипотеза', target: 'body:0:hyp' },
+      { keyword: 'Решение', target: 'body:1' },
+      { keyword: 'Арт-дирекшн', target: 'body:2' },
+      { keyword: 'Метрики', target: 'body:3' },
+      { keyword: 'Результат', target: 'body:4' },
+      { keyword: 'Стратегия', target: 'body:5' },
+      { keyword: 'Моя роль', target: 'body:6' },
+    ],
+  },
+  biohacking: {
+    chapterTitle: 'Биохакинг',
+    items: [
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Контекст', target: 'overview' },
+      { keyword: 'Цель', target: 'body:0' },
+      { keyword: 'Гипотезы', target: 'body:0:hyp' },
+      { keyword: 'Концепция', target: 'body:1' },
+      { keyword: 'Визуал', target: 'body:2' },
+      { keyword: '3D и интерактив', target: 'body:3' },
+      { keyword: 'Вёрстка', target: 'body:4' },
+      { keyword: 'AI', target: 'body:5' },
+      { keyword: 'Метрики', target: 'body:6' },
+      { keyword: 'Результат', target: 'body:7' },
+      { keyword: 'Моя роль', target: 'body:8' },
+    ],
+  },
+  drop: {
+    chapterTitle: 'DROP',
+    items: [
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Контекст', target: 'body:0' },
+      { keyword: 'Концепция', target: 'body:1' },
+      { keyword: 'Гипотеза', target: 'body:2:hyp' },
+      { keyword: 'Telegram-MVP', target: 'body:3' },
+      { keyword: 'Валидация', target: 'body:4' },
+      { keyword: 'Дизайн-система', target: 'body:5' },
+      { keyword: 'Trade-off', target: 'body:6' },
+      { keyword: 'Результат', target: 'body:7' },
+      { keyword: 'Моя роль', target: 'body:8' },
+    ],
+  },
+  loochok: {
+    chapterTitle: 'LÒÒCHOK',
+    items: [
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Контекст', target: 'body:0' },
+      { keyword: 'Проблема', target: 'body:1' },
+      { keyword: 'Исследование', target: 'body:2' },
+      { keyword: 'TAM/SAM/SOM', target: 'body:3' },
+      { keyword: 'Аудитория', target: 'body:4' },
+      { keyword: 'Гипотеза', target: 'body:4:hyp' },
+      { keyword: 'MVP', target: 'body:5' },
+      { keyword: 'Комьюнити', target: 'body:6' },
+      { keyword: 'Бизнес-модель', target: 'body:7' },
+      { keyword: 'Дизайн-система', target: 'body:8' },
+      { keyword: 'Результат', target: 'body:9' },
+      { keyword: 'Моя роль', target: 'body:10' },
+    ],
+  },
+  retrash: {
+    chapterTitle: 'RE*TRASH',
+    items: [
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Контекст', target: 'body:0' },
+      { keyword: 'Исследование', target: 'body:1' },
+      { keyword: 'Гипотеза', target: 'body:1:hyp' },
+      { keyword: 'Решение', target: 'body:2' },
+      { keyword: 'Архитектура', target: 'body:3' },
+      { keyword: 'Бренд', target: 'body:4' },
+      { keyword: 'Дизайн-система', target: 'body:5' },
+      { keyword: 'Результат', target: 'body:6' },
+      { keyword: 'Моя роль', target: 'body:7' },
+    ],
+  },
+  inkz: {
+    chapterTitle: 'INKZ',
+    items: [
+      { keyword: 'О проекте', target: 'intro' },
+      { keyword: 'Проблема', target: 'body:0' },
+      { keyword: 'Задача', target: 'body:1' },
+      { keyword: 'Исследование', target: 'body:2' },
+      { keyword: 'Гипотезы', target: 'body:2:hyp' },
+      { keyword: 'MVP', target: 'body:3' },
+      { keyword: 'Экраны', target: 'body:4' },
+      { keyword: 'Метрики', target: 'body:5' },
+      { keyword: 'Бизнес-модель', target: 'body:6' },
+      { keyword: 'Результат', target: 'body:7' },
+      { keyword: 'Моя роль', target: 'body:8' },
     ],
   },
 };

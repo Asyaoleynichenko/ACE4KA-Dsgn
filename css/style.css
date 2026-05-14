@@ -263,8 +263,8 @@
   --layout-89-756-item-radius: var(--radius-lg);
   --layout-89-756-item-inner-gap: 4px;
 
-  /* Горизонтальный gutter: строго --layout-page-pad-x (24px) + safe-area с каждой стороны */
-  --layout-page-pad-x: 24px;
+  /* Горизонтальный gutter: пользовательский запрос — 1.5rem на всех страницах + safe-area. */
+  --layout-page-pad-x: 1.5rem;
   --layout-edge-left: calc(var(--layout-page-pad-x) + env(safe-area-inset-left, 0px));
   --layout-edge-right: calc(var(--layout-page-pad-x) + env(safe-area-inset-right, 0px));
   --layout-page-pad-y-top: 48px;

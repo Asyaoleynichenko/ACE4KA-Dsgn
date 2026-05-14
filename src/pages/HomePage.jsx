@@ -138,9 +138,8 @@ export default function HomePage() {
               <p className="hero-role">{t('hero.role')}</p>
               <h1 className="hero-title" data-scale="hero-name">{t('hero.title')}</h1>
               <p className="hero-text">{t('hero.text')}</p>
-              <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
+              <Link to={localizedPath('/about')} className="hero-more">
                 <span className="hero-more__text">{t('hero.moreAbout')}</span>
-                <DotIcon name="dot-arrow-right" size={18} className="hero-more__chevron" />
               </Link>
             </div>
             <div className="info-grid">

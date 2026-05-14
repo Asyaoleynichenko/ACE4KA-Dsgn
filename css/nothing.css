@@ -311,18 +311,23 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-direction: row-reverse;
     justify-content: flex-start;
-    color: var(--text-tertiary);
+    color: rgba(255, 255, 255, 0.46);
     text-decoration: none;
     cursor: pointer;
     transition: color 220ms ease;
     outline: none;
+    font-weight: 400;
 }
 .cs-dotnav:hover .cs-dotnav__link,
 .cs-dotnav:focus-within .cs-dotnav__link {
     flex-direction: row;
+}
+.cs-dotnav__link.is-active {
+    color: #ffffff;
+    font-weight: 600;
 }
 .cs-dotnav__dot {
     display: block;
@@ -347,6 +352,22 @@ body {
     background: #ffffff;
     animation: none;
 }
+.cs-dotnav__num {
+    display: none;
+    font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: inherit;
+    opacity: 0.62;
+    min-width: 18px;
+}
+.cs-dotnav:hover .cs-dotnav__num,
+.cs-dotnav:focus-within .cs-dotnav__num {
+    display: inline-block;
+}
+.cs-dotnav__link.is-active .cs-dotnav__num {
+    opacity: 0.85;
+}
 .cs-dotnav__label {
     overflow: hidden;
     white-space: nowrap;
@@ -355,7 +376,7 @@ body {
     font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
     font-size: 13px;
     letter-spacing: 0;
-    color: rgba(255, 255, 255, 0.46);
+    color: inherit;
     pointer-events: none;
     transition:
         max-width 240ms var(--ease-out, cubic-bezier(0.32, 0.72, 0, 1)),
@@ -368,26 +389,11 @@ body {
     opacity: 1;
     pointer-events: auto;
 }
-.cs-dotnav:hover .cs-dotnav__link.is-active .cs-dotnav__label,
-.cs-dotnav:focus-within .cs-dotnav__link.is-active .cs-dotnav__label {
-    color: #ffffff;
-}
 
-@media (hover: none), (max-width: 768px) {
-    /* На тач/узких — только чёрточки, без раскрытия */
-    .cs-dotnav:hover .cs-dotnav__label,
-    .cs-dotnav:focus-within .cs-dotnav__label {
-        max-width: 0;
-        opacity: 0;
-    }
-    .cs-dotnav:hover,
-    .cs-dotnav:focus-within {
-        padding: 14px 14px;
-        background: transparent;
-        border-color: transparent;
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-        box-shadow: none;
+@media (max-width: 1024px) {
+    /* На планшетах и уже — scrollspy полностью скрыт; на мобиле он мешает контенту. */
+    .cs-dotnav {
+        display: none;
     }
 }
 

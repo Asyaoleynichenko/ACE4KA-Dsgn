@@ -30,13 +30,10 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
   const nav = (
     <nav className="cs-dotnav" aria-label={t('projectDetail.spyNavAria')}>
       <ol className="cs-dotnav__list">
-        {items.map((entry) => {
+        {items.map((entry, idx) => {
           const isActive = activeId === entry.id;
-          const label = entry.keyword
-            ? entry.caption
-              ? `${entry.keyword} — ${entry.caption}`
-              : entry.keyword
-            : entry.label;
+          const label = entry.keyword || entry.label;
+          const number = String(idx + 1).padStart(2, '0');
           return (
             <li key={entry.id} className="cs-dotnav__item">
               <a
@@ -46,6 +43,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
                 onClick={(e) => onClick(e, entry.id)}
               >
                 <span className="cs-dotnav__dot" aria-hidden="true" />
+                <span className="cs-dotnav__num" aria-hidden="true">{number}</span>
                 <span className="cs-dotnav__label">{label}</span>
               </a>
             </li>
