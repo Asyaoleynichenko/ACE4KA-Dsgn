@@ -7877,3 +7877,149 @@ canvas {
         top: max(16px, env(safe-area-inset-top, 0px));
     }
 }
+
+/* =========================
+   9) Responsive safety net (адаптив: lg→xs)
+   Защита от горизонтального overflow и поломки сеток вне 901px+ десктопа.
+   Десктоп остаётся ground truth — здесь только «не дать сломаться» на узких.
+   ========================= */
+
+/* lg (901–1200): info-grid 5×148/147/148/254/184 = 881px и не помещается в hero__content
+   при viewport ≈ 901–1024px (после 24px gutter с двух сторон). Сжимаем сетку до 3-кол. */
+@media (max-width: 1024px) and (min-width: 901px) {
+    .info-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--space-24) var(--space-16);
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .info-card--wide {
+        grid-column: span 3;
+    }
+}
+
+/* md (641–900): hero первого экрана может казаться «пустым» — header-items в потоке,
+   уплотняем минимальную ширину ячеек, чтобы 4 пункта помещались в 2 ряда. */
+@media (max-width: 900px) {
+    .page-home .hero-first-screen .header-items--figma {
+        grid-template-columns: repeat(auto-fill, minmax(min(120px, 100%), 1fr));
+        gap: var(--space-16) var(--space-12);
+    }
+
+    /* Hero info-grid 2-кол уже задан, но добавим max-width чтобы карточки не растягивались на всю строку */
+    .info-grid {
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* sm (481–640): группы и заголовки страниц — снизить вертикальный воздух */
+@media (max-width: 640px) {
+    .projects-page__groups {
+        gap: clamp(2rem, 6vw, 2.75rem);
+    }
+
+    .projects-page__group-intro {
+        font-size: clamp(14px, 0.9vw + 12px, 16px);
+    }
+
+    /* Тип-рамп компетенций: ограничиваем максимум на узких, чтобы H1 не «упирался» */
+    .home-competencies__line {
+        font-size: clamp(28px, 11vw, 56px);
+    }
+
+    /* Кейс-секция: heading и pills меньше */
+    .project-case-study-mail .section h2 {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    .project-case-study-mail .dual-outcomes__title {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    /* About: панель с экспи + скиллы — стек уже на ≤900; добавляем gap collapse */
+    .about-page {
+        gap: var(--space-40);
+    }
+
+    .about-page__name {
+        font-size: clamp(2rem, 9vw, 3rem);
+    }
+}
+
+/* xs (≤480): крайние сценарии — стек всего, что было колоночным; никакого
+   фиксированного px по горизонтали. */
+@media (max-width: 480px) {
+    /* Header items: тонкие папки — в один столбец (уже задано), но дополнительно
+       обрезаем иконки чтобы они не растягивались под grid 1fr. */
+    .page-home .hero-first-screen .header-items--figma .header-item--folder,
+    .page-home .hero-first-screen .header-items--figma .header-item--image-well {
+        max-width: 100%;
+    }
+
+    .header-item__icon-wrap {
+        width: clamp(64px, 22vw, 99px);
+        height: clamp(58px, 20vw, 90px);
+    }
+
+    /* Hero info-grid: 2 кол → 1 кол уже на ≤640, гарантируем тут тоже */
+    .info-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+
+    .hero-links {
+        gap: var(--space-12);
+    }
+
+    /* Footer wordmark может перерасти viewport при letter-spacing/font-weight 500 — фиксируем */
+    .site-footer__wordmark__track {
+        font-size: clamp(56px, 19vw, 96px);
+        letter-spacing: -0.04em;
+    }
+
+    .site-footer__contain {
+        /* На узких устройствах не дать главному вордмарку отрезаться */
+        overflow-x: hidden;
+    }
+
+    /* About: edu-grid auto-fill 240px иногда даёт 1 кол с большой пустотой по бокам;
+       заодно сжимаем падинг карточек */
+    .about-page__edu-card,
+    .about-page__job-card {
+        padding: var(--space-16);
+    }
+
+    /* Case study sidebar (project-info) — внутренние отступы поменьше */
+    .project-case-study-mail .project-info {
+        padding: var(--space-20) var(--space-20);
+    }
+
+    /* Filter pills — pills остаются скроллящимися; чуть уменьшить padding */
+    .filter-pill {
+        padding: 6px var(--space-16);
+        min-height: 32px;
+    }
+
+    /* Lang switch может перекрывать nav-toggle на 320px — уменьшаем минимум */
+    .lang-switch {
+        min-width: 0;
+        font-size: 16px;
+        line-height: 1.3;
+    }
+
+    /* Logo тоже уменьшим */
+    .logo {
+        font-size: 18px;
+        line-height: 1.2;
+    }
+}
+
+/* Глобальная защита от горизонтального скролла на body
+   (snap-mode выключает overflow-x:hidden, поэтому ставим только когда не snap). */
+html:not(.snap-pages) body {
+    overflow-x: hidden;
+}
