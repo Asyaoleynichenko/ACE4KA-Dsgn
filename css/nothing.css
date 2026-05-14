@@ -111,6 +111,42 @@ body {
     }
 }
 
+/* ---------- Hide horizontal scrollbar in native-x case-study card strips ---------- */
+.scroll-scrub-row--native-x .scroll-scrub-row__viewport--native-x {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.scroll-scrub-row--native-x .scroll-scrub-row__viewport--native-x::-webkit-scrollbar {
+    display: none;
+}
+
+/* ---------- Case study top-cards: убрать резерв высоты под corner-icon и min-height ---------- */
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
+    min-height: 0;
+    --case-corner-icon: clamp(24px, 4vw, 44px);
+    padding-bottom: calc(var(--project-card-padding) + var(--case-corner-icon) * 0.35);
+}
+.project-case-study-mail .scroll-scrub-row--cards .scroll-scrub-row__inner {
+    align-items: flex-start;
+}
+
+/* ---------- Footer wordmark: one solid line, not 6-column grid ---------- */
+.site-footer__wordmark__track {
+    display: block;
+    text-align: center;
+    font-size: clamp(72px, 22vw, 280px);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    grid-template-columns: none;
+}
+.site-footer__wordmark__char {
+    display: inline;
+    width: auto;
+    text-align: inherit;
+}
+
 /* ---------- Kill default hover-underline on project card titles ---------- */
 .preview-card__title,
 .preview-content h3,

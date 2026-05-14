@@ -5,6 +5,7 @@ import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import IconAssembleFromDots from '../components/IconAssembleFromDots.jsx';
 import PreviewCardBlock from '../components/PreviewCardBlock';
 import ProjectCard from '../components/ProjectCard';
+import DotIcon from '../components/DotIcon.jsx';
 import HomeCompetenciesScrub from '../components/HomeCompetenciesScrub.jsx';
 import FilterPills from '../components/FilterPills';
 import { projects } from '../data/projects';
@@ -139,7 +140,7 @@ export default function HomePage() {
               <p className="hero-text">{t('hero.text')}</p>
               <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
                 <span className="hero-more__text">{t('hero.moreAbout')}</span>
-                <span className="hero-more__chevron" aria-hidden="true" />
+                <DotIcon name="dot-arrow-right" size={18} className="hero-more__chevron" />
               </Link>
             </div>
             <div className="info-grid">

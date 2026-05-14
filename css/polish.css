@@ -55,13 +55,10 @@
     opacity: 1;
 }
 
-/* Direction rows in HomeCompetencies */
-.home-competencies__line,
-.home-competencies-scrub__line.home-competencies__line {
-    font-size: clamp(48px, 7vw, 88px);
+/* Direction rows in HomeCompetencies — base styling only, size/active handled by style.css */
+.home-competencies__line {
     font-weight: 500;
     letter-spacing: -0.03em;
-    line-height: 1.0;
 }
 
 /* Project card titles + meta/desc */
@@ -224,20 +221,6 @@
     border-color: rgba(255, 255, 255, 0.25);
     transform: translateY(-2px);
     box-shadow: none;
-}
-
-/* Direction-row hover (HomeCompetenciesScrub passive rows) */
-.home-competencies-scrub__line.home-competencies__line {
-    color: rgba(255, 255, 255, 0.3);
-    transition: color var(--t-polish) var(--ease-polish),
-        letter-spacing var(--t-polish) var(--ease-polish);
-}
-.home-competencies-scrub__line.home-competencies__line:hover {
-    color: rgba(255, 255, 255, 0.95);
-    letter-spacing: -0.04em;
-}
-.home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
-    color: #fff;
 }
 
 /* cursor:pointer hint on interactives that don't naturally have it */

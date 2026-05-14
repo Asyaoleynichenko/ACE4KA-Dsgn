@@ -87,6 +87,82 @@ const ICONS = {
       { cx: 19, cy: 19 },
     ],
   },
+  'dot-close': {
+    viewBox: '0 0 24 24',
+    circles: [
+      { cx: 5, cy: 5 },
+      { cx: 9, cy: 9 },
+      { cx: 12, cy: 12 },
+      { cx: 15, cy: 15 },
+      { cx: 19, cy: 19 },
+      { cx: 19, cy: 5 },
+      { cx: 15, cy: 9 },
+      { cx: 9, cy: 15 },
+      { cx: 5, cy: 19 },
+    ],
+  },
+  'dot-burger': {
+    viewBox: '0 0 24 24',
+    circles: [
+      { cx: 5, cy: 7 },
+      { cx: 12, cy: 7 },
+      { cx: 19, cy: 7 },
+      { cx: 5, cy: 12 },
+      { cx: 12, cy: 12 },
+      { cx: 19, cy: 12 },
+      { cx: 5, cy: 17 },
+      { cx: 12, cy: 17 },
+      { cx: 19, cy: 17 },
+    ],
+  },
+  'dot-chevron-left': {
+    viewBox: '0 0 24 24',
+    circles: [
+      { cx: 16, cy: 5 },
+      { cx: 13, cy: 8 },
+      { cx: 10, cy: 11 },
+      { cx: 8, cy: 12 },
+      { cx: 10, cy: 13 },
+      { cx: 13, cy: 16 },
+      { cx: 16, cy: 19 },
+    ],
+  },
+  'dot-chevron-right': {
+    viewBox: '0 0 24 24',
+    circles: [
+      { cx: 8, cy: 5 },
+      { cx: 11, cy: 8 },
+      { cx: 14, cy: 11 },
+      { cx: 16, cy: 12 },
+      { cx: 14, cy: 13 },
+      { cx: 11, cy: 16 },
+      { cx: 8, cy: 19 },
+    ],
+  },
+  'dot-chevron-up': {
+    viewBox: '0 0 24 24',
+    circles: [
+      { cx: 5, cy: 16 },
+      { cx: 8, cy: 13 },
+      { cx: 11, cy: 10 },
+      { cx: 12, cy: 8 },
+      { cx: 13, cy: 10 },
+      { cx: 16, cy: 13 },
+      { cx: 19, cy: 16 },
+    ],
+  },
+  'dot-chevron-down': {
+    viewBox: '0 0 24 24',
+    circles: [
+      { cx: 5, cy: 8 },
+      { cx: 8, cy: 11 },
+      { cx: 11, cy: 14 },
+      { cx: 12, cy: 16 },
+      { cx: 13, cy: 14 },
+      { cx: 16, cy: 11 },
+      { cx: 19, cy: 8 },
+    ],
+  },
 };
 
 export default function DotIcon({ name, size = 20, className = '', animated = true, ...rest }) {

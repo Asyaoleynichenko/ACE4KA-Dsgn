@@ -6,6 +6,7 @@ import { getProjectBySlug } from '../data/projects.js';
 import LanguageSwitcher from './LanguageSwitcher.jsx';
 import { Navigation } from './Navigation';
 import CaseStudyHeaderNav from './CaseStudyHeaderNav.jsx';
+import DotIcon from './DotIcon.jsx';
 
 /** Шапка — Figma 432:30376 (единая строка: логотип | навигация | язык | бургер). */
 export default function Header() {
@@ -63,9 +64,7 @@ export default function Header() {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <span />
-          <span />
-          <span />
+          <DotIcon name={menuOpen ? 'dot-close' : 'dot-burger'} size={22} animated={false} />
         </button>
       </nav>
     </header>

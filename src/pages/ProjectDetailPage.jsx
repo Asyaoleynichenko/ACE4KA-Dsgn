@@ -21,6 +21,7 @@ import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
 import ScrollScrubRow from '../components/ScrollScrubRow.jsx';
+import DotIcon from '../components/DotIcon.jsx';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
 function HorizontalMvpGallery({ slides }) {
@@ -116,7 +117,7 @@ function HorizontalMvpGallery({ slides }) {
               onClick={() => goTo(activeIndex - 1)}
               aria-label={t('projectDetail.prevSlide')}
             >
-              <span aria-hidden="true">‹</span>
+              <DotIcon name="dot-chevron-left" size={20} animated={false} />
             </button>
             <button
               type="button"
@@ -125,7 +126,7 @@ function HorizontalMvpGallery({ slides }) {
               onClick={() => goTo(activeIndex + 1)}
               aria-label={t('projectDetail.nextSlide')}
             >
-              <span aria-hidden="true">›</span>
+              <DotIcon name="dot-chevron-right" size={20} animated={false} />
             </button>
             <div className="mvp-slider__media">
               <button

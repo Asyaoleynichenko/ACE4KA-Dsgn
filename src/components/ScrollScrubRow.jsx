@@ -1,13 +1,13 @@
 import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-/** Вертикальный ход страницы на полный горизонтальный сдвиг (больше — дольше читать). */
+/** Вертикальный ход страницы на полный горизонтальный сдвиг — 1:1 маппинг, без избытка. */
 function getScrollSpan(mx, vh) {
-  return Math.min(1300, Math.max(520, mx * 0.68 + vh * 0.36));
+  return Math.max(150, Math.min(mx, vh * 0.7));
 }
 
-/** Доп. вертикальный скролл в зоне pin: горизонталь = 0 (время прочитать первую карту). */
-function getReadDwellPx(vh) {
-  return Math.max(220, vh * 0.32);
+/** Без dwell — карточки сразу начинают скрабиться, никаких «прилипаний». */
+function getReadDwellPx() {
+  return 0;
 }
 
 /**
@@ -52,6 +52,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return () => mq.removeEventListener('change', sync);
   }, []);
 
+  /** Cards-вариант рендерится через native horizontal scroll (см. диагноз обрезки/runway). */
+  const useNativeX = reducedMotion || variant === 'cards';
+
   const recalcMaxX = useCallback(() => {
     const inner = innerRef.current;
     const viewport = viewportRef.current;
@@ -81,6 +84,10 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     if (!runway || !track || !viewport || !inner) return;
     const vh = window.innerHeight || 1;
     const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
+    if (mx <= 1) {
+      setRunwayMin((prev) => (prev === 0 ? prev : 0));
+      return;
+    }
     const scrollSpan = getScrollSpan(mx, vh);
     const dwellPx = getReadDwellPx(vh);
     const trackH = track.offsetHeight;
@@ -100,13 +107,13 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   }, []);
 
   useLayoutEffect(() => {
-    if (reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
     measureRunwayMin();
     return undefined;
-  }, [children, maxX, measureRunwayMin, reducedMotion, variant]);
+  }, [children, maxX, measureRunwayMin, useNativeX, variant]);
 
   useEffect(() => {
-    if (reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
     const runway = runwayRef.current;
     const track = trackRef.current;
     const vp = viewportRef.current;
@@ -123,10 +130,10 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       ro.disconnect();
       window.removeEventListener('resize', onResize);
     };
-  }, [measureRunwayMin, reducedMotion, variant]);
+  }, [measureRunwayMin, useNativeX, variant]);
 
   const updateFromPageScroll = useCallback(() => {
-    if (reducedMotion) return;
+    if (useNativeX) return;
     const inner = innerRef.current;
     const viewport = viewportRef.current;
     if (!inner || !viewport) return;
@@ -137,10 +144,10 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const idx =
       count <= 1 || mx <= 1 ? 0 : Math.min(count - 1, Math.round((x / mx) * (count - 1)));
     setActiveIdx(idx);
-  }, [count, reducedMotion, progressFromViewport]);
+  }, [count, useNativeX, progressFromViewport]);
 
   useEffect(() => {
-    if (reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
 
     const tick = () => {
       rafRef.current = null;
@@ -162,12 +169,12 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       window.removeEventListener('scroll', onScrollOrResize);
       window.removeEventListener('resize', onScrollOrResize);
     };
-  }, [updateFromPageScroll, reducedMotion, variant]);
+  }, [updateFromPageScroll, useNativeX, variant]);
 
   useEffect(() => {
-    if (reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
     updateFromPageScroll();
-  }, [maxX, reducedMotion, variant, updateFromPageScroll]);
+  }, [maxX, useNativeX, variant, updateFromPageScroll]);
 
   const syncDotsFromViewportScroll = useCallback(() => {
     const vp = viewportRef.current;
@@ -192,13 +199,13 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   }, [count]);
 
   useLayoutEffect(() => {
-    if (!reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (!useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
     syncDotsFromViewportScroll();
     return undefined;
-  }, [children, reducedMotion, variant, syncDotsFromViewportScroll]);
+  }, [children, useNativeX, variant, syncDotsFromViewportScroll]);
 
   useEffect(() => {
-    if (!reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (!useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
     const vp = viewportRef.current;
     const inner = innerRef.current;
     if (!vp || !inner) return undefined;
@@ -220,10 +227,10 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       vp.removeEventListener('scroll', schedule);
       ro.disconnect();
     };
-  }, [reducedMotion, variant, syncDotsFromViewportScroll]);
+  }, [useNativeX, variant, syncDotsFromViewportScroll]);
 
   useEffect(() => {
-    if (!reducedMotion || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (!useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
     const vp = viewportRef.current;
     if (!vp) return undefined;
     const onWheel = (e) => {
@@ -238,7 +245,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     };
     vp.addEventListener('wheel', onWheel, { passive: false });
     return () => vp.removeEventListener('wheel', onWheel);
-  }, [reducedMotion, variant]);
+  }, [useNativeX, variant]);
 
   const scrollToSlideReduced = useCallback(
     (index) => {
@@ -287,7 +294,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   }
 
   if (variant === 'cards' || variant === 'contact') {
-    if (reducedMotion) {
+    if (useNativeX) {
       return (
         <div className={`${rootClass} scroll-scrub-row--native-x scroll-scrub-row--reduced-motion`.trim()}>
           <div className="scroll-scrub-row__shell">
