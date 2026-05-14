@@ -135,7 +135,7 @@ export default function HomePage() {
           <div className="hero__content">
             <div className="hero-content">
               <p className="hero-role">{t('hero.role')}</p>
-              <h1 className="hero-title">{t('hero.title')}</h1>
+              <h1 className="hero-title" data-scale="hero-name">{t('hero.title')}</h1>
               <p className="hero-text">{t('hero.text')}</p>
               <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
                 <span className="hero-more__text">{t('hero.moreAbout')}</span>
@@ -299,7 +299,7 @@ export default function HomePage() {
 
       <section className="section section-projects snap-screen" data-node-id="1:285" data-figma-node="1-285">
         <div className="logo-section" data-node-id="1:286">
-          <h2 className="projects-title-main" data-node-id="1:289">{t('hero.projectsSectionTitle')}</h2>
+          <h2 className="projects-title-main" data-node-id="1:289" data-scale="section-title">{t('hero.projectsSectionTitle')}</h2>
           <FilterPills />
         </div>
         <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">

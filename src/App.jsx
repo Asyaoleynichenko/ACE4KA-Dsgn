@@ -16,6 +16,7 @@ import Page89_909 from './pages/Page89_909';
 import Page89_915 from './pages/Page89_915';
 import Page89_920 from './pages/Page89_920';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import ScrollPolish from './components/ScrollPolish.jsx';
 
 const routerBasename =
   import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '') || undefined;
@@ -38,6 +39,7 @@ export default function App() {
     <BrowserRouter basename={routerBasename}>
       <I18nProvider>
         <ScrollToTop />
+        <ScrollPolish />
         <Routes>
           <Route path="/" element={<RootLocaleRedirect />} />
           <Route path="/project/:slug" element={<LegacyLocaleRedirect />} />

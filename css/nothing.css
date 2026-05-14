@@ -1,0 +1,234 @@
+/* =========================================================
+   Nothing.tech layer
+   - One accent #FF3D2E. No green. No monospace.
+   - Suisse Int'l → Inter → system fallback.
+   - Dot-matrix icons, lift-on-hover, dot-fill, pulse-dot.
+   ========================================================= */
+
+:root {
+    /* Surfaces */
+    --bg-primary: #0a0a0a;
+    --bg-surface: #141414;
+    --bg-elevated: rgba(255, 255, 255, 0.04);
+
+    /* Borders */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.2);
+
+    /* Text */
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.55);
+    --text-tertiary: rgba(255, 255, 255, 0.4);
+
+    /* Accent — single hot red, used sparingly */
+    --accent: #FF3D2E;
+
+    /* Radii */
+    --radius-pill: 999px;
+    --radius-lg: 14px;
+    --radius-md: 11px;
+    --radius-sm: 8px;
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --dur-fast: 200ms;
+    --dur-base: 300ms;
+    --dur-slow: 400ms;
+
+    /* Kill monospace globally — Suisse → Inter → system */
+    --font-mono: "Suisse Int'l", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --cs-font-mono: "Suisse Int'l", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-competencies-display: "Suisse Int'l", "Inter", system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Body font preference ---------- */
+body {
+    font-family: "Suisse Int'l", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ---------- Green removal ----------
+   Was set in polish.css for the "open for work" indicator.
+   Now red, pulsing.
+*/
+.site-footer__dot {
+    background: var(--accent);
+    width: 8px;
+    height: 8px;
+    animation: nothing-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes nothing-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* Reusable utility */
+.pulse-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: nothing-pulse 1.6s ease-in-out infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* ---------- Dot icon base + animation ---------- */
+.dot-icon {
+    display: inline-block;
+    vertical-align: middle;
+    color: currentColor;
+    flex-shrink: 0;
+}
+
+@keyframes dot-fill {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.dot-icon[data-animated] circle {
+    animation: dot-fill var(--dur-slow) var(--ease-out) backwards;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+.dot-icon[data-animated] circle:nth-child(1) { animation-delay: 0ms; }
+.dot-icon[data-animated] circle:nth-child(2) { animation-delay: 30ms; }
+.dot-icon[data-animated] circle:nth-child(3) { animation-delay: 60ms; }
+.dot-icon[data-animated] circle:nth-child(4) { animation-delay: 90ms; }
+.dot-icon[data-animated] circle:nth-child(5) { animation-delay: 120ms; }
+.dot-icon[data-animated] circle:nth-child(6) { animation-delay: 150ms; }
+.dot-icon[data-animated] circle:nth-child(7) { animation-delay: 180ms; }
+.dot-icon[data-animated] circle:nth-child(8) { animation-delay: 210ms; }
+.dot-icon[data-animated] circle:nth-child(9) { animation-delay: 240ms; }
+.dot-icon[data-animated] circle:nth-child(10) { animation-delay: 270ms; }
+.dot-icon[data-animated] circle:nth-child(n+11) { animation-delay: 300ms; }
+
+@media (prefers-reduced-motion: reduce) {
+    .dot-icon[data-animated] circle {
+        animation: none;
+    }
+}
+
+/* ---------- Card lift (translateY only, no shadow) ---------- */
+.preview-card {
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: none;
+    transition: transform var(--dur-slow) var(--ease-out),
+        border-color var(--dur-base) ease;
+}
+.preview-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-hover);
+    box-shadow: none;
+}
+
+/* Editorial: impact + context cells already use 0.5px lines — no extra shadow */
+.case-study-editorial .cs-impact__cell,
+.case-study-editorial .cs-context-grid__cell {
+    transition: border-color var(--dur-base) ease;
+}
+
+/* ---------- Hypothesis chips — use accent for confirmed where it adds weight,
+   but keep palette restrained. Replace prior green confirmed with white. ---------- */
+.case-study-editorial .cs-hypotheses__row[data-status="confirmed"] .cs-hypotheses__chip {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+.case-study-editorial .cs-hypotheses__row[data-status="rejected"] .cs-hypotheses__chip {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+.case-study-editorial .cs-hypotheses__row[data-status="iterated"] .cs-hypotheses__chip {
+    color: var(--text-secondary);
+    border-color: var(--border-hover);
+}
+.case-study-editorial .cs-impact__cell[data-direction="up"] .cs-impact__arrow {
+    color: var(--text-primary);
+}
+.case-study-editorial .cs-impact__cell[data-direction="down"] .cs-impact__arrow {
+    color: var(--accent);
+}
+
+/* ---------- Section eyebrow with DotIcon ---------- */
+.section-label,
+.case-study-editorial .cs-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 24px;
+}
+
+/* ---------- Dot progress ---------- */
+.dot-progress {
+    display: inline-flex;
+    gap: 4px;
+}
+.dot-progress-item {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: background var(--dur-base) ease;
+}
+.dot-progress-item.filled {
+    background: #fff;
+}
+.dot-progress-item.active {
+    animation: nothing-pulse 1.4s ease-in-out infinite;
+}
+
+/* ---------- Tags (used inside cards) ---------- */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 0.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-pill);
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+}
+
+/* ---------- Filter chips: drop monospace, keep squircle/pill ---------- */
+.filter-pill {
+    font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
+    letter-spacing: 0.12em;
+    border-radius: var(--radius-pill);
+    border: 0.5px solid var(--border-hover);
+}
+.filter-pill.filter-pill--active {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ---------- Buttons: square 0.5px (already set by polish, drop monospace) ---------- */
+.btn-show-all {
+    font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
+    letter-spacing: 0.12em;
+    border-radius: var(--radius-md);
+}
+
+/* ---------- Polish-layer monospace usage neutralized via --font-mono var,
+   but a few places hardcode the family name. Override them. ---------- */
+.case-study-editorial .cs-meta__label,
+.case-study-editorial .cs-impact__label,
+.case-study-editorial .cs-impact__arrow,
+.case-study-editorial .cs-impact__note,
+.case-study-editorial .cs-context-grid__label,
+.case-study-editorial .cs-tradeoff__label,
+.case-study-editorial .cs-hypotheses__index,
+.case-study-editorial .cs-hypotheses__subline,
+.case-study-editorial .cs-hypotheses__chip,
+.case-study-editorial .cs-hypotheses__result {
+    font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
+}
