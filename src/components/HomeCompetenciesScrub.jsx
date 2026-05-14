@@ -138,8 +138,8 @@ export default function HomeCompetenciesScrub({
     const appRoot = document.getElementById('root');
     const vh = appRoot?.clientHeight ?? window.innerHeight ?? 800;
     const rect = runway.getBoundingClientRect();
-    /* Start the scrub earlier — as soon as the runway enters the viewport, not only when its top hits 0. */
-    const scrolled = -rect.top + vh * 0.45;
+    /* Start the scrub earlier — as soon as the runway enters the viewport, +80px head-start. */
+    const scrolled = -rect.top + vh * 0.45 + 80;
     const span = Math.max(1, runway.offsetHeight - vh * 0.1);
     const t = Math.min(1, Math.max(0, scrolled / span));
     const { idx, scaleX, scaleY } = activeLineStretchFromScroll(n, t);
