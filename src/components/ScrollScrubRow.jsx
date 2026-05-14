@@ -52,8 +52,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return () => mq.removeEventListener('change', sync);
   }, []);
 
-  /** Cards-вариант рендерится через native horizontal scroll (см. диагноз обрезки/runway). */
-  const useNativeX = reducedMotion || variant === 'cards';
+  /** Native horizontal scroll включается только при reduced-motion; в остальных случаях — scroll-linked auto-scrub. */
+  const useNativeX = reducedMotion;
 
   const recalcMaxX = useCallback(() => {
     const inner = innerRef.current;
