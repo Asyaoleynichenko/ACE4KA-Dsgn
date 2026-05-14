@@ -43,6 +43,14 @@
   /* Figma 418:21263 — Suisse Intl 600 в макете; при отсутствии файлов в `public/fonts` — Inter 600. */
   --font-competencies-display: 'Suisse Intl', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
+  /* Figma 416:12975 — компетенции: смешанный тайп-рамп H2/H4/H1/H5/H3 для строк; H1 — максимум, H5 — минимум. */
+  --comp-line-size-1: clamp(32px, 9.5vw, 96px);
+  --comp-line-size-2: clamp(28px, 8.5vw, 84px);
+  --comp-line-size-3: clamp(22px, 6.4vw, 64px);
+  --comp-line-size-4: clamp(26px, 7.5vw, 76px);
+  --comp-line-size-5: clamp(20px, 5.4vw, 56px);
+  --comp-line-resting-ratio: 0.62;
+
   /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
   --ease-smart: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-page: var(--ease-smart);
@@ -1446,8 +1454,9 @@ button:focus-visible,
     width: 100%;
     margin-top: var(--hero-section-gap);
     margin-bottom: var(--space-48);
-    padding-left: var(--layout-edge-left);
-    padding-right: var(--layout-edge-right);
+    /* Пользовательский запрос: блок шире, без боковых отрезов — панель тянется на всю ширину экрана. */
+    padding-left: 0;
+    padding-right: 0;
     box-sizing: border-box;
     /* Между двумя snap-screen (hero и проекты) без своей точки mandatory-snap «пролистывал» блок */
     scroll-snap-align: start;
@@ -1457,16 +1466,16 @@ button:focus-visible,
 .home-competencies__panel {
     position: relative;
     width: 100%;
-    max-width: min(896px, 100%);
+    /* Edge-to-edge: убрали max-width, скругление и тень — панель сливается с фоном страницы. */
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 24px;
+    border-radius: 0;
     background: #000000;
     color: #fafafa;
     box-sizing: border-box;
-    /* Figma: карточки вылезают за края панели — overflow:hidden обрезал их как «битый блок с картинкой» */
     overflow: visible;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    box-shadow: none;
 }
 
 .home-competencies__inner {
@@ -1526,10 +1535,14 @@ button:focus-visible,
 
 .home-competencies__inner--scrub {
     position: relative;
-    min-height: min(480px, 70vh);
-    /* Запас под шапку: даже когда блок только входит в вьюпорт, строки не должны совпадать с логотипом */
-    padding: max(104px, clamp(88px, 15vw, 200px)) clamp(16px, 3vw, 24px) clamp(40px, 8vw, 120px);
+    /* sticky сверху уже отступает от шапки; внутри панели — симметричный паддинг + флекс-центрирование */
+    min-height: min(680px, 78vh);
+    padding: clamp(56px, 10vw, 120px) clamp(16px, 3vw, 24px);
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
 }
 
 .home-competencies__inner--scrub-static {
@@ -1547,11 +1560,11 @@ button:focus-visible,
     margin-bottom: clamp(8px, 2vw, 16px);
 }
 
-/* Центр — типографика; по бокам — превью (z-index выше, могут наезжать на текст) */
+/* Центр — типографика на всю ширину панели. Превью-карточки больше не нужны (см. JSX). */
 .home-competencies-scrub__stage {
     position: relative;
     width: 100%;
-    max-width: min(896px, 100%);
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     min-height: min(560px, 68vh);
@@ -1569,7 +1582,8 @@ button:focus-visible,
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: min(520px, 78%);
+    /* Figma 416:12975 — типографика занимает всю ширину панели (896×), а не узкую колонку 520×. */
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -1588,6 +1602,8 @@ button:focus-visible,
     z-index: 4;
     box-sizing: border-box;
     pointer-events: none;
+    /* Figma 416:12975 — в макете только декоративные @-карточки (TL/BR); превью проектов перекрывали типографику. */
+    display: none;
 }
 
 .home-competencies-scrub__side .home-competencies-scrub__card-wrap {
@@ -1666,7 +1682,8 @@ button:focus-visible,
     position: relative;
     z-index: 2;
     flex: 1 1 auto;
-    max-width: min(520px, 72%);
+    /* Figma 416:12975 — типографика занимает всю ширину панели (896×). */
+    max-width: 100%;
     text-align: center;
     pointer-events: none;
 }
@@ -1678,6 +1695,8 @@ button:focus-visible,
     max-width: 300px;
     z-index: 4;
     pointer-events: none;
+    /* Figma 416:12975 — синхронно со скроллящимся вариантом: только декоративные @-карточки. */
+    display: none;
 }
 
 .home-competencies-scrub__static-side .home-competencies-scrub__card-wrap {
@@ -1730,13 +1749,20 @@ button:focus-visible,
     overflow: visible;
 }
 
+/* Figma 416:12975 — порядок H в стопке: H2 / H4 / H1 / H5 / H3 (data-heading на line-wrap). */
+.home-competencies-scrub__line-wrap[data-heading="1"] { --comp-line-size: var(--comp-line-size-1); }
+.home-competencies-scrub__line-wrap[data-heading="2"] { --comp-line-size: var(--comp-line-size-2); }
+.home-competencies-scrub__line-wrap[data-heading="3"] { --comp-line-size: var(--comp-line-size-3); }
+.home-competencies-scrub__line-wrap[data-heading="4"] { --comp-line-size: var(--comp-line-size-4); }
+.home-competencies-scrub__line-wrap[data-heading="5"] { --comp-line-size: var(--comp-line-size-5); }
+
 .home-competencies-scrub__line.home-competencies__line {
-    font-size: clamp(22px, 5.8vw, 64px);
+    font-size: calc(var(--comp-line-size, var(--comp-line-size-3)) * var(--comp-line-resting-ratio, 0.62));
     transition: font-size 0.28s var(--ease-smart, ease);
 }
 
 .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
-    font-size: clamp(32px, 9.5vw, 96px);
+    font-size: var(--comp-line-size, var(--comp-line-size-1));
     transform: scale(var(--comp-active-scale-x, 1), var(--comp-active-scale-y, 1));
     transform-origin: center center;
     will-change: transform;
@@ -1766,28 +1792,6 @@ button:focus-visible,
     pointer-events: auto;
 }
 
-.home-competencies-scrub__dots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: clamp(8px, 2vw, 16px);
-}
-
-.home-competencies-scrub__dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(250, 250, 250, 0.22);
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
-}
-
-.home-competencies-scrub__dot.is-active {
-    background: rgba(250, 250, 250, 0.92);
-    transform: scale(1.25);
-}
-
 .home-competencies-scrub--reduced-motion .home-competencies-scrub__static-step {
     margin-bottom: clamp(32px, 8vw, 56px);
     min-height: min(200px, 36vw);
@@ -1801,11 +1805,24 @@ button:focus-visible,
     margin: 0;
 }
 
+/* Figma 416:12975 — reduced-motion / static: H-рамп тот же, каждая строка показана в полном размере H-N. */
+.home-competencies-scrub__static-step[data-heading="1"] { --comp-line-size: var(--comp-line-size-1); }
+.home-competencies-scrub__static-step[data-heading="2"] { --comp-line-size: var(--comp-line-size-2); }
+.home-competencies-scrub__static-step[data-heading="3"] { --comp-line-size: var(--comp-line-size-3); }
+.home-competencies-scrub__static-step[data-heading="4"] { --comp-line-size: var(--comp-line-size-4); }
+.home-competencies-scrub__static-step[data-heading="5"] { --comp-line-size: var(--comp-line-size-5); }
+
+.home-competencies-scrub__line--static.home-competencies__line {
+    font-size: var(--comp-line-size, var(--comp-line-size-1));
+}
+
 .home-competencies__floats {
     position: absolute;
     inset: 0;
     z-index: 2;
     pointer-events: none;
+    /* Figma 416:12975: убрали декоративные @-карточки — текст должен дышать по центру. */
+    display: none;
 }
 
 .home-competencies__float {
@@ -1844,6 +1861,8 @@ button:focus-visible,
     inset: 0;
     z-index: 2;
     pointer-events: none;
+    /* Figma 416:12975: убрали декоративные @-карточки — текст должен дышать по центру. */
+    display: none;
 }
 
 .home-competencies__card {

@@ -1,16 +1,17 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { useState } from 'react';
 import { useIntersectionScrollSpy } from '../hooks/useIntersectionScrollSpy.js';
 import { smartTween, smartTweenReduced } from '../motion/smartAnimate.js';
 
 function dashWidths(level, isActive) {
   const parent = level <= 1;
-  if (isActive) return parent ? 44 : 30;
-  return parent ? 18 : 10;
+  if (isActive) return parent ? 32 : 26;
+  return parent ? 20 : 12;
 }
 
 /**
- * Боковая навигация в духе nektar.tv: тире + подпись, иерархия по level,
- * scrollspy через Intersection Observer, плавные состояния — Framer Motion.
+ * Боковая навигация: по умолчанию — только вертикальный столбец чёрточек справа;
+ * на hover/focus раскрывается в TOC с подписями. scrollspy — IntersectionObserver.
  *
  * @param {{ id: string, label: string, level?: number }[]} items
  */
@@ -18,6 +19,7 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
   const reduceMotion = useReducedMotion();
   const sectionIds = items.map((i) => i.id);
   const activeId = useIntersectionScrollSpy(sectionIds);
+  const [expanded, setExpanded] = useState(false);
 
   const scrollToId = (id) => {
     const el = document.getElementById(id);
@@ -28,19 +30,45 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
 
   if (!items.length) return null;
 
+  const tween = reduceMotion ? smartTweenReduced() : smartTween(0.24);
+
   return (
     <nav
-      className={`pointer-events-auto fixed right-5 top-1/2 z-[55] hidden max-w-[min(220px,calc(50vw-24px))] -translate-y-1/2 min-[1120px]:block ${className}`.trim()}
+      className={`pointer-events-auto fixed right-5 top-1/2 z-[55] hidden -translate-y-1/2 min-[1120px]:block ${className}`.trim()}
       aria-label={ariaLabel}
+      onMouseEnter={() => setExpanded(true)}
+      onMouseLeave={() => setExpanded(false)}
+      onFocus={() => setExpanded(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setExpanded(false);
+      }}
     >
-      <div className="rounded-3xl border border-white/10 bg-black/25 px-5 py-6 font-sans shadow-lg shadow-black/20 backdrop-blur-xl">
+      <motion.div
+        className="font-sans"
+        initial={false}
+        animate={{
+          paddingInline: expanded ? 20 : 12,
+          paddingBlock: expanded ? 24 : 18,
+          backgroundColor: expanded ? 'rgba(0,0,0,0.42)' : 'rgba(0,0,0,0)',
+          borderColor: expanded ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0)',
+        }}
+        transition={tween}
+        style={{
+          borderRadius: 24,
+          borderWidth: 1,
+          borderStyle: 'solid',
+          backdropFilter: expanded ? 'blur(20px)' : 'none',
+          WebkitBackdropFilter: expanded ? 'blur(20px)' : 'none',
+          boxShadow: expanded ? '0 12px 36px rgba(0,0,0,0.28)' : 'none',
+        }}
+      >
         <ul className="flex flex-col gap-3.5">
           {items.map(({ id, label, level = 1 }) => {
             const isActive = activeId === id;
             const parent = level <= 1;
             const w = dashWidths(level, isActive);
             return (
-              <li key={id} style={{ paddingLeft: parent ? 0 : 12 }}>
+              <li key={id} style={{ paddingLeft: expanded && !parent ? 12 : 0 }}>
                 <a
                   href={`#${id}`}
                   className="group flex max-w-full items-center gap-3 outline-none ring-offset-2 ring-offset-transparent focus-visible:ring-2 focus-visible:ring-white/40"
@@ -55,18 +83,21 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
                     initial={false}
                     animate={{
                       width: w,
-                      backgroundColor: isActive ? '#ffffff' : 'rgba(255,255,255,0.28)',
-                      opacity: isActive ? 1 : 0.55,
+                      backgroundColor: isActive ? '#ffffff' : 'rgba(255,255,255,0.32)',
+                      opacity: isActive ? 1 : 0.6,
                     }}
-                    transition={reduceMotion ? smartTweenReduced() : smartTween(0.28)}
+                    transition={tween}
                   />
                   <motion.span
-                    className="min-w-0 truncate text-left text-[11px] font-medium uppercase tracking-[0.14em] text-white"
+                    className="overflow-hidden whitespace-nowrap text-left text-[13px] font-medium tracking-[0.01em] text-white"
                     initial={false}
                     animate={{
-                      opacity: isActive ? 1 : 0.4,
+                      opacity: expanded ? (isActive ? 1 : 0.42) : 0,
+                      maxWidth: expanded ? 200 : 0,
+                      marginLeft: expanded ? 0 : -12,
                     }}
-                    transition={reduceMotion ? smartTweenReduced() : smartTween(0.28)}
+                    transition={tween}
+                    aria-hidden={expanded ? undefined : 'true'}
                   >
                     {label}
                   </motion.span>
@@ -75,7 +106,7 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
             );
           })}
         </ul>
-      </div>
+      </motion.div>
     </nav>
   );
 }

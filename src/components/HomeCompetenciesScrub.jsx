@@ -21,6 +21,9 @@ function bindScrollResize(onTick) {
   };
 }
 
+/** Figma 416:12975 — порядок H-уровней в стопке (H1 — самый большой, H5 — самый маленький). */
+const COMPETENCIES_HEADING_ORDER = [2, 4, 1, 5, 3];
+
 function chunkSlugsForLines(lineCount, homeSlugs) {
   if (!lineCount || !homeSlugs?.length) return [];
   const out = [];
@@ -187,27 +190,19 @@ export default function HomeCompetenciesScrub({
       <div className="home-competencies-scrub home-competencies-scrub--reduced-motion">
         <div className="home-competencies__panel">
           <div className="home-competencies__inner home-competencies__inner--scrub-static">
-            {lines.map((line, i) => {
-              const slugs = slugRows[i] ?? [];
-              const rowProjects = slugs.map(resolveProject).filter(Boolean);
-              const rp0 = rowProjects[0] ?? null;
-              const rp1 = rowProjects[1] ?? null;
-              return (
-                <div key={i} className="home-competencies-scrub__static-step">
-                  <div className="home-competencies-scrub__static-stage">
-                    <div className="home-competencies-scrub__static-side home-competencies-scrub__static-side--left">
-                      {rp0 ? projectCard(rp0) : null}
-                    </div>
-                    <div className="home-competencies-scrub__static-center">
-                      <p className="home-competencies__line home-competencies-scrub__line--static">{line}</p>
-                    </div>
-                    <div className="home-competencies-scrub__static-side home-competencies-scrub__static-side--right">
-                      {rp1 ? projectCard(rp1) : null}
-                    </div>
+            {lines.map((line, i) => (
+              <div
+                key={i}
+                className="home-competencies-scrub__static-step"
+                data-heading={COMPETENCIES_HEADING_ORDER[i] ?? 3}
+              >
+                <div className="home-competencies-scrub__static-stage">
+                  <div className="home-competencies-scrub__static-center">
+                    <p className="home-competencies__line home-competencies-scrub__line--static">{line}</p>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
             {children}
           </div>
         </div>
@@ -226,37 +221,22 @@ export default function HomeCompetenciesScrub({
           <div className="home-competencies__inner home-competencies__inner--scrub">
             <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
               <div ref={stageRef} className="home-competencies-scrub__stage">
-                <div className="home-competencies-scrub__side home-competencies-scrub__side--left">
-                  {leftProject ? projectCard(leftProject) : null}
-                </div>
                 <div className="home-competencies-scrub__center">
                   <div className="home-competencies-scrub__lines">
                     {lines.map((line, i) => (
                       <div
                         key={i}
                         className={`home-competencies-scrub__line-wrap${i === activeIdx ? ' is-active' : ''}`}
+                        data-heading={COMPETENCIES_HEADING_ORDER[i] ?? 3}
                         aria-current={i === activeIdx ? 'true' : undefined}
                       >
                         <p className="home-competencies__line home-competencies-scrub__line">{line}</p>
                       </div>
                     ))}
                   </div>
-                  {!leftProject && !rightProject ? (
-                    <p className="home-competencies-scrub__previews-empty">{t('hero.competencies.previewEmpty')}</p>
-                  ) : null}
-                </div>
-                <div className="home-competencies-scrub__side home-competencies-scrub__side--right">
-                  {rightProject ? projectCard(rightProject) : null}
                 </div>
               </div>
             </div>
-            {n > 1 ? (
-              <div className="home-competencies-scrub__dots" aria-hidden="true">
-                {lines.map((_, i) => (
-                  <span key={i} className={`home-competencies-scrub__dot${i === activeIdx ? ' is-active' : ''}`} />
-                ))}
-              </div>
-            ) : null}
             {children}
           </div>
         </div>

@@ -262,93 +262,142 @@ body {
     border-radius: var(--radius-md);
 }
 
-/* ---------- Scrollspy: vertical dot-progress on right edge ---------- */
+/* ---------- Scrollspy: dashes by default; hover-expand into a labeled TOC ---------- */
 .cs-dotnav {
     position: fixed;
     top: 50%;
     right: max(16px, env(safe-area-inset-right, 16px));
     transform: translateY(-50%);
     z-index: 60;
-    pointer-events: none;
+    pointer-events: auto;
+    padding: 14px 14px;
+    border-radius: 22px;
+    border: 1px solid transparent;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition:
+        padding 220ms var(--ease-out, cubic-bezier(0.32, 0.72, 0, 1)),
+        background-color 220ms var(--ease-out, cubic-bezier(0.32, 0.72, 0, 1)),
+        border-color 220ms var(--ease-out, cubic-bezier(0.32, 0.72, 0, 1)),
+        box-shadow 220ms var(--ease-out, cubic-bezier(0.32, 0.72, 0, 1));
+}
+.cs-dotnav:hover,
+.cs-dotnav:focus-within {
+    padding: 20px 22px;
+    background: rgba(0, 0, 0, 0.42);
+    border-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
 }
 .cs-dotnav__list {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 12px;
     margin: 0;
     padding: 0;
     list-style: none;
+}
+.cs-dotnav:hover .cs-dotnav__list,
+.cs-dotnav:focus-within .cs-dotnav__list {
+    align-items: stretch;
 }
 .cs-dotnav__item {
     margin: 0;
 }
 .cs-dotnav__link {
     position: relative;
-    display: block;
-    width: 6px;
-    height: 6px;
-    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
     color: var(--text-tertiary);
     text-decoration: none;
-    pointer-events: auto;
     cursor: pointer;
-    transition: color var(--dur-base) ease;
+    transition: color 220ms ease;
+    outline: none;
+}
+.cs-dotnav:hover .cs-dotnav__link,
+.cs-dotnav:focus-within .cs-dotnav__link {
+    flex-direction: row;
 }
 .cs-dotnav__dot {
     display: block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: background var(--dur-base) ease, transform var(--dur-fast) var(--ease-out);
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.32);
+    flex-shrink: 0;
+    transition:
+        width 220ms var(--ease-out, cubic-bezier(0.32, 0.72, 0, 1)),
+        background 220ms ease;
 }
-.cs-dotnav__link:hover .cs-dotnav__dot {
-    background: rgba(255, 255, 255, 0.8);
-    transform: scale(1.4);
+.cs-dotnav__link:hover .cs-dotnav__dot,
+.cs-dotnav__link:focus-visible .cs-dotnav__dot {
+    background: rgba(255, 255, 255, 0.7);
 }
 .cs-dotnav__link.is-active {
     color: var(--text-primary);
 }
 .cs-dotnav__link.is-active .cs-dotnav__dot {
-    background: var(--accent);
-    animation: nothing-pulse 1.4s ease-in-out infinite;
+    width: 36px;
+    background: #ffffff;
+    animation: none;
 }
 .cs-dotnav__label {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%) translateX(8px);
-    font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.06em;
+    overflow: hidden;
     white-space: nowrap;
+    max-width: 0;
     opacity: 0;
-    transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
-    color: var(--text-primary);
+    font-family: "Suisse Int'l", "Inter", system-ui, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0;
+    color: rgba(255, 255, 255, 0.46);
     pointer-events: none;
+    transition:
+        max-width 240ms var(--ease-out, cubic-bezier(0.32, 0.72, 0, 1)),
+        opacity 240ms var(--ease-out, cubic-bezier(0.32, 0.72, 0, 1)),
+        color 220ms ease;
 }
-.cs-dotnav__link:hover .cs-dotnav__label,
-.cs-dotnav__link:focus-visible .cs-dotnav__label,
-.cs-dotnav__link.is-active .cs-dotnav__label {
+.cs-dotnav:hover .cs-dotnav__label,
+.cs-dotnav:focus-within .cs-dotnav__label {
+    max-width: 240px;
     opacity: 1;
-    transform: translateY(-50%) translateX(0);
+    pointer-events: auto;
+}
+.cs-dotnav:hover .cs-dotnav__link.is-active .cs-dotnav__label,
+.cs-dotnav:focus-within .cs-dotnav__link.is-active .cs-dotnav__label {
+    color: #ffffff;
 }
 
 @media (hover: none), (max-width: 768px) {
-    /* On touch / narrow screens: dots-only, no label slide-out */
-    .cs-dotnav__link:hover .cs-dotnav__label,
-    .cs-dotnav__link.is-active .cs-dotnav__label {
+    /* На тач/узких — только чёрточки, без раскрытия */
+    .cs-dotnav:hover .cs-dotnav__label,
+    .cs-dotnav:focus-within .cs-dotnav__label {
+        max-width: 0;
         opacity: 0;
+    }
+    .cs-dotnav:hover,
+    .cs-dotnav:focus-within {
+        padding: 14px 14px;
+        background: transparent;
+        border-color: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: none;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .cs-dotnav,
     .cs-dotnav__dot,
-    .cs-dotnav__label {
+    .cs-dotnav__label,
+    .cs-dotnav__list,
+    .cs-dotnav__link {
         transition: none;
-    }
-    .cs-dotnav__link.is-active .cs-dotnav__dot {
-        animation: none;
     }
 }
 
