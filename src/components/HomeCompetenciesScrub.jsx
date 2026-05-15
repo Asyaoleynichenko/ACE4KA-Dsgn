@@ -134,13 +134,15 @@ export default function HomeCompetenciesScrub({
   const updateActiveFromScroll = useCallback(() => {
     if (reducedMotion || n < 1) return;
     const runway = runwayRef.current;
-    if (!runway) return;
+    const sticky = stickyRef.current;
+    if (!runway || !sticky) return;
     const appRoot = document.getElementById('root');
     const vh = appRoot?.clientHeight ?? window.innerHeight ?? 800;
     const rect = runway.getBoundingClientRect();
-    /* Start the scrub earlier — as soon as the runway enters the viewport, +80px head-start. */
+    /* Pre-trigger 80px + 45vh so the scrub starts as soon as the runway enters the viewport. */
     const scrolled = -rect.top + vh * 0.45 + 80;
-    const span = Math.max(1, runway.offsetHeight - vh * 0.1);
+    /* Span = full distance the sticky stays pinned. Guarantees t reaches 1 (last line: Branding) before unstick. */
+    const span = Math.max(1, runway.offsetHeight - sticky.offsetHeight);
     const t = Math.min(1, Math.max(0, scrolled / span));
     const { idx, scaleX, scaleY } = activeLineStretchFromScroll(n, t);
     setActiveIdx((prev) => (prev === idx ? prev : idx));

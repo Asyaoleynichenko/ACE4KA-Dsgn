@@ -1583,14 +1583,13 @@ button:focus-visible,
     margin-bottom: clamp(8px, 2vw, 16px);
 }
 
-/* Центр — типографика на всю ширину панели. Превью-карточки больше не нужны (см. JSX). */
+/* Центр — типографика на всю ширину панели. Превью-карточки удалены — min-height больше не нужен. */
 .home-competencies-scrub__stage {
     position: relative;
     width: 100%;
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
-    min-height: min(560px, 68vh);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -7087,13 +7086,15 @@ button:focus-visible,
         padding-right: max(env(safe-area-inset-right, 0px), clamp(8px, 2.4vw, 16px));
     }
 
+    /* Wordmark остаётся компактным и на ≤768 — единый стиль с desktop. */
     .site-footer__wordmark__track {
-        font-size: clamp(2rem, min(calc(100cqw / 5.55), 15vw), 6.5rem);
+        font-size: 12px;
+        letter-spacing: 0.18em;
     }
 
     @supports (font-size: 1cqi) {
         .site-footer__wordmark__track {
-            font-size: clamp(2rem, min(calc(100cqw / 5.25), 16vw), 6.5rem);
+            font-size: 12px;
         }
     }
 
@@ -7104,6 +7105,8 @@ button:focus-visible,
     }
 
     .site-footer__left {
+        /* В column-flex `flex: 1 1 260px` превращался в вертикальный basis 260px → пустота под текстом. */
+        flex: 0 0 auto;
         max-width: none;
         align-self: stretch;
         align-items: center;
@@ -7998,10 +8001,10 @@ canvas {
         gap: var(--space-12);
     }
 
-    /* Footer wordmark может перерасти viewport при letter-spacing/font-weight 500 — фиксируем */
+    /* Wordmark в подвале — единый компактный стиль на всех мобильных. */
     .site-footer__wordmark__track {
-        font-size: clamp(56px, 19vw, 96px);
-        letter-spacing: -0.04em;
+        font-size: 12px;
+        letter-spacing: 0.18em;
     }
 
     .site-footer__contain {
