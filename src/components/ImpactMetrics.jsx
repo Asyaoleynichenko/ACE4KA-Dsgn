@@ -19,7 +19,7 @@ export default function ImpactMetrics({ items }) {
         return (
           <div key={i} className="cs-impact__cell" data-direction={direction} role="listitem">
             <div className="cs-impact__top">
-              <span className="cs-impact__label">{item.label}</span>
+              <span className="cs-impact__label"><span className="text-condensed">{item.label}</span></span>
               <span className="cs-impact__arrow" aria-hidden="true">
                 {ARROW[direction] || ARROW.flat}
               </span>

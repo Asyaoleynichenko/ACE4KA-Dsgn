@@ -229,6 +229,9 @@ export default function HomeCompetenciesScrub({
           <div className="home-competencies__inner home-competencies__inner--scrub">
             <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
               <div ref={stageRef} className="home-competencies-scrub__stage">
+                <div className="home-competencies-scrub__side home-competencies-scrub__side--left">
+                  {projectCard(leftProject)}
+                </div>
                 <div className="home-competencies-scrub__center">
                   <div className="home-competencies-scrub__lines">
                     {lines.map((line, i) => (
@@ -242,6 +245,9 @@ export default function HomeCompetenciesScrub({
                       </div>
                     ))}
                   </div>
+                </div>
+                <div className="home-competencies-scrub__side home-competencies-scrub__side--right">
+                  {projectCard(rightProject)}
                 </div>
               </div>
             </div>

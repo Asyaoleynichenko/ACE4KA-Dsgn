@@ -47,7 +47,7 @@ export default function CaseStudyEditorial({ project, title }) {
           <div className="cs-meta">
             {meta.map((item, i) => (
               <div key={i} className="cs-meta__cell">
-                <div className="cs-meta__label">{item.label}</div>
+                <div className="cs-meta__label"><span className="text-condensed">{item.label}</span></div>
                 <div className="cs-meta__value">{item.value}</div>
               </div>
             ))}

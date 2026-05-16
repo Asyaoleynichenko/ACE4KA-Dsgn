@@ -13,26 +13,26 @@ export default function ResumePage() {
       <div className="contact-grid">
         <div className="contact-item contact-item--text">
           <div>
-            <strong>{t('resume.experienceTitle')}</strong>
+            <strong><span className="text-condensed">{t('resume.experienceTitle')}</span></strong>
             <p>{t('resume.experienceText')}</p>
           </div>
         </div>
         <div className="contact-item contact-item--text">
           <div>
-            <strong>{t('resume.skillsTitle')}</strong>
+            <strong><span className="text-condensed">{t('resume.skillsTitle')}</span></strong>
             <p>{t('resume.skillsText')}</p>
           </div>
         </div>
         <div className="contact-item contact-item--text">
           <div>
-            <strong>{t('resume.educationTitle')}</strong>
+            <strong><span className="text-condensed">{t('resume.educationTitle')}</span></strong>
             <p>{t('resume.educationText')}</p>
           </div>
         </div>
         <div className="contact-item">
           <div>
-            <strong>{t('resume.downloadTitle')}</strong>
-            <a href="#">{t('resume.downloadLink')}</a>
+            <strong><span className="text-condensed">{t('resume.downloadTitle')}</span></strong>
+            <a href="#"><span className="text-condensed">{t('resume.downloadLink')}</span></a>
           </div>
         </div>
       </div>

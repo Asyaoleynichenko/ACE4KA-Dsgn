@@ -371,7 +371,7 @@ export default function ProjectDetailPage() {
               ))}
               {project.relatedCaseSlugs?.length ? (
                 <p className="project-intro__related">
-                  <span className="project-intro__related-label">{t('projectDetail.relatedCasesLabel')}: </span>
+                  <span className="project-intro__related-label"><span className="text-condensed">{t('projectDetail.relatedCasesLabel')}</span>: </span>
                   {project.relatedCaseSlugs.map((relatedSlug, idx) => {
                     const rp = projects.find((p) => p.slug === relatedSlug);
                     if (!rp) return null;
@@ -389,7 +389,7 @@ export default function ProjectDetailPage() {
             <div className="project-info">
               {metaItems.map((item) => (
                 <div key={item.label} className="project-info__row">
-                  <span className="project-info__label">{translateMetaLabel(item.label, t)}</span>
+                  <span className="project-info__label"><span className="text-condensed">{translateMetaLabel(item.label, t)}</span></span>
                   <span className="project-info__value">{item.value}</span>
                 </div>
               ))}
@@ -668,7 +668,7 @@ export default function ProjectDetailPage() {
             <div key={item.label} className="contact-item">
               <span className="contact-item__icon" aria-hidden="true">•</span>
               <div>
-                <strong>{translateMetaLabel(item.label, t)}</strong>
+                <strong><span className="text-condensed">{translateMetaLabel(item.label, t)}</span></strong>
                 <span>{item.value}</span>
               </div>
             </div>
@@ -677,7 +677,7 @@ export default function ProjectDetailPage() {
             <div key={`${idx}-${item.title}`} className="contact-item contact-item--text">
               <span className="contact-item__icon" aria-hidden="true">•</span>
               <div>
-                <strong>{translateCaseCardTitle(item.title, t)}</strong>
+                <strong><span className="text-condensed">{translateCaseCardTitle(item.title, t)}</span></strong>
                 <p>{item.value}</p>
               </div>
             </div>
@@ -687,11 +687,11 @@ export default function ProjectDetailPage() {
           <footer className="project-detail-footer project-detail-footer--centered">
             {project.tools?.length ? (
               <div>
-                <h3 className="project-detail-footer__label">{t('projectDetail.toolsHeading')}</h3>
+                <h3 className="project-detail-footer__label"><span className="text-condensed">{t('projectDetail.toolsHeading')}</span></h3>
                 <ul className="tools-list" aria-label={t('projectDetail.toolsListAria')}>
                   {project.tools.map((tool) => (
                     <li key={tool}>
-                      <span className="tools-list__pill">{translateToolLine(tool, locale, messages)}</span>
+                      <span className="tools-list__pill"><span className="text-condensed">{translateToolLine(tool, locale, messages)}</span></span>
                     </li>
                   ))}
                 </ul>
@@ -699,7 +699,7 @@ export default function ProjectDetailPage() {
             ) : null}
             {project.extLink ? (
               <div>
-                <h3 className="project-detail-footer__label">{t('projectDetail.linksHeading')}</h3>
+                <h3 className="project-detail-footer__label"><span className="text-condensed">{t('projectDetail.linksHeading')}</span></h3>
                 <a href={project.extLink.href} className="ext-link" target="_blank" rel="noopener noreferrer">
                   {translateExtLinkLabel(project.extLink.label, t)}
                 </a>

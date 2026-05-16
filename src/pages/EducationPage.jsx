@@ -13,19 +13,19 @@ export default function EducationPage() {
       <div className="contact-grid">
         <div className="contact-item contact-item--text">
           <div>
-            <strong>{t('education.hseTitle')}</strong>
+            <strong><span className="text-condensed">{t('education.hseTitle')}</span></strong>
             <p>{t('education.hseText')}</p>
           </div>
         </div>
         <div className="contact-item contact-item--text">
           <div>
-            <strong>{t('education.coursesTitle')}</strong>
+            <strong><span className="text-condensed">{t('education.coursesTitle')}</span></strong>
             <p>{t('education.coursesText')}</p>
           </div>
         </div>
         <div className="contact-item contact-item--text">
           <div>
-            <strong>{t('education.languagesTitle')}</strong>
+            <strong><span className="text-condensed">{t('education.languagesTitle')}</span></strong>
             <p>{t('education.languagesText')}</p>
           </div>
         </div>

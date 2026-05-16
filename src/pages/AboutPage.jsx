@@ -47,9 +47,9 @@ export default function AboutPage() {
           <ul className="about-page__card-list">
             {jobs.map((job) => (
               <li key={job.org + job.period} className="about-page__job-card">
-                <p className="about-page__job-period">{job.period}</p>
+                <p className="about-page__job-period"><span className="text-condensed">{job.period}</span></p>
                 <h3 className="about-page__job-title">{job.title}</h3>
-                <p className="about-page__job-org">{job.org}</p>
+                <p className="about-page__job-org"><span className="text-condensed">{job.org}</span></p>
                 <p className="about-page__job-text">{job.text}</p>
               </li>
             ))}
@@ -63,7 +63,7 @@ export default function AboutPage() {
           <ul className="about-page__skills">
             {skills.map((s) => (
               <li key={s} className="about-page__skill-pill">
-                {s}
+                <span className="text-condensed">{s}</span>
               </li>
             ))}
           </ul>
@@ -77,9 +77,9 @@ export default function AboutPage() {
         <ul className="about-page__edu-grid">
           {eduItems.map((e) => (
             <li key={e.school + e.years} className="about-page__edu-card">
-              <p className="about-page__edu-years">{e.years}</p>
+              <p className="about-page__edu-years"><span className="text-condensed">{e.years}</span></p>
               <h3 className="about-page__edu-school">{e.school}</h3>
-              <p className="about-page__edu-line">{e.line}</p>
+              <p className="about-page__edu-line"><span className="text-condensed">{e.line}</span></p>
               <p className="about-page__edu-detail">{e.detail}</p>
               {e.extra ? <p className="about-page__edu-extra">{e.extra}</p> : null}
             </li>

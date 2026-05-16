@@ -20,14 +20,14 @@ export default function ContactPage() {
         <div className="contact-item">
           <span aria-hidden="true">✉</span>
           <div>
-            <strong>{t('contact.labels.mail')}</strong>
+            <strong><span className="text-condensed">{t('contact.labels.mail')}</span></strong>
             <a href="mailto:hello@example.com">hello@example.com</a>
           </div>
         </div>
         <div className="contact-item">
           <span aria-hidden="true">📱</span>
           <div>
-            <strong>{t('contact.labels.telegram')}</strong>
+            <strong><span className="text-condensed">{t('contact.labels.telegram')}</span></strong>
             <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">
               @pnkprty
             </a>
@@ -36,7 +36,7 @@ export default function ContactPage() {
         <div className="contact-item">
           <span aria-hidden="true">💼</span>
           <div>
-            <strong>{t('contact.labels.behance')}</strong>
+            <strong><span className="text-condensed">{t('contact.labels.behance')}</span></strong>
             <a href="https://behance.net/" target="_blank" rel="noopener noreferrer">
               behance.net
             </a>
@@ -45,7 +45,7 @@ export default function ContactPage() {
         <div className="contact-item">
           <span aria-hidden="true">📌</span>
           <div>
-            <strong>{t('contact.labels.pinterest')}</strong>
+            <strong><span className="text-condensed">{t('contact.labels.pinterest')}</span></strong>
             <a href="https://pinterest.com/" target="_blank" rel="noopener noreferrer">
               pinterest.com
             </a>

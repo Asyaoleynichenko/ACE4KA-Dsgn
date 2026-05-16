@@ -7,6 +7,7 @@ import PreviewCardBlock from '../components/PreviewCardBlock';
 import ProjectCard from '../components/ProjectCard';
 import DotIcon from '../components/DotIcon.jsx';
 import HomeCompetenciesScrub from '../components/HomeCompetenciesScrub.jsx';
+import HalftoneButton from '../components/HalftoneButton.jsx';
 import FilterPills from '../components/FilterPills';
 import { projects } from '../data/projects';
 import {
@@ -108,7 +109,7 @@ export default function HomePage() {
                       <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} />
                     </IconAssembleFromDots>
                   </div>
-                  <span className="header-item__label">{t(labelKey)}</span>
+                  <span className="header-item__label"><span className="text-condensed">{t(labelKey)}</span></span>
                 </FolderLink>
               );
               })}
@@ -125,7 +126,7 @@ export default function HomePage() {
                       <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" />
                     </IconAssembleFromDots>
                   </div>
-                  <span className="header-item__label">{t(labelKey)}</span>
+                  <span className="header-item__label"><span className="text-condensed">{t(labelKey)}</span></span>
                 </Link>
               ))}
             </div>
@@ -135,28 +136,28 @@ export default function HomePage() {
         <div className="hero__row" data-node-id="1:232">
           <div className="hero__content">
             <div className="hero-content">
-              <p className="hero-role">{t('hero.role')}</p>
+              <p className="hero-role"><span className="text-condensed">{t('hero.role')}</span></p>
               <h1 className="hero-title" data-scale="hero-name">{t('hero.title')}</h1>
               <p className="hero-text">{t('hero.text')}</p>
               <Link to={localizedPath('/about')} className="hero-more">
-                <span className="hero-more__text">{t('hero.moreAbout')}</span>
+                <span className="hero-more__text"><span className="text-condensed">{t('hero.moreAbout')}</span></span>
               </Link>
             </div>
             <div className="info-grid">
               <div className="info-card">
-                <span className="info-label">{t('hero.info.location')}</span>
+                <span className="info-label"><span className="text-condensed">{t('hero.info.location')}</span></span>
                 <span className="info-value">{t('hero.info.locationValue')}</span>
               </div>
               <div className="info-card">
-                <span className="info-label">{t('hero.info.company')}</span>
+                <span className="info-label"><span className="text-condensed">{t('hero.info.company')}</span></span>
                 <span className="info-value">{t('hero.info.companyValue')}</span>
               </div>
               <div className="info-card">
-                <span className="info-label">{t('hero.info.focus')}</span>
+                <span className="info-label"><span className="text-condensed">{t('hero.info.focus')}</span></span>
                 <span className="info-value">{t('hero.info.focusValue')}</span>
               </div>
               <div className="info-card info-card--wide">
-                <span className="info-label">{t('hero.info.education')}</span>
+                <span className="info-label"><span className="text-condensed">{t('hero.info.education')}</span></span>
                 <span className="info-value">
                   {t('hero.info.educationValueLine1')}
                   <br />
@@ -164,11 +165,11 @@ export default function HomePage() {
                 </span>
               </div>
               <div className="info-card">
-                <span className="info-label">{t('hero.info.awards')}</span>
+                <span className="info-label"><span className="text-condensed">{t('hero.info.awards')}</span></span>
                 <span className="info-value">{t('hero.info.awardsValue')}</span>
               </div>
               <div className="info-card">
-                <span className="info-label">{t('hero.info.contacts')}</span>
+                <span className="info-label"><span className="text-condensed">{t('hero.info.contacts')}</span></span>
                 <span className="info-value">{t('hero.info.contactsValue')}</span>
               </div>
             </div>
@@ -176,11 +177,11 @@ export default function HomePage() {
               {heroLinks.map(({ href, label, labelKey }) =>
                 href.startsWith('/') ? (
                   <Link key={href} to={localizedPath(href)}>
-                    {labelKey ? t(labelKey) : label}
+                    <span className="text-condensed">{labelKey ? t(labelKey) : label}</span>
                   </Link>
                 ) : (
                   <a key={href} href={href} target="_blank" rel="noopener noreferrer">
-                    {labelKey ? t(labelKey) : label}
+                    <span className="text-condensed">{labelKey ? t(labelKey) : label}</span>
                   </a>
                 ),
               )}
@@ -247,7 +248,7 @@ export default function HomePage() {
                     aria-label={competencyCardAriaLabel(competencyCardTl) || t('hero.competencies.cards.tl.title')}
                   >
                     {competencyBadge ? (
-                      <span className="home-competencies__badge">{competencyBadge}</span>
+                      <span className="home-competencies__badge"><span className="text-condensed">{competencyBadge}</span></span>
                     ) : null}
                     <div className="home-competencies__card-bg" aria-hidden="true" />
                     <div className="home-competencies__card-mesh" aria-hidden="true" />
@@ -270,7 +271,7 @@ export default function HomePage() {
                     aria-label={competencyCardAriaLabel(competencyCardBr) || t('hero.competencies.decorCardAria')}
                   >
                     {competencyBadge ? (
-                      <span className="home-competencies__badge">{competencyBadge}</span>
+                      <span className="home-competencies__badge"><span className="text-condensed">{competencyBadge}</span></span>
                     ) : null}
                     <div className="home-competencies__card-bg" aria-hidden="true" />
                     <div className="home-competencies__card-mesh" aria-hidden="true" />
@@ -289,9 +290,7 @@ export default function HomePage() {
               </div>
             ) : null}
             <div className="home-competencies__cta">
-              <SeamlessProjectsLink to={localizedPath('/projects')} className="btn-show-all">
-                <span className="btn-show-all__label">{t('hero.allProjects')}</span>
-              </SeamlessProjectsLink>
+              <HalftoneButton to={localizedPath('/projects')}>{t('hero.allProjects')}</HalftoneButton>
             </div>
           </HomeCompetenciesScrub>
         </section>

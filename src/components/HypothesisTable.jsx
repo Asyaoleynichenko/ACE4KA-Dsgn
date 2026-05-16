@@ -28,9 +28,9 @@ export default function HypothesisTable({ items }) {
               <p className="cs-hypotheses__statement">{item.statement}</p>
             </div>
             <div className="cs-hypotheses__meta" role="cell">
-              <span className="cs-hypotheses__chip">{STATUS_LABEL[status] || status}</span>
+              <span className="cs-hypotheses__chip"><span className="text-condensed">{STATUS_LABEL[status] || status}</span></span>
               {item.result ? (
-                <span className="cs-hypotheses__result">{item.result}</span>
+                <span className="cs-hypotheses__result"><span className="text-condensed">{item.result}</span></span>
               ) : null}
             </div>
           </div>

@@ -44,7 +44,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
               >
                 <span className="cs-dotnav__dot" aria-hidden="true" />
                 <span className="cs-dotnav__num" aria-hidden="true">{number}</span>
-                <span className="cs-dotnav__label">{label}</span>
+                <span className="cs-dotnav__label"><span className="text-condensed">{label}</span></span>
               </a>
             </li>
           );
