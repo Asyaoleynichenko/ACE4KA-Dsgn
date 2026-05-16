@@ -7,7 +7,7 @@ function Eyebrow({ children, icon = 'dot-bullet' }) {
   return (
     <div className="cs-eyebrow">
       <DotIcon name={icon} size={14} />
-      <span>{children}</span>
+      <span className="text-condensed">{children}</span>
     </div>
   );
 }

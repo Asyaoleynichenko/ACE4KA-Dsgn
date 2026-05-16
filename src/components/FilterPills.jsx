@@ -34,7 +34,7 @@ export default function FilterPills() {
             className={`filter-pill${isActive ? ' filter-pill--active' : ''}`}
             aria-current={isActive ? 'page' : undefined}
           >
-            {t(labelKey)}
+            <span className="text-condensed">{t(labelKey)}</span>
           </SeamlessProjectsLink>
         );
       })}

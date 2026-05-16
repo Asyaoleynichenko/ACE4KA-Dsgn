@@ -2,24 +2,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
-import IconAssembleFromDots from './IconAssembleFromDots.jsx';
-import { publicUrl } from '../utils/publicUrl.js';
 
-/** Маршруты основной шапки (Figma 432:30376, свойство Default). */
+/** Маршруты основной шапки (Figma: Проекты | Главная | О себе). */
 export const NAV_ROUTE_KEYS = [
-  { path: '/', labelKey: 'header.nav.home' },
   { path: '/projects', labelKey: 'header.nav.projects' },
+  { path: '/', labelKey: 'header.nav.home' },
   { path: '/about', labelKey: 'header.about' },
 ];
-
-/** Декоративная звезда как в макете (433:31043 / nav-icon-430-29004.svg) — «Главная» и «О себе». */
-const HEADER_SNOW_ICON = publicUrl('/images/icons/nav-icon-430-29004.svg');
-const NAV_PROJECTS_ICON = publicUrl('/images/icons/projects.svg');
-
-function routePillIcon(path) {
-  if (path === '/projects') return { src: NAV_PROJECTS_ICON, variant: 'symbol' };
-  return { src: HEADER_SNOW_ICON, variant: 'led' };
-}
 
 function itemIsActive(pathname, targetPath) {
   const base = stripLocaleFromPathname(pathname);
@@ -29,47 +18,22 @@ function itemIsActive(pathname, targetPath) {
   return base === targetPath;
 }
 
-/** Навигация: Figma 432:30376 — маршруты в пилюлях (на всех страницах, включая кейсы). */
-export function Navigation({ menuOpen, onItemClick, showRouteIcons = true }) {
+/** Навигация: Frame с gap 120px (Figma). */
+export function Navigation() {
   const { pathname } = useLocation();
   const { t, localizedPath } = useI18n();
-  const listClass = `${menuOpen ? 'nav-list open' : 'nav-list'}`.trim();
 
   return (
-    <ul
-      className={listClass}
-      data-node-id="433:30466"
-      data-variant="Default"
-      aria-label={t('header.navListAria')}
-    >
+    <ul className="nav-list" aria-label={t('header.navListAria')}>
       {NAV_ROUTE_KEYS.map(({ path, labelKey }) => {
         const label = t(labelKey);
         const active = itemIsActive(pathname, path);
         const to = localizedPath(path);
         const NavItem = path === '/projects' ? SeamlessProjectsLink : Link;
-        const pill = routePillIcon(path);
         return (
           <li key={path}>
-            <NavItem to={to} className={`nav-link${active ? ' active' : ''}`} onClick={onItemClick}>
-              {showRouteIcons ? (
-                <IconAssembleFromDots
-                  className={`icon-assemble-dots--nav${pill.variant === 'led' ? ' icon-assemble-dots--nav-led' : ''}`}
-                  ringRadiusPx={pill.variant === 'led' ? 26 : 22}
-                  dotCount={pill.variant === 'led' ? 20 : 14}
-                  dotPx={2.5}
-                >
-                  <img
-                    className={`nav-link__pill-icon nav-link__pill-icon--${pill.variant}`}
-                    src={pill.src}
-                    alt=""
-                    aria-hidden
-                    width={22}
-                    height={22}
-                    decoding="async"
-                  />
-                </IconAssembleFromDots>
-              ) : null}
-              <span className="blend-text">{label}</span>
+            <NavItem to={to} className={`nav-link${active ? ' active' : ''}`}>
+              <span>{label}</span>
             </NavItem>
           </li>
         );

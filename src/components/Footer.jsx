@@ -63,7 +63,7 @@ export default function Footer({ snapScreen = false }) {
                             className={linkClass}
                             data-node-id={nodeId}
                           >
-                            {label}
+                            <span className="text-condensed">{label}</span>
                           </SeamlessProjectsLink>
                         </li>
                       );
@@ -71,7 +71,7 @@ export default function Footer({ snapScreen = false }) {
                     return (
                       <li key={nodeId} className="site-footer__item">
                         <Link to={localizedPath(href)} className={linkClass} data-node-id={nodeId}>
-                          {label}
+                          <span className="text-condensed">{label}</span>
                         </Link>
                       </li>
                     );
@@ -86,7 +86,7 @@ export default function Footer({ snapScreen = false }) {
                         target={isExternal ? '_blank' : undefined}
                         rel={isExternal ? 'noopener noreferrer' : undefined}
                       >
-                        {label}
+                        <span className="text-condensed">{label}</span>
                       </a>
                     </li>
                   );

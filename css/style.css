@@ -652,16 +652,14 @@ button:focus-visible,
 /* =========================
    2) Header / Navigation
    ========================= */
-/* Figma 300:107467 — sticky; горизонтальный padding по сетке 8px (--space-24) */
+/* Figma — sticky, прозрачный фон, mix-blend-mode: difference на всю шапку */
 .header {
     position: sticky;
     top: 0;
     z-index: 100;
-    /* Figma 573:18422 — единый чёрный хедер на всех страницах. */
-    background: #000;
-    transition: background var(--transition-base);
-    mix-blend-mode: normal !important;
-    isolation: auto !important;
+    background: transparent;
+    mix-blend-mode: difference;
+    isolation: isolate;
 }
 
 /* Figma 573:18422 — Logo: совпадает по размеру с nav-link, uppercase, без mix-blend (хедер чёрный). */
@@ -860,25 +858,20 @@ button:focus-visible,
     -webkit-backdrop-filter: blur(4px);
 }
 
-/* ---- 8.2 Header consistency override pack (Figma 432:30376) ---- */
-/* Figma 432:30376 Header — одна строка: логотип | Navigation | язык (max 1358, px 24 py 12, space-between) */
+/* Figma Header — одна строка: имя | навигация | язык; padding 34/21 */
 .header .nav {
     position: relative;
     z-index: 1;
-    max-width: min(1358px, 100%);
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: max(12px, env(safe-area-inset-top, 0px));
-    padding-bottom: 12px;
-    padding-left: var(--layout-edge-left);
-    padding-right: var(--layout-edge-right);
-    min-height: 0;
+    width: 100%;
+    margin: 0;
+    padding: 21px 34px max(21px, env(safe-area-inset-bottom, 0px));
+    padding-top: max(21px, env(safe-area-inset-top, 0px));
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
-    gap: 0;
+    gap: 16px;
     background: transparent;
 }
 
@@ -915,22 +908,35 @@ button:focus-visible,
 
 .header .logo,
 .header .lang-switch {
-    font-size: 24px;
-    line-height: 32px;
-    letter-spacing: -1px;
-    color: var(--project-title-color);
-    mix-blend-mode: exclusion !important;
-    text-transform: none; /* имя из `common.brandName` — нормальный регистр, не ALL CAPS */
+    font-family: var(--font-competencies-display);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: #fff;
+    mix-blend-mode: normal;
 }
 
-/* Переключатель языка — Figma 432:30380 / 16:168: фиксированная колонка 228px справа */
+/* Имитация condensed-варианта: scaleX на текстовых нодах. Глобальная утилита — `.text-condensed`.
+   В JSX: оборачивай текстовый узел в <span className="text-condensed">. */
+.text-condensed,
+.header .logo > span,
+.header .lang-switch .lang-switch__toggle-row,
+.header .nav-list .nav-link > span,
+.btn-show-all__label {
+    display: inline-block;
+    transform: scaleX(0.62);
+    transform-origin: center;
+}
+
 .header .lang-switch {
     position: relative;
     z-index: 5;
-    flex: 0 0 228px;
-    width: 228px;
-    max-width: 228px;
-    min-width: 228px;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+    min-width: 0;
     box-sizing: border-box;
     text-align: right;
 }
@@ -985,32 +991,31 @@ button:focus-visible,
 
 .header .logo .blend-text,
 .header .lang-switch .blend-text {
-    mix-blend-mode: exclusion !important;
+    mix-blend-mode: normal;
+    color: inherit;
 }
 
+/* Figma Frame 2131330000 — gap 120px, плоский ряд */
 .header .nav-list {
     display: inline-flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 4px;
-    gap: 8px;
-    border-radius: 9999px;
-    min-height: 46px;
+    padding: 0;
+    gap: clamp(40px, 8vw, 120px);
+    border-radius: 0;
+    min-height: 0;
     height: auto;
     box-sizing: border-box;
     width: auto;
-    max-width: min(440px, max(0px, calc(100vw - 220px)));
-    /* tint + blur на ::before — стабильнее в Chrome, чем backdrop на самом flex-контейнере */
-    background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    max-width: none;
+    background: transparent;
+    border: 0;
     box-shadow: none;
-    isolation: auto !important;
+    isolation: auto;
     position: relative;
     overflow: visible;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 /* Полоска кейса: сетка 1fr | центр | 1fr + одинаковые внутренние поля и отступы у ссылок */
@@ -1070,21 +1075,9 @@ button:focus-visible,
     }
 }
 
-/* Слой матового стекла под пунктами меню (Chrome-friendly) */
+/* Матового стекла больше нет — плоский ряд */
 .header .nav-list::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    z-index: 0;
-    background: rgba(255, 255, 255, 0.11);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-    pointer-events: none;
-    will-change: backdrop-filter;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    -webkit-backdrop-filter: blur(50px) saturate(1.3) !important;
-    backdrop-filter: blur(50px) saturate(1.3) !important;
+    content: none;
 }
 
 .header .nav-list > li {
@@ -1092,56 +1085,50 @@ button:focus-visible,
     z-index: 1;
 }
 
+/* Figma — текст Suisse, uppercase, weight 400; активный — 600. Кегль крупный, т.к. visual width урезается scaleX */
 .header .nav-list .nav-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    min-height: auto;
-    min-width: auto;
+    gap: 0;
+    min-height: 0;
+    min-width: 0;
     height: auto;
-    font-size: 14px;
-    line-height: 20px;
-    letter-spacing: -1px;
+    font-family: var(--font-competencies-display);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0;
     text-transform: uppercase;
-    color: var(--project-title-color) !important;
-    padding: 8px 21px;
-    border-radius: 100px;
-    border: 1px solid transparent;
+    color: #fff;
+    opacity: 1;
+    padding: 0;
+    border-radius: 0;
+    border: 0;
     background: transparent;
-    mix-blend-mode: normal !important;
+    box-shadow: none;
+    mix-blend-mode: normal;
 }
 
 .header .nav-list .nav-link .blend-text {
-    display: inline-block;
-    mix-blend-mode: normal !important;
-    color: inherit !important;
-    opacity: 0.92;
-}
-
-.header .nav-list .nav-link:not(.active) .blend-text {
-    mix-blend-mode: normal !important;
-}
-
-.header .nav-list .nav-link.active {
-    letter-spacing: 1px;
-    border: 1px solid rgba(255, 255, 255, 0.48);
-    outline: 1px solid rgba(255, 255, 255, 0.2);
-    outline-offset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    box-shadow:
-        inset 1px -1px 1.6px 0 rgba(255, 255, 255, 0.51),
-        inset 0 0 6.2px 0 rgba(255, 255, 255, 0.51);
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-.header .nav-list .nav-link.active .blend-text {
+    display: inline;
+    mix-blend-mode: normal;
+    color: inherit;
     opacity: 1;
 }
 
+.header .nav-list .nav-link.active {
+    font-weight: 600;
+    letter-spacing: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    box-shadow: none;
+}
+
 .header .nav-list .nav-link:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.06);
+    background: transparent;
+    opacity: 0.78;
 }
 
 .header .nav-list .nav-link--case-with-chevron {
@@ -1297,82 +1284,21 @@ button:focus-visible,
 
 @media (max-width: 900px) {
     .header .nav {
-        width: 100%;
-        padding-top: max(12px, env(safe-area-inset-top, 0px));
-        padding-bottom: 12px;
-        padding-left: var(--layout-edge-left);
-        padding-right: var(--layout-edge-right);
-        max-width: 100vw;
-        box-sizing: border-box;
-        /* Не clip: иначе по правилам overflow связанная ось режет крестик .nav-toggle (transform выходит за кнопку) */
-        overflow-x: visible;
-        min-height: auto;
-        margin-left: 0;
-        margin-right: 0;
-        justify-content: flex-start;
-        gap: clamp(8px, 2vw, 16px);
-    }
-
-    /* Логотип: не flex: 1 1 0 (basis 0 + shrink давали «А…»). min-content целиком раздувал ряд и ломал шапку на кейсах. */
-    .header .nav > .logo {
-        flex: 0 1 auto;
-        min-width: min(11.5rem, 42vw);
-        max-width: min(100%, calc(100vw - 9.5rem));
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .header .lang-switch {
-        flex: 0 1 auto;
-        width: auto;
-        min-width: 0;
-        max-width: min(228px, 38vw);
-        margin-left: auto;
-    }
-
-    .header .nav-toggle {
-        margin-left: 0;
-        flex-shrink: 0;
+        padding: 16px 20px;
+        gap: 12px;
     }
 
     .header .nav-list {
-        width: min(
-            280px,
-            calc(
-                100vw - var(--layout-edge-left) - var(--layout-edge-right) - 12px
-            )
-        );
-        border-radius: 0;
-        background: transparent !important;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        overflow: visible;
-        transform: translateZ(0);
-        -webkit-transform: translateZ(0);
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-    }
-
-    /* В строке шапки полоска кейса — по контенту; max-width с учётом 24px gutter и safe-area */
-    .header .nav-list.nav-list--case-study {
+        gap: clamp(20px, 5vw, 48px);
         width: auto;
-        max-width: min(
-            100%,
-            calc(
-                100vw - var(--layout-edge-left) - var(--layout-edge-right) - 9.5rem
-            )
-        );
-        flex-shrink: 1;
-        min-width: 0;
+        border: 0;
+        background: transparent;
     }
 
-
-    .header .nav-list::before {
-        background: rgba(26, 26, 26, 0.72);
-        box-shadow: none;
-        border-radius: inherit;
-        -webkit-backdrop-filter: blur(50px) saturate(1.85) !important;
-        backdrop-filter: blur(50px) saturate(1.85) !important;
+    .header .logo,
+    .header .nav-list .nav-link,
+    .header .lang-switch {
+        font-size: clamp(13px, 3.4vw, 16px);
     }
 }
 
@@ -1769,20 +1695,15 @@ button:focus-visible,
         transform 0.28s var(--ease-smart, ease);
 }
 
-.home-competencies-scrub__line-wrap:not(.is-active) {
-    opacity: 0.32;
-    /* scale не уменьшает геометрию в layout — «башня» из строк оставалась слишком высокой */
-    transform: none;
-    max-height: 3.1em;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
+/* Figma: все строки одинаково крупные и непрозрачные (без активного/неактивного состояния) */
+.home-competencies-scrub__line-wrap,
+.home-competencies-scrub__line-wrap:not(.is-active),
 .home-competencies-scrub__line-wrap.is-active {
     opacity: 1;
     transform: none;
     max-height: none;
     overflow: visible;
+    flex-shrink: 0;
 }
 
 /* Figma 416:12975 — порядок H в стопке: H2 / H4 / H1 / H5 / H3 (data-heading на line-wrap). */
@@ -3424,8 +3345,7 @@ button:focus-visible,
     margin-top: var(--grid-row-gap);
 }
 
-/* Figma 1:397 + liquid glass: размытие контента под кнопкой, градиент «стекла», inset-блик */
-/* Figma «ВСЕ ПРОЕКТЫ» — горячая розовая пилюля + анимированный half-tone по краям. */
+/* Figma «ВСЕ ПРОЕКТЫ» — розовая пилюля с halftone-точками по бокам и верхним хайлайтом. */
 .btn-show-all {
     position: relative;
     display: inline-flex;
@@ -3438,21 +3358,25 @@ button:focus-visible,
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #ffffff;
-    padding: 16px 56px;
-    min-width: 280px;
+    padding: 18px 72px;
+    min-width: 320px;
     width: auto;
     max-width: 100%;
-    min-height: 52px;
+    min-height: 56px;
     box-sizing: border-box;
     text-align: center;
     border-radius: 999px;
     overflow: hidden;
     border: 0;
+    /* База: верхний светлый блик + насыщенный розовый корпус + лёгкая тёмная кайма снизу */
     background:
-        radial-gradient(ellipse at center, #ff2bb5 0%, #ff3aa1 55%, #d8157a 100%);
+        linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 38%),
+        radial-gradient(ellipse 80% 60% at 50% 110%, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 70%),
+        linear-gradient(180deg, #ff5cb8 0%, #ff2fa5 45%, #e91e85 100%);
     box-shadow:
-        0 6px 24px rgba(255, 47, 165, 0.35),
-        0 1px 0 rgba(255, 255, 255, 0.4) inset;
+        0 8px 28px rgba(255, 47, 165, 0.42),
+        0 1px 0 rgba(255, 255, 255, 0.55) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.18) inset;
     transition:
         box-shadow 0.32s cubic-bezier(0.34, 1.56, 0.64, 1),
         transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -3460,23 +3384,23 @@ button:focus-visible,
     isolation: isolate;
 }
 
-/* Halftone-точки по бокам: два слоя радиал-точечного паттерна, edge-маской спрятаны в центр. */
+/* Halftone-точки по бокам: два слоя радиал-точечного паттерна, маска от края к центру. */
 .btn-show-all::before,
 .btn-show-all::after {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 45%;
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.55) 18%, transparent 22%);
-    background-size: 11px 11px;
+    width: 48%;
+    /* Тёмно-розовые точки на светло-розовом — print-halftone */
+    background-image: radial-gradient(circle, rgba(140, 12, 78, 0.62) 30%, transparent 34%);
+    background-size: 13px 13px;
     background-position: 0 0;
     pointer-events: none;
     z-index: 0;
-    /* Плавный край в центр — слева ярко по краю, к центру в ноль. */
-    -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 100%);
-    mask-image: linear-gradient(to right, #000 0%, transparent 100%);
-    animation: halftone-drift-left 6s linear infinite;
+    -webkit-mask-image: linear-gradient(to right, #000 10%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 10%, transparent 100%);
+    animation: halftone-drift-left 3.6s linear infinite;
 }
 
 .btn-show-all::before {
@@ -3485,19 +3409,19 @@ button:focus-visible,
 
 .btn-show-all::after {
     right: 0;
-    -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 100%);
-    mask-image: linear-gradient(to left, #000 0%, transparent 100%);
-    animation: halftone-drift-right 6s linear infinite;
+    -webkit-mask-image: linear-gradient(to left, #000 10%, transparent 100%);
+    mask-image: linear-gradient(to left, #000 10%, transparent 100%);
+    animation: halftone-drift-right 3.6s linear infinite;
 }
 
 @keyframes halftone-drift-left {
     from { background-position: 0 0; }
-    to { background-position: 44px 0; }
+    to { background-position: 26px 0; }
 }
 
 @keyframes halftone-drift-right {
     from { background-position: 0 0; }
-    to { background-position: -44px 0; }
+    to { background-position: -26px 0; }
 }
 
 /* Текст поверх паттерна. */
@@ -3505,17 +3429,24 @@ button:focus-visible,
 .btn-show-all__label {
     position: relative;
     z-index: 1;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
 }
 
 .btn-show-all:hover {
     box-shadow:
-        0 10px 36px rgba(255, 47, 165, 0.5),
-        0 1px 0 rgba(255, 255, 255, 0.55) inset;
-    transform: scaleX(1.06) scaleY(0.94);
+        0 12px 38px rgba(255, 47, 165, 0.6),
+        0 1px 0 rgba(255, 255, 255, 0.7) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.2) inset;
+    transform: scaleX(1.04) scaleY(0.96);
+}
+
+.btn-show-all:hover::before,
+.btn-show-all:hover::after {
+    animation-duration: 1.8s;
 }
 
 .btn-show-all:active {
-    transform: scaleX(0.96) scaleY(1.06);
+    transform: scaleX(0.97) scaleY(1.04);
     transition-duration: 0.12s;
 }
 
@@ -3523,6 +3454,10 @@ button:focus-visible,
     .btn-show-all::before,
     .btn-show-all::after {
         animation: none;
+    }
+
+    .btn-show-all:hover {
+        transform: none;
     }
 }
 

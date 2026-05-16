@@ -26,7 +26,7 @@ export default function ProjectCard({ slug, title, meta, desc, image, isDemo }) 
         </div>
         <div className="preview-card__body">
           <h3 className="preview-card__title">{title}</h3>
-          <p className="preview-card__meta">{meta}</p>
+          <p className="preview-card__meta"><span className="text-condensed">{meta}</span></p>
           {desc && <p className="preview-card__desc">{desc}</p>}
         </div>
       </Link>
