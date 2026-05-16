@@ -909,7 +909,7 @@ button:focus-visible,
 .header .logo,
 .header .lang-switch {
     font-family: var(--font-competencies-display);
-    font-size: 28px;
+    font-size: 18px;
     font-weight: 400;
     line-height: 1.1;
     letter-spacing: 0;
@@ -919,15 +919,75 @@ button:focus-visible,
 }
 
 /* Имитация condensed-варианта: scaleX на текстовых нодах. Глобальная утилита — `.text-condensed`.
-   В JSX: оборачивай текстовый узел в <span className="text-condensed">. */
+   В JSX: оборачивай текстовый узел в <span className="text-condensed">.
+   font-size: 1.45em — компенсация «съежившегося» восприятия из-за scaleX: текст крупнее, но
+   ширина остаётся сравнимой с исходной шириной обычного шрифта.
+   --tc-scale-x — кастомное свойство, чтобы переопределять степень сжатия (hover/active → ближе к 1). */
 .text-condensed,
 .header .logo > span,
 .header .lang-switch .lang-switch__toggle-row,
 .header .nav-list .nav-link > span,
 .btn-show-all__label {
     display: inline-block;
-    transform: scaleX(0.62);
+    --tc-scale-x: 0.62;
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: center;
+    font-size: 1.45em;
+    line-height: 1;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== Раскрытие condensed-текста при hover/active ===== */
+
+/* Хедер: активная вкладка — полная ширина букв */
+.header .nav-list .nav-link.active > span {
+    --tc-scale-x: 1;
+}
+
+/* Хедер: hover по неактивной вкладке — приоткрываем (промежуточное состояние) */
+.header .nav-list .nav-link:hover:not(.active) > span,
+.header .logo:hover > span {
+    --tc-scale-x: 0.88;
+}
+
+/* Кнопка «ВСЕ ПРОЕКТЫ»: hover раскрывает лейбл */
+.btn-show-all:hover .btn-show-all__label {
+    --tc-scale-x: 0.95;
+}
+
+/* Filter pills: активный + hover */
+.filter-pill.filter-pill--active .text-condensed {
+    --tc-scale-x: 1;
+}
+
+.filter-pill:hover .text-condensed {
+    --tc-scale-x: 0.88;
+}
+
+/* Футер: hover по ссылке */
+.site-footer__link:hover .text-condensed,
+.site-footer__item a:hover .text-condensed {
+    --tc-scale-x: 0.88;
+}
+
+/* Карточки проектов: hover по карточке расширяет meta */
+.preview-card__link:hover .preview-card__meta .text-condensed {
+    --tc-scale-x: 0.88;
+}
+
+/* Eyebrow в кейсах — статически раскрытый чуть больше базы */
+.cs-eyebrow .text-condensed {
+    --tc-scale-x: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .text-condensed,
+    .header .logo > span,
+    .header .lang-switch .lang-switch__toggle-row,
+    .header .nav-list .nav-link > span,
+    .btn-show-all__label {
+        transition: none;
+    }
 }
 
 .header .lang-switch {
@@ -1085,7 +1145,7 @@ button:focus-visible,
     z-index: 1;
 }
 
-/* Figma — текст Suisse, uppercase, weight 400; активный — 600. Кегль крупный, т.к. visual width урезается scaleX */
+/* Figma — текст Suisse, uppercase, weight 400; активный — 600. Кегль базовый 18px, span внутри увеличивается 1.45em */
 .header .nav-list .nav-link {
     display: inline-flex;
     align-items: center;
@@ -1095,7 +1155,7 @@ button:focus-visible,
     min-width: 0;
     height: auto;
     font-family: var(--font-competencies-display);
-    font-size: 28px;
+    font-size: 18px;
     font-weight: 400;
     line-height: 1.1;
     letter-spacing: 0;
@@ -3345,62 +3405,65 @@ button:focus-visible,
     margin-top: var(--grid-row-gap);
 }
 
-/* Figma «ВСЕ ПРОЕКТЫ» — розовая пилюля с halftone-точками по бокам и верхним хайлайтом. */
+/* Figma «ВСЕ ПРОЕКТЫ» — широкая розовая пилюля; плотный halftone-паттерн по бокам,
+   маска плавно гасит точки к центру. */
 .btn-show-all {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-body);
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
     line-height: 1;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: #ffffff;
-    padding: 18px 72px;
-    min-width: 320px;
+    padding: 22px 120px;
+    min-width: 600px;
     width: auto;
     max-width: 100%;
-    min-height: 56px;
+    min-height: 68px;
     box-sizing: border-box;
     text-align: center;
     border-radius: 999px;
     overflow: hidden;
     border: 0;
-    /* База: верхний светлый блик + насыщенный розовый корпус + лёгкая тёмная кайма снизу */
+    /* Глянец сверху + насыщенный розовый корпус + лёгкая нижняя кайма */
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 38%),
-        radial-gradient(ellipse 80% 60% at 50% 110%, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 70%),
-        linear-gradient(180deg, #ff5cb8 0%, #ff2fa5 45%, #e91e85 100%);
+        linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.06) 22%, rgba(255, 255, 255, 0) 42%),
+        radial-gradient(ellipse 70% 80% at 50% 50%, #ff5cbe 0%, #ff3aa6 70%, #f01f93 100%);
     box-shadow:
-        0 8px 28px rgba(255, 47, 165, 0.42),
-        0 1px 0 rgba(255, 255, 255, 0.55) inset,
+        0 14px 38px rgba(255, 60, 170, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 1px 0 rgba(255, 255, 255, 0.85) inset,
         0 -1px 0 rgba(0, 0, 0, 0.18) inset;
     transition:
-        box-shadow 0.32s cubic-bezier(0.34, 1.56, 0.64, 1),
-        transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     text-decoration: none;
     isolation: isolate;
 }
 
-/* Halftone-точки по бокам: два слоя радиал-точечного паттерна, маска от края к центру. */
+/* Halftone-точки: плотная сетка (9px шаг), мелкие мягкие белые круги, плавный непрерывный дрейф.
+   Маска от края к центру: full на 30% длины, затем плавно в 0 — точки «растворяются» в розовом ближе к тексту. */
 .btn-show-all::before,
 .btn-show-all::after {
     content: "";
     position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 48%;
-    /* Тёмно-розовые точки на светло-розовом — print-halftone */
-    background-image: radial-gradient(circle, rgba(140, 12, 78, 0.62) 30%, transparent 34%);
-    background-size: 13px 13px;
+    top: -2px;
+    bottom: -2px;
+    width: 58%;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.92) 14%, rgba(255, 255, 255, 0.55) 22%, rgba(255, 255, 255, 0) 30%);
+    background-size: 9px 9px;
     background-position: 0 0;
     pointer-events: none;
     z-index: 0;
-    -webkit-mask-image: linear-gradient(to right, #000 10%, transparent 100%);
-    mask-image: linear-gradient(to right, #000 10%, transparent 100%);
-    animation: halftone-drift-left 3.6s linear infinite;
+    will-change: background-position;
+    filter: blur(0.4px);
+    -webkit-mask-image: linear-gradient(to right, #000 0%, #000 32%, transparent 96%);
+    mask-image: linear-gradient(to right, #000 0%, #000 32%, transparent 96%);
+    animation: halftone-drift-left 14s linear infinite;
 }
 
 .btn-show-all::before {
@@ -3409,19 +3472,20 @@ button:focus-visible,
 
 .btn-show-all::after {
     right: 0;
-    -webkit-mask-image: linear-gradient(to left, #000 10%, transparent 100%);
-    mask-image: linear-gradient(to left, #000 10%, transparent 100%);
-    animation: halftone-drift-right 3.6s linear infinite;
+    -webkit-mask-image: linear-gradient(to left, #000 0%, #000 32%, transparent 96%);
+    mask-image: linear-gradient(to left, #000 0%, #000 32%, transparent 96%);
+    animation: halftone-drift-right 14s linear infinite;
 }
 
+/* Бесшовный сдвиг: шаг = периоду паттерна (9px), на перепетле без скачка. */
 @keyframes halftone-drift-left {
     from { background-position: 0 0; }
-    to { background-position: 26px 0; }
+    to   { background-position: 9px 0; }
 }
 
 @keyframes halftone-drift-right {
     from { background-position: 0 0; }
-    to { background-position: -26px 0; }
+    to   { background-position: -9px 0; }
 }
 
 /* Текст поверх паттерна. */
@@ -3429,25 +3493,26 @@ button:focus-visible,
 .btn-show-all__label {
     position: relative;
     z-index: 1;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
 }
 
 .btn-show-all:hover {
     box-shadow:
-        0 12px 38px rgba(255, 47, 165, 0.6),
-        0 1px 0 rgba(255, 255, 255, 0.7) inset,
-        0 -1px 0 rgba(0, 0, 0, 0.2) inset;
-    transform: scaleX(1.04) scaleY(0.96);
+        0 18px 50px rgba(255, 60, 170, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+        0 1px 0 rgba(255, 255, 255, 0.95) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.22) inset;
+    transform: scaleX(1.02) scaleY(0.98);
 }
 
 .btn-show-all:hover::before,
 .btn-show-all:hover::after {
-    animation-duration: 1.8s;
+    animation-duration: 8s;
 }
 
 .btn-show-all:active {
-    transform: scaleX(0.97) scaleY(1.04);
-    transition-duration: 0.12s;
+    transform: scaleX(0.98) scaleY(1.02);
+    transition-duration: 0.14s;
 }
 
 @media (prefers-reduced-motion: reduce) {
