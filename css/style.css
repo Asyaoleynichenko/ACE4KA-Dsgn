@@ -652,7 +652,8 @@ button:focus-visible,
 /* =========================
    2) Header / Navigation
    ========================= */
-/* Figma — sticky, прозрачный фон, mix-blend-mode: difference на всю шапку */
+/* Figma — sticky, прозрачный фон, mix-blend-mode: difference на всю шапку.
+   Состояние `header--hidden` (translateY -100%): прячется при скролле вниз, возвращается при остановке/скролле вверх. */
 .header {
     position: sticky;
     top: 0;
@@ -660,6 +661,21 @@ button:focus-visible,
     background: transparent;
     mix-blend-mode: difference;
     isolation: isolate;
+    will-change: transform;
+    transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.header--hidden {
+    transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .header {
+        transition: none;
+    }
+    .header--hidden {
+        transform: none;
+    }
 }
 
 /* Figma 573:18422 — Logo: совпадает по размеру с nav-link, uppercase, без mix-blend (хедер чёрный). */
@@ -923,18 +939,19 @@ button:focus-visible,
    В подписях/метках font-size наследуется от родителя (без акцента).
    --tc-scale-x — кастомное свойство, чтобы переопределять степень сжатия (hover/active → ближе к 1).
    transform-origin: left → весь «пустой» зазор смещается вправо, его компенсируем negative margin-inline-end.
-   Компенсация в em — фиксированная, лучше всего работает для подписей 6-12 символов. */
+   max-width: 100% — inline-block не должен распирать узкий контейнер; длинный текст переносится. */
 .text-condensed,
 .header .logo > span,
 .header .lang-switch .lang-switch__toggle-row,
 .header .nav-list .nav-link > span,
 .btn-show-all__label {
     display: inline-block;
+    max-width: 100%;
     --tc-scale-x: 0.62;
     transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
     margin-inline-end: calc((var(--tc-scale-x, 0.62) - 1) * 1.6em);
-    line-height: 1;
+    line-height: 1.1;
     transition:
         transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
         margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1628,21 +1645,7 @@ button:focus-visible,
 }
 
 .home-competencies-scrub__side {
-    position: absolute;
-    top: 50%;
-    width: min(338px, 42vw);
-    max-width: 338px;
-    z-index: 4;
-    box-sizing: border-box;
-    pointer-events: none;
-    display: block;
-}
-
-/* На узких экранах сайд-превью прячем, чтобы не перекрывать типографику. */
-@media (max-width: 900px) {
-    .home-competencies-scrub__side {
-        display: none;
-    }
+    display: none;
 }
 
 .home-competencies-scrub__side .home-competencies-scrub__card-wrap {
