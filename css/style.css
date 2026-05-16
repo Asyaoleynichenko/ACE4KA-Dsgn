@@ -44,11 +44,12 @@
   --font-competencies-display: 'Suisse Intl', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Figma 416:12975 — компетенции: смешанный тайп-рамп H2/H4/H1/H5/H3 для строк; H1 — максимум, H5 — минимум. */
-  --comp-line-size-1: clamp(32px, 9.5vw, 96px);
-  --comp-line-size-2: clamp(28px, 8.5vw, 84px);
-  --comp-line-size-3: clamp(22px, 6.4vw, 64px);
-  --comp-line-size-4: clamp(26px, 7.5vw, 76px);
-  --comp-line-size-5: clamp(20px, 5.4vw, 56px);
+  /* Figma 416:12975 — H-рамп компетенций: H1 ~104px доминирует, H5 ~60px самый маленький. */
+  --comp-line-size-1: clamp(36px, 10vw, 112px);
+  --comp-line-size-2: clamp(32px, 8.8vw, 96px);
+  --comp-line-size-3: clamp(24px, 6.8vw, 76px);
+  --comp-line-size-4: clamp(28px, 7.6vw, 84px);
+  --comp-line-size-5: clamp(20px, 5.6vw, 64px);
   --comp-line-resting-ratio: 0.62;
 
   /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
@@ -1841,15 +1842,16 @@ button:focus-visible,
 .home-competencies-scrub__line-wrap[data-heading="4"] { --comp-line-size: var(--comp-line-size-4); }
 .home-competencies-scrub__line-wrap[data-heading="5"] { --comp-line-size: var(--comp-line-size-5); }
 
-/* Figma 418:21263 — все 5 строк одинакового размера (Heading 1 = 96px), без активного/неактивного состояния */
+/* Figma 416:12975 — H-рамп по data-heading: каждая строка наследует свой --comp-line-size
+   из правил выше (H2/H4/H1/H5/H3 в порядке отображения). Активное состояние не меняет размер. */
 .home-competencies-scrub__line.home-competencies__line {
-    font-size: clamp(32px, 9.5vw, 96px);
+    font-size: var(--comp-line-size, var(--comp-line-size-1));
     font-weight: 700;
     transition: none;
 }
 
 .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
-    font-size: clamp(32px, 9.5vw, 96px);
+    font-size: var(--comp-line-size, var(--comp-line-size-1));
     transform: none;
 }
 
@@ -3464,8 +3466,10 @@ button:focus-visible,
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: clamp(280px, 100%, 463px);
-    height: 85px;
+    /* Figma 592:38790 — 463×85.67. На узких — max-width: 100%, чтобы не вылезать. */
+    width: 463px;
+    max-width: 100%;
+    height: 86px;
     padding: 0 64px;
     border-radius: 24px;
     background: #f03a9a;
