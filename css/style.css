@@ -891,17 +891,27 @@ button:focus-visible,
     background: transparent;
 }
 
-/* Кейс в шапке (десктоп): пилюля по центру строки — равные боковые 1fr, без «липкости» к имени */
+/* Десктоп: 1fr | max-content | 1fr — nav-list строго по центру вьюпорта,
+   не зависит от ширины логотипа и переключателя языка (с flex/space-between
+   центр «плавал» при разной длине логотипа / [Eng / Rus]). */
 @media (min-width: 901px) {
-    .header .nav:has(> .nav-list--case-study) {
+    .header .nav {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr);
         align-items: center;
         column-gap: var(--layout-page-pad-x);
     }
 
-    .header .nav:has(> .nav-list--case-study) > .logo {
+    .header .nav > .logo {
         justify-self: start;
+    }
+
+    .header .nav > .nav-list {
+        justify-self: center;
+    }
+
+    .header .nav > .lang-switch {
+        justify-self: end;
     }
 
     .header .nav:has(> .nav-list--case-study) > .nav-list--case-study {
@@ -910,10 +920,6 @@ button:focus-visible,
         max-width: min(100%, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 12rem));
         min-width: 0;
         flex: unset;
-    }
-
-    .header .nav:has(> .nav-list--case-study) > .lang-switch {
-        justify-self: end;
     }
 }
 
@@ -1646,6 +1652,48 @@ button:focus-visible,
 
 .home-competencies-scrub__side {
     display: none;
+}
+
+/* Превью проектов под типографикой — два кадра, меняются при смене активной строки. */
+.home-competencies-scrub__previews {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: clamp(12px, 2vw, 24px);
+    width: 100%;
+    max-width: 760px;
+    margin: clamp(24px, 4vw, 48px) auto 0;
+    padding-inline: clamp(16px, 3vw, 24px);
+    box-sizing: border-box;
+    animation: home-comp-preview-fade 0.42s var(--ease-smart, ease) both;
+}
+
+.home-competencies-scrub__previews .home-competencies-scrub__card-wrap {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 360px;
+}
+
+@keyframes home-comp-preview-fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+    .home-competencies-scrub__previews {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-competencies-scrub__previews .home-competencies-scrub__card-wrap {
+        max-width: 320px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-competencies-scrub__previews {
+        animation: none;
+    }
 }
 
 .home-competencies-scrub__side .home-competencies-scrub__card-wrap {
@@ -3347,19 +3395,12 @@ button:focus-visible,
     white-space: normal;
     overflow-wrap: break-word;
     word-wrap: break-word;
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.12em;
-    transition:
-        text-decoration-color var(--duration-micro) var(--ease-micro-out),
-        text-underline-offset var(--duration-micro) var(--ease-micro-out);
+    text-decoration: none;
 }
 
 .preview-card__link:hover .preview-content h3,
 .preview-card__link:hover .preview-card__title {
-    text-decoration-color: currentColor;
-    text-underline-offset: 0.22em;
+    text-decoration: none;
 }
 
 /* Figma 1:304 — meta 12px, uppercase, opacity 40% */
@@ -6906,7 +6947,8 @@ button:focus-visible,
     text-align: center;
 }
 
-/* Figma 573:23146 — большой вордмарк на всю ширину экрана; 6 колонок по букве, scaleY-резинка. */
+/* Figma 573:23146 — большой вордмарк на всю ширину экрана; 6 колонок по букве, scaleY-резинка.
+   Формула: viewport/3.72 даёт ~365px при ширине Figma-кадра 1358 (cap-height ≈ height 335.97 / line-height 0.92). */
 .site-footer__wordmark__track {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -6917,7 +6959,7 @@ button:focus-visible,
     box-sizing: border-box;
     align-items: baseline;
     font-family: var(--font-body), Inter, sans-serif;
-    font-size: clamp(2.5rem, min(calc(100cqw / 4.4), 18vw), 18rem);
+    font-size: clamp(2.5rem, calc(100cqw / 3.72), 32rem);
     font-style: normal;
     font-weight: 600;
     line-height: 0.92;
@@ -6928,7 +6970,7 @@ button:focus-visible,
 
 @supports (font-size: 1cqi) {
     .site-footer__wordmark__track {
-        font-size: clamp(2.5rem, min(calc(100cqw / 4.4), 18vw), 18rem);
+        font-size: clamp(2.5rem, calc(100cqw / 3.72), 32rem);
     }
 }
 
@@ -7088,13 +7130,13 @@ button:focus-visible,
 
     /* Wordmark на узких сохраняем огромным per Figma — это hero подвала. */
     .site-footer__wordmark__track {
-        font-size: clamp(2.5rem, min(calc(100cqw / 4.4), 22vw), 8rem);
+        font-size: clamp(2.5rem, calc(100cqw / 3.72), 14rem);
         letter-spacing: 0;
     }
 
     @supports (font-size: 1cqi) {
         .site-footer__wordmark__track {
-            font-size: clamp(2.5rem, min(calc(100cqw / 4.4), 22vw), 8rem);
+            font-size: clamp(2.5rem, calc(100cqw / 3.72), 14rem);
         }
     }
 

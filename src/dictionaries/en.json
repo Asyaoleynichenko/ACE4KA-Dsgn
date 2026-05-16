@@ -32,7 +32,7 @@
   },
   "hero": {
     "title": "Asya Oleynichenko",
-    "role": "Product Designer · VK",
+    "role": "Product Designer · Mail, Cloud & inbox",
     "text": "Five years in product design. Now on upsell and offer personalization at VK: monetization for Mail Space, Cloud, and Mail. Previously ~1.5 years on Mail media (Mail Science, Hi-Tech, Cinema, Lady, Pets). Work spans research, hypotheses, A/B tests, design, and impact on LTV, conversion, retention, and ARPPU. DAFES AWARDS finalist & winner · HSE red diploma, GPA 8.82 (Design & Programming). Open to Senior Product Designer roles.",
     "moreAbout": "More about me",
     "sectionNavAria": "Sections",
@@ -40,16 +40,13 @@
     "allProjects": "All projects",
     "info": {
       "location": "Location",
-      "locationValue": "Moscow",
+      "locationValue": "Worldwide",
       "company": "Company",
       "companyValue": "VK",
       "focus": "Focus",
       "focusValue": "Monetization",
       "education": "Education",
-      "educationValueLine1": "HSE Design",
-      "educationValueLine2": "& programming",
-      "awards": "DAFES",
-      "awardsValue": "DAFES AWARDS finalist & winner · Avito Design & AI Cup (2025)",
+      "educationValue": "HSE Design & Programming",
       "contacts": "Contacts",
       "contactsValue": "@pnkprty"
     },

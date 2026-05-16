@@ -158,15 +158,7 @@ export default function HomePage() {
               </div>
               <div className="info-card info-card--wide">
                 <span className="info-label"><span className="text-condensed">{t('hero.info.education')}</span></span>
-                <span className="info-value">
-                  {t('hero.info.educationValueLine1')}
-                  <br />
-                  {t('hero.info.educationValueLine2')}
-                </span>
-              </div>
-              <div className="info-card">
-                <span className="info-label"><span className="text-condensed">{t('hero.info.awards')}</span></span>
-                <span className="info-value">{t('hero.info.awardsValue')}</span>
+                <span className="info-value">{t('hero.info.educationValue')}</span>
               </div>
               <div className="info-card">
                 <span className="info-label"><span className="text-condensed">{t('hero.info.contacts')}</span></span>

@@ -244,6 +244,12 @@ export default function HomeCompetenciesScrub({
                   </div>
                 </div>
               </div>
+              {leftProject || rightProject ? (
+                <div className="home-competencies-scrub__previews" key={activeIdx}>
+                  {projectCard(leftProject)}
+                  {projectCard(rightProject)}
+                </div>
+              ) : null}
             </div>
             {children}
           </div>

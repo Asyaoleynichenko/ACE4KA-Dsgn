@@ -32,7 +32,7 @@
   },
   "hero": {
     "title": "Ася Олейниченко",
-    "role": "Product Designer · ВК",
+    "role": "Продуктовый дизайнер mail почта и облако",
     "text": "5 лет в продуктовом дизайне. Сейчас — в команде апсейла и персонализации офферов ВК: монетизация Mail Space, Облака и Почты. До этого 1,5 года вела дизайн медиапродуктов Mail.ru (Mail Наука, Hi-Tech, Кино, Леди, Питомцы). Работаю на всех этапах: исследование, гипотезы, A/B-тесты, проектирование, влияние на LTV, conversion, retention, ARPPU. Финалист и призёр DAFES AWARDS · GPA 8,82, красный диплом НИУ ВШЭ (Дизайн и программирование). Открыта к ролям Senior Product Designer.",
     "moreAbout": "Больше обо мне",
     "sectionNavAria": "Разделы",
@@ -40,16 +40,13 @@
     "allProjects": "Все проекты",
     "info": {
       "location": "Локация",
-      "locationValue": "Москва",
+      "locationValue": "Worldwide",
       "company": "Компания",
       "companyValue": "VK",
       "focus": "Направление",
       "focusValue": "Монетизация",
       "education": "Образование",
-      "educationValueLine1": "ВШЭ Дизайн",
-      "educationValueLine2": "и программирование",
-      "awards": "DAFES",
-      "awardsValue": "Финалист и призёр DAFES AWARDS · Кубок Дизайна и ИИ от Авито (2025)",
+      "educationValue": "ВШЭ Дизайн и Программирование",
       "contacts": "Контакты",
       "contactsValue": "@pnkprty"
     },
