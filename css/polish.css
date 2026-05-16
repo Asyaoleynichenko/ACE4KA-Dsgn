@@ -233,11 +233,12 @@
 }
 
 /* ---------------------------------------------------------
-   5. Scroll-scale targets (JS sets --scale-y; CSS fallback to 1)
+   5. Резиновый текст: scaleX/scaleY на скролле + hover-squash.
+   JS-фолбэк через --scale-y / --scale-x; современный путь — animation-timeline.
    --------------------------------------------------------- */
 [data-scale] {
-    transform: scaleY(var(--scale-y, 1));
-    transition: transform 0.1s linear;
+    transform: scaleX(var(--scale-x, 1)) scaleY(var(--scale-y, 1));
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
     will-change: transform;
     display: inline-block;
 }
@@ -251,41 +252,76 @@
     transform-origin: center bottom;
 }
 
-/* Modern fallback: native animation-timeline (Chromium 115+) */
+/* Modern fallback: native animation-timeline (Chromium 115+) — резинка вместо линейного scaleY. */
 @supports (animation-timeline: view()) {
     [data-scale="hero-name"] {
-        animation: polish-scale-hero linear both;
+        animation: polish-rubber-hero linear both;
         animation-timeline: view();
         animation-range: entry 0% cover 50%;
     }
-    @keyframes polish-scale-hero {
-        from {
-            transform: scaleY(1);
+    @keyframes polish-rubber-hero {
+        0% {
+            transform: scaleX(0.94) scaleY(1.12);
         }
-        to {
-            transform: scaleY(1.15);
+        50% {
+            transform: scaleX(1.08) scaleY(0.92);
+        }
+        100% {
+            transform: scaleX(1) scaleY(1);
         }
     }
-    /* Подвальный знак стал компактным — анимация растяжки больше не нужна. */
     [data-scale="footer-mega"] {
-        animation: none;
+        animation: polish-rubber-footer linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 80%;
+    }
+    @keyframes polish-rubber-footer {
+        0% {
+            transform: scaleX(1.08) scaleY(0.78);
+        }
+        45% {
+            transform: scaleX(0.94) scaleY(1.22);
+        }
+        100% {
+            transform: scaleX(1) scaleY(1);
+        }
     }
     [data-scale="section-title"] {
-        animation: polish-scale-section linear both;
+        animation: polish-rubber-section linear both;
         animation-timeline: view();
         animation-range: cover 0% cover 100%;
     }
-    @keyframes polish-scale-section {
+    @keyframes polish-rubber-section {
         0% {
-            transform: scaleY(1);
+            transform: scaleX(1) scaleY(1);
         }
         50% {
-            transform: scaleY(1.25);
+            transform: scaleX(0.94) scaleY(1.18);
         }
         100% {
-            transform: scaleY(1);
+            transform: scaleX(1) scaleY(1);
         }
     }
+}
+
+/* Общая утилита для текста — добавь класс или [data-rubber] чтобы получить hover-squash. */
+.text-rubber,
+[data-rubber] {
+    display: inline-block;
+    transform-origin: center center;
+    transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+}
+.text-rubber:hover,
+[data-rubber]:hover,
+a:hover > .text-rubber,
+a:hover > [data-rubber] {
+    transform: scaleX(1.08) scaleY(0.92);
+}
+.text-rubber:active,
+[data-rubber]:active {
+    transform: scaleX(0.96) scaleY(1.06);
+    transition-duration: 0.12s;
 }
 
 /* ---------------------------------------------------------
@@ -303,7 +339,51 @@
     transform: translateY(0);
 }
 
+/* Site-wide hover-squash на ключевые текстовые элементы — без JSX-правок. */
+.nav-link,
+.hero-more,
+.hero-links a,
+.btn-show-all,
+.site-footer__link,
+.site-footer__status,
+.preview-card__title,
+.projects-title-main,
+.hero-title,
+.lang-switch {
+    transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease, opacity 0.2s ease;
+    transform-origin: center center;
+    will-change: transform;
+}
+.nav-link:hover:not(.active),
+.hero-more:hover,
+.hero-links a:hover,
+.btn-show-all:hover,
+.site-footer__link:hover,
+.preview-card__link:hover .preview-card__title,
+.lang-switch:hover {
+    transform: scaleX(1.06) scaleY(0.94);
+}
+.nav-link:active,
+.hero-more:active,
+.hero-links a:active,
+.btn-show-all:active,
+.site-footer__link:active {
+    transform: scaleX(0.96) scaleY(1.06);
+    transition-duration: 0.12s;
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .text-rubber,
+    [data-rubber],
+    .nav-link,
+    .hero-more,
+    .hero-links a,
+    .btn-show-all,
+    .site-footer__link,
+    .preview-card__link:hover .preview-card__title {
+        transform: none !important;
+        transition: none !important;
+    }
     [data-scale],
     [data-reveal] {
         transition: none;

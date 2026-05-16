@@ -8,6 +8,7 @@ export default function LanguageSwitcher() {
 
   return (
     <span className="lang-switch__toggle-row">
+      <span className="lang-switch__bracket" aria-hidden>[</span>
       <button
         type="button"
         className={`lang-switch__btn${locale === 'en' ? ' is-active' : ''}`}
@@ -15,7 +16,7 @@ export default function LanguageSwitcher() {
         aria-label="English"
         onClick={() => setLocale('en')}
       >
-        <span className="blend-text">EN</span>
+        <span className="blend-text">ENG</span>
       </button>
       <span className="lang-switch__split" aria-hidden>
         /
@@ -27,8 +28,9 @@ export default function LanguageSwitcher() {
         aria-label="Русский"
         onClick={() => setLocale('ru')}
       >
-        <span className="blend-text">RU</span>
+        <span className="blend-text">RUS</span>
       </button>
+      <span className="lang-switch__bracket" aria-hidden>]</span>
     </span>
   );
 }

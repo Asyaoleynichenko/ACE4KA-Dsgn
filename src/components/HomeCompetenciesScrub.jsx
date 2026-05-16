@@ -35,7 +35,11 @@ function chunkSlugsForLines(lineCount, homeSlugs) {
   return out;
 }
 
-/** Прогресс скролла t∈[0,1] → активная строка и «растяжение» активной надписи внутри сегмента. */
+/**
+ * Прогресс скролла t∈[0,1] → активная строка + резиновая деформация:
+ * оси scaleX/scaleY всегда инверсны (X↑ → Y↓ и наоборот). Чётные строки
+ * растягиваются по горизонтали и зажимаются по вертикали, нечётные — наоборот.
+ */
 function activeLineStretchFromScroll(n, t) {
   if (n < 1) return { idx: 0, scaleX: 1, scaleY: 1 };
   const clampedT = Math.min(1, Math.max(0, t));
@@ -43,8 +47,8 @@ function activeLineStretchFromScroll(n, t) {
     const wave = Math.sin(Math.PI * clampedT);
     return {
       idx: 0,
-      scaleX: 1 + 0.1 * wave,
-      scaleY: 0.86 + 0.28 * wave,
+      scaleX: 1 + 0.12 * wave,
+      scaleY: 1 - 0.1 * wave,
     };
   }
   const denom = n - 1;
@@ -55,10 +59,11 @@ function activeLineStretchFromScroll(n, t) {
       ? Math.min(1, Math.max(0, raw - (n - 2)))
       : Math.min(1, Math.max(0, raw - idx));
   const wave = Math.sin(Math.PI * localT);
+  const stretchX = idx % 2 === 0;
   return {
     idx,
-    scaleX: 1 + 0.12 * wave,
-    scaleY: 0.82 + 0.36 * wave,
+    scaleX: stretchX ? 1 + 0.14 * wave : 1 - 0.1 * wave,
+    scaleY: stretchX ? 1 - 0.1 * wave : 1 + 0.14 * wave,
   };
 }
 

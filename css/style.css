@@ -649,28 +649,28 @@ button:focus-visible,
     position: sticky;
     top: 0;
     z-index: 100;
-    background: transparent;
+    /* Figma 573:18422 — единый чёрный хедер на всех страницах. */
+    background: #000;
     transition: background var(--transition-base);
     mix-blend-mode: normal !important;
-    /* Chrome: isolation здесь часто отрезает backdrop-filter от контента под sticky header */
     isolation: auto !important;
 }
 
-/* Figma 300:107467 — Logo: 24px, 32px line-height, -1px, основной текст, mix-blend-mode exclusion */
+/* Figma 573:18422 — Logo: совпадает по размеру с nav-link, uppercase, без mix-blend (хедер чёрный). */
 .logo {
-    font-size: 24px;
+    font-size: clamp(14px, 1.4vw, 18px);
     font-weight: 400;
-    line-height: 32px;
-    letter-spacing: -1px;
+    line-height: 24px;
+    letter-spacing: 0;
     text-transform: uppercase;
     display: inline-block;
     color: var(--color-text);
-    mix-blend-mode: var(--mix-blend-exclusion, exclusion);
+    mix-blend-mode: normal;
     flex-shrink: 0;
     text-decoration: none;
     transition:
         opacity var(--transition-base),
-        transform var(--duration-micro) var(--ease-smart);
+        transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .logo:hover {
@@ -715,26 +715,26 @@ button:focus-visible,
     }
 }
 
-/* Figma 300:107467 — nav-list: liquid glass (blur + полупрозрачность + тонкий обод + inset rim) */
+/* Figma 573:18422 — nav-list плоская, без pill, текстовые элементы с обычным интервалом. */
 .nav-list {
     display: inline-flex;
     list-style: none;
-    gap: var(--space-8);
+    gap: clamp(40px, 5vw, 92px);
     margin: 0;
-    padding: 4px;
+    padding: 0;
     width: auto;
     max-width: 100%;
     flex-shrink: 0;
     box-sizing: border-box;
-    border-radius: var(--radius-full);
-    background: var(--effect-nav-pill-bg);
-    border: 1px solid var(--effect-nav-pill-border);
-    box-shadow: var(--shadow-nav-pill-rim);
-    justify-content: flex-start;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    justify-content: center;
     align-items: center;
-    isolation: isolate;
-    backdrop-filter: blur(var(--blur-nav-list)) saturate(1.85);
-    -webkit-backdrop-filter: blur(var(--blur-nav-list)) saturate(1.85);
+    isolation: auto;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .nav-list li {
@@ -742,51 +742,52 @@ button:focus-visible,
     flex-shrink: 0;
 }
 
-/* Figma 300:107467 — Nav links: 14px, 20px line-height, -1px, uppercase */
+/* Figma 573:18422 — nav-link плоский текст, активный — bold; никаких pill / backgrounds. */
 .nav-link {
-    font-size: 14px;
+    font-size: clamp(14px, 1.4vw, 18px);
     font-weight: 400;
-    line-height: 20px;
-    letter-spacing: -1px;
+    line-height: 24px;
+    letter-spacing: 0;
     text-transform: uppercase;
     color: var(--color-text);
-    padding: var(--space-8) var(--space-24);
-    border-radius: var(--radius-full);
-    border: 1px solid transparent;
+    padding: 0;
+    border-radius: 0;
+    border: 0;
+    background: transparent !important;
     transition:
-        background var(--dur-smart-nav) var(--ease-smart),
-        border-color var(--dur-smart-nav) var(--ease-smart),
-        letter-spacing var(--dur-smart-nav) var(--ease-smart),
+        font-weight var(--dur-smart-nav) var(--ease-smart),
+        opacity var(--dur-smart-nav) var(--ease-smart),
         transform var(--duration-micro) var(--ease-smart);
-    mix-blend-mode: var(--mix-blend-exclusion, exclusion);
+    mix-blend-mode: normal;
+    opacity: 0.7;
 }
 
-/* Внутри стеклянной пилюли mix-blend ломает видимость backdrop-filter — оставляем обычное смешивание */
 .nav-list .nav-link {
     mix-blend-mode: normal;
 }
 
-/* Активная капсула — тёмное стекло + яркий верх/низ rim + Figma inset glow */
 .nav-link.active {
-    letter-spacing: 1px;
-    border-radius: var(--radius-full);
-    border: 1px solid var(--effect-nav-active-outline);
+    font-weight: 700;
+    letter-spacing: 0;
+    border-radius: 0;
+    border: 0;
     outline: none;
-    background: #000;
-    box-shadow: var(--shadow-nav-active-liquid), var(--shadow-nav-active);
-    backdrop-filter: blur(80px) saturate(1.65);
-    -webkit-backdrop-filter: blur(80px) saturate(1.65);
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     transform: none;
+    opacity: 1;
 }
 
 .nav-link:hover:not(.active) {
-    background: var(--effect-nav-link-hover);
+    background: transparent;
     border-color: transparent;
-    transform: translateY(-1px);
+    opacity: 1;
 }
 
 .nav-link:active:not(.active) {
-    transform: translateY(0);
+    opacity: 0.92;
 }
 
 /* UX: минимальная область нажатия 44×44px, центрирование текста */
@@ -798,17 +799,17 @@ button:focus-visible,
     justify-content: center;
 }
 
-/* Figma 300:107467 — Lang: 24px, 32px line-height, -1px, min-width 228px, mix-blend exclusion */
+/* Figma 573:18422 — Lang в виде [ENG / RUS], тот же размер и uppercase что у nav-item. */
 .lang-switch {
-    font-size: 24px;
+    font-size: clamp(14px, 1.4vw, 18px);
     font-weight: 400;
-    line-height: 32px;
-    letter-spacing: -1px;
+    line-height: 24px;
+    letter-spacing: 0;
     text-transform: uppercase;
     display: inline-block;
     color: var(--color-text);
-    mix-blend-mode: var(--mix-blend-exclusion, exclusion);
-    min-width: min(228px, 42vw);
+    mix-blend-mode: normal;
+    min-width: 0;
     text-align: right;
     flex-shrink: 0;
 }
@@ -928,13 +929,18 @@ button:focus-visible,
 
 .lang-switch__toggle-row {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: flex-end;
-    gap: 0.35em;
+    gap: 0.25em;
 }
 
 .lang-switch__split {
-    opacity: 0.5;
+    opacity: 0.6;
+    user-select: none;
+}
+
+.lang-switch__bracket {
+    opacity: 0.7;
     user-select: none;
 }
 
@@ -2250,10 +2256,11 @@ button:focus-visible,
     margin: 0;
 }
 
-/* Главный заголовок героя — масштабируется по ширине экрана (конкретные размеры ниже, после :root type scale) */
+/* Главный заголовок героя — Figma 416:12975: UPPERCASE, масштабируется по ширине экрана. */
 .hero-title {
     margin: 0;
     color: var(--color-text);
+    text-transform: uppercase;
 }
 
 /* Figma 1:239–240: text 24px, line-height 1.2, -1px tracking, max 661px */
@@ -6894,48 +6901,52 @@ button:focus-visible,
 .site-footer__wordmark {
     container-name: foot-wm;
     container-type: inline-size;
-    width: 100%;
+    width: 100vw;
     max-width: none;
-    margin: 0 0 var(--space-12, 16px);
-    padding: 0;
+    margin-top: 0;
+    margin-bottom: clamp(1.25rem, 3vw, 2rem);
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 0 max(env(safe-area-inset-right, 0px), clamp(8px, 2.4vw, 20px)) 0
+        max(env(safe-area-inset-left, 0px), clamp(8px, 2.4vw, 20px));
     box-sizing: border-box;
-    color: rgba(255, 255, 255, 0.5);
-    -webkit-text-fill-color: currentColor;
+    color: #fff;
+    -webkit-text-fill-color: #fff;
     -webkit-text-stroke-width: 0;
     paint-order: normal;
-    text-align: left;
+    text-align: center;
 }
 
-/* Маленький подвальный знак: компактный inline-trekn вместо 6-колоночной растяжки. */
+/* Figma 573:23146 — большой вордмарк на всю ширину экрана; 6 колонок по букве, scaleY-резинка. */
 .site-footer__wordmark__track {
-    display: inline-flex;
-    gap: 0.02em;
-    width: auto;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    width: 100%;
     max-width: none;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     align-items: baseline;
     font-family: var(--font-body), Inter, sans-serif;
-    font-size: 13px;
+    font-size: clamp(2.5rem, min(calc(100cqw / 4.4), 18vw), 18rem);
     font-style: normal;
     font-weight: 600;
-    line-height: 1;
-    letter-spacing: 0.18em;
+    line-height: 0.92;
+    letter-spacing: 0;
     text-transform: uppercase;
     color: inherit;
 }
 
 @supports (font-size: 1cqi) {
     .site-footer__wordmark__track {
-        font-size: clamp(1.25rem, min(calc(100cqw / 5.5), 5vw), 3.25rem);
+        font-size: clamp(2.5rem, min(calc(100cqw / 4.4), 18vw), 18rem);
     }
 }
 
 .site-footer__wordmark__char {
-    display: inline-block;
-    width: auto;
-    text-align: left;
+    display: block;
+    width: 100%;
+    text-align: center;
     line-height: inherit;
 }
 
@@ -7086,15 +7097,15 @@ button:focus-visible,
         padding-right: max(env(safe-area-inset-right, 0px), clamp(8px, 2.4vw, 16px));
     }
 
-    /* Wordmark остаётся компактным и на ≤768 — единый стиль с desktop. */
+    /* Wordmark на узких сохраняем огромным per Figma — это hero подвала. */
     .site-footer__wordmark__track {
-        font-size: 12px;
-        letter-spacing: 0.18em;
+        font-size: clamp(2.5rem, min(calc(100cqw / 4.4), 22vw), 8rem);
+        letter-spacing: 0;
     }
 
     @supports (font-size: 1cqi) {
         .site-footer__wordmark__track {
-            font-size: 12px;
+            font-size: clamp(2.5rem, min(calc(100cqw / 4.4), 22vw), 8rem);
         }
     }
 
@@ -8001,10 +8012,10 @@ canvas {
         gap: var(--space-12);
     }
 
-    /* Wordmark в подвале — единый компактный стиль на всех мобильных. */
+    /* Wordmark на узких сохраняем огромным per Figma. */
     .site-footer__wordmark__track {
-        font-size: 12px;
-        letter-spacing: 0.18em;
+        font-size: clamp(2.5rem, 24vw, 7rem);
+        letter-spacing: 0;
     }
 
     .site-footer__contain {
