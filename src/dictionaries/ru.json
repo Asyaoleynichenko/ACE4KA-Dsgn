@@ -56,10 +56,6 @@
     },
     "competencies": {
       "aria": "Ключевые направления",
-      "decorCardAria": "Декоративная карточка в блоке компетенций",
-      "previewStripAria": "Превью проектов для выбранного направления",
-      "previewEmpty": "Проекты скоро добавятся",
-      "badge": "Для работы",
       "lines": [
         "Product Design",
         "AI и Вайбкодинг",
@@ -73,21 +69,7 @@
         ["mail-nauki", "racktables"],
         ["racktables", "mail-monetization"],
         ["drop", "inkz"]
-      ],
-      "cardImages": {
-        "tl": "",
-        "br": ""
-      },
-      "cards": {
-        "tl": {
-          "title": "@pnkprty",
-          "subtitle": "Telegram и почта — напишите, обсудим проект"
-        },
-        "br": {
-          "title": "Senior Product Designer",
-          "subtitle": "Продукт, метрики, дизайн-системы и запуски"
-        }
-      }
+      ]
     }
   },
   "sectionNav": {

@@ -37,7 +37,6 @@
   --color-accent-hover: #e5e5e5;
   --color-focus-ring: rgba(245, 245, 245, 0.4);
   --color-focus-ring-strong: rgba(245, 245, 245, 0.56);
-  --color-focus-ring-soft: rgba(245, 245, 245, 0.28);
   --color-preview-titlebar-text: #a3a3a3;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   /* Figma 418:21263 — Suisse Intl 600 в макете; при отсутствии файлов в `public/fonts` — Inter 600. */
@@ -50,7 +49,6 @@
   --comp-line-size-3: clamp(24px, 6.8vw, 76px);
   --comp-line-size-4: clamp(28px, 7.6vw, 84px);
   --comp-line-size-5: clamp(20px, 5.6vw, 64px);
-  --comp-line-resting-ratio: 0.62;
 
   /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
   --ease-smart: cubic-bezier(0.32, 0.72, 0, 1);
@@ -67,7 +65,6 @@
   --transition: var(--dur-smart-base) var(--ease-smart);
   --transition-fast: var(--dur-smart-fast) var(--ease-smart);
   --transition-base: var(--dur-smart-base) var(--ease-smart);
-  --transition-slow: var(--dur-smart-slow) var(--ease-smart);
   --page-transition-duration: 380ms;
   --page-project-sheet-duration: 520ms;
   --duration-micro: 220ms;
@@ -76,24 +73,13 @@
   --radius: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 20px;
-  --surface-2: rgba(10, 10, 10, 0.04);
   --radius-2xl: 22px;
   --radius-card-premium: 22px;
   --radius-full: 9999px;
   --color-surface-border: #2a2a31;
   --color-elevated-mid: #262626;
-  --font-size-14: 14px;
-  --font-size-16: 16px;
-  --font-size-18: 18px;
-  --font-size-24: 24px;
-  --font-size-32: 32px;
-  --font-size-44: 44px;
   --font-weight-semibold: 600;
   --shadow-nav-active: 0 1px 2px rgba(0, 0, 0, 0.42);
-  --shadow-nav-pill-rim: 0 1px 2px rgba(0, 0, 0, 0.36);
-  --shadow-nav-active-liquid: 0 1px 2px rgba(0, 0, 0, 0.45);
-  --shadow-btn-show-all: 0 1px 2px rgba(0, 0, 0, 0.36);
   --shadow-preview-card: 0 10px 32px rgba(0, 0, 0, 0.22);
   --shadow-preview-card-hover: 0 14px 40px rgba(0, 0, 0, 0.28);
   --shadow-card-hover: 0 12px 36px rgba(0, 0, 0, 0.26);
@@ -434,12 +420,126 @@ html.snap-pages #root.snap-pages-root--home {
 .icon-assemble-dots {
     --icon-reveal-dur: 260ms;
     --icon-reveal-ease: var(--ease-smart);
+    --loader-scale: 1;
 
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     vertical-align: middle;
+}
+
+/* 9-точечный пульсирующий loader (l26) за иконкой: первого экрана (folder/well) и nav-хедера.
+   Box-shadow рисует 3×3 сетку точек; --loader-scale ужимает паттерн под размер иконки. */
+.icon-assemble-dots--folder::before,
+.icon-assemble-dots--well::before,
+.icon-assemble-dots--nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 4px;
+    aspect-ratio: 1;
+    color: rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    box-shadow:
+        19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+        19px 0     0 5px, 38px 0     0 5px, 57px 0     0 5px,
+        19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px;
+    transform: scale(var(--loader-scale, 1)) translateX(-38px);
+    animation: l26 2s infinite linear;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.icon-assemble-dots--well { --loader-scale: 0.7; }
+.icon-assemble-dots--nav  { --loader-scale: 0.4; }
+
+@keyframes l26 {
+    12.5% { box-shadow:
+        19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 5px,
+        19px 0     0 5px, 38px 0     0 0px, 57px 0     0 5px,
+        19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px; }
+    25%   { box-shadow:
+        19px -19px 0 5px, 38px -19px 0 0px, 57px -19px 0 5px,
+        19px 0     0 0px, 38px 0     0 0px, 57px 0     0 0px,
+        19px 19px  0 0px, 38px 19px  0 5px, 57px 19px  0 0px; }
+    50%   { box-shadow:
+        19px -19px 0 5px, 38px -19px 0 5px, 57px -19px 0 0px,
+        19px 0     0 0px, 38px 0     0 0px, 57px 0     0 0px,
+        19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 5px; }
+    62.5% { box-shadow:
+        19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+        19px 0     0 5px, 38px 0     0 0px, 57px 0     0 0px,
+        19px 19px  0 0px, 38px 19px  0 5px, 57px 19px  0 5px; }
+    75%   { box-shadow:
+        19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+        19px 0     0 0px, 38px 0     0 0px, 57px 0     0 5px,
+        19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 5px; }
+    87.5% { box-shadow:
+        19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+        19px 0     0 0px, 38px 0     0 5px, 57px 0     0 0px,
+        19px 19px  0 5px, 38px 19px  0 0px, 57px 19px  0 0px; }
+}
+
+/* Blob-loader (l14): 4 белые «капли» сливаются на чёрном через blur+contrast.
+   Утилита — повесьте `class="blob-loader"` на любой div, где нужен индикатор загрузки. */
+.blob-loader {
+    height: 50px;
+    aspect-ratio: 2;
+    border: 10px solid #000;
+    box-sizing: border-box;
+    background:
+        radial-gradient(farthest-side, #fff 98%, #0000) left  /20px 20px,
+        radial-gradient(farthest-side, #fff 98%, #0000) left  /20px 20px,
+        radial-gradient(farthest-side, #fff 98%, #0000) center/20px 20px,
+        radial-gradient(farthest-side, #fff 98%, #0000) right /20px 20px,
+        #000;
+    background-repeat: no-repeat;
+    filter: blur(4px) contrast(10);
+    animation: l14 1s infinite;
+}
+
+@keyframes l14 {
+    100% { background-position: right, left, center, right; }
+}
+
+/* 5-точечный bounce-loader. Утилита: <span class="wave-loader" aria-hidden="true">
+   <span></span><span></span><span></span><span></span><span></span></span>
+   Цвет точки переопределяется через `--wave-dot-color`. */
+.wave-loader {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    vertical-align: middle;
+}
+
+.wave-loader > * {
+    width: 15px;
+    height: 15px;
+    background-color: var(--wave-dot-color, #fff);
+    border-radius: 50%;
+    animation: wave-loader-bounce 1.2s infinite ease-in-out;
+}
+
+.wave-loader > *:nth-child(2) { animation-delay: 0.1s; }
+.wave-loader > *:nth-child(3) { animation-delay: 0.2s; }
+.wave-loader > *:nth-child(4) { animation-delay: 0.3s; }
+.wave-loader > *:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes wave-loader-bounce {
+    0%, 40%, 100% { transform: translateY(0); }
+    20%           { transform: translateY(-20px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .icon-assemble-dots--folder::before,
+    .icon-assemble-dots--well::before,
+    .icon-assemble-dots--nav::before,
+    .blob-loader,
+    .wave-loader > * {
+        animation: none;
+    }
 }
 
 .icon-assemble-dots__media {
@@ -964,6 +1064,20 @@ button:focus-visible,
         margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Глобально: все заголовки UPPERCASE. */
+h1, h2, h3, h4, h5, h6 {
+    text-transform: uppercase;
+}
+
+/* h3 «condensed»: без transform: scaleX (он распирал карточки).
+   Лёгкий letter-spacing reduction + переносы по словам, чтобы вмещалось в контейнер. */
+h3 {
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: auto;
+}
+
 /* Display-condensed: больший кегль (для шапки и CTA-кнопки). */
 .header .logo > span,
 .header .lang-switch .lang-switch__toggle-row,
@@ -1041,6 +1155,9 @@ button:focus-visible,
     align-items: baseline;
     justify-content: flex-end;
     gap: 0.25em;
+    /* [ENG / RUS] всегда в одну строку — без перевода ENG/ + RUS] на разные строки. */
+    white-space: nowrap;
+    flex-wrap: nowrap;
 }
 
 .lang-switch__split {
@@ -1842,16 +1959,16 @@ button:focus-visible,
 .home-competencies-scrub__line-wrap[data-heading="4"] { --comp-line-size: var(--comp-line-size-4); }
 .home-competencies-scrub__line-wrap[data-heading="5"] { --comp-line-size: var(--comp-line-size-5); }
 
-/* Figma 416:12975 — H-рамп по data-heading: каждая строка наследует свой --comp-line-size
-   из правил выше (H2/H4/H1/H5/H3 в порядке отображения). Активное состояние не меняет размер. */
+/* Figma: все 5 строк одинакового размера, каждая в одну строку (без переноса). */
 .home-competencies-scrub__line.home-competencies__line {
-    font-size: var(--comp-line-size, var(--comp-line-size-1));
+    font-size: clamp(32px, 7.6vw, 88px);
     font-weight: 700;
+    white-space: nowrap;
     transition: none;
 }
 
 .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
-    font-size: var(--comp-line-size, var(--comp-line-size-1));
+    font-size: clamp(32px, 7.6vw, 88px);
     transform: none;
 }
 
@@ -1903,241 +2020,6 @@ button:focus-visible,
     font-size: var(--comp-line-size, var(--comp-line-size-1));
 }
 
-.home-competencies__floats {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.home-competencies__float {
-    position: absolute;
-    pointer-events: auto;
-    width: min(338px, 42vw);
-    max-width: 338px;
-    box-sizing: border-box;
-    line-height: 0;
-}
-
-.home-competencies__float-img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 338 / 199;
-    border-radius: 16px;
-    border: 1px solid transparent;
-    box-shadow: 0 5.621697px 16.865093px rgba(0, 16, 61, 0.28);
-    object-fit: cover;
-}
-
-/* Figma 418:21263 — позиции img: left −186.98 / 896, top 197 / 1008 и left 727 / 896, top 473 / 1008 */
-.home-competencies__float--tl {
-    top: 19.54%;
-    left: -20.86%;
-}
-
-.home-competencies__float--br {
-    top: 46.92%;
-    left: 81.14%;
-}
-
-.home-competencies__cards {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.home-competencies__card {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: min(338px, 42vw);
-    max-width: 338px;
-    min-height: 199px;
-    aspect-ratio: 338 / 199;
-    height: auto;
-    padding: 10px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid transparent;
-    background: #0a0a0d;
-    box-shadow: 0 5.621697px 16.865093px rgba(0, 16, 61, 0.28);
-    pointer-events: auto;
-    text-decoration: none;
-    color: inherit;
-    box-sizing: border-box;
-}
-
-/* Figma 418:21263 — декоративные карточки: бейдж, «шум», центральный @ в плите, искры */
-.home-competencies__card--figma418 {
-    justify-content: center;
-    align-items: center;
-}
-
-.home-competencies__card--tl {
-    top: 19.54%;
-    left: -20.86%;
-}
-
-.home-competencies__card--br {
-    top: 46.92%;
-    left: 81.14%;
-}
-
-.home-competencies__badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: #0a0a0c;
-    background: linear-gradient(135deg, #5fffd4 0%, #2ee6ff 100%);
-    box-shadow: 0 2px 8px rgba(46, 230, 255, 0.35);
-}
-
-.home-competencies__card-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background:
-        radial-gradient(ellipse 90% 70% at 18% 88%, rgba(72, 82, 110, 0.42), transparent 58%),
-        radial-gradient(circle at 82% 18%, rgba(46, 230, 255, 0.09), transparent 46%),
-        radial-gradient(circle at 48% 32%, rgba(255, 255, 255, 0.05), transparent 38%),
-        linear-gradient(155deg, #141418 0%, #0a0a0e 48%, #101014 100%);
-    opacity: 1;
-}
-
-.home-competencies__card-bg::after {
-    content: '';
-    position: absolute;
-    inset: -24%;
-    background: radial-gradient(ellipse at 55% 65%, rgba(255, 255, 255, 0.035), transparent 52%);
-    transform: rotate(-11deg);
-    pointer-events: none;
-}
-
-.home-competencies__card-mesh {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    opacity: 0.22;
-    mix-blend-mode: soft-light;
-    background-image:
-        repeating-linear-gradient(
-            -18deg,
-            transparent,
-            transparent 11px,
-            rgba(255, 255, 255, 0.04) 11px,
-            rgba(255, 255, 255, 0.04) 12px
-        ),
-        repeating-linear-gradient(
-            112deg,
-            transparent,
-            transparent 19px,
-            rgba(46, 230, 255, 0.05) 19px,
-            rgba(46, 230, 255, 0.05) 20px
-        ),
-        radial-gradient(circle at 12% 20%, rgba(255, 255, 255, 0.06), transparent 28%),
-        radial-gradient(circle at 88% 78%, rgba(255, 255, 255, 0.05), transparent 30%);
-    pointer-events: none;
-}
-
-.home-competencies__card-glow {
-    position: absolute;
-    inset: 18% 22%;
-    z-index: 0;
-    border-radius: 40%;
-    background: radial-gradient(ellipse at 50% 50%, rgba(46, 230, 255, 0.14), transparent 68%);
-    filter: blur(18px);
-    opacity: 0.75;
-    pointer-events: none;
-}
-
-.home-competencies__glyph-stage {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-}
-
-.home-competencies__glyph-slab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: min(118px, 32vw);
-    height: min(118px, 32vw);
-    max-width: 118px;
-    max-height: 118px;
-    border-radius: 22px;
-    background: linear-gradient(180deg, #1c1c22 0%, #0e0e12 100%);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.07),
-        0 14px 36px rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-sizing: border-box;
-}
-
-.home-competencies__glyph {
-    font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
-    font-weight: 700;
-    font-size: clamp(44px, 11vw, 62px);
-    line-height: 1;
-    letter-spacing: -0.04em;
-    color: #ffffff;
-    user-select: none;
-}
-
-.home-competencies__spark {
-    position: absolute;
-    z-index: 3;
-    height: 3px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, transparent, rgba(46, 230, 255, 0.95), transparent);
-    opacity: 0.88;
-    pointer-events: none;
-}
-
-.home-competencies__spark--a {
-    top: 22%;
-    right: 10%;
-    width: 26px;
-    transform: rotate(-38deg);
-}
-
-.home-competencies__spark--b {
-    bottom: 20%;
-    left: 12%;
-    width: 20px;
-    transform: rotate(18deg);
-    opacity: 0.72;
-}
-
-.home-competencies__spark--c {
-    top: 52%;
-    right: 14%;
-    width: 14px;
-    transform: rotate(8deg);
-    opacity: 0.58;
-}
-
-.home-competencies__spark--d {
-    top: 38%;
-    left: 18%;
-    width: 18px;
-    transform: rotate(-22deg);
-    opacity: 0.62;
-}
-
 .home-competencies__cta {
     position: relative;
     z-index: 3;
@@ -2145,27 +2027,6 @@ button:focus-visible,
     justify-content: center;
     padding: 0 clamp(20px, 4vw, 40px) clamp(28px, 5vw, 40px);
     pointer-events: auto;
-}
-
-@media (max-width: 640px) {
-    .home-competencies__card,
-    .home-competencies__float {
-        width: min(260px, 48vw);
-        max-width: min(260px, 48vw);
-    }
-
-    .home-competencies__card--tl,
-    .home-competencies__float--tl {
-        left: -8%;
-        top: 14%;
-    }
-
-    .home-competencies__card--br,
-    .home-competencies__float--br {
-        left: auto;
-        right: -6%;
-        top: 48%;
-    }
 }
 
 @media (max-width: 480px) {
@@ -2289,14 +2150,26 @@ button:focus-visible,
     object-position: center;
 }
 
-/* Hero content block — выравнивание по центру (Figma 1-202) */
+/* Hero content block — выравнивание по центру (Figma 1-202).
+   Все текстовые блоки внутри — width: fit-content, центрируются за счёт align-items: center. */
 .hero-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--hero-row-gap);
     max-width: 100%;
-    margin: 0;
+    margin: 0 auto;
+}
+
+.hero-content > .hero-role,
+.hero-content > .hero-title,
+.hero-content > .hero-text,
+.hero-content > .hero-more {
+    width: auto;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 /* Figma 1:235–236: role 14px, 20px line-height, 1px tracking, uppercase, opacity 60% */
@@ -2309,6 +2182,12 @@ button:focus-visible,
     color: var(--color-text);
     opacity: 0.6;
     margin: 0;
+    /* Если на десктопе хватает места — держим в одну строку. */
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .hero-role { white-space: normal; }
 }
 
 /* Главный заголовок героя — Figma 416:12975: UPPERCASE, масштабируется по ширине экрана. */
@@ -2329,15 +2208,20 @@ button:focus-visible,
     margin: 0;
 }
 
-/* Figma 1:241–242: more 24px, 1.2 line-height, -1px tracking, underline */
+/* Figma 416:13015 — «Больше обо мне» bold UPPERCASE + chevron справа. */
 .hero-more {
-    font-size: 24px;
-    font-weight: 400;
+    font-size: 20px;
+    font-weight: 700;
     line-height: 1.2;
-    letter-spacing: -1px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
     color: var(--color-text);
     margin: 0;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+    text-decoration: none;
 }
 
 .hero-more:hover {
@@ -2377,8 +2261,9 @@ button:focus-visible,
     display: grid;
     grid-template-columns: 148px 147px 148px 254px 184px;
     gap: 32px 1rem;
-    margin: 0;
+    margin: 0 auto;
     max-width: 100%;
+    justify-content: center;
 }
 
 .info-card {
@@ -3304,6 +3189,18 @@ button:focus-visible,
 .preview-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-card-hover);
+    outline: none;
+    border: 0;
+}
+
+.preview-card:hover .preview-card__link,
+.preview-card__link:hover,
+.preview-card__link:hover .preview-image,
+.preview-card:hover .preview-image,
+.preview-card:hover .preview-image img {
+    outline: none;
+    border: 0;
+    box-shadow: none;
 }
 
 .preview-card:active {
@@ -3311,7 +3208,7 @@ button:focus-visible,
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
 }
 
-/* Project covers use a strict 16:9 ratio. */
+/* Project covers use a strict 16:9 ratio. Без подложки — превью «лежит» прямо на странице. */
 .preview-image {
     position: relative;
     flex-shrink: 0;
@@ -3320,7 +3217,7 @@ button:focus-visible,
     padding: 0;
     border: 0;
     border-radius: var(--radius-lg);
-    background: rgba(38, 38, 38, 0.4);
+    background: transparent;
     overflow: hidden;
     box-sizing: border-box;
 }
@@ -4531,13 +4428,70 @@ button:focus-visible,
     overflow: visible;
 }
 
-.project-case-study-mail .scroll-scrub-row--cards .case-strip-led-svg__dot {
-    transform-box: fill-box;
-    transform-origin: center;
-    fill: rgba(188, 200, 224, 0.34);
-    opacity: 0.7;
-    transform: scale(1);
-    animation: none;
+/* Иконки в углу карточек кейса — metaball-loader (l19): 4 статичные «капли» по сторонам
+   + одна, бегущая по периметру; blur+contrast даёт эффект слияния. */
+.project-case-study-mail .scroll-scrub-row--cards .card__corner-icon-led {
+    isolation: isolate;
+}
+
+.project-case-study-mail .scroll-scrub-row--cards .card__corner-icon-led::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 10px solid #000;
+    box-sizing: border-box;
+    background:
+        radial-gradient(farthest-side, #fff 98%, #0000) top,
+        radial-gradient(farthest-side, #fff 98%, #0000) top,
+        radial-gradient(farthest-side, #fff 98%, #0000) left,
+        radial-gradient(farthest-side, #fff 98%, #0000) right,
+        radial-gradient(farthest-side, #fff 98%, #0000) bottom,
+        #000;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    filter: blur(4px) contrast(10);
+    animation: l19 2s infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Скрываем исходный SVG-узор — анимация l19 идёт поверх. */
+.project-case-study-mail .scroll-scrub-row--cards .card__corner-icon-led .case-strip-led-svg {
+    opacity: 0;
+}
+
+@keyframes l19 {
+    0%   { background-position: top,    top, left, right, bottom; }
+    25%  { background-position: right,  top, left, right, bottom; }
+    50%  { background-position: bottom, top, left, right, bottom; }
+    75%  { background-position: left,   top, left, right, bottom; }
+    100% { background-position: top,    top, left, right, bottom; }
+}
+
+/* Утилита: <div class="metaball-loader"></div> — фиксированный 80×80 вариант. */
+.metaball-loader {
+    width: 80px;
+    aspect-ratio: 1;
+    border: 10px solid #000;
+    box-sizing: border-box;
+    background:
+        radial-gradient(farthest-side, #fff 98%, #0000) top,
+        radial-gradient(farthest-side, #fff 98%, #0000) top,
+        radial-gradient(farthest-side, #fff 98%, #0000) left,
+        radial-gradient(farthest-side, #fff 98%, #0000) right,
+        radial-gradient(farthest-side, #fff 98%, #0000) bottom,
+        #000;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    filter: blur(4px) contrast(10);
+    animation: l19 2s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-case-study-mail .scroll-scrub-row--cards .card__corner-icon-led::after,
+    .metaball-loader {
+        animation: none;
+    }
 }
 
 .project-case-study-mail .scroll-scrub-row--cards .card p {

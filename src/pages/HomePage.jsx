@@ -26,19 +26,6 @@ function headerItemPlacementStyle(placement) {
   };
 }
 
-/** Путь для плавающего img: пустой / null / undefined из данных не считаем за картинку. */
-function competencyCardImageSrc(raw) {
-  const s = String(raw ?? '').trim();
-  if (!s || /^null$/i.test(s) || /^undefined$/i.test(s)) return '';
-  return s;
-}
-
-/** Текст для aria / screen reader из словаря `cards.tl` | `cards.br`. */
-function competencyCardAriaLabel(card) {
-  if (!card) return '';
-  return [card.title, card.subtitle].filter(Boolean).join('. ');
-}
-
 const heroLinks = [
   { href: 'https://t.me/pnkprty', label: 'Telegram' },
   { href: 'https://behance.net/', label: 'Behance' },
@@ -70,12 +57,6 @@ export default function HomePage() {
   const { t, localizedPath, messages } = useI18n();
   const competencyLines = messages.hero?.competencies?.lines ?? [];
   const competencyLineProjectSlugs = messages.hero?.competencies?.lineProjectSlugs;
-  const competencyBadge = messages.hero?.competencies?.badge ?? '';
-  const competencyCardTl = messages.hero?.competencies?.cards?.tl;
-  const competencyCardBr = messages.hero?.competencies?.cards?.br;
-  const cardImgTl = competencyCardImageSrc(messages.hero?.competencies?.cardImages?.tl);
-  const cardImgBr = competencyCardImageSrc(messages.hero?.competencies?.cardImages?.br);
-  const showCompetencyTextCards = !cardImgTl || !cardImgBr;
 
   return (
     <div className="home-page home-page--chrome" data-node-id="89:347" data-name="Главная">
@@ -139,8 +120,11 @@ export default function HomePage() {
               <p className="hero-role"><span className="text-condensed">{t('hero.role')}</span></p>
               <h1 className="hero-title" data-scale="hero-name">{t('hero.title')}</h1>
               <p className="hero-text">{t('hero.text')}</p>
-              <Link to={localizedPath('/about')} className="hero-more">
-                <span className="hero-more__text"><span className="text-condensed">{t('hero.moreAbout')}</span></span>
+              <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
+                <span className="hero-more__text">{t('hero.moreAbout')}</span>
+                <svg className="hero-more__chevron" width="20" height="24" viewBox="0 0 20 24" aria-hidden="true">
+                  <polygon points="4,4 16,12 4,20" fill="currentColor" />
+                </svg>
               </Link>
             </div>
             <div className="info-grid">
@@ -196,91 +180,6 @@ export default function HomePage() {
             projects={projects}
             ariaLabel={t('hero.competencies.aria')}
           >
-            {cardImgTl || cardImgBr ? (
-              <div className="home-competencies__floats">
-                {cardImgTl ? (
-                  <a
-                    className="home-competencies__float home-competencies__float--tl"
-                    href="https://t.me/pnkprty"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img
-                      src={publicUrl(cardImgTl)}
-                      alt=""
-                      width={338}
-                      height={199}
-                      className="home-competencies__float-img"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </a>
-                ) : null}
-                {cardImgBr ? (
-                  <img
-                    src={publicUrl(cardImgBr)}
-                    alt=""
-                    width={338}
-                    height={199}
-                    className="home-competencies__float home-competencies__float-img home-competencies__float--br"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                ) : null}
-              </div>
-            ) : null}
-            {showCompetencyTextCards ? (
-              <div className="home-competencies__cards">
-                {!cardImgTl ? (
-                  <a
-                    className="home-competencies__card home-competencies__card--tl home-competencies__card--figma418"
-                    href="https://t.me/pnkprty"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={competencyCardAriaLabel(competencyCardTl) || t('hero.competencies.cards.tl.title')}
-                  >
-                    {competencyBadge ? (
-                      <span className="home-competencies__badge"><span className="text-condensed">{competencyBadge}</span></span>
-                    ) : null}
-                    <div className="home-competencies__card-bg" aria-hidden="true" />
-                    <div className="home-competencies__card-mesh" aria-hidden="true" />
-                    <div className="home-competencies__card-glow" aria-hidden="true" />
-                    <div className="home-competencies__glyph-stage" aria-hidden="true">
-                      <span className="home-competencies__glyph-slab">
-                        <span className="home-competencies__glyph">@</span>
-                      </span>
-                    </div>
-                    <span className="home-competencies__spark home-competencies__spark--a" aria-hidden="true" />
-                    <span className="home-competencies__spark home-competencies__spark--b" aria-hidden="true" />
-                    <span className="home-competencies__spark home-competencies__spark--c" aria-hidden="true" />
-                    <span className="home-competencies__spark home-competencies__spark--d" aria-hidden="true" />
-                  </a>
-                ) : null}
-                {!cardImgBr ? (
-                  <div
-                    className="home-competencies__card home-competencies__card--br home-competencies__card--figma418"
-                    role="img"
-                    aria-label={competencyCardAriaLabel(competencyCardBr) || t('hero.competencies.decorCardAria')}
-                  >
-                    {competencyBadge ? (
-                      <span className="home-competencies__badge"><span className="text-condensed">{competencyBadge}</span></span>
-                    ) : null}
-                    <div className="home-competencies__card-bg" aria-hidden="true" />
-                    <div className="home-competencies__card-mesh" aria-hidden="true" />
-                    <div className="home-competencies__card-glow" aria-hidden="true" />
-                    <div className="home-competencies__glyph-stage" aria-hidden="true">
-                      <span className="home-competencies__glyph-slab">
-                        <span className="home-competencies__glyph">@</span>
-                      </span>
-                    </div>
-                    <span className="home-competencies__spark home-competencies__spark--a" aria-hidden="true" />
-                    <span className="home-competencies__spark home-competencies__spark--b" aria-hidden="true" />
-                    <span className="home-competencies__spark home-competencies__spark--c" aria-hidden="true" />
-                    <span className="home-competencies__spark home-competencies__spark--d" aria-hidden="true" />
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
             <div className="home-competencies__cta">
               <HalftoneButton to={localizedPath('/projects')}>{t('hero.allProjects')}</HalftoneButton>
             </div>

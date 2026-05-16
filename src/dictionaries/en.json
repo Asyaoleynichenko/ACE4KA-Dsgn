@@ -56,10 +56,6 @@
     },
     "competencies": {
       "aria": "Core focus areas",
-      "decorCardAria": "Decorative card in the competencies section",
-      "previewStripAria": "Project previews for the selected focus area",
-      "previewEmpty": "Projects coming soon",
-      "badge": "For work",
       "lines": [
         "Product Design",
         "AI & vibe coding",
@@ -73,21 +69,7 @@
         ["mail-nauki", "racktables"],
         ["racktables", "mail-monetization"],
         ["drop", "inkz"]
-      ],
-      "cardImages": {
-        "tl": "",
-        "br": ""
-      },
-      "cards": {
-        "tl": {
-          "title": "@pnkprty",
-          "subtitle": "Telegram & email — reach out to discuss a project"
-        },
-        "br": {
-          "title": "Senior Product Designer",
-          "subtitle": "Product, metrics, design systems, and launches"
-        }
-      }
+      ]
     }
   },
   "sectionNav": {
