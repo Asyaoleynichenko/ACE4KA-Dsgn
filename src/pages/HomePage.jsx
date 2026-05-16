@@ -290,7 +290,7 @@ export default function HomePage() {
             ) : null}
             <div className="home-competencies__cta">
               <SeamlessProjectsLink to={localizedPath('/projects')} className="btn-show-all">
-                {t('hero.allProjects')}
+                <span className="btn-show-all__label">{t('hero.allProjects')}</span>
               </SeamlessProjectsLink>
             </div>
           </HomeCompetenciesScrub>

@@ -335,6 +335,14 @@ html.snap-pages #root.snap-pages-root.snap-pages-root--home {
     scroll-snap-type: y proximity;
 }
 
+/* Токен главной (`главная.json` → #000000): фон главной страницы — чистый чёрный. */
+.page-home,
+.home-page,
+html.snap-pages body:has(.page-home),
+html.snap-pages #root.snap-pages-root--home {
+    background: #000000;
+}
+
 .snap-screen {
     scroll-snap-align: start;
     scroll-snap-stop: normal;
@@ -1483,9 +1491,9 @@ button:focus-visible,
     width: 100%;
     margin-top: var(--hero-section-gap);
     margin-bottom: var(--space-48);
-    /* Пользовательский запрос: блок шире, без боковых отрезов — панель тянется на всю ширину экрана. */
-    padding-left: 0;
-    padding-right: 0;
+    /* Возвращаем боковые поля страницы — панель не должна упираться в края экрана. */
+    padding-left: var(--layout-edge-left);
+    padding-right: var(--layout-edge-right);
     box-sizing: border-box;
     /* Между двумя snap-screen (hero и проекты) без своей точки mandatory-snap «пролистывал» блок */
     scroll-snap-align: start;
@@ -1495,16 +1503,16 @@ button:focus-visible,
 .home-competencies__panel {
     position: relative;
     width: 100%;
-    /* Edge-to-edge: убрали max-width, скругление и тень — панель сливается с фоном страницы. */
-    max-width: 100%;
+    /* Figma: контейнер 896px, скруглён, чуть приподнят тенью на фоне страницы. */
+    max-width: min(1090px, 100%);
     margin-left: auto;
     margin-right: auto;
-    border-radius: 0;
+    border-radius: 24px;
     background: #000000;
     color: #fafafa;
     box-sizing: border-box;
     overflow: visible;
-    box-shadow: none;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
 }
 
 .home-competencies__inner {
@@ -1564,9 +1572,9 @@ button:focus-visible,
 
 .home-competencies__inner--scrub {
     position: relative;
-    /* Панель = высоте видимой области под sticky-шапкой (104px). Тогда flex-center реально центрирует текст в экране. */
-    min-height: calc(100dvh - 104px);
-    padding: clamp(24px, 4vw, 56px) clamp(16px, 3vw, 24px);
+    /* Высота — по содержимому, но с разумным минимумом, чтобы плавающие карточки умещались. */
+    min-height: min(640px, 80vh);
+    padding: clamp(56px, 9vw, 120px) clamp(24px, 4vw, 56px);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -1849,8 +1857,6 @@ button:focus-visible,
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    /* Figma 416:12975: убрали декоративные @-карточки — текст должен дышать по центру. */
-    display: none;
 }
 
 .home-competencies__float {
@@ -1889,8 +1895,6 @@ button:focus-visible,
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    /* Figma 416:12975: убрали декоративные @-карточки — текст должен дышать по центру. */
-    display: none;
 }
 
 .home-competencies__card {
@@ -3421,57 +3425,105 @@ button:focus-visible,
 }
 
 /* Figma 1:397 + liquid glass: размытие контента под кнопкой, градиент «стекла», inset-блик */
+/* Figma «ВСЕ ПРОЕКТЫ» — горячая розовая пилюля + анимированный half-tone по краям. */
 .btn-show-all {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-body);
-    font-size: 21.78px;
-    font-weight: 400;
-    line-height: 32px;
-    letter-spacing: 1px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-text-primary);
-    padding: var(--space-12) var(--space-32);
+    color: #ffffff;
+    padding: 16px 56px;
     min-width: 280px;
     width: auto;
     max-width: 100%;
-    min-height: 56px;
+    min-height: 52px;
     box-sizing: border-box;
     text-align: center;
-    border-radius: var(--radius-full);
+    border-radius: 999px;
     overflow: hidden;
-    border: 1.556px solid var(--effect-btn-show-all-border);
-    background-color: rgba(18, 18, 20, 0.38);
-    background-image: linear-gradient(
-        185deg,
-        rgba(255, 255, 255, 0.24) 0%,
-        rgba(255, 255, 255, 0.08) 36%,
-        rgba(255, 255, 255, 0.03) 52%,
-        rgba(0, 0, 0, 0.35) 100%
-    );
-    backdrop-filter: blur(var(--blur-btn-show-all-liquid)) saturate(1.45);
-    -webkit-backdrop-filter: blur(var(--blur-btn-show-all-liquid)) saturate(1.45);
-    box-shadow: var(--shadow-btn-show-all), 0 4px 28px rgba(0, 0, 0, 0.32);
+    border: 0;
+    background:
+        radial-gradient(ellipse at center, #ff2bb5 0%, #ff3aa1 55%, #d8157a 100%);
+    box-shadow:
+        0 6px 24px rgba(255, 47, 165, 0.35),
+        0 1px 0 rgba(255, 255, 255, 0.4) inset;
     transition:
-        background-color var(--transition-fast),
-        border-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        transform var(--duration-micro) var(--ease-micro-out);
+        box-shadow 0.32s cubic-bezier(0.34, 1.56, 0.64, 1),
+        transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
     text-decoration: none;
     isolation: isolate;
 }
 
+/* Halftone-точки по бокам: два слоя радиал-точечного паттерна, edge-маской спрятаны в центр. */
+.btn-show-all::before,
+.btn-show-all::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 45%;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.55) 18%, transparent 22%);
+    background-size: 11px 11px;
+    background-position: 0 0;
+    pointer-events: none;
+    z-index: 0;
+    /* Плавный край в центр — слева ярко по краю, к центру в ноль. */
+    -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 0%, transparent 100%);
+    animation: halftone-drift-left 6s linear infinite;
+}
+
+.btn-show-all::before {
+    left: 0;
+}
+
+.btn-show-all::after {
+    right: 0;
+    -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 100%);
+    mask-image: linear-gradient(to left, #000 0%, transparent 100%);
+    animation: halftone-drift-right 6s linear infinite;
+}
+
+@keyframes halftone-drift-left {
+    from { background-position: 0 0; }
+    to { background-position: 44px 0; }
+}
+
+@keyframes halftone-drift-right {
+    from { background-position: 0 0; }
+    to { background-position: -44px 0; }
+}
+
+/* Текст поверх паттерна. */
+.btn-show-all > *,
+.btn-show-all__label {
+    position: relative;
+    z-index: 1;
+}
+
 .btn-show-all:hover {
-    background-color: rgba(34, 34, 38, 0.48);
-    border-color: rgba(255, 255, 255, 0.62);
-    box-shadow: var(--shadow-btn-show-all), 0 8px 40px rgba(0, 0, 0, 0.4);
-    transform: translateY(-2px);
+    box-shadow:
+        0 10px 36px rgba(255, 47, 165, 0.5),
+        0 1px 0 rgba(255, 255, 255, 0.55) inset;
+    transform: scaleX(1.06) scaleY(0.94);
 }
 
 .btn-show-all:active {
-    transform: translateY(0);
+    transform: scaleX(0.96) scaleY(1.06);
+    transition-duration: 0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-show-all::before,
+    .btn-show-all::after {
+        animation: none;
+    }
 }
 
 /* Education cards */
