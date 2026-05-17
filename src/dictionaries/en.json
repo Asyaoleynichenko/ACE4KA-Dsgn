@@ -64,11 +64,11 @@
         "Branding"
       ],
       "lineProjectSlugs": [
-        ["mail-monetization", "mail-spetsproekty"],
+        ["mail-monetization", "mail-nauki"],
         ["neural", "biohacking"],
-        ["mail-nauki", "racktables"],
-        ["racktables", "mail-monetization"],
-        ["drop", "inkz"]
+        ["racktables", "drop"],
+        ["mail-spetsproekty", "mail-monetization"],
+        ["loochok", "retrash"]
       ]
     }
   },

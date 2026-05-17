@@ -1,11 +1,7 @@
 /**
  * Единая точка стилей проекта.
  * Включает: fonts + design tokens + tailwind utilities + компонентные/страничные стили.
- * Адаптивные токены и правила: css/responsive-system.css
  */
-
-@import './responsive-system.css';
-@import './page89.css';
 
 /* Tailwind utilities (раньше были в src/styles/tailwind.css) */
 @tailwind utilities;
@@ -429,31 +425,7 @@ html.snap-pages #root.snap-pages-root--home {
     vertical-align: middle;
 }
 
-/* 9-точечный пульсирующий loader (l26) за иконкой: первого экрана (folder/well) и nav-хедера.
-   Box-shadow рисует 3×3 сетку точек; --loader-scale ужимает паттерн под размер иконки. */
-.icon-assemble-dots--folder::before,
-.icon-assemble-dots--well::before,
-.icon-assemble-dots--nav::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    width: 4px;
-    aspect-ratio: 1;
-    color: rgba(255, 255, 255, 0.35);
-    border-radius: 50%;
-    box-shadow:
-        19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
-        19px 0     0 5px, 38px 0     0 5px, 57px 0     0 5px,
-        19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px;
-    transform: scale(var(--loader-scale, 1)) translateX(-38px);
-    animation: l26 2s infinite linear;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.icon-assemble-dots--well { --loader-scale: 0.7; }
-.icon-assemble-dots--nav  { --loader-scale: 0.4; }
+/* Анимация-loader за иконками снята по запросу. */
 
 @keyframes l26 {
     12.5% { box-shadow:
@@ -753,10 +725,11 @@ button:focus-visible,
 /* =========================
    2) Header / Navigation
    ========================= */
-/* Figma — sticky, прозрачный фон, mix-blend-mode: difference на всю шапку.
+/* Sticky шапка — прилипает к верху на любой странице.
    Состояние `header--hidden` (translateY -100%): прячется при скролле вниз, возвращается при остановке/скролле вверх. */
 .header {
     position: sticky;
+    position: -webkit-sticky;
     top: 0;
     z-index: 100;
     background: transparent;
@@ -764,6 +737,13 @@ button:focus-visible,
     isolation: isolate;
     will-change: transform;
     transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Гарантируем sticky на страницах проектов: ничто из page-project не должно сломать его. */
+.page-project .header,
+.project-page-wrap .header {
+    position: sticky;
+    top: 0;
 }
 
 .header--hidden {
@@ -1064,18 +1044,29 @@ button:focus-visible,
         margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Глобально: все заголовки UPPERCASE. */
+/* Глобально: все заголовки UPPERCASE + semibold, не вылезают за контейнер. */
 h1, h2, h3, h4, h5, h6 {
+    text-transform: uppercase;
+    font-weight: 600;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+}
+
+/* Глобально: текст во всех кнопках/CTA — UPPERCASE. */
+button,
+.btn-show-all,
+.btn-show-all__label,
+.filter-pill,
+.hero-more,
+.hero-links a {
     text-transform: uppercase;
 }
 
-/* h3 «condensed»: без transform: scaleX (он распирал карточки).
-   Лёгкий letter-spacing reduction + переносы по словам, чтобы вмещалось в контейнер. */
+/* h3 «condensed»-вид без transform-хака, который распирал карточки. */
 h3 {
     letter-spacing: -0.02em;
-    overflow-wrap: anywhere;
-    word-break: normal;
-    hyphens: auto;
 }
 
 /* Display-condensed: больший кегль (для шапки и CTA-кнопки). */
@@ -1124,10 +1115,6 @@ h3 {
     --tc-scale-x: 0.88;
 }
 
-/* Eyebrow в кейсах — статически раскрытый чуть больше базы */
-.cs-eyebrow .text-condensed {
-    --tc-scale-x: 0.75;
-}
 
 @media (prefers-reduced-motion: reduce) {
     .text-condensed,
@@ -1685,9 +1672,10 @@ h3 {
     max-width: 100%;
     font-family: var(--font-competencies-display);
     font-size: clamp(32px, 9.5vw, 96px);
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1;
     letter-spacing: -0.03em;
+    text-transform: uppercase;
     text-wrap: balance;
     text-align: center;
     color: #ffffff;
@@ -1772,39 +1760,36 @@ h3 {
     display: none;
 }
 
-/* Превью проектов под типографикой — два кадра, меняются при смене активной строки. */
+/* Превью проектов — поверх типографики, по бокам стека (слева и справа).
+   Меняются при смене активной строки. */
 .home-competencies-scrub__previews {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
     display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: clamp(12px, 2vw, 24px);
-    width: 100%;
-    max-width: 760px;
-    margin: clamp(24px, 4vw, 48px) auto 0;
-    padding-inline: clamp(16px, 3vw, 24px);
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    padding: 0 clamp(8px, 2vw, 32px);
     box-sizing: border-box;
     animation: home-comp-preview-fade 0.42s var(--ease-smart, ease) both;
 }
 
 .home-competencies-scrub__previews .home-competencies-scrub__card-wrap {
-    flex: 1 1 0;
-    min-width: 0;
-    max-width: 360px;
+    width: clamp(160px, 18vw, 240px);
+    flex: 0 0 auto;
+    pointer-events: auto;
 }
 
 @keyframes home-comp-preview-fade {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
+    /* На узких — прячем превью, чтобы не мешали типографике. */
     .home-competencies-scrub__previews {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .home-competencies-scrub__previews .home-competencies-scrub__card-wrap {
-        max-width: 320px;
+        display: none;
     }
 }
 
@@ -1812,21 +1797,6 @@ h3 {
     .home-competencies-scrub__previews {
         animation: none;
     }
-}
-
-.home-competencies-scrub__side .home-competencies-scrub__card-wrap {
-    pointer-events: auto;
-}
-
-/* Сдвиг к центру — визуальный наезд на колонку надписей (как плавающие карточки в макете) */
-.home-competencies-scrub__side--left {
-    left: 0;
-    transform: translate(calc(-1 * min(20%, 200px)), -50%);
-}
-
-.home-competencies-scrub__side--right {
-    right: 0;
-    transform: translate(min(20%, 200px), -50%);
 }
 
 .home-competencies-scrub__card-wrap {
@@ -1852,19 +1822,6 @@ h3 {
 }
 
 @media (max-width: 520px) {
-    .home-competencies-scrub__side {
-        width: min(260px, 46vw);
-        max-width: 260px;
-    }
-
-    .home-competencies-scrub__side--left {
-        transform: translate(calc(-1 * min(10%, 72px)), -50%);
-    }
-
-    .home-competencies-scrub__side--right {
-        transform: translate(min(10%, 72px), -50%);
-    }
-
     .home-competencies-scrub__center {
         max-width: min(420px, 88%);
     }
@@ -1959,17 +1916,34 @@ h3 {
 .home-competencies-scrub__line-wrap[data-heading="4"] { --comp-line-size: var(--comp-line-size-4); }
 .home-competencies-scrub__line-wrap[data-heading="5"] { --comp-line-size: var(--comp-line-size-5); }
 
-/* Figma: все 5 строк одинакового размера, каждая в одну строку (без переноса). */
+/* Все строки одного размера, в одну строку. Активная — полная opacity + резиновая
+   деформация (scaleX/Y читаются с stage через --comp-active-scale-x/y). */
 .home-competencies-scrub__line.home-competencies__line {
     font-size: clamp(32px, 7.6vw, 88px);
-    font-weight: 700;
+    font-weight: 600;
     white-space: nowrap;
-    transition: none;
+    opacity: 0.28;
+    transform: scale(1);
+    transform-origin: center center;
+    transition:
+        opacity 0.32s var(--ease-smart, ease),
+        transform 0.42s var(--ease-smart, ease);
+    will-change: opacity, transform;
 }
 
 .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
-    font-size: clamp(32px, 7.6vw, 88px);
-    transform: none;
+    opacity: 1;
+    transform: scale(var(--comp-active-scale-x, 1.05), var(--comp-active-scale-y, 1.05));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-competencies-scrub__line.home-competencies__line {
+        transition: opacity 0.2s linear;
+        transform: none;
+    }
+    .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
+        transform: none;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2025,7 +1999,8 @@ h3 {
     z-index: 3;
     display: flex;
     justify-content: center;
-    padding: 0 clamp(20px, 4vw, 40px) clamp(28px, 5vw, 40px);
+    /* Top 80px — фиксированный отступ от типографики до кнопки «Все проекты». */
+    padding: 80px clamp(20px, 4vw, 40px) clamp(28px, 5vw, 40px);
     pointer-events: auto;
 }
 
@@ -3358,51 +3333,161 @@ h3 {
 }
 
 /* Figma 573:19026 — кнопка «ВСЕ ПРОЕКТЫ», 463×85px пропорция. */
+/* Кнопка «ВСЕ ПРОЕКТЫ» — breathing halftone wave (по референсу: dots статичные, маска дышит).
+   В JSX два side-узла (left/right), каждый с .field — кругом из dot-pattern, замаскированным от своего борта к центру.
+   Анимация на .field: scale + translateX + opacity → flowing energy. */
 .btn-show-all {
     position: relative;
-    display: inline-flex;
+    display: flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    /* Figma 592:38790 — 463×85.67. На узких — max-width: 100%, чтобы не вылезать. */
     width: 463px;
+    min-width: 280px;
     max-width: 100%;
     height: 86px;
+    min-height: 86px;
     padding: 0 64px;
-    border-radius: 24px;
-    background: #f03a9a;
+    border: 0;
+    border-radius: 30px;
+    box-sizing: border-box;
+    /* Чистый pink-gradient сверху-вниз: highlight → основной розовый → тёмный низ. */
+    background: linear-gradient(180deg, #ff7dc4 0%, #ff3d9c 50%, #d61c75 100%);
     color: #ffffff;
-    font-weight: 700;
-    font-size: 18px;
-    letter-spacing: 0.01em;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     text-decoration: none;
+    cursor: pointer;
     overflow: hidden;
     isolation: isolate;
     box-shadow:
-        0 0 0 1.5px rgba(255, 140, 210, 0.22),
-        0 0 14px 2px rgba(240, 58, 154, 0.28),
-        0 2px 8px rgba(0, 0, 0, 0.12);
+        /* Сильный glass highlight у верха */
+        inset 0 3px 6px rgba(255, 255, 255, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        /* Внутренняя нижняя тень (depth) */
+        inset 0 -3px 8px rgba(150, 0, 70, 0.5),
+        /* Чистая drop-shadow */
+        0 10px 24px rgba(0, 0, 0, 0.55);
 }
 
-.btn-show-all__canvas-wrap {
+/* Тонкий центральный glossy highlight. */
+.btn-show-all::after {
+    content: '';
     position: absolute;
     inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.12), transparent 58%);
     pointer-events: none;
-    border-radius: inherit;
-    overflow: hidden;
 }
 
-.btn-show-all__canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-    mix-blend-mode: screen;
-    pointer-events: none;
-}
 
 .btn-show-all__label {
     position: relative;
-    z-index: 1;
-    text-shadow: 0 1px 3px rgba(160, 0, 80, 0.2);
+    z-index: 50;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    /* Сильнее сжатый condensed — узкие, плотные буквы. */
+    --tc-scale-x: 0.55;
+    transform-origin: center center;
+    margin-inline-end: 0;
+}
+
+/* Side-зоны: изолированный слой с чёрным фоном, mix-blend-mode: lighten пропускает
+   только белые пиксели поверх pink. Это даёт contrast-трюк для variable-size точек. */
+.btn-show-all__side {
+    position: absolute;
+    top: 50%;
+    width: 200px;
+    height: 180px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    isolation: isolate;
+    background: #000;
+    mix-blend-mode: lighten;
+}
+
+.btn-show-all__side--left  { left: -20px; }
+.btn-show-all__side--right { right: -20px; }
+
+/* DOT FIELD — белые точки на чёрном (изолировано). blur(3px) + contrast(N) даёт
+   variable-size: где маска плотная (у борта) — точки большие, где альфа маски слабее
+   (к центру) — contrast «срезает» soft alpha edges → точки меньше. Пропорциональная градация. */
+.btn-show-all__field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(circle, #fff 0%, #fff 38%, transparent 50%),
+        radial-gradient(circle, #fff 0%, #fff 38%, transparent 50%);
+    background-size: 18px 18px, 18px 18px;
+    background-position: 0 0, 9px 9px;
+    filter: blur(3px) contrast(700%);
+}
+
+.btn-show-all__side--left .btn-show-all__field {
+    -webkit-mask-image: radial-gradient(
+        circle at left center,
+        #000 0%,
+        #000 18%,
+        rgba(0, 0, 0, 0.85) 30%,
+        rgba(0, 0, 0, 0.6) 45%,
+        rgba(0, 0, 0, 0.35) 60%,
+        rgba(0, 0, 0, 0.15) 72%,
+        transparent 85%
+    );
+    mask-image: radial-gradient(
+        circle at left center,
+        #000 0%,
+        #000 18%,
+        rgba(0, 0, 0, 0.85) 30%,
+        rgba(0, 0, 0, 0.6) 45%,
+        rgba(0, 0, 0, 0.35) 60%,
+        rgba(0, 0, 0, 0.15) 72%,
+        transparent 85%
+    );
+    animation: btn-halftone-left 1.8s ease-in-out infinite;
+}
+
+.btn-show-all__side--right .btn-show-all__field {
+    -webkit-mask-image: radial-gradient(
+        circle at right center,
+        #000 0%,
+        #000 18%,
+        rgba(0, 0, 0, 0.85) 30%,
+        rgba(0, 0, 0, 0.6) 45%,
+        rgba(0, 0, 0, 0.35) 60%,
+        rgba(0, 0, 0, 0.15) 72%,
+        transparent 85%
+    );
+    mask-image: radial-gradient(
+        circle at right center,
+        #000 0%,
+        #000 18%,
+        rgba(0, 0, 0, 0.85) 30%,
+        rgba(0, 0, 0, 0.6) 45%,
+        rgba(0, 0, 0, 0.35) 60%,
+        rgba(0, 0, 0, 0.15) 72%,
+        transparent 85%
+    );
+    animation: btn-halftone-right 1.8s ease-in-out infinite;
+}
+
+/* Halftone breathing — ТОЛЬКО opacity. Точки фиксированы по координатам. */
+@keyframes btn-halftone-left {
+    0%, 100% { opacity: 0.5; }
+    50%      { opacity: 1; }
+}
+
+@keyframes btn-halftone-right {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-show-all__field {
+        animation: none;
+    }
 }
 
 /* Education cards */
@@ -4428,36 +4513,13 @@ h3 {
     overflow: visible;
 }
 
-/* Иконки в углу карточек кейса — metaball-loader (l19): 4 статичные «капли» по сторонам
-   + одна, бегущая по периметру; blur+contrast даёт эффект слияния. */
-.project-case-study-mail .scroll-scrub-row--cards .card__corner-icon-led {
-    isolation: isolate;
-}
-
-.project-case-study-mail .scroll-scrub-row--cards .card__corner-icon-led::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border: 10px solid #000;
-    box-sizing: border-box;
-    background:
-        radial-gradient(farthest-side, #fff 98%, #0000) top,
-        radial-gradient(farthest-side, #fff 98%, #0000) top,
-        radial-gradient(farthest-side, #fff 98%, #0000) left,
-        radial-gradient(farthest-side, #fff 98%, #0000) right,
-        radial-gradient(farthest-side, #fff 98%, #0000) bottom,
-        #000;
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    filter: blur(4px) contrast(10);
-    animation: l19 2s infinite;
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* Скрываем исходный SVG-узор — анимация l19 идёт поверх. */
-.project-case-study-mail .scroll-scrub-row--cards .card__corner-icon-led .case-strip-led-svg {
-    opacity: 0;
+/* Анимация l19 / led-pulse на иконках карточек снята. SVG-узор остаётся статичным. */
+.project-case-study-mail .scroll-scrub-row--cards .case-strip-led-svg__dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    fill: rgba(220, 230, 250, 0.6);
+    opacity: 0.6;
+    animation: none;
 }
 
 @keyframes l19 {
