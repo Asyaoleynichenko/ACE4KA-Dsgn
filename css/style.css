@@ -3342,12 +3342,11 @@ h3 {
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    width: 463px;
-    min-width: 280px;
+    /* Адаптив: fluid размеры на узких, фикс 463×86 на десктопе. */
+    width: clamp(280px, 70vw, 463px);
+    height: clamp(56px, 9.2vw, 86px);
+    padding: 0 clamp(28px, 6vw, 64px);
     max-width: 100%;
-    height: 86px;
-    min-height: 86px;
-    padding: 0 64px;
     border: 0;
     border-radius: 30px;
     box-sizing: border-box;
@@ -3355,7 +3354,7 @@ h3 {
     background: linear-gradient(180deg, #ff7dc4 0%, #ff3d9c 50%, #d61c75 100%);
     color: #ffffff;
     font-weight: 600;
-    font-size: 24px;
+    font-size: clamp(14px, 2.5vw, 24px);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     text-decoration: none;
@@ -3393,13 +3392,14 @@ h3 {
     margin-inline-end: 0;
 }
 
-/* Side-зоны: изолированный слой с чёрным фоном, mix-blend-mode: lighten пропускает
-   только белые пиксели поверх pink. Это даёт contrast-трюк для variable-size точек. */
+/* HALFTONE через background-blend-mode: multiply + filter: contrast(18) —
+   точки получаются варьируемого размера благодаря радиальной gradient-map. */
+/* Side-зоны с isolation + чёрным бг + lighten для contrast-трюка без артефактов. */
 .btn-show-all__side {
     position: absolute;
     top: 50%;
-    width: 200px;
-    height: 180px;
+    width: 220px;
+    height: 200px;
     transform: translateY(-50%);
     pointer-events: none;
     isolation: isolate;
@@ -3407,12 +3407,12 @@ h3 {
     mix-blend-mode: lighten;
 }
 
-.btn-show-all__side--left  { left: -20px; }
-.btn-show-all__side--right { right: -20px; }
+.btn-show-all__side--left  { left: -30px; }
+.btn-show-all__side--right { right: -30px; }
 
-/* DOT FIELD — белые точки на чёрном (изолировано). blur(3px) + contrast(N) даёт
-   variable-size: где маска плотная (у борта) — точки большие, где альфа маски слабее
-   (к центру) — contrast «срезает» soft alpha edges → точки меньше. Пропорциональная градация. */
+/* Halftone-поле: белые точки на чёрном (внутри изоляции).
+   blur + contrast делают точки variable-size через alpha-gradient маски.
+   Через mix-blend-mode: lighten на side чёрный сливается с pink, белые точки видны. */
 .btn-show-all__field {
     position: absolute;
     inset: 0;
@@ -3422,28 +3422,29 @@ h3 {
         radial-gradient(circle, #fff 0%, #fff 38%, transparent 50%);
     background-size: 18px 18px, 18px 18px;
     background-position: 0 0, 9px 9px;
-    filter: blur(3px) contrast(700%);
+    filter: blur(2px) contrast(400%);
 }
 
+/* Плавный радиальный fade: точки большие у борта, постепенно меньше → исчезают к центру. */
 .btn-show-all__side--left .btn-show-all__field {
     -webkit-mask-image: radial-gradient(
         circle at left center,
         #000 0%,
         #000 18%,
-        rgba(0, 0, 0, 0.85) 30%,
-        rgba(0, 0, 0, 0.6) 45%,
-        rgba(0, 0, 0, 0.35) 60%,
-        rgba(0, 0, 0, 0.15) 72%,
+        rgba(0,0,0, 0.85) 30%,
+        rgba(0,0,0, 0.6) 45%,
+        rgba(0,0,0, 0.35) 60%,
+        rgba(0,0,0, 0.15) 72%,
         transparent 85%
     );
     mask-image: radial-gradient(
         circle at left center,
         #000 0%,
         #000 18%,
-        rgba(0, 0, 0, 0.85) 30%,
-        rgba(0, 0, 0, 0.6) 45%,
-        rgba(0, 0, 0, 0.35) 60%,
-        rgba(0, 0, 0, 0.15) 72%,
+        rgba(0,0,0, 0.85) 30%,
+        rgba(0,0,0, 0.6) 45%,
+        rgba(0,0,0, 0.35) 60%,
+        rgba(0,0,0, 0.15) 72%,
         transparent 85%
     );
     animation: btn-halftone-left 1.8s ease-in-out infinite;
@@ -3454,39 +3455,37 @@ h3 {
         circle at right center,
         #000 0%,
         #000 18%,
-        rgba(0, 0, 0, 0.85) 30%,
-        rgba(0, 0, 0, 0.6) 45%,
-        rgba(0, 0, 0, 0.35) 60%,
-        rgba(0, 0, 0, 0.15) 72%,
+        rgba(0,0,0, 0.85) 30%,
+        rgba(0,0,0, 0.6) 45%,
+        rgba(0,0,0, 0.35) 60%,
+        rgba(0,0,0, 0.15) 72%,
         transparent 85%
     );
     mask-image: radial-gradient(
         circle at right center,
         #000 0%,
         #000 18%,
-        rgba(0, 0, 0, 0.85) 30%,
-        rgba(0, 0, 0, 0.6) 45%,
-        rgba(0, 0, 0, 0.35) 60%,
-        rgba(0, 0, 0, 0.15) 72%,
+        rgba(0,0,0, 0.85) 30%,
+        rgba(0,0,0, 0.6) 45%,
+        rgba(0,0,0, 0.35) 60%,
+        rgba(0,0,0, 0.15) 72%,
         transparent 85%
     );
     animation: btn-halftone-right 1.8s ease-in-out infinite;
 }
 
-/* Halftone breathing — ТОЛЬКО opacity. Точки фиксированы по координатам. */
-@keyframes btn-halftone-left {
-    0%, 100% { opacity: 0.5; }
-    50%      { opacity: 1; }
-}
+@keyframes btn-halftone-left  { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+@keyframes btn-halftone-right { 0%, 100% { opacity: 1; }    50% { opacity: 0.55; } }
 
-@keyframes btn-halftone-right {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.5; }
+@media (prefers-reduced-motion: reduce) {
+    .btn-show-all__field { animation: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .btn-show-all__field {
+    .btn-show-all__halftone {
         animation: none;
+        -webkit-mask-size: 130% 130%;
+        mask-size: 130% 130%;
     }
 }
 

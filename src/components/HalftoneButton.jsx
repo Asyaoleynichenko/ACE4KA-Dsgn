@@ -1,8 +1,8 @@
 import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 
 /**
- * Кнопка «ВСЕ ПРОЕКТЫ» — pink pill, halftone-точки с пропорциональным изменением размера
- * через blur + contrast в изолированном чёрном слое, наложенном через mix-blend-mode: lighten.
+ * Кнопка «ВСЕ ПРОЕКТЫ» — pink pill + halftone-точки с плавным радиальным изменением размера.
+ * isolation + чёрный бг + lighten + contrast(400%) → реально variable-size без артефактов.
  */
 export default function HalftoneButton({ to, children, ariaLabel, className = '' }) {
   return (
