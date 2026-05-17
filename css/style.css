@@ -3394,12 +3394,12 @@ h3 {
 
 /* HALFTONE через background-blend-mode: multiply + filter: contrast(18) —
    точки получаются варьируемого размера благодаря радиальной gradient-map. */
-/* Side-зоны с isolation + чёрным бг + lighten для contrast-трюка без артефактов. */
+/* Side-зоны с isolation + чёрным бг + lighten. Размеры адаптивны под ширину кнопки. */
 .btn-show-all__side {
     position: absolute;
     top: 50%;
-    width: 220px;
-    height: 200px;
+    width: clamp(120px, 32vw, 220px);
+    height: clamp(110px, 28vw, 200px);
     transform: translateY(-50%);
     pointer-events: none;
     isolation: isolate;
@@ -3407,8 +3407,8 @@ h3 {
     mix-blend-mode: lighten;
 }
 
-.btn-show-all__side--left  { left: -30px; }
-.btn-show-all__side--right { right: -30px; }
+.btn-show-all__side--left  { left: clamp(-30px, -3vw, -10px); }
+.btn-show-all__side--right { right: clamp(-30px, -3vw, -10px); }
 
 /* Halftone-поле: белые точки на чёрном (внутри изоляции).
    blur + contrast делают точки variable-size через alpha-gradient маски.
