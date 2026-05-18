@@ -121,10 +121,8 @@ export default function HomePage() {
               <h1 className="hero-title" data-scale="hero-name">{t('hero.title')}</h1>
               <p className="hero-text">{t('hero.text')}</p>
               <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
-                <span className="hero-more__text">{t('hero.moreAbout')}</span>
-                <svg className="hero-more__chevron" width="20" height="24" viewBox="0 0 20 24" aria-hidden="true">
-                  <polygon points="4,4 16,12 4,20" fill="currentColor" />
-                </svg>
+                <span className="hero-more__text"><span className="text-condensed">{t('hero.moreAbout')}</span></span>
+                <span className="hero-more__chevron" aria-hidden="true" />
               </Link>
             </div>
             <div className="info-grid">

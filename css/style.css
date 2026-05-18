@@ -1060,6 +1060,7 @@ button:focus-visible,
     .hero-role,
     .hero-content,
     .page-header,
+    .filter-pill,
     [style*="text-align:center"],
     [style*="text-align: center"]
 ) > .text-condensed,
@@ -1067,6 +1068,7 @@ button:focus-visible,
     .hero-role,
     .hero-content,
     .page-header,
+    .filter-pill,
     [style*="text-align:center"],
     [style*="text-align: center"]
 ) .text-condensed {
@@ -2259,6 +2261,10 @@ h3 {
     text-decoration: underline;
 }
 
+.hero-more:hover .text-condensed {
+    --tc-scale-x: 0.88;
+}
+
 .hero-more__chevron {
     display: inline-block;
     width: 20px;
@@ -3140,6 +3146,8 @@ h3 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    white-space: nowrap;
     border-radius: var(--radius-full);
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.22);
@@ -3169,6 +3177,13 @@ h3 {
     border-color: rgba(255, 255, 255, 0.48);
     font-weight: 500;
     color: var(--color-text-primary);
+}
+
+.filter-pill .text-condensed {
+    max-width: none;
+    width: max-content;
+    white-space: nowrap;
+    text-align: center;
 }
 
 /* Project Card — Figma 1:298: ячейка сетки; раскладку колонки задаёт только .preview-card__link */
@@ -3373,26 +3388,22 @@ h3 {
     margin-top: var(--grid-row-gap);
 }
 
-/* Figma 573:19026 — кнопка «ВСЕ ПРОЕКТЫ», 463×85px пропорция. */
-/* Кнопка «ВСЕ ПРОЕКТЫ» — breathing halftone wave (по референсу: dots статичные, маска дышит).
-   В JSX два side-узла (left/right), каждый с .field — кругом из dot-pattern, замаскированным от своего борта к центру.
-   Анимация на .field: scale + translateX + opacity → flowing energy. */
+/* Figma 573:19026 — glossy fintech CTA (Swap / «Все проекты»): static shell + dual halftone waves. */
 .btn-show-all {
     position: relative;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    /* Адаптив: fluid размеры на узких, фикс 463×86 на десктопе. */
     width: clamp(280px, 70vw, 463px);
     height: clamp(56px, 9.2vw, 86px);
     padding: 0 clamp(28px, 6vw, 64px);
     max-width: 100%;
     border: 0;
-    border-radius: 30px;
+    border-radius: 28px;
     box-sizing: border-box;
-    /* Чистый pink-gradient сверху-вниз: highlight → основной розовый → тёмный низ. */
-    background: linear-gradient(180deg, #ff7dc4 0%, #ff3d9c 50%, #d61c75 100%);
+    background:
+        linear-gradient(180deg, #ff8fd0 0%, #ff3d9c 42%, #e82488 78%, #c4186e 100%);
     color: #ffffff;
     font-weight: 600;
     font-size: clamp(14px, 2.5vw, 24px);
@@ -3403,21 +3414,25 @@ h3 {
     overflow: hidden;
     isolation: isolate;
     box-shadow:
-        /* Сильный glass highlight у верха */
-        inset 0 3px 6px rgba(255, 255, 255, 0.7),
+        0 0 22px rgba(255, 55, 160, 0.55),
+        0 0 48px rgba(255, 30, 140, 0.28),
+        0 10px 28px rgba(0, 0, 0, 0.45),
+        inset 0 2px 5px rgba(255, 255, 255, 0.75),
         inset 0 1px 0 rgba(255, 255, 255, 0.95),
-        /* Внутренняя нижняя тень (depth) */
-        inset 0 -3px 8px rgba(150, 0, 70, 0.5),
-        /* Чистая drop-shadow */
-        0 10px 24px rgba(0, 0, 0, 0.55);
+        inset 0 -3px 10px rgba(120, 0, 60, 0.45),
+        inset 0 0 18px rgba(255, 175, 220, 0.42),
+        inset 0 0 6px rgba(255, 210, 235, 0.35);
 }
 
-/* Тонкий центральный glossy highlight. */
 .btn-show-all::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.12), transparent 58%);
+    z-index: 2;
+    border-radius: inherit;
+    background:
+        radial-gradient(ellipse 85% 55% at 50% 0%, rgba(255, 255, 255, 0.35), transparent 62%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08), transparent 55%);
     pointer-events: none;
 }
 
@@ -3433,119 +3448,155 @@ h3 {
     margin-inline-end: 0;
 }
 
-/* HALFTONE через background-blend-mode: multiply + filter: contrast(18) —
-   точки получаются варьируемого размера благодаря радиальной gradient-map. */
-/* Side-зоны с isolation + чёрным бг + lighten. Размеры адаптивны под ширину кнопки. */
-.btn-show-all__side {
-    position: absolute;
-    top: 50%;
-    width: clamp(120px, 32vw, 220px);
-    height: clamp(110px, 28vw, 200px);
-    transform: translateY(-50%);
-    pointer-events: none;
-    isolation: isolate;
-    background: #000;
-    mix-blend-mode: lighten;
-}
-
-.btn-show-all__side--left  { left: clamp(-30px, -3vw, -10px); }
-.btn-show-all__side--right { right: clamp(-30px, -3vw, -10px); }
-
-/* Halftone-поле: белые точки на чёрном (внутри изоляции).
-   blur + contrast делают точки variable-size через alpha-gradient маски.
-   Через mix-blend-mode: lighten на side чёрный сливается с pink, белые точки видны. */
-.btn-show-all__field {
+/* Halftone: dot-сетка статична; radial map пульсирует строго от center кнопки (50% 50%). */
+.btn-show-all__halftone {
+    --btn-halftone-dot: 16px;
+    --btn-halftone-dot-half: 8px;
+    --btn-halftone-clear-w: 246px;
     position: absolute;
     inset: 0;
+    z-index: 3;
+    border-radius: inherit;
     pointer-events: none;
+    overflow: hidden;
+    mix-blend-mode: lighten;
+    /* ellipse 246×100%: чистый центр на всю высоту кнопки, radial fade к halftone */
+    -webkit-mask-image: radial-gradient(
+        ellipse calc(var(--btn-halftone-clear-w) / 2) 100% at 50% 50%,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0) 72%,
+        rgba(0, 0, 0, 0.5) 86%,
+        rgba(0, 0, 0, 1) 100%
+    );
+    mask-image: radial-gradient(
+        ellipse calc(var(--btn-halftone-clear-w) / 2) 100% at 50% 50%,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0) 72%,
+        rgba(0, 0, 0, 0.5) 86%,
+        rgba(0, 0, 0, 1) 100%
+    );
+}
+
+.btn-show-all__halftone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+        inset 0 0 14px rgba(255, 185, 225, 0.5),
+        inset 0 0 28px rgba(255, 100, 175, 0.22);
+    pointer-events: none;
+}
+
+.btn-show-all__halftone::before {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    background-color: #ffffff;
+    /* Тёмное ядро в центре карты → при росте size волна уходит к краям кнопки. */
     background-image:
-        radial-gradient(circle, #fff 0%, #fff 38%, transparent 50%),
-        radial-gradient(circle, #fff 0%, #fff 38%, transparent 50%);
-    background-size: 18px 18px, 18px 18px;
-    background-position: 0 0, 9px 9px;
-    filter: blur(2px) contrast(400%);
+        radial-gradient(
+            circle at center,
+            #000000 0%,
+            #1a1a1a 18%,
+            #ffffff 56%,
+            #f4f4f4 100%
+        ),
+        radial-gradient(circle, #000000 0%, #000000 30%, rgba(0, 0, 0, 0.4) 42%, #ffffff 52%),
+        radial-gradient(circle, #000000 0%, #000000 30%, rgba(0, 0, 0, 0.4) 42%, #ffffff 52%);
+    background-size:
+        20% 20%,
+        var(--btn-halftone-dot) var(--btn-halftone-dot),
+        var(--btn-halftone-dot) var(--btn-halftone-dot);
+    background-position:
+        center center,
+        0 0,
+        var(--btn-halftone-dot-half) var(--btn-halftone-dot-half);
+    background-repeat: no-repeat, repeat, repeat;
+    background-blend-mode: multiply;
+    filter: blur(2.5px) contrast(400%);
+    animation: btn-halftone-radial 2.8s ease-in-out infinite alternate;
+    will-change: background-size;
 }
 
-/* Плавный радиальный fade: точки большие у борта, постепенно меньше → исчезают к центру. */
-.btn-show-all__side--left .btn-show-all__field {
-    -webkit-mask-image: radial-gradient(
-        circle at left center,
-        #000 0%,
-        #000 18%,
-        rgba(0,0,0, 0.85) 30%,
-        rgba(0,0,0, 0.6) 45%,
-        rgba(0,0,0, 0.35) 60%,
-        rgba(0,0,0, 0.15) 72%,
-        transparent 85%
-    );
-    mask-image: radial-gradient(
-        circle at left center,
-        #000 0%,
-        #000 18%,
-        rgba(0,0,0, 0.85) 30%,
-        rgba(0,0,0, 0.6) 45%,
-        rgba(0,0,0, 0.35) 60%,
-        rgba(0,0,0, 0.15) 72%,
-        transparent 85%
-    );
-    animation: btn-halftone-left 1.8s ease-in-out infinite;
+/* Дыхание: center → края → center (alternate), без скачка в начало цикла. */
+@keyframes btn-halftone-radial {
+    0% {
+        background-size:
+            18% 18%,
+            16px 16px,
+            16px 16px;
+    }
+    100% {
+        background-size:
+            168% 168%,
+            16px 16px,
+            16px 16px;
+    }
 }
-
-.btn-show-all__side--right .btn-show-all__field {
-    -webkit-mask-image: radial-gradient(
-        circle at right center,
-        #000 0%,
-        #000 18%,
-        rgba(0,0,0, 0.85) 30%,
-        rgba(0,0,0, 0.6) 45%,
-        rgba(0,0,0, 0.35) 60%,
-        rgba(0,0,0, 0.15) 72%,
-        transparent 85%
-    );
-    mask-image: radial-gradient(
-        circle at right center,
-        #000 0%,
-        #000 18%,
-        rgba(0,0,0, 0.85) 30%,
-        rgba(0,0,0, 0.6) 45%,
-        rgba(0,0,0, 0.35) 60%,
-        rgba(0,0,0, 0.15) 72%,
-        transparent 85%
-    );
-    animation: btn-halftone-right 1.8s ease-in-out infinite;
-}
-
-@keyframes btn-halftone-left  { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
-@keyframes btn-halftone-right { 0%, 100% { opacity: 1; }    50% { opacity: 0.55; } }
 
 @media (prefers-reduced-motion: reduce) {
-    .btn-show-all__field { animation: none; }
+    .btn-show-all__halftone::before {
+        animation: none;
+        background-size:
+            18% 18%,
+            var(--btn-halftone-dot) var(--btn-halftone-dot),
+            var(--btn-halftone-dot) var(--btn-halftone-dot);
+    }
 }
 
-/* Тонкая настройка halftone-плотности на маленьких экранах: сетка точек уменьшается. */
 @media (max-width: 640px) {
-    .btn-show-all__field {
-        background-size: 14px 14px, 14px 14px;
-        background-position: 0 0, 7px 7px;
-        filter: blur(1.4px) contrast(380%);
+    .btn-show-all__halftone {
+        --btn-halftone-dot: 13px;
+        --btn-halftone-dot-half: 6.5px;
+    }
+
+    .btn-show-all__halftone::before {
+        filter: blur(2px) contrast(380%);
+    }
+
+    @keyframes btn-halftone-radial {
+        0% {
+            background-size:
+                18% 18%,
+                13px 13px,
+                13px 13px;
+        }
+        100% {
+            background-size:
+                168% 168%,
+                13px 13px,
+                13px 13px;
+        }
     }
 }
 
 @media (max-width: 380px) {
-    .btn-show-all__field {
-        background-size: 11px 11px, 11px 11px;
-        background-position: 0 0, 5.5px 5.5px;
-        filter: blur(1px) contrast(340%);
+    .btn-show-all__halftone {
+        --btn-halftone-dot: 10px;
+        --btn-halftone-dot-half: 5px;
+    }
+
+    .btn-show-all__halftone::before {
+        filter: blur(1.5px) contrast(360%);
+    }
+
+    @keyframes btn-halftone-radial {
+        0% {
+            background-size:
+                18% 18%,
+                10px 10px,
+                10px 10px;
+        }
+        100% {
+            background-size:
+                168% 168%,
+                10px 10px,
+                10px 10px;
+        }
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .btn-show-all__halftone {
-        animation: none;
-        -webkit-mask-size: 130% 130%;
-        mask-size: 130% 130%;
-    }
-}
 
 /* Education cards */
 .edu-grid {
