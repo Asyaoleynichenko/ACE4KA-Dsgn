@@ -1760,9 +1760,11 @@ h3 {
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    /* Колонная схема: типография сверху, карточки превью снизу — детерминированно без overlap. */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
     padding-left: clamp(8px, 2.5vw, 20px);
     padding-right: clamp(8px, 2.5vw, 20px);
     box-sizing: border-box;
@@ -1780,8 +1782,7 @@ h3 {
     margin-right: auto;
     text-align: center;
     pointer-events: none;
-    /* Резерв снизу под карточки превью, чтобы активная строка не уезжала под них */
-    padding-bottom: clamp(220px, 26vw, 360px);
+    flex: 0 0 auto;
 }
 
 .home-competencies-scrub__center .home-competencies-scrub__lines {
@@ -1792,22 +1793,20 @@ h3 {
     display: none;
 }
 
-/* Превью проектов — снизу стека, чтобы не залезать на активную строку типографики.
-   Меняются при смене активной строки. */
+/* Превью проектов — снизу стека (sibling flex item), чтобы детерминированно не пересекаться
+   с типографикой выше. Меняются при смене активной строки. */
 .home-competencies-scrub__previews {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: clamp(8px, 1.5vw, 24px);
-    top: auto;
+    position: relative;
     z-index: 2;
+    margin-top: clamp(24px, 3vw, 48px);
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: center;
     gap: clamp(20px, 3vw, 48px);
     pointer-events: none;
     padding: 0 clamp(16px, 3vw, 48px);
     box-sizing: border-box;
+    flex: 0 0 auto;
     animation: home-comp-preview-fade 0.42s var(--ease-smart, ease) both;
 }
 
@@ -4385,6 +4384,21 @@ h3 {
 .project-case-study-mail .cards-section {
     margin: 0;
     width: 100%;
+    position: relative;
+    /* Pin-strip: runway создаёт длинный вертикальный буфер для горизонтального scroll-linked сдвига.
+       Чтобы во время пина не было пустого viewport под лентой — следующий блок поднимаем negative margin'ом
+       вверх, и он выглядывает снизу из-под прилипшей ленты. */
+    z-index: 2;
+}
+.project-case-study-mail .cards-section + .case-study-narrative,
+.project-case-study-mail .cards-section + .section,
+.project-case-study-mail .cards-section + section {
+    /* Подъём следующего блока в зону runway: пока лента закреплена sticky,
+       нижний блок уже выглядывает снизу из viewport вместо пустого пространства. */
+    margin-top: -40vh;
+    position: relative;
+    z-index: 1;
+    padding-top: clamp(40px, 6vw, 64px);
 }
 .project-case-study-mail .scroll-scrub-row__runway {
     width: 100%;
