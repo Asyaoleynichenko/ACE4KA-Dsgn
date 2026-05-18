@@ -39,6 +39,7 @@ export default function ProjectsPage() {
                     meta={tWithFallback(t, `projects.cards.${slug}.meta`, p.meta)}
                     desc={tWithFallback(t, `projects.cards.${slug}.desc`, p.desc)}
                     image={p.image}
+                    video={p.video}
                     isDemo={false}
                   />
                 );

@@ -37,6 +37,8 @@
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   /* Figma 418:21263 — Suisse Intl 600 в макете; при отсутствии файлов в `public/fonts` — Inter 600. */
   --font-competencies-display: 'Suisse Intl', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Figma 337:24521 — VK Sans Display для крупных заголовков case-study; проприетарный, fallback Inter Black uppercase. */
+  --font-display: 'VK Sans Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Figma 416:12975 — компетенции: смешанный тайп-рамп H2/H4/H1/H5/H3 для строк; H1 — максимум, H5 — минимум. */
   /* Figma 416:12975 — H-рамп компетенций: H1 ~104px доминирует, H5 ~60px самый маленький. */
@@ -137,6 +139,9 @@
   --case-content-max: min(1240px, 100%);
   --case-section-rhythm: clamp(48px, 6vw, 80px);
   --case-divider: rgba(255, 255, 255, 0.075);
+  /* Figma 337:24703 — заголовок case-study на 862×162px (3 строки ~54px). */
+  --type-case-study-title: clamp(2.25rem, 4.2vw, 3.5rem);
+  --type-case-study-lead: clamp(1rem, 0.6vw + 0.85rem, 1.125rem);
   --ease-premium-out: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-premium: 200ms;
 
@@ -1035,13 +1040,17 @@ button:focus-visible,
     display: inline-block;
     max-width: 100%;
     --tc-scale-x: 0.62;
-    transform: scaleX(var(--tc-scale-x));
+    /* Area-preserving: scaleX * scaleY = 1. Squeezing X stretches Y и наоборот. */
+    --tc-scale-y: calc(1 / var(--tc-scale-x));
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: left center;
     margin-inline-end: calc((var(--tc-scale-x, 0.62) - 1) * 1.6em);
-    line-height: 1.1;
+    /* line-height сжимаем обратно, чтобы вертикальный stretch не разрывал верстку */
+    line-height: calc(1.1 * var(--tc-scale-x));
     transition:
         transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-        margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        line-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Глобально: все заголовки UPPERCASE + semibold, не вылезают за контейнер. */
@@ -3197,7 +3206,8 @@ h3 {
     box-sizing: border-box;
 }
 
-.preview-image img {
+.preview-image img,
+.preview-image video {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -3479,6 +3489,23 @@ h3 {
 
 @media (prefers-reduced-motion: reduce) {
     .btn-show-all__field { animation: none; }
+}
+
+/* Тонкая настройка halftone-плотности на маленьких экранах: сетка точек уменьшается. */
+@media (max-width: 640px) {
+    .btn-show-all__field {
+        background-size: 14px 14px, 14px 14px;
+        background-position: 0 0, 7px 7px;
+        filter: blur(1.4px) contrast(380%);
+    }
+}
+
+@media (max-width: 380px) {
+    .btn-show-all__field {
+        background-size: 11px 11px, 11px 11px;
+        background-position: 0 0, 5.5px 5.5px;
+        filter: blur(1px) contrast(340%);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4223,11 +4250,13 @@ h3 {
     max-width: var(--case-prose-max); /* ~862px */
 }
 .project-case-study-mail .project-intro .title h1 {
+    font-family: var(--font-display);
     font-size: var(--type-case-study-title);
     margin: 0 0 var(--space-24);
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
     color: var(--color-text);
     white-space: pre-line;
 }
@@ -4299,27 +4328,12 @@ h3 {
     font-weight: 400;
     opacity: var(--project-meta-value-opacity);
 }
-.project-case-study-mail .project-info__cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+/* Halftone CTA внутри info-card занимает всю ширину карточки */
+.project-case-study-mail .project-info .btn-show-all {
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
     margin-top: var(--space-8);
-    padding: var(--space-8) var(--space-24);
-    border-radius: var(--radius-full);
-    border: 1px solid rgba(255, 255, 255, 0.48);
-    background: rgba(0, 0, 0, 0.55);
-    box-shadow: var(--shadow-nav-active);
-    font-size: 14px;
-    line-height: 20px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #fff;
-    text-decoration: none;
-}
-.project-case-study-mail .project-info__cta--section {
-    align-self: flex-start;
-    margin-top: var(--space-8);
-    margin-bottom: 0;
 }
 .project-case-study-mail .case-study-narrative {
     max-width: var(--case-prose-max);
@@ -4489,6 +4503,12 @@ h3 {
     color: var(--project-title-color);
     opacity: var(--project-card-title-opacity);
     margin: 0 0 var(--project-card-gap);
+    /* Condensed (area-preserving): scaleX*scaleY = 1 — единое правило для condensed-текстов */
+    display: inline-block;
+    --tc-scale-x: 0.7;
+    --tc-scale-y: calc(1 / var(--tc-scale-x));
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform-origin: left center;
 }
 
 /* Иконка угла карточки: SVG LED — каждый <circle> со своей задержкой анимации */
@@ -4722,6 +4742,13 @@ h3 {
     line-height: 1.22;
     letter-spacing: -0.025em;
     color: var(--color-text);
+    text-transform: uppercase;
+    /* Condensed (area-preserving) — общее правило для подзаголовков case-study */
+    display: inline-block;
+    --tc-scale-x: 0.78;
+    --tc-scale-y: calc(1 / var(--tc-scale-x));
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform-origin: left center;
 }
 
 .project-case-study-mail .section__pills.section__pills--nested {
@@ -4853,11 +4880,13 @@ h3 {
     margin-top: var(--space-32);
 }
 .project-case-study-mail .section h2 {
+    font-family: var(--font-display);
     font-size: clamp(1.875rem, 2.8vw, 2.5rem);
     margin: 0 0 var(--space-20);
-    font-weight: 600;
-    line-height: 1.18;
-    letter-spacing: -0.03em;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
     color: var(--color-text);
     max-width: var(--case-prose-max);
     white-space: pre-line;
@@ -4873,6 +4902,12 @@ h3 {
     font-weight: 500;
     opacity: 0.85;
     white-space: pre-line;
+    /* Condensed (area-preserving) — общее правило для подзаголовков */
+    display: inline-block;
+    --tc-scale-x: 0.78;
+    --tc-scale-y: calc(1 / var(--tc-scale-x));
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform-origin: left center;
 }
 .project-case-study-mail .section .scroll-scrub-row__runway {
     margin-top: var(--space-56);
@@ -4932,14 +4967,27 @@ h3 {
 .project-case-study-mail .section ul.section__pills li {
     list-style: none;
     margin: 0;
-    padding: 10px 20px;
+    padding: 12px 22px;
     border-radius: var(--radius-full);
-    background: rgba(38, 38, 42, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    font-size: 17px;
-    line-height: 1.35;
-    letter-spacing: -0.02em;
-    color: rgba(200, 200, 206, 0.95);
+    background: rgba(245, 245, 247, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    font-family: var(--font-display);
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #0b0b0c;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.project-case-study-mail .section ul.section__pills li::before {
+    content: '↑';
+    font-size: 1.05em;
+    line-height: 1;
+    color: #0b0b0c;
+    font-weight: 700;
 }
 .project-case-study-mail .section__pills ~ .scroll-scrub-row--hypothesis,
 .project-case-study-mail .gallery--before-hypotheses ~ .scroll-scrub-row--hypothesis {
@@ -5102,6 +5150,137 @@ h3 {
     line-height: 1.45;
     letter-spacing: -0.01em;
     color: rgba(220, 220, 224, 0.95);
+}
+
+/* Figma 337:24763 — Hypothesis accordion: вертикальный список с раскрытием.
+   Default — первая открыта, остальные свернуты. <details>/<summary> — без JS. */
+.project-case-study-mail .hyp-list {
+    list-style: none;
+    margin: 0;
+    padding: clamp(48px, 6vw, 80px) clamp(24px, 6vw, 120px);
+    background: var(--project-card-bg);
+    border-radius: var(--project-card-radius);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+}
+.project-case-study-mail .hyp-list__item {
+    list-style: none;
+    margin: 0;
+}
+.project-case-study-mail .hyp-list__row {
+    width: 100%;
+}
+.project-case-study-mail .hyp-list__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-24);
+    padding: clamp(18px, 2.4vw, 28px) 0;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+.project-case-study-mail .hyp-list__summary::-webkit-details-marker {
+    display: none;
+}
+.project-case-study-mail .hyp-list__summary::marker {
+    display: none;
+}
+.project-case-study-mail .hyp-list__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3.4vw, 3rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.project-case-study-mail .hyp-list__icon {
+    position: relative;
+    flex: 0 0 auto;
+    width: clamp(28px, 2.5vw, 36px);
+    height: clamp(28px, 2.5vw, 36px);
+    color: var(--color-text);
+}
+/* ✦ — свёрнутая (стандартная иконка раскрытия) */
+.project-case-study-mail .hyp-list__icon::before,
+.project-case-study-mail .hyp-list__icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transition: transform var(--dur-premium) var(--ease-premium-out), opacity var(--dur-premium) var(--ease-premium-out);
+}
+.project-case-study-mail .hyp-list__icon::before {
+    background:
+        linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat,
+        linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+    transform: rotate(0deg);
+}
+.project-case-study-mail .hyp-list__icon::after {
+    background:
+        linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat,
+        linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+    transform: rotate(45deg);
+    opacity: 0.55;
+}
+/* × — раскрытая: оба штриха под 45°/135° (крестик) */
+.project-case-study-mail .hyp-list__row[open] .hyp-list__icon::before {
+    transform: rotate(45deg);
+    opacity: 1;
+}
+.project-case-study-mail .hyp-list__row[open] .hyp-list__icon::after {
+    transform: rotate(-45deg);
+    opacity: 1;
+}
+.project-case-study-mail .hyp-list__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(18px, 2vw, 26px);
+    padding: clamp(20px, 2vw, 28px) 0 clamp(28px, 3vw, 40px);
+    max-width: var(--case-prose-max);
+}
+.project-case-study-mail .hyp-list__text {
+    font-size: clamp(15px, 1.1vw, 17px);
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    color: rgba(245, 245, 245, 0.78);
+    margin: 0;
+    white-space: pre-line;
+}
+.project-case-study-mail .hyp-list__outcome {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: var(--radius-full);
+    background: rgba(245, 245, 247, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    font-family: var(--font-display);
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #0b0b0c;
+}
+.project-case-study-mail .hyp-list__outcome::before {
+    content: '↑';
+    font-size: 1.05em;
+    line-height: 1;
+    font-weight: 700;
+}
+@media (prefers-reduced-motion: reduce) {
+    .project-case-study-mail .hyp-list__icon::before,
+    .project-case-study-mail .hyp-list__icon::after {
+        transition: none;
+    }
 }
 .project-case-study-mail .images {
     display: grid;
@@ -6851,10 +7030,12 @@ h3 {
 }
 
 .project-page-wrap--layout-89 .page-header h1 {
+    font-family: var(--font-display);
     font-size: clamp(2.25rem, 4.2vw, 3.25rem);
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
     margin-bottom: var(--space-20);
     color: var(--color-text-primary);
 }

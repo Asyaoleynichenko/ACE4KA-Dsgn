@@ -201,6 +201,7 @@ export default function HomePage() {
               meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}
               desc={tWithFallback(t, `projects.cards.${item.slug}.desc`, item.desc)}
               image={item.image}
+              video={item.video}
               isDemo={false}
             />
           ))}

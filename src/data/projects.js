@@ -2392,6 +2392,7 @@ export const projects = [
     meta: 'UX/UI · Yandex Fast Track · апрель 2026',
     desc: 'Превращение пассивной БД в инструмент поддержки решений для инженеров on-call — за 2 дня',
     image: '/images/figma-sync-racktables-376587/71cac6c251727191894dcde67eaf7bd0bd58ee9f.png',
+    video: '/videos/racktables-cover.mov',
     heroImages: [
       '/images/figma-sync-racktables-376587/73398965538261d1e4c0e44c514db38a5c4b49d1.svg',
       '/images/figma-sync-racktables-376587/71cac6c251727191894dcde67eaf7bd0bd58ee9f.png',

@@ -22,6 +22,7 @@ import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
 import ScrollScrubRow from '../components/ScrollScrubRow.jsx';
 import DotIcon from '../components/DotIcon.jsx';
+import HalftoneButton from '../components/HalftoneButton.jsx';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
 function HorizontalMvpGallery({ slides }) {
@@ -394,14 +395,9 @@ export default function ProjectDetailPage() {
                 </div>
               ))}
               {project.extLink ? (
-                <a
-                  href={project.extLink.href}
-                  className="project-info__cta"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <HalftoneButton href={project.extLink.href}>
                   {translateExtLinkLabel(project.extLink.label, t)}
-                </a>
+                </HalftoneButton>
               ) : null}
             </div>
           </section>
@@ -496,14 +492,15 @@ export default function ProjectDetailPage() {
                   </p>
                 )}
                 {section.ctaLink?.href ? (
-                  <a
-                    href={section.ctaLink.href}
-                    className="project-info__cta project-info__cta--section"
-                    target={section.ctaLink.external === false ? undefined : '_blank'}
-                    rel={section.ctaLink.external === false ? undefined : 'noopener noreferrer'}
-                  >
-                    {section.ctaLink.label}
-                  </a>
+                  section.ctaLink.external === false ? (
+                    <HalftoneButton to={section.ctaLink.href} className="btn-show-all--section">
+                      {section.ctaLink.label}
+                    </HalftoneButton>
+                  ) : (
+                    <HalftoneButton href={section.ctaLink.href} className="btn-show-all--section">
+                      {section.ctaLink.label}
+                    </HalftoneButton>
+                  )
                 ) : null}
                 {section.tasksHeading ? (
                   <p className="section__tasks-heading">{section.tasksHeading}</p>
@@ -570,19 +567,26 @@ export default function ProjectDetailPage() {
                   />
                 ) : null}
                 {section.hypotheses?.length > 0 && (
-                  <ScrollScrubRow variant="hypothesis" ariaLabel={t('projectDetail.hypothesisStripAria')}>
+                  <ul className="hyp-list" aria-label={t('projectDetail.hypothesisStripAria')}>
                     {section.hypotheses.map((h, j) => (
-                      <div key={j} className="hyp-card">
-                        <h4>{hypothesisCardHeading(h, j, locale, t)}</h4>
-                        <p>{h.text}</p>
-                        {h.outcome ? (
-                          <div className="hyp-card__outcome">
-                            <span>{h.outcome}</span>
+                      <li key={j} className="hyp-list__item">
+                        <details className="hyp-list__row" open={j === 0}>
+                          <summary className="hyp-list__summary">
+                            <span className="hyp-list__title">
+                              {hypothesisCardHeading(h, j, locale, t)}
+                            </span>
+                            <span className="hyp-list__icon" aria-hidden="true" />
+                          </summary>
+                          <div className="hyp-list__body">
+                            <p className="hyp-list__text">{h.text}</p>
+                            {h.outcome ? (
+                              <span className="hyp-list__outcome">{h.outcome}</span>
+                            ) : null}
                           </div>
-                        ) : null}
-                      </div>
+                        </details>
+                      </li>
                     ))}
-                  </ScrollScrubRow>
+                  </ul>
                 )}
                 {section.galleryImage ? (
                   <div className="gallery">
@@ -700,9 +704,9 @@ export default function ProjectDetailPage() {
             {project.extLink ? (
               <div>
                 <h3 className="project-detail-footer__label"><span className="text-condensed">{t('projectDetail.linksHeading')}</span></h3>
-                <a href={project.extLink.href} className="ext-link" target="_blank" rel="noopener noreferrer">
+                <HalftoneButton href={project.extLink.href}>
                   {translateExtLinkLabel(project.extLink.label, t)}
-                </a>
+                </HalftoneButton>
               </div>
             ) : null}
           </footer>

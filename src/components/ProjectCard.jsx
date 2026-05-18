@@ -3,16 +3,28 @@ import { useI18n } from '../i18n/I18nProvider.jsx';
 import { publicUrl } from '../utils/publicUrl.js';
 import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
 
-export default function ProjectCard({ slug, title, meta, desc, image, isDemo }) {
+export default function ProjectCard({ slug, title, meta, desc, image, video, isDemo }) {
   const { localizedPath } = useI18n();
   const href = slug ? localizedPath(`/project/${slug}`) : localizedPath('/projects');
   const imageSrc = typeof image === 'string' ? publicUrl(image) : image;
+  const videoSrc = typeof video === 'string' ? publicUrl(video) : null;
 
   return (
     <article className="preview-card">
       <Link to={href} className="preview-card__link">
         <div className="preview-image">
-          {image ? (
+          {videoSrc ? (
+            <video
+              src={videoSrc}
+              poster={imageSrc}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              ref={(el) => setProjectHeroVtName(el, slug)}
+            />
+          ) : image ? (
             <img
               src={imageSrc}
               alt=""
