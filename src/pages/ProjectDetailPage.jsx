@@ -446,7 +446,7 @@ export default function ProjectDetailPage() {
                         {col.tasks?.length ? (
                           <ul className="section__pills dual-outcomes__pills" aria-label={col.title}>
                             {col.tasks.map((line, j) => (
-                              <li key={j}>{line}</li>
+                              <li key={j}>{pillArrowReplace(line)}</li>
                             ))}
                           </ul>
                         ) : null}
@@ -510,7 +510,7 @@ export default function ProjectDetailPage() {
                   section.taskLayout === 'pills' ? (
                     <ul className="section__pills" aria-label={section.pillsLabel ?? t('projectDetail.pillsDefaultAria')}>
                       {section.tasks.map((line, j) => (
-                        <li key={j}>{line}</li>
+                        <li key={j}>{pillArrowReplace(line)}</li>
                       ))}
                     </ul>
                   ) : (
@@ -539,7 +539,7 @@ export default function ProjectDetailPage() {
                         aria-label={section.nestedAfterPills.subtitle ?? t('projectDetail.nestedSubtitle')}
                       >
                         {section.nestedAfterPills.tasks.map((line, j) => (
-                          <li key={j}>{line}</li>
+                          <li key={j}>{pillArrowReplace(line)}</li>
                         ))}
                       </ul>
                       ) : (
@@ -581,7 +581,7 @@ export default function ProjectDetailPage() {
                           <div className="hyp-list__body">
                             <p className="hyp-list__text">{h.text}</p>
                             {h.outcome ? (
-                              <span className="hyp-list__outcome">{h.outcome}</span>
+                              <span className="hyp-list__outcome">{pillArrowReplace(h.outcome)}</span>
                             ) : null}
                           </div>
                         </details>

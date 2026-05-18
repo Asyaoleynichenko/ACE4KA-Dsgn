@@ -1045,8 +1045,8 @@ button:focus-visible,
     transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: left center;
     margin-inline-end: calc((var(--tc-scale-x, 0.62) - 1) * 1.6em);
-    /* line-height сжимаем обратно, чтобы вертикальный stretch не разрывал верстку */
-    line-height: calc(1.1 * var(--tc-scale-x));
+    /* line-height растягиваем под scaleY, чтобы при переносе строк глифы не накладывались */
+    line-height: calc(1.1 * var(--tc-scale-y));
     transition:
         transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
         margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
