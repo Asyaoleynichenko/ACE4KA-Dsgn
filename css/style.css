@@ -4982,13 +4982,6 @@ h3 {
     align-items: center;
     gap: 8px;
 }
-.project-case-study-mail .section ul.section__pills li::before {
-    content: '↑';
-    font-size: 1.05em;
-    line-height: 1;
-    color: #0b0b0c;
-    font-weight: 700;
-}
 .project-case-study-mail .section__pills ~ .scroll-scrub-row--hypothesis,
 .project-case-study-mail .gallery--before-hypotheses ~ .scroll-scrub-row--hypothesis {
     margin-top: var(--space-56);
@@ -5178,11 +5171,15 @@ h3 {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-24);
-    padding: clamp(18px, 2.4vw, 28px) 0;
+    padding: 0 0 clamp(14px, 1.6vw, 21px);
+    margin-top: clamp(14px, 1.6vw, 21px);
     border-bottom: 3px solid rgba(255, 255, 255, 0.08);
     cursor: pointer;
     list-style: none;
     user-select: none;
+}
+.project-case-study-mail .hyp-list__item:first-child .hyp-list__summary {
+    margin-top: 0;
 }
 .project-case-study-mail .hyp-list__summary::-webkit-details-marker {
     display: none;
@@ -5192,9 +5189,9 @@ h3 {
 }
 .project-case-study-mail .hyp-list__title {
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 3.4vw, 3rem);
+    font-size: clamp(2rem, 4vw, 3.375rem);
     font-weight: var(--font-weight-semibold);
-    line-height: 1.04;
+    line-height: 1;
     letter-spacing: -0.02em;
     text-transform: uppercase;
     color: var(--color-text);
@@ -5269,12 +5266,6 @@ h3 {
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: #0b0b0c;
-}
-.project-case-study-mail .hyp-list__outcome::before {
-    content: '↑';
-    font-size: 1.05em;
-    line-height: 1;
-    font-weight: 700;
 }
 @media (prefers-reduced-motion: reduce) {
     .project-case-study-mail .hyp-list__icon::before,

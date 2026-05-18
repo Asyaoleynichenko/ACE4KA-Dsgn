@@ -23,6 +23,7 @@ import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
 import ScrollScrubRow from '../components/ScrollScrubRow.jsx';
 import DotIcon from '../components/DotIcon.jsx';
 import HalftoneButton from '../components/HalftoneButton.jsx';
+import { pillArrowReplace } from '../utils/pillArrowKeywords.js';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
 function HorizontalMvpGallery({ slides }) {

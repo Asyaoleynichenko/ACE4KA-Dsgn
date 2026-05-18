@@ -44,18 +44,24 @@ export function translateExtLinkLabel(label, t) {
   return key ? t(key) : label;
 }
 
-/** Шаблонные заголовки из `projects.js` («Гипотеза 1» …) — на EN показываем `common.caseStudy.hypothesis`. */
+/** Шаблонные заголовки из `projects.js` («Гипотеза 1», «H1», «H1 (продуктовая)» …) — нормализуем под `common.caseStudy.hypothesis`. */
 const GENERIC_HYPOTHESIS_TITLE_RU = /^гипотеза\s*\d+$/i;
+/** «H1», «H2», «H1 (продуктовая)» — буква H/Н + число + опциональный суффикс */
+const SHORT_HYPOTHESIS_TITLE = /^[HНh]\s*(\d+)(\s*\(.+\))?$/u;
 
 export function hypothesisCardHeading(hypothesis, index, locale, t) {
   const title = hypothesis?.title;
   const fallback = t('common.caseStudy.hypothesis', { n: index + 1 });
-  if (locale === 'en') {
-    if (title == null || title === '') return fallback;
-    if (GENERIC_HYPOTHESIS_TITLE_RU.test(String(title).trim())) return fallback;
-    return title;
+  if (title == null || title === '') return fallback;
+  const trimmed = String(title).trim();
+  // Шаблонные «Гипотеза N» / «H1» / «H1 (suffix)» — всегда отображаем как локализованный «Гипотеза N (suffix)».
+  const shortMatch = SHORT_HYPOTHESIS_TITLE.exec(trimmed);
+  if (shortMatch) {
+    const suffix = shortMatch[2] ? ` ${shortMatch[2].trim()}` : '';
+    return `${fallback}${suffix}`;
   }
-  return title ?? fallback;
+  if (GENERIC_HYPOTHESIS_TITLE_RU.test(trimmed)) return fallback;
+  return title;
 }
 
 /** Строки в `tools[]` из данных — только для EN через `projects.toolStrings` */
