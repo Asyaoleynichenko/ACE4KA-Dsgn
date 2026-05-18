@@ -1780,6 +1780,8 @@ h3 {
     margin-right: auto;
     text-align: center;
     pointer-events: none;
+    /* Резерв снизу под карточки превью, чтобы активная строка не уезжала под них */
+    padding-bottom: clamp(220px, 26vw, 360px);
 }
 
 .home-competencies-scrub__center .home-competencies-scrub__lines {
