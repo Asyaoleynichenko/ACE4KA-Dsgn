@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { remPx } from '../utils/cssRem.js';
 
 const DEFAULT_THRESHOLDS = [0, 0.04, 0.1, 0.18, 0.28, 0.4, 0.52, 0.65, 0.78, 0.9, 1];
 
@@ -22,7 +23,7 @@ export function useIntersectionScrollSpy(sectionIds) {
     const root =
       scrollRootEl && scrollRootEl.scrollHeight > scrollRootEl.clientHeight + 2 ? scrollRootEl : null;
 
-    const anchorLine = () => Math.min(window.innerHeight * 0.33, 168);
+    const anchorLine = () => Math.min(window.innerHeight * 0.33, remPx(168));
 
     const pickByScrollFallback = () => {
       const line = anchorLine();
@@ -31,7 +32,7 @@ export function useIntersectionScrollSpy(sectionIds) {
         const el = document.getElementById(sid);
         if (!el) continue;
         const { top, bottom } = el.getBoundingClientRect();
-        if (top <= line && bottom > 72) id = sid;
+        if (top <= line && bottom > remPx(72)) id = sid;
       }
       return id;
     };
@@ -62,6 +63,7 @@ export function useIntersectionScrollSpy(sectionIds) {
       },
       {
         root,
+        /* IntersectionObserver принимает только px или % (не rem) */
         rootMargin: '-28% 0px -56% 0px',
         threshold: DEFAULT_THRESHOLDS,
       },

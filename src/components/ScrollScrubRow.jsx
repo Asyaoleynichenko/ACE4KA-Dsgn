@@ -1,8 +1,9 @@
 import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { rem, remPx } from '../utils/cssRem.js';
 
 /** Вертикальный ход страницы на полный горизонтальный сдвиг — 1:1 маппинг, без избытка. */
 function getScrollSpan(mx, vh) {
-  return Math.max(150, Math.min(mx, vh * 0.7));
+  return Math.max(remPx(150), Math.min(mx, vh * 0.7));
 }
 
 /** Без dwell — карточки сразу начинают скрабиться, никаких «прилипаний». */
@@ -91,7 +92,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const scrollSpan = getScrollSpan(mx, vh);
     const dwellPx = getReadDwellPx(vh);
     const trackH = track.offsetHeight;
-    const next = Math.ceil(trackH + dwellPx + scrollSpan + 12);
+    const next = Math.ceil(trackH + dwellPx + scrollSpan + remPx(12));
     setRunwayMin((prev) => (prev === next ? prev : next));
   }, []);
 
@@ -140,7 +141,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
     const p = progressFromViewport();
     const x = p * mx;
-    inner.style.transform = `translate3d(${-x}px,0,0)`;
+    inner.style.transform = `translate3d(${rem(-x)},0,0)`;
     const idx =
       count <= 1 || mx <= 1 ? 0 : Math.min(count - 1, Math.round((x / mx) * (count - 1)));
     setActiveIdx(idx);
@@ -331,7 +332,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       <div
         ref={runwayRef}
         className="scroll-scrub-row__runway"
-        style={runwayMin > 0 ? { minHeight: `${runwayMin}px` } : undefined}
+        style={runwayMin > 0 ? { minHeight: rem(runwayMin) } : undefined}
       >
         <div ref={trackRef} className={`${rootClass} scroll-scrub-row--scroll-linked`.trim()}>
           <div className="scroll-scrub-row__shell">

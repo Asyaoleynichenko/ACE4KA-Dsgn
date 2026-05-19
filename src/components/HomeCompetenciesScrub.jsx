@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { rem, remPx } from '../utils/cssRem.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import ProjectCard from './ProjectCard.jsx';
@@ -116,7 +117,7 @@ export default function HomeCompetenciesScrub({
     const appRoot = document.getElementById('root');
     const vh = appRoot?.clientHeight ?? window.innerHeight ?? 800;
     const stickyH = sticky.offsetHeight;
-    const perStep = Math.max(280, vh * 0.52);
+    const perStep = Math.max(remPx(280), vh * 0.52);
     const next = Math.ceil(stickyH + n * perStep + vh * 0.12);
     setRunwayMin((prev) => (prev === next ? prev : next));
   }, [n, reducedMotion]);
@@ -144,8 +145,8 @@ export default function HomeCompetenciesScrub({
     const appRoot = document.getElementById('root');
     const vh = appRoot?.clientHeight ?? window.innerHeight ?? 800;
     const rect = runway.getBoundingClientRect();
-    /* Pre-trigger 80px + 45vh so the scrub starts as soon as the runway enters the viewport. */
-    const scrolled = -rect.top + vh * 0.45 + 80;
+    /* Pre-trigger 5rem + 45vh so the scrub starts as soon as the runway enters the viewport. */
+    const scrolled = -rect.top + vh * 0.45 + remPx(80);
     /* Span = full distance the sticky stays pinned. Guarantees t reaches 1 (last line: Branding) before unstick. */
     const span = Math.max(1, runway.offsetHeight - sticky.offsetHeight);
     const t = Math.min(1, Math.max(0, scrolled / span));
@@ -222,7 +223,7 @@ export default function HomeCompetenciesScrub({
     <div
       ref={runwayRef}
       className="home-competencies-scrub__runway"
-      style={runwayMin > 0 ? { minHeight: `${runwayMin}px` } : undefined}
+      style={runwayMin > 0 ? { minHeight: rem(runwayMin) } : undefined}
     >
       <div ref={stickyRef} className="home-competencies-scrub__sticky">
         <div className="home-competencies__panel">

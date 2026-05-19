@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useState } from 'react';
 import { useIntersectionScrollSpy } from '../hooks/useIntersectionScrollSpy.js';
 import { smartTween, smartTweenReduced } from '../motion/smartAnimate.js';
+import { rem } from '../utils/cssRem.js';
 
 function dashWidths(level, isActive) {
   const parent = level <= 1;
@@ -34,7 +35,7 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
 
   return (
     <nav
-      className={`pointer-events-auto fixed right-5 top-1/2 z-[55] hidden -translate-y-1/2 min-[1120px]:block ${className}`.trim()}
+      className={`pointer-events-auto fixed right-5 top-1/2 z-[55] hidden -translate-y-1/2 scrollspy:block ${className}`.trim()}
       aria-label={ariaLabel}
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
@@ -47,19 +48,19 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
         className="font-sans"
         initial={false}
         animate={{
-          paddingInline: expanded ? 20 : 12,
-          paddingBlock: expanded ? 24 : 18,
+          paddingInline: expanded ? rem(20) : rem(12),
+          paddingBlock: expanded ? rem(24) : rem(18),
           backgroundColor: expanded ? 'rgba(0,0,0,0.42)' : 'rgba(0,0,0,0)',
           borderColor: expanded ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0)',
         }}
         transition={tween}
         style={{
-          borderRadius: 24,
-          borderWidth: 1,
+          borderRadius: rem(24),
+          borderWidth: rem(1),
           borderStyle: 'solid',
-          backdropFilter: expanded ? 'blur(20px)' : 'none',
-          WebkitBackdropFilter: expanded ? 'blur(20px)' : 'none',
-          boxShadow: expanded ? '0 12px 36px rgba(0,0,0,0.28)' : 'none',
+          backdropFilter: expanded ? 'blur(1.25rem)' : 'none',
+          WebkitBackdropFilter: expanded ? 'blur(1.25rem)' : 'none',
+          boxShadow: expanded ? '0 0.75rem 2.25rem rgba(0,0,0,0.28)' : 'none',
         }}
       >
         <ul className="flex flex-col gap-3.5">
@@ -68,7 +69,7 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
             const parent = level <= 1;
             const w = dashWidths(level, isActive);
             return (
-              <li key={id} style={{ paddingLeft: expanded && !parent ? 12 : 0 }}>
+              <li key={id} style={{ paddingLeft: expanded && !parent ? rem(12) : 0 }}>
                 <a
                   href={`#${id}`}
                   className="group flex max-w-full items-center gap-3 outline-none ring-offset-2 ring-offset-transparent focus-visible:ring-2 focus-visible:ring-white/40"
@@ -82,19 +83,19 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
                     className="h-0.5 shrink-0 rounded-full"
                     initial={false}
                     animate={{
-                      width: w,
+                      width: rem(w),
                       backgroundColor: isActive ? '#ffffff' : 'rgba(255,255,255,0.32)',
                       opacity: isActive ? 1 : 0.6,
                     }}
                     transition={tween}
                   />
                   <motion.span
-                    className="overflow-hidden whitespace-nowrap text-left text-[13px] font-medium tracking-[0.01em] text-white"
+                    className="overflow-hidden whitespace-nowrap text-left text-[0.8125rem] font-medium tracking-[0.01em] text-white"
                     initial={false}
                     animate={{
                       opacity: expanded ? (isActive ? 1 : 0.42) : 0,
-                      maxWidth: expanded ? 200 : 0,
-                      marginLeft: expanded ? 0 : -12,
+                      maxWidth: expanded ? rem(200) : 0,
+                      marginLeft: expanded ? 0 : rem(-12),
                     }}
                     transition={tween}
                     aria-hidden={expanded ? undefined : 'true'}

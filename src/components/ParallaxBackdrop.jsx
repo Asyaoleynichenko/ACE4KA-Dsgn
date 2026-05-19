@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { rem } from '../utils/cssRem.js';
 
 /** Декоративный параллакс фона для всех страниц (уважает prefers-reduced-motion). */
 export default function ParallaxBackdrop() {
@@ -35,9 +36,9 @@ export default function ParallaxBackdrop() {
     };
 
     const applyParallaxFromY = (y) => {
-      root.style.setProperty('--parallax-y1', `${y * 0.06}px`);
-      root.style.setProperty('--parallax-y2', `${y * 0.12}px`);
-      root.style.setProperty('--parallax-y3', `${y * 0.18}px`);
+      root.style.setProperty('--parallax-y1', rem(y * 0.06));
+      root.style.setProperty('--parallax-y2', rem(y * 0.12));
+      root.style.setProperty('--parallax-y3', rem(y * 0.18));
     };
 
     const tick = (now) => {

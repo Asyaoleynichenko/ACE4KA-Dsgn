@@ -18,7 +18,7 @@ function itemIsActive(pathname, targetPath) {
   return base === targetPath;
 }
 
-/** Навигация: Frame с gap 120px (Figma). */
+/** Навигация: Frame с gap 7.5rem (120px в Figma). */
 export function Navigation() {
   const { pathname } = useLocation();
   const { t, localizedPath } = useI18n();
