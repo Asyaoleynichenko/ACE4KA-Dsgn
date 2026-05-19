@@ -270,6 +270,7 @@
     :root {
         --layout-page-pad-y-top: 36px;
         --layout-page-pad-y-bottom: 48px;
+        --layout-page-pad-x: 1.25rem;
         --project-page-padding-y: 36px;
         --project-page-padding-bottom: 48px;
         --hero-section-gap: 48px;
@@ -277,6 +278,16 @@
         --project-detail-gap: 40px;
         --project-card-padding: 24px;
         --case-section-rhythm: clamp(36px, 8vw, 56px);
+        --preview-card-media-body-gap: 12px;
+        --tc-scale-x: 0.68;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --layout-page-pad-x: 1rem;
+        --hero-section-gap: 40px;
+        --tc-scale-x: 0.72;
     }
 }
 
@@ -1031,7 +1042,7 @@ button:focus-visible,
    В подписях/метках font-size наследуется от родителя (без акцента).
    --tc-scale-x — кастомное свойство, чтобы переопределять степень сжатия (hover/active → ближе к 1).
    transform-origin: left → весь «пустой» зазор смещается вправо, его компенсируем negative margin-inline-end.
-   width: fit-content + max-width: 100% — узкий контейнер ограничивает ширину; line-height делим на scaleY. */
+   width: fit-content + max-width: 100%. Только scaleX — scaleY ломает межстрочный интервал при переносах. */
 .text-condensed,
 .header .logo > span,
 .header .lang-switch .lang-switch__toggle-row,
@@ -1042,15 +1053,13 @@ button:focus-visible,
     max-width: 100%;
     vertical-align: middle;
     --tc-scale-x: 0.62;
-    --tc-scale-y: calc(1 / var(--tc-scale-x));
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
     margin-inline-end: calc((var(--tc-scale-x, 0.62) - 1) * 1em);
-    line-height: calc(1.1 / var(--tc-scale-y));
+    line-height: 1.3;
     transition:
         transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-        margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-        line-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Центрированные контексты: scaleX(0.62) с origin left прижимает визуал к ЛЕВОМУ
@@ -1064,7 +1073,6 @@ button:focus-visible,
     .info-card,
     .info-label,
     .header-item__label,
-    .preview-card__meta,
     .site-footer,
     .btn-show-all,
     .filter-pill,
@@ -1080,7 +1088,6 @@ button:focus-visible,
     .info-card,
     .info-label,
     .header-item__label,
-    .preview-card__meta,
     .site-footer,
     .btn-show-all,
     .filter-pill,
@@ -2521,11 +2528,21 @@ h3 {
     font-family: var(--font-body);
     font-size: 12px;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 1.35;
     letter-spacing: 0.6px;
     text-transform: uppercase;
     color: var(--project-title-color);
     opacity: 0.4;
+}
+
+.preview-card__meta .text-condensed {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: left top;
+    margin-inline-end: 0;
+    line-height: inherit;
 }
 
 .preview-card__desc {
@@ -2650,12 +2667,15 @@ h3 {
 
 /* Подпись: 13.22px, по центру, тень (Figma 1:208, 1:211 и др.) */
 .header-item__label {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     width: 100%;
     font-family: var(--font-body);
     font-size: 13.22px;
     font-weight: 400;
-    line-height: normal;
+    line-height: 1.3;
     color: var(--color-text-primary);
     text-align: center;
     text-shadow: 0 0.88px 8.9px rgba(0, 0, 0, 0.25);
@@ -2663,18 +2683,17 @@ h3 {
     box-sizing: border-box;
 }
 
-/* Плашки hero: только scaleX + нормальный line-height — area-preserving scaleY ломает переносы. */
+/* Плашки hero: condensed по центру под иконкой */
 .header-item__label .text-condensed {
-    display: inline-block;
-    width: auto;
+    display: block;
+    width: 100%;
     max-width: 100%;
     text-align: center;
     transform: scaleX(var(--tc-scale-x));
-    transform-origin: center center;
+    transform-origin: center top;
     margin-inline-end: 0;
-    line-height: 1.25;
+    line-height: inherit;
     box-sizing: border-box;
-    vertical-align: top;
 }
 
 /* Figma Image Preview (420:21377 / компонент 1:231): карточка окна 369×280, titlebar 38px, внутреннее превью r6 + inset 8px */
@@ -3230,13 +3249,10 @@ h3 {
     text-align: center;
     vertical-align: middle;
     --tc-scale-x: 0.62;
-    --tc-scale-y: calc(1 / var(--tc-scale-x));
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: center center;
-    line-height: calc(1.1 / var(--tc-scale-y));
-    transition:
-        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-        line-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    line-height: 1.3;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3398,7 +3414,7 @@ h3 {
     font-size: 12px;
     font-family: var(--font-body);
     font-weight: 400;
-    line-height: 16px;
+    line-height: 1.35;
     letter-spacing: 0.6px;
     text-transform: uppercase;
     color: var(--color-text);
@@ -7684,7 +7700,42 @@ h3 {
         justify-content: flex-start;
         overflow-x: auto;
         flex-wrap: nowrap;
+        width: 100%;
+        max-width: 100%;
         padding-bottom: 0.5rem;
+        padding-inline: 2px;
+        -webkit-overflow-scrolling: touch;
+        scroll-padding-inline: var(--layout-edge-left);
+    }
+
+    .page-home .logo-section .filter-pills,
+    .page-projects .logo-section .filter-pills {
+        margin-inline: 0;
+    }
+
+    .filter-pill {
+        flex-shrink: 0;
+    }
+
+    .filter-pill__text {
+        font-size: 13px;
+    }
+
+    .preview-card__title {
+        font-size: clamp(18px, 4.8vw, 22px);
+        line-height: 1.25;
+        letter-spacing: -0.4px;
+    }
+
+    .preview-card__meta {
+        font-size: 11px;
+        line-height: 1.4;
+        letter-spacing: 0.45px;
+    }
+
+    .preview-card__desc {
+        font-size: 13px;
+        line-height: 1.45;
     }
 }
 
@@ -8317,8 +8368,18 @@ canvas {
    уплотняем минимальную ширину ячеек, чтобы 4 пункта помещались в 2 ряда. */
 @media (max-width: 900px) {
     .page-home .hero-first-screen .header-items--figma {
-        grid-template-columns: repeat(auto-fill, minmax(min(120px, 100%), 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--space-16) var(--space-12);
+    }
+
+    .page-home .hero-first-screen .header-items--figma .header-item--folder,
+    .page-home .hero-first-screen .header-items--figma .header-item--image-well {
+        max-width: min(168px, 100%);
+    }
+
+    .header-item__label {
+        font-size: clamp(11px, 2.8vw, 13.22px);
+        line-height: 1.35;
     }
 
     /* Hero info-grid 2-кол уже задан, но добавим max-width чтобы карточки не растягивались на всю строку */
@@ -8326,6 +8387,10 @@ canvas {
         max-width: 520px;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .hero__card .preview-card-block {
+        max-width: min(340px, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 24px));
     }
 }
 
@@ -8361,6 +8426,31 @@ canvas {
     .about-page__name {
         font-size: clamp(2rem, 9vw, 3rem);
     }
+
+    .page-home .hero-first-screen {
+        min-height: min(300px, 75vw);
+    }
+
+    .page-home .hero-first-screen .header-items--figma {
+        padding-top: var(--space-12);
+    }
+
+    .text-condensed,
+    .header .logo > span,
+    .header .lang-switch .lang-switch__toggle-row,
+    .header .nav-list .nav-link > span,
+    .btn-show-all__label {
+        line-height: 1.35;
+    }
+
+    .header-item__label .text-condensed,
+    .preview-card__meta .text-condensed {
+        line-height: inherit;
+    }
+
+    .projects-title-main {
+        font-size: clamp(1.75rem, 8vw, 2.5rem);
+    }
 }
 
 /* xs (≤480): крайние сценарии — стек всего, что было колоночным; никакого
@@ -8368,14 +8458,34 @@ canvas {
 @media (max-width: 480px) {
     /* Header items: тонкие папки — в один столбец (уже задано), но дополнительно
        обрезаем иконки чтобы они не растягивались под grid 1fr. */
+    .page-home .hero-first-screen {
+        min-height: min(260px, 80vw);
+    }
+
+    .page-home .hero-first-screen .header-items--figma {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-12) var(--space-8);
+        padding-inline: var(--space-4);
+    }
+
     .page-home .hero-first-screen .header-items--figma .header-item--folder,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well {
         max-width: 100%;
+        width: 100%;
     }
 
     .header-item__icon-wrap {
         width: clamp(64px, 22vw, 99px);
         height: clamp(58px, 20vw, 90px);
+    }
+
+    .header-item__label {
+        font-size: clamp(10px, 2.9vw, 12px);
+        line-height: 1.35;
+    }
+
+    .header-item--folder {
+        gap: 2px;
     }
 
     /* Hero info-grid: 2 кол → 1 кол уже на ≤640, гарантируем тут тоже */
@@ -8411,10 +8521,51 @@ canvas {
         padding: var(--space-20) var(--space-20);
     }
 
-    /* Filter pills — pills остаются скроллящимися; чуть уменьшить padding */
+    /* Filter pills — горизонтальный скролл, компактнее кегль */
+    .filter-pills {
+        gap: 6px;
+        scrollbar-width: none;
+    }
+
+    .filter-pills::-webkit-scrollbar {
+        display: none;
+    }
+
     .filter-pill {
-        padding: 6px var(--space-16);
+        padding: 6px var(--space-12);
         min-height: 32px;
+    }
+
+    .filter-pill__text {
+        font-size: 12px;
+    }
+
+    .page-home .logo-section .filter-pills,
+    .page-projects .logo-section .filter-pills {
+        padding: 2px;
+    }
+
+    .preview-card__meta {
+        font-size: 10px;
+        line-height: 1.45;
+        letter-spacing: 0.35px;
+    }
+
+    .preview-card__title {
+        font-size: clamp(17px, 5.2vw, 20px);
+    }
+
+    .hero__card .preview-card-block {
+        max-width: min(300px, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 16px));
+    }
+
+    .hero__card .preview-card-block--mac-window .preview-card-block__title {
+        font-size: clamp(11px, 3.2vw, 13px);
+    }
+
+    .hero__card .preview-card-block__cta {
+        font-size: clamp(10px, 2.8vw, 12px);
+        padding: 4px 8px;
     }
 
     /* Lang switch может перекрывать nav-toggle на 320px — уменьшаем минимум */
