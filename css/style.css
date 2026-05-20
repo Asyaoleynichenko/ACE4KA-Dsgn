@@ -4013,6 +4013,7 @@ h3 {
         - env(safe-area-inset-right, 0px)
     );
     --scrub-pin-height: calc(100dvh - var(--scrub-sticky-top) - env(safe-area-inset-bottom, 0px));
+    --scrub-card-gap: var(--case-study-pad-x); /* 24px между карточками ленты */
     display: flex;
     width: 100%;
     max-width: none;
@@ -4799,13 +4800,50 @@ h3 {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: stretch;
-    gap: 0;
+    gap: var(--scrub-card-gap);
     width: max-content;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
     will-change: transform;
     align-items: stretch;
     min-height: 100%;
+}
+
+/* Cinematic scrub — perspective, GPU-слои, без CSS-hover поверх JS-transform */
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__shell {
+    overflow-x: clip;
+    overflow-y: visible;
+}
+
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__viewport--linked {
+    overflow: visible;
+    perspective: 87.5rem;
+    perspective-origin: 50% 42%;
+}
+
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__inner {
+    transform-style: preserve-3d;
+}
+
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__inner > .card {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform, opacity, filter;
+    transition: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__inner > .card:hover {
+        transform: unset;
+        border-color: transparent;
+        box-shadow: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__viewport--linked {
+        perspective: none;
+    }
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
@@ -4972,13 +5010,15 @@ h3 {
     align-items: center;
     justify-content: center;
     align-self: center;
-    gap: 0.25rem;
+    justify-self: center;
+    gap: 0.75rem;
     margin-top: var(--space-8);
     flex-shrink: 0;
-    width: auto;
-    min-width: 4rem;
+    width: fit-content;
+    max-width: none;
+    min-width: 0;
     height: 1rem;
-    padding: 0 0.25rem;
+    padding: 0 0.5rem;
     box-sizing: border-box;
     border-radius: 0.5rem;
     background: rgba(255, 255, 255, 0.11);

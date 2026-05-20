@@ -1,4 +1,9 @@
 import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  applyCinematicCardTransforms,
+  lerpScalar,
+  resetCinematicCardTransforms,
+} from '../utils/cinematicScrub.js';
 import { rem, remPx } from '../utils/cssRem.js';
 
 /** Скролл страницы: window или #root (snap-pages), как ParallaxBackdrop / HomeCompetenciesScrub. */
@@ -60,14 +65,18 @@ function readViewportHeight() {
   return window.innerHeight || 1;
 }
 
-/** Горизонтальный ход ленты: по ширине слайдов (надёжнее scrollWidth при 100cqi). */
+/** Горизонтальный ход ленты (ширина слайдов + gap между ними). */
 function readMx(viewport, inner) {
   if (!viewport || !inner) return 0;
+  const fromLayout = inner.scrollWidth - viewport.clientWidth;
+  if (fromLayout > 1) return fromLayout;
   const slides = inner.querySelectorAll(':scope > *');
   if (slides.length < 2) return 0;
   const slideW = slides[0].getBoundingClientRect().width;
-  if (slideW > 1) return Math.max(0, slideW * (slides.length - 1));
-  return Math.max(0, inner.scrollWidth - viewport.clientWidth);
+  if (slideW <= 1) return 0;
+  const gap = parseFloat(getComputedStyle(inner).columnGap || getComputedStyle(inner).gap) || 0;
+  const gaps = slides.length - 1;
+  return Math.max(0, slideW * gaps + gap * gaps);
 }
 
 /**
@@ -100,6 +109,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
   const rafRef = useRef(null);
+  const cinematicRafRef = useRef(null);
+  const smoothXRef = useRef(0);
   const [activeIdx, setActiveIdx] = useState(0);
   const [maxX, setMaxX] = useState(0);
   const [runwayMin, setRunwayMin] = useState(0);
@@ -117,6 +128,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
 
   /** Native horizontal scroll включается только при reduced-motion; в остальных случаях — scroll-linked auto-scrub. */
   const useNativeX = reducedMotion;
+  /** Кинематичный scrub с lerp + parallax — только лента карточек кейса. */
+  const useCinematicScrub = variant === 'cards' && !useNativeX;
 
   const recalcMaxX = useCallback(() => {
     const inner = innerRef.current;
@@ -200,7 +213,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   }, [measureRunwayMin, useNativeX, variant]);
 
   const updateFromPageScroll = useCallback(() => {
-    if (useNativeX) return;
+    if (useNativeX || useCinematicScrub) return;
     const inner = innerRef.current;
     const viewport = viewportRef.current;
     if (!inner || !viewport) return;
@@ -209,10 +222,11 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const x = p * mx;
     inner.style.transform = mx > 1 ? `translate3d(${-x}px,0,0)` : 'none';
     setActiveIdx(activeIndexFromOffset(x, mx, count));
-  }, [count, useNativeX, progressFromViewport]);
+  }, [count, useCinematicScrub, useNativeX, progressFromViewport]);
 
+  /** Линейный scrub (contact): обновление по scroll + resize. */
   useEffect(() => {
-    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (useNativeX || useCinematicScrub || (variant !== 'cards' && variant !== 'contact')) return undefined;
 
     const tick = () => {
       rafRef.current = null;
@@ -227,12 +241,54 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     };
 
     return bindScrollResize(onScrollOrResize);
-  }, [updateFromPageScroll, useNativeX, variant]);
+  }, [updateFromPageScroll, useCinematicScrub, useNativeX, variant]);
 
   useEffect(() => {
-    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
+    if (useNativeX || useCinematicScrub || (variant !== 'cards' && variant !== 'contact')) return undefined;
     updateFromPageScroll();
-  }, [maxX, useNativeX, variant, updateFromPageScroll]);
+  }, [maxX, useCinematicScrub, useNativeX, variant, updateFromPageScroll]);
+
+  /** Кинематичный scrub (cards): непрерывный RAF + lerp к целевой позиции от вертикального скролла. */
+  useEffect(() => {
+    if (!useCinematicScrub) return undefined;
+
+    let alive = true;
+
+    const frame = () => {
+      if (!alive) return;
+      const inner = innerRef.current;
+      const viewport = viewportRef.current;
+      if (inner && viewport) {
+        const targetP = progressFromViewport();
+        const mx = readMx(viewport, inner);
+        const targetX = targetP * mx;
+        smoothXRef.current = lerpScalar(smoothXRef.current, targetX);
+        const { mx: layoutMx } = applyCinematicCardTransforms(inner, viewport, smoothXRef.current);
+        const mxUse = layoutMx > 1 ? layoutMx : mx;
+        setActiveIdx(activeIndexFromOffset(smoothXRef.current, mxUse, count));
+      }
+      cinematicRafRef.current = requestAnimationFrame(frame);
+    };
+
+    cinematicRafRef.current = requestAnimationFrame(frame);
+
+    return () => {
+      alive = false;
+      if (cinematicRafRef.current != null) cancelAnimationFrame(cinematicRafRef.current);
+      resetCinematicCardTransforms(innerRef.current);
+    };
+  }, [count, progressFromViewport, useCinematicScrub]);
+
+  useLayoutEffect(() => {
+    if (!useCinematicScrub) return undefined;
+    const inner = innerRef.current;
+    const viewport = viewportRef.current;
+    if (!inner || !viewport) return undefined;
+    const mx = readMx(viewport, inner);
+    smoothXRef.current = progressFromViewport() * mx;
+    applyCinematicCardTransforms(inner, viewport, smoothXRef.current);
+    return undefined;
+  }, [children, maxX, progressFromViewport, useCinematicScrub]);
 
   const syncDotsFromViewportScroll = useCallback(() => {
     const vp = viewportRef.current;
@@ -396,7 +452,10 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
         style={runwayMin > 0 ? { minHeight: rem(runwayMin) } : undefined}
       >
         <div ref={stickyRef} className="scroll-scrub-row__sticky scroll-scrub-row__sticky--cards">
-          <div ref={trackRef} className={`${rootClass} scroll-scrub-row--scroll-linked`.trim()}>
+          <div
+            ref={trackRef}
+            className={`${rootClass} scroll-scrub-row--scroll-linked${useCinematicScrub ? ' scroll-scrub-row--cinematic' : ''}`.trim()}
+          >
             <div className="scroll-scrub-row__shell">
             <div
               ref={viewportRef}
