@@ -3,6 +3,7 @@ import {
   applyCinematicCardTransforms,
   lerpScalar,
   resetCinematicCardTransforms,
+  scrollProgress01,
 } from '../utils/cinematicScrub.js';
 import { rem, remPx } from '../utils/cssRem.js';
 
@@ -79,18 +80,9 @@ function readMx(viewport, inner) {
   return Math.max(0, slideW * gaps + gap * gaps);
 }
 
-/**
- * Прогресс 0…1 по вертикальному скроллу, пока runway проходит через viewport.
- * Та же модель, что HomeCompetenciesScrub: scrolled / (runwayH − stickyH).
- */
+/** Scroll-bound progress 0…1 (runway + sticky pin). */
 function linkedProgress01(runway, sticky) {
-  if (!runway) return 0;
-  const vh = readViewportHeight();
-  const rect = runway.getBoundingClientRect();
-  const scrolled = -rect.top + vh * 0.45 + remPx(80);
-  const pinH = sticky?.offsetHeight ?? 0;
-  const span = Math.max(1, runway.offsetHeight - pinH);
-  return Math.min(1, Math.max(0, scrolled / span));
+  return scrollProgress01(runway, sticky);
 }
 
 /**
@@ -111,6 +103,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   const rafRef = useRef(null);
   const cinematicRafRef = useRef(null);
   const smoothXRef = useRef(0);
+  const prevSmoothXRef = useRef(0);
   const [activeIdx, setActiveIdx] = useState(0);
   const [maxX, setMaxX] = useState(0);
   const [runwayMin, setRunwayMin] = useState(0);
@@ -258,12 +251,24 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       if (!alive) return;
       const inner = innerRef.current;
       const viewport = viewportRef.current;
+      const runway = runwayRef.current;
+      const sticky = stickyRef.current;
       if (inner && viewport) {
         const targetP = progressFromViewport();
         const mx = readMx(viewport, inner);
         const targetX = targetP * mx;
+        const prevX = smoothXRef.current;
         smoothXRef.current = lerpScalar(smoothXRef.current, targetX);
-        const { mx: layoutMx } = applyCinematicCardTransforms(inner, viewport, smoothXRef.current);
+        const velocityPx = smoothXRef.current - prevX;
+        prevSmoothXRef.current = smoothXRef.current;
+        const progress01 = runway ? scrollProgress01(runway, sticky) : targetP;
+        const { mx: layoutMx } = applyCinematicCardTransforms(
+          inner,
+          viewport,
+          smoothXRef.current,
+          progress01,
+          velocityPx,
+        );
         const mxUse = layoutMx > 1 ? layoutMx : mx;
         setActiveIdx(activeIndexFromOffset(smoothXRef.current, mxUse, count));
       }
@@ -285,8 +290,12 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const viewport = viewportRef.current;
     if (!inner || !viewport) return undefined;
     const mx = readMx(viewport, inner);
-    smoothXRef.current = progressFromViewport() * mx;
-    applyCinematicCardTransforms(inner, viewport, smoothXRef.current);
+    const runway = runwayRef.current;
+    const sticky = stickyRef.current;
+    const p = runway ? scrollProgress01(runway, sticky) : progressFromViewport();
+    smoothXRef.current = p * mx;
+    prevSmoothXRef.current = smoothXRef.current;
+    applyCinematicCardTransforms(inner, viewport, smoothXRef.current, p, 0);
     return undefined;
   }, [children, maxX, progressFromViewport, useCinematicScrub]);
 

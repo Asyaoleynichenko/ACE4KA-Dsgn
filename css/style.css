@@ -208,6 +208,8 @@
   --project-meta-value-line-height: 1.25;
   --project-meta-value-letter-spacing: -0.01em;
   --project-meta-value-opacity: 1;
+  --project-meta-cta-font-size: clamp(1.0625rem, 2.8vw, 1.375rem);
+  --project-meta-cta-height: clamp(3.5rem, 10vw, 4.5rem);
   --project-grid-gap: 1.5rem;
   --project-footer-border-top: 4.0625rem;
   --project-footer-pt: 4.0625rem;
@@ -1065,7 +1067,7 @@ button:focus-visible,
     letter-spacing: 0;
     text-transform: uppercase;
     color: #fff;
-    mix-blend-mode: normal;
+    mix-blend-mode: difference;
 }
 
 /* Имитация condensed-варианта: scaleX на текстовых нодах. Глобальная утилита — `.text-condensed`.
@@ -1134,7 +1136,8 @@ button:focus-visible,
 .hero-role .text-condensed,
 .hero-more .text-condensed,
 .filter-pill__text,
-.btn-show-all__label {
+.btn-show-all__label,
+.site-footer__link .text-condensed {
     max-width: none;
     white-space: nowrap;
 }
@@ -1413,7 +1416,7 @@ h3 {
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    mix-blend-mode: normal;
+    mix-blend-mode: difference;
 }
 
 .header .nav-list .nav-link > span {
@@ -4672,18 +4675,21 @@ h3 {
     font-weight: 400;
     opacity: var(--project-meta-value-opacity);
 }
-/* Halftone CTA внутри info-card занимает всю ширину карточки */
+/* Halftone CTA внутри info-card — крупнее кегль, чем был компактный override */
 .project-case-study-mail .project-info .btn-show-all {
     align-self: stretch;
     width: 100%;
     max-width: 100%;
     margin-top: var(--space-8);
-    padding-inline: clamp(0.875rem, 3vw, 1.5rem);
-    font-size: clamp(0.8125rem, 2.2vw, 1.125rem);
+    height: var(--project-meta-cta-height);
+    padding-inline: clamp(1rem, 4vw, 1.75rem);
+    font-size: var(--project-meta-cta-font-size);
 }
 
 .project-case-study-mail .project-info .btn-show-all .btn-show-all__label {
-    font-size: 1em;
+    font-size: 1.45em;
+    line-height: 1.1;
+    --tc-scale-x: 0.65;
 }
 .project-case-study-mail .case-study-narrative {
     max-width: var(--case-prose-max);
@@ -4732,7 +4738,7 @@ h3 {
     max-width: none;
     box-sizing: border-box;
 }
-/* Sticky — по высоте карточки + индикатор, без принудительного 100dvh */
+/* Sticky pin: пока скроллим runway — сцена на высоту viewport */
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__sticky--cards {
     position: sticky;
     top: var(--scrub-sticky-top);
@@ -4742,6 +4748,10 @@ h3 {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+}
+
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__sticky--cards {
+    min-height: var(--scrub-pin-height);
 }
 .project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards,
 .project-case-study-mail .scroll-scrub-row.scroll-scrub-row--cards {
@@ -4821,12 +4831,21 @@ h3 {
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__shell {
     overflow-x: clip;
     overflow-y: visible;
+    flex: 1 1 auto;
+    min-height: var(--scrub-pin-height);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__viewport--linked {
     overflow: visible;
-    perspective: 87.5rem;
-    perspective-origin: 50% 42%;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    perspective: 68.75rem;
+    perspective-origin: 50% 46%;
 }
 
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__inner {
@@ -7676,15 +7695,15 @@ h3 {
 
 .site-footer__main {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-between;
     align-items: flex-end;
-    gap: clamp(1.25rem, 3vw, 2.5rem);
+    gap: clamp(1rem, 2vw, 2.5rem);
 }
 
 .site-footer__left {
-    flex: 1 1 16.25rem;
-    max-width: min(100%, 40rem);
+    flex: 0 1 auto;
+    max-width: min(42%, 20rem);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -7717,20 +7736,28 @@ h3 {
 }
 
 .site-footer__nav {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     min-width: 0;
     margin-left: auto;
 }
 
 .site-footer__list {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.875rem;
+    gap: clamp(0.375rem, 1vw, 0.875rem);
     margin: 0;
     padding: 0;
     list-style: none;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.site-footer__list::-webkit-scrollbar {
+    display: none;
 }
 
 .site-footer__item {
@@ -7761,6 +7788,12 @@ h3 {
     text-decoration-color: rgba(255, 255, 255, 0.92);
     text-underline-offset: 0.28em;
     opacity: 0.92;
+}
+
+.site-footer__link .text-condensed {
+    max-width: none;
+    white-space: nowrap;
+    margin-inline: calc((1 - var(--tc-scale-x)) / 2 * -100%);
 }
 
 /* Примечание — уже статуса, узкая колонка как в макете (~половина блока) */
@@ -7859,6 +7892,7 @@ h3 {
 
     .site-footer__list {
         justify-content: center;
+        flex-wrap: nowrap;
     }
 
     .site-footer__note {
@@ -7898,6 +7932,11 @@ h3 {
 
     .nav-list.open {
         right: 0;
+    }
+
+    /* В drawer — тёмный фон, difference не нужен */
+    .header .nav-list .nav-link {
+        mix-blend-mode: normal;
     }
 
     .nav-toggle {
