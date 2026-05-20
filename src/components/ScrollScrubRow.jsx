@@ -37,18 +37,18 @@ function scrollByPx(delta, behavior = 'auto') {
   else window.scrollBy({ top: delta, behavior });
 }
 
-/** Вертикальный ход runway: ~0.48vh на переход между карточками (не привязываем к px-ходу ленты mx). */
-function getRunwayScrollSpan(vh, slideCount) {
+/** Вертикальный ход runway: привязан к горизонтальному ходу ленты (без лишней пустоты). */
+function getRunwayScrollSpan(vh, slideCount, mx) {
   const steps = Math.max(1, slideCount - 1);
-  const perStep = vh * 0.52;
-  return Math.max(perStep * steps, remPx(96));
+  const perStep = Math.max(vh * 0.38, mx > 1 ? mx * 0.55 : vh * 0.38);
+  return Math.max(perStep * steps, remPx(72));
 }
 
 /**
  * Прогресс 0…1 и scrollSpan (runwayRectTop — верх обёртки runway, см. sticky-pin ниже).
  */
 function linkedStripMetrics(runwayRectTop, mx, vh, slideCount) {
-  const scrollSpan = Math.max(1, getRunwayScrollSpan(vh, slideCount));
+  const scrollSpan = Math.max(1, getRunwayScrollSpan(vh, slideCount, mx));
   const enter = vh * 0.12;
   const p = Math.min(1, Math.max(0, (enter - runwayRectTop) / scrollSpan));
   return { p, scrollSpan };
@@ -97,6 +97,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   const count = Children.count(children);
   const runwayRef = useRef(null);
   const stickyRef = useRef(null);
+  const pinRef = useRef(null);
+  const spacerRef = useRef(null);
   const trackRef = useRef(null);
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
@@ -106,7 +108,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   const prevSmoothXRef = useRef(0);
   const [activeIdx, setActiveIdx] = useState(0);
   const [maxX, setMaxX] = useState(0);
-  const [runwayMin, setRunwayMin] = useState(0);
+  const [scrollSpanPx, setScrollSpanPx] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
@@ -155,14 +157,13 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const vh = readViewportHeight();
     const mx = readMx(viewport, inner);
     if (mx <= 1) {
-      setRunwayMin((prev) => (prev === 0 ? prev : 0));
+      setScrollSpanPx((prev) => (prev === 0 ? prev : 0));
       return;
     }
-    const scrollSpan = getRunwayScrollSpan(vh, count);
-    const stickyTop = sticky ? parseFloat(getComputedStyle(sticky).top) || 0 : 0;
-    const pinH = Math.round(vh - stickyTop - remPx(8));
-    const next = Math.ceil(pinH + scrollSpan + remPx(8));
-    setRunwayMin((prev) => (prev === next ? prev : next));
+    const scrollSpan = getRunwayScrollSpan(vh, count, mx);
+    setScrollSpanPx((prev) => (prev === scrollSpan ? prev : scrollSpan));
+    const spacer = spacerRef.current;
+    if (spacer) spacer.style.height = rem(scrollSpan);
   }, [count]);
 
   const progressFromViewport = useCallback(() => {
@@ -172,7 +173,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const inner = innerRef.current;
     if (!runway || !viewport) return 0;
     const mx = inner ? readMx(viewport, inner) : 0;
-    if (sticky) return linkedProgress01(runway, sticky);
+    if (sticky) return scrollProgress01(runway, sticky, spacerRef.current);
     const vh = readViewportHeight();
     return linkedStripMetrics(runway.getBoundingClientRect().top, mx, vh, count).p;
   }, [count]);
@@ -183,6 +184,43 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const id = requestAnimationFrame(measureRunwayMin);
     return () => cancelAnimationFrame(id);
   }, [children, maxX, measureRunwayMin, useNativeX, variant]);
+
+  /** CSS sticky часто ломается на кейсах (flex/clip у предков) — дублируем pin через fixed. */
+  useEffect(() => {
+    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
+
+    const updatePin = () => {
+      const runway = runwayRef.current;
+      const sticky = stickyRef.current;
+      const pin = pinRef.current;
+      const spacer = spacerRef.current;
+      if (!runway || !sticky || !pin) return;
+
+      const stickyTop = parseFloat(getComputedStyle(sticky).top) || 0;
+      const runwayRect = runway.getBoundingClientRect();
+      const pinH = Math.max(1, pin.offsetHeight);
+      /* Пин до тех пор, пока низ runway не дошёл до низа зоны pin (не вычитаем spacer — он уже в bottom). */
+      const inPin = runwayRect.top <= stickyTop && runwayRect.bottom > stickyTop + pinH;
+
+      if (inPin) {
+        const left = runwayRect.left;
+        const width = runwayRect.width;
+        pin.classList.add('scroll-scrub-row__pin--fixed');
+        pin.style.top = `${stickyTop}px`;
+        pin.style.left = `${left}px`;
+        pin.style.width = `${width}px`;
+        sticky.style.minHeight = `${pinH}px`;
+      } else {
+        pin.classList.remove('scroll-scrub-row__pin--fixed');
+        pin.style.top = '';
+        pin.style.left = '';
+        pin.style.width = '';
+        sticky.style.minHeight = '';
+      }
+    };
+
+    return bindScrollResize(updatePin);
+  }, [useNativeX, variant]);
 
   useEffect(() => {
     if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
@@ -195,6 +233,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const ro = new ResizeObserver(() => measureRunwayMin());
     ro.observe(runway);
     if (sticky) ro.observe(sticky);
+    const spacer = spacerRef.current;
+    if (spacer) ro.observe(spacer);
     ro.observe(track);
     ro.observe(vp);
     ro.observe(inner);
@@ -263,7 +303,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       const prevX = smoothXRef.current;
       smoothXRef.current = lerpScalar(smoothXRef.current, targetX);
       const velocityPx = smoothXRef.current - prevX;
-      const progress01 = runway ? scrollProgress01(runway, sticky) : targetP;
+      const progress01 = runway ? scrollProgress01(runway, sticky, spacerRef.current) : targetP;
       const { mx: layoutMx } = applyCinematicCardTransforms(
         inner,
         viewport,
@@ -324,7 +364,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const mx = readMx(viewport, inner);
     const runway = runwayRef.current;
     const sticky = stickyRef.current;
-    const p = runway ? scrollProgress01(runway, sticky) : progressFromViewport();
+    const p = runway ? scrollProgress01(runway, sticky, spacerRef.current) : progressFromViewport();
     smoothXRef.current = p * mx;
     prevSmoothXRef.current = smoothXRef.current;
     applyCinematicCardTransforms(inner, viewport, smoothXRef.current, p, 0);
@@ -494,13 +534,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     }
 
     return (
-      <div
-        ref={runwayRef}
-        className="scroll-scrub-row__runway"
-        style={runwayMin > 0 ? { minHeight: rem(runwayMin) } : undefined}
-      >
+      <div ref={runwayRef} className="scroll-scrub-row__runway">
         <div ref={stickyRef} className="scroll-scrub-row__sticky scroll-scrub-row__sticky--cards">
-          <div className="scroll-scrub-row__pin">
+          <div ref={pinRef} className="scroll-scrub-row__pin">
             <div
               ref={trackRef}
               className={`${rootClass} scroll-scrub-row--scroll-linked${useCinematicScrub ? ' scroll-scrub-row--cinematic' : ''}`.trim()}
@@ -521,6 +557,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
             </div>
           </div>
         </div>
+        <div ref={spacerRef} className="scroll-scrub-row__runway-spacer" aria-hidden="true" />
       </div>
     );
   }

@@ -462,6 +462,17 @@ html.snap-pages #root.snap-pages-root--home {
     background: #0a0a0a;
 }
 
+/* Кейс-стади: без transform/animation на обёртке — иначе position:sticky у ленты не работает */
+.page-transition.page-transition--case-study {
+    animation: none;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    align-self: stretch;
+    box-sizing: border-box;
+    background: transparent;
+}
+
 /* Иконки: спокойный UI-reveal — opacity + лёгкий rise (без scale/blur) */
 .icon-assemble-dots {
     --icon-reveal-dur: 260ms;
@@ -4028,9 +4039,7 @@ h3 {
 }
 
 .main:has(.project-page-wrap--case-study) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: block;
     overflow-x: visible;
     /* Поля 24px только у .container--case-study (Figma 337:24521), без двойного gutter у .main */
     padding-left: 0;
@@ -4770,15 +4779,14 @@ h3 {
     overflow: visible;
 }
 
-/* Sticky pin: сцена = viewport минус шапка; карточки hug внутри pin */
-.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__sticky--cards {
+/* Sticky pin: sticky — сосед runway-spacer, не потомок .scroll-scrub-row--scroll-linked */
+.project-case-study-mail .scroll-scrub-row__runway .scroll-scrub-row__sticky--cards {
     position: sticky;
     top: var(--scrub-sticky-top);
     z-index: 5;
     width: 100%;
-    height: var(--scrub-pin-height);
-    min-height: var(--scrub-pin-height);
-    max-height: var(--scrub-pin-height);
+    height: auto;
+    min-height: 0;
     box-sizing: border-box;
     display: block;
     align-self: flex-start;
@@ -4786,15 +4794,26 @@ h3 {
     isolation: isolate;
 }
 
-.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__pin {
+.project-case-study-mail .scroll-scrub-row__runway .scroll-scrub-row__pin {
     width: 100%;
-    height: 100%;
     min-height: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
     box-sizing: border-box;
+}
+
+.project-case-study-mail .scroll-scrub-row__pin.scroll-scrub-row__pin--fixed {
+    position: fixed;
+    z-index: 5;
+    box-sizing: border-box;
+}
+
+.project-case-study-mail .scroll-scrub-row__runway-spacer {
+    width: 100%;
+    flex-shrink: 0;
+    pointer-events: none;
 }
 
 .project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards,
@@ -7445,11 +7464,12 @@ h3 {
     max-width: none;
     box-sizing: border-box;
 }
-.project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row__track.scroll-scrub-row--scroll-linked,
-.project-page-wrap--layout-89 .contact-grid-wrap.scroll-scrub-row--contact.scroll-scrub-row--scroll-linked {
+.project-page-wrap--layout-89 .scroll-scrub-row__runway .scroll-scrub-row__sticky--cards {
     position: sticky;
     top: clamp(3.5rem, 11svh, 7.5rem);
     z-index: 1;
+    width: 100%;
+    height: auto;
 }
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--native-x .scroll-scrub-row__shell,
 .project-page-wrap--layout-89 .scroll-scrub-row--contact.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {

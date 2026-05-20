@@ -24,14 +24,15 @@ function clamp01(v) {
   return Math.min(1, Math.max(0, v));
 }
 
-/** Scroll-bound progress 0…1: вертикальный скролл = timeline scrub */
-export function scrollProgress01(runway, sticky) {
+/** Scroll-bound progress 0…1: вертикальный скролл = timeline scrub (span = runway-spacer). */
+export function scrollProgress01(runway, sticky, spacer) {
   if (!runway) return 0;
   const pin = sticky ?? runway;
   const stickyTop = parseFloat(getComputedStyle(pin).top) || 0;
   const rect = runway.getBoundingClientRect();
   const pinH = sticky?.offsetHeight ?? pin.offsetHeight ?? 0;
-  const span = Math.max(1, runway.offsetHeight - pinH);
+  const spacerH = spacer?.offsetHeight ?? 0;
+  const span = Math.max(1, spacerH || runway.offsetHeight - pinH);
   const scrolled = stickyTop - rect.top;
   return clamp01(scrolled / span);
 }

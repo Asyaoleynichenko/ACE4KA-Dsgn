@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import Header from './Header';
 import Footer from './Footer';
@@ -69,7 +69,13 @@ export default function Layout() {
       <ParallaxBackdrop />
       <Header />
       <main className={mainWithHomeShell}>
-        <PageTransition />
+        {isProjectDetail ? (
+          <div key={pathname} className="page-transition page-transition--case-study">
+            <Outlet />
+          </div>
+        ) : (
+          <PageTransition />
+        )}
       </main>
       <Footer snapScreen={snapScreens} />
     </div>
