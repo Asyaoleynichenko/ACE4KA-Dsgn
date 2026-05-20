@@ -429,8 +429,8 @@
       "mail-monetization": {
         "navShortTitle": "Mail monetization",
         "title": "Mail monetization",
-        "meta": "Growth · Mail Space, Mail, Cloud · 2025 — present (separate team from 2026)",
-        "desc": "Series of experiments in Mail Space, Cloud, and Mail: plans, subscription entry points, freemium features, sharing limits",
+        "meta": "Growth · Space, Mail, Cloud · 2025 — present",
+        "desc": "Plans, subscriptions, and freemium across Space, Cloud, and Mail",
         "introParas": [
           "Growth monetization for the Mail.ru ecosystem. A series of experiments in Mail Space, Cloud, and Mail: plans, subscription entry points, freemium features, sharing limits."
         ]
@@ -439,7 +439,7 @@
         "navShortTitle": "Mail Science",
         "title": "Mail media redesign & Mail Science launch",
         "meta": "Media · Mail",
-        "desc": "Mail Science launch as a new vertical + Media UI — base for redesigning the rest of the platform",
+        "desc": "Mail Science and Media UI — base for media redesign",
         "introParas": [
           "Mail Media is five thematic products combining editorial content, recommendations, and ad integrations.",
           "The goal was to launch Mail Science and use it as the base architecture for a systematic platform redesign."
@@ -449,7 +449,7 @@
         "navShortTitle": "RackTables",
         "title": "RackTables — Objects page redesign",
         "meta": "UX/UI · Yandex Fast Track · April 2026",
-        "desc": "Turning a passive DB into a decision-support tool for on-call engineers — in 2 days",
+        "desc": "Passive DB → on-call tool in 2 days",
         "introParas": [
           "Shipped in two days as part of Yandex Fast Track. The original RackTables interface behaved like a passive database: information was structured linearly with no priority logic. During incidents and outages that meant critical delays — engineers spent time manually searching and interpreting object state."
         ]
@@ -458,7 +458,7 @@
         "navShortTitle": "Special projects",
         "title": "Growing the special-projects stream",
         "meta": "Mail Media · 2025",
-        "desc": "From manual production to a scalable process: 23 specials in 3 months, 20+ concepts for advertisers",
+        "desc": "Special-projects stream: AI, less outsourcing",
         "introParas": [
           "I led the special-projects stream and built a scalable system for producing branded content — faster launches, higher throughput, and less reliance on contractors."
         ]
@@ -467,7 +467,7 @@
         "navShortTitle": "Neural networks",
         "title": "Neural networks — Mail Hi-Tech editorial special",
         "meta": "Mail Hi-Tech · 2024",
-        "desc": "Interactive landing that proved the format and kicked off the branded-specials direction",
+        "desc": "Landing that launched the specials direction",
         "introParas": [
           "An interactive landing that explains neural networks to a general audience: visual storytelling, AI illustrations, and an immersive format. After launch the format was scaled to commercial branded specials (see Biohacking and Growing the special-projects stream)."
         ]
@@ -476,7 +476,7 @@
         "navShortTitle": "Biohacking",
         "title": "Biohacking for Invitro",
         "meta": "Mail Media × Invitro · 2024",
-        "desc": "Branded interactive special: 3D motion, visual storytelling, native ad integration",
+        "desc": "3D longread with native Invitro integration",
         "introParas": [
           "A branded interactive special project: 3D animation, visual storytelling, and native ad integration. One of the first commercial projects in the new interactive-landing format at Mail.ru."
         ]
@@ -485,7 +485,7 @@
         "navShortTitle": "DROP",
         "title": "DROP — app for city networking",
         "meta": "UX/UI · HSE · 2024–2025",
-        "desc": "Location-based communication: anonymous “traces” at physical city spots, Telegram MVP",
+        "desc": "City “traces” and a Telegram MVP",
         "introParas": [
           "DROP is a location-based communication platform that turns the city into a map of messages, stories, and micro-dialogues. Users leave a digital “trace” at a meaningful place (a park, a café, a street) as text, a voice clip, or a 3D object. Others who happen to be nearby can discover the note and start a conversation. Anonymity reduces social pressure, asynchrony removes the friction of the first contact, and the context of the place replaces the context of a profile."
         ]
@@ -494,7 +494,7 @@
         "navShortTitle": "Loochok",
         "title": "LÒÒCHOK — media platform for customization and DIY community",
         "meta": "UX/UI · HSE · 2023–2024",
-        "desc": "0→1: research, MVP web + iOS, design system, business model, community launch",
+        "desc": "DIY platform: web, iOS, community",
         "introParas": [
           "A dedicated platform where people find customization ideas, follow step-by-step tutorials, and share their work.",
           "The project grew as a media ecosystem that brings content, community, and interaction tools together."
@@ -504,7 +504,7 @@
         "navShortTitle": "RE*TRASH",
         "title": "RE*TRASH — media service about mindful consumption",
         "meta": "Media · HSE · 2022–2023",
-        "desc": "Brand and web platform from scratch: research, concept, visual system, design system, launch",
+        "desc": "Product and brand without moralizing",
         "introParas": [
           "A media service that lowers the barrier to mindful consumption through structured content, step-by-step instructions, and a clear visual system — built across product, content, and brand."
         ]
@@ -512,8 +512,8 @@
       "inkz": {
         "navShortTitle": "INKZ",
         "title": "INKZ — app for finding tattoo artists",
-        "meta": "UX/UI · HSE · September — October 2023",
-        "desc": "Full product cycle in 2 months: research → hypotheses → MVP → interactive prototype",
+        "meta": "UX/UI · HSE · 2023",
+        "desc": "0→1 in 2 months: MVP and monetization",
         "introParas": [
           "INKZ is a tattoo-artist discovery platform concept built from scratch in two months. Hypothesis: reviews, ratings, and style-based search make it easier to pick an artist and build trust. The goal was an MVP that makes the search transparent and convenient."
         ]
