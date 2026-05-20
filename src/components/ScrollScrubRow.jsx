@@ -36,18 +36,18 @@ function scrollByPx(delta, behavior = 'auto') {
   else window.scrollBy({ top: delta, behavior });
 }
 
-/** Вертикальный ход: ~0.55vh на каждый переход между карточками, не меньше фактического mx. */
-function getScrollSpan(mx, vh, slideCount) {
+/** Вертикальный ход runway: ~0.48vh на переход между карточками (не привязываем к px-ходу ленты mx). */
+function getRunwayScrollSpan(vh, slideCount) {
   const steps = Math.max(1, slideCount - 1);
-  const perStep = vh * 0.55;
-  return Math.max(mx + 1, perStep * steps, remPx(120));
+  const perStep = vh * 0.48;
+  return Math.max(perStep * steps, remPx(96));
 }
 
 /**
  * Прогресс 0…1 и scrollSpan (runwayRectTop — верх обёртки runway, см. sticky-pin ниже).
  */
 function linkedStripMetrics(runwayRectTop, mx, vh, slideCount) {
-  const scrollSpan = Math.max(1, getScrollSpan(mx, vh, slideCount));
+  const scrollSpan = Math.max(1, getRunwayScrollSpan(vh, slideCount));
   const enter = vh * 0.12;
   const p = Math.min(1, Math.max(0, (enter - runwayRectTop) / scrollSpan));
   return { p, scrollSpan };
@@ -165,9 +165,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       setRunwayMin((prev) => (prev === 0 ? prev : 0));
       return;
     }
-    const scrollSpan = getScrollSpan(mx, vh, count);
+    const scrollSpan = getRunwayScrollSpan(vh, count);
     const pinH = sticky?.offsetHeight ?? track.offsetHeight;
-    const next = Math.ceil(pinH + scrollSpan + remPx(16));
+    const next = Math.ceil(pinH + scrollSpan + remPx(8));
     setRunwayMin((prev) => (prev === next ? prev : next));
   }, [count]);
 
@@ -401,6 +401,26 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
 
   const rootClass = `scroll-scrub-row scroll-scrub-row__track scroll-scrub-row--${variant} ${className}`.trim();
 
+  const renderIndicator = (onDotClick) => {
+    if (count <= 1) return null;
+    return (
+      <div className="scroll-scrub-row__indicator" role="tablist">
+        <div className="scroll-scrub-row__indicator-pill">
+          {Array.from({ length: count }, (_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-current={i === activeIdx ? 'true' : undefined}
+              aria-label={`${i + 1} / ${count}`}
+              className={`scroll-scrub-row__dot${i === activeIdx ? ' is-active' : ''}`}
+              onClick={() => onDotClick(i)}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   if (variant === 'hypothesis') {
     return (
       <div className={`${rootClass} scroll-scrub-row--hypothesis-static`}>
@@ -426,20 +446,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
                 {children}
               </div>
             </div>
-            {count > 1 ? (
-              <div className="scroll-scrub-row__indicator">
-                {Array.from({ length: count }, (_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    aria-current={i === activeIdx ? 'true' : undefined}
-                    aria-label={`${i + 1} / ${count}`}
-                    className={`scroll-scrub-row__dot${i === activeIdx ? ' is-active' : ''}`}
-                    onClick={() => scrollToSlideReduced(i)}
-                  />
-                ))}
-              </div>
-            ) : null}
+            {renderIndicator(scrollToSlideReduced)}
           </div>
         </div>
       );
@@ -467,20 +474,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
                 {children}
               </div>
             </div>
-            {count > 1 ? (
-              <div className="scroll-scrub-row__indicator">
-                {Array.from({ length: count }, (_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    aria-current={i === activeIdx ? 'true' : undefined}
-                    aria-label={`${i + 1} / ${count}`}
-                    className={`scroll-scrub-row__dot${i === activeIdx ? ' is-active' : ''}`}
-                    onClick={() => scrollToSlideLinked(i)}
-                  />
-                ))}
-              </div>
-            ) : null}
+            {renderIndicator(scrollToSlideLinked)}
             </div>
           </div>
         </div>
