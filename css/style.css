@@ -2238,6 +2238,16 @@ h3 {
     align-items: center;
 }
 
+.hero__intro,
+.hero__details {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--hero-row-gap);
+}
+
 .hero__card {
     width: var(--hero-card-width);
     max-width: 100%;
@@ -2584,82 +2594,46 @@ h3 {
 }
 
 @media (max-width: 56.25rem) {
-    .page-home .hero-first-screen {
-        aspect-ratio: auto;
-        min-height: min(20rem, 70vw);
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    /* Mac-window превью — в центре видимой зоны первого экрана */
-    .page-home .hero-first-screen .hero__top {
+    /* Первый экран = весь viewport: фото + имя + описание по центру, папки по координатам Figma */
+    .page-home .hero {
         position: relative;
-        display: grid;
-        place-items: center;
-        width: 100%;
-        height: auto;
-        min-height: clamp(16rem, 48svh, 22rem);
-        padding: clamp(1.25rem, 5vw, 2.5rem) max(var(--layout-edge-left), env(safe-area-inset-left, 0))
-            clamp(1rem, 4vw, 1.75rem) max(var(--layout-edge-right), env(safe-area-inset-right, 0));
-        box-sizing: border-box;
     }
 
-    .page-home .hero-first-screen .hero__top .hero-vector {
+    .page-home .hero.snap-screen {
+        min-height: 0;
+    }
+
+    .page-home .hero-first-screen {
+        position: relative;
+        aspect-ratio: auto;
+        width: 100%;
+        min-height: 100svh;
+        min-height: 100dvh;
+        display: block;
+        overflow: hidden;
+    }
+
+    .page-home .hero-first-screen .section-nav--overlay {
         position: absolute;
         inset: 0;
-        width: 100%;
-        height: 100%;
+        z-index: 2;
         margin: 0;
-        aspect-ratio: unset;
-        min-height: 0;
-        z-index: 0;
-        overflow: hidden;
+        padding: max(5.25rem, calc(env(safe-area-inset-top, 0) + 4.5rem)) 0
+            max(6.5rem, calc(env(safe-area-inset-bottom, 0) + 5rem));
+        box-sizing: border-box;
         pointer-events: none;
     }
 
-    .page-home .hero-first-screen .hero__top .hero-vector__inner {
-        top: 50%;
-        right: 0;
-        bottom: auto;
-        left: 0;
-        height: 85%;
-        transform: translateY(-50%);
-    }
-
-    .page-home .hero-first-screen .hero__top .hero-vector__inner img {
-        object-fit: contain;
-        object-position: center;
-    }
-
-    .page-home .hero-first-screen .hero__top .hero__card {
-        position: relative;
-        left: auto;
-        top: auto;
-        transform: none;
-        z-index: 2;
-        width: min(var(--hero-card-width), 100%);
-        max-width: min(21.25rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 1.5rem));
-        margin: 0 auto;
-        justify-self: center;
-    }
-
-    .page-home .hero-first-screen .hero__top .hero__card .preview-card-block:hover,
-    .page-home .hero-first-screen .hero__top .hero__card .preview-card-block:active {
-        transform: translateY(-0.25rem);
-    }
-
-    /* Адаптив: та же композиция Figma (%, не auto-fill grid) — масштаб через aspect-ratio */
     .page-home .hero-first-screen .header-items--figma {
         display: block;
         position: relative;
         width: 100%;
-        height: auto;
-        aspect-ratio: var(--header-items-aspect);
-        min-height: clamp(10.5rem, 36vw, 19.5rem);
-        max-height: none;
-        margin: 0 auto;
+        height: 100%;
+        min-height: 100%;
+        max-width: none;
+        margin: 0;
         padding: 0;
+        aspect-ratio: auto;
         pointer-events: none;
     }
 
@@ -2674,19 +2648,131 @@ h3 {
     }
 
     .page-home .hero-first-screen .header-items--figma .header-item--folder {
-        max-width: min(8.75rem, 22vw);
-        min-width: 4.25rem;
+        max-width: min(7.5rem, 24vw);
+        min-width: 3.75rem;
     }
 
     .page-home .hero-first-screen .header-items--figma .header-item--image-well {
-        width: clamp(4.25rem, 14vw, 6.1875rem);
+        width: clamp(3.75rem, 13vw, 5.5rem);
         max-width: none;
     }
 
-    .page-home .hero-first-screen .section-nav--overlay {
+    .page-home .hero-first-screen .header-items--figma .header-item--folder:hover,
+    .page-home .hero-first-screen .header-items--figma .header-item--folder:active,
+    .page-home .hero-first-screen .header-items--figma .header-item--image-well:hover,
+    .page-home .hero-first-screen .header-items--figma .header-item--image-well:active {
+        transform: translateX(-50%);
+    }
+
+    .page-home .hero-first-screen .header-items--figma .header-item__label {
+        max-width: min(6.5rem, 22vw);
+        font-size: clamp(0.5625rem, 2.2vw, 0.6875rem);
+        line-height: 1.3;
+    }
+
+    /* Фото (Mac-window) — верхняя середина первого экрана */
+    .page-home .hero-first-screen .hero__top {
+        position: absolute;
+        left: 50%;
+        top: clamp(5.5rem, 13svh, 7.5rem);
+        transform: translateX(-50%);
+        width: min(var(--hero-card-width), calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem));
+        height: auto;
+        min-height: 0;
+        z-index: 5;
+        display: block;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+
+    .page-home .hero-first-screen .hero__top .hero-vector {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 140%;
+        height: auto;
+        margin: 0;
+        aspect-ratio: 1275 / 274;
+        transform: translate(-50%, -52%);
+        z-index: 0;
+        opacity: 0.28;
+        overflow: visible;
+        pointer-events: none;
+    }
+
+    .page-home .hero-first-screen .hero__top .hero-vector__inner {
+        position: absolute;
+        inset: -8%;
+    }
+
+    .page-home .hero-first-screen .hero__top .hero__card {
         position: relative;
-        inset: auto;
+        left: auto;
+        top: auto;
+        transform: none;
+        z-index: 2;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
         pointer-events: auto;
+    }
+
+    .page-home .hero-first-screen .hero__top .hero__card .preview-card-block:hover,
+    .page-home .hero-first-screen .hero__top .hero__card .preview-card-block:active {
+        transform: translateY(-0.25rem);
+    }
+
+    /* Имя + описание — в том же первом экране, под фото */
+    .page-home .hero__row {
+        position: static;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-home .hero__row .hero__content {
+        display: block;
+        max-width: none;
+        width: 100%;
+    }
+
+    .page-home .hero__intro {
+        position: absolute;
+        left: max(var(--layout-edge-left), env(safe-area-inset-left, 0));
+        right: max(var(--layout-edge-right), env(safe-area-inset-right, 0));
+        top: clamp(17.5rem, 50svh, 23rem);
+        z-index: 6;
+        width: auto;
+        max-width: none;
+        margin: 0;
+        padding: 0 var(--space-8);
+        box-sizing: border-box;
+        pointer-events: none;
+    }
+
+    .page-home .hero__intro .hero-content {
+        pointer-events: auto;
+        gap: var(--space-12);
+        max-width: 22.5rem;
+        margin: 0 auto;
+    }
+
+    .page-home .hero__intro .hero-title {
+        font-size: clamp(1.75rem, 8.5vw, 2.75rem);
+    }
+
+    .page-home .hero__intro .hero-text {
+        font-size: clamp(0.9375rem, 3.6vw, 1.0625rem);
+        line-height: 1.45;
+        max-width: 20rem;
+        margin-inline: auto;
+    }
+
+    .page-home .hero__details {
+        margin-top: 0;
+        padding: var(--space-32) max(var(--layout-edge-left), env(safe-area-inset-left, 0)) 0
+            max(var(--layout-edge-right), env(safe-area-inset-right, 0));
+        box-sizing: border-box;
     }
 
     .header-items {
@@ -8999,12 +9085,8 @@ canvas {
         font-size: clamp(2rem, 9vw, 3rem);
     }
 
-    .page-home .hero-first-screen {
-        min-height: min(18.75rem, 75vw);
-    }
-
-    .page-home .hero-first-screen .header-items--figma {
-        min-height: clamp(9.5rem, 34vw, 17rem);
+    .page-home .hero__intro {
+        top: clamp(16rem, 48svh, 21.5rem);
     }
 
     .text-condensed,
@@ -9033,23 +9115,22 @@ canvas {
 @media (max-width: 30rem) {
     /* Header items: тонкие папки — в один столбец (уже задано), но дополнительно
        обрезаем иконки чтобы они не растягивались под grid 1fr. */
-    .page-home .hero-first-screen {
-        min-height: min(16.25rem, 80vw);
+    .page-home .hero-first-screen .hero__top {
+        top: clamp(5rem, 12svh, 6.5rem);
+        width: min(18.75rem, calc(100vw - 2rem));
     }
 
-    .page-home .hero-first-screen .header-items--figma {
-        min-height: clamp(8.75rem, 42vw, 15rem);
-        padding-inline: var(--space-4);
-        box-sizing: border-box;
+    .page-home .hero__intro {
+        top: clamp(15rem, 46svh, 20rem);
     }
 
     .page-home .hero-first-screen .header-items--figma .header-item--folder {
-        max-width: min(7.25rem, 28vw);
-        min-width: 3.75rem;
+        max-width: min(6.75rem, 28vw);
+        min-width: 3.25rem;
     }
 
     .page-home .hero-first-screen .header-items--figma .header-item--image-well {
-        width: clamp(3.75rem, 16vw, 5.5rem);
+        width: clamp(3.25rem, 15vw, 5rem);
     }
 
     .header-item__icon-wrap {
