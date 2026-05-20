@@ -6,6 +6,14 @@ import {
   scrollProgress01,
 } from '../utils/cinematicScrub.js';
 import { rem, remPx } from '../utils/cssRem.js';
+import {
+  applyScrubExitHandoff,
+  clearScrubExitHandoff,
+  resolveHandoffTarget,
+  scrubExitSpanPx,
+  SCRUB_EXIT_PHASE_RATIO,
+  splitScrubProgress,
+} from '../utils/scrubExitHandoff.js';
 
 /** Скролл страницы: window или #root (snap-pages), как ParallaxBackdrop / HomeCompetenciesScrub. */
 function getScrollRoot() {
@@ -104,6 +112,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   const innerRef = useRef(null);
   const rafRef = useRef(null);
   const cinematicRafRef = useRef(null);
+  const handoffTargetRef = useRef(null);
   const smoothXRef = useRef(0);
   const prevSmoothXRef = useRef(0);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -161,10 +170,12 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       return;
     }
     const scrollSpan = getRunwayScrollSpan(vh, count, mx);
-    setScrollSpanPx((prev) => (prev === scrollSpan ? prev : scrollSpan));
+    const exitSpan = useCinematicScrub ? scrubExitSpanPx(vh) : 0;
+    const totalSpan = scrollSpan + exitSpan;
+    setScrollSpanPx((prev) => (prev === totalSpan ? prev : totalSpan));
     const spacer = spacerRef.current;
-    if (spacer) spacer.style.height = rem(scrollSpan);
-  }, [count]);
+    if (spacer) spacer.style.height = rem(totalSpan);
+  }, [count, useCinematicScrub]);
 
   const progressFromViewport = useCallback(() => {
     const runway = runwayRef.current;
@@ -252,8 +263,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const viewport = viewportRef.current;
     if (!inner || !viewport) return;
     const mx = readMx(viewport, inner);
-    const p = progressFromViewport();
-    const x = p * mx;
+    const rawP = progressFromViewport();
+    const { scrubP } = splitScrubProgress(rawP);
+    const x = scrubP * mx;
     inner.style.transform = mx > 1 ? `translate3d(${-x}px,0,0)` : 'none';
     setActiveIdx(activeIndexFromOffset(x, mx, count));
   }, [count, useCinematicScrub, useNativeX, progressFromViewport]);
@@ -297,19 +309,22 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       const sticky = stickyRef.current;
       if (!inner || !viewport) return;
 
-      const targetP = progressFromViewport();
+      const rawP = progressFromViewport();
+      const { scrubP, exitP } = splitScrubProgress(rawP);
       const mx = readMx(viewport, inner);
-      const targetX = targetP * mx;
+      const targetX = scrubP * mx;
       const prevX = smoothXRef.current;
       smoothXRef.current = lerpScalar(smoothXRef.current, targetX);
       const velocityPx = smoothXRef.current - prevX;
-      const progress01 = runway ? scrollProgress01(runway, sticky, spacerRef.current) : targetP;
+      const progress01 = runway ? scrollProgress01(runway, sticky, spacerRef.current) : rawP;
+      applyScrubExitHandoff(handoffTargetRef.current, exitP);
       const { mx: layoutMx } = applyCinematicCardTransforms(
         inner,
         viewport,
         smoothXRef.current,
         progress01,
         velocityPx,
+        exitP,
       );
       const mxUse = layoutMx > 1 ? layoutMx : mx;
       setActiveIdx(activeIndexFromOffset(smoothXRef.current, mxUse, count));
@@ -353,8 +368,20 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       unbind();
       if (cinematicRafRef.current != null) cancelAnimationFrame(cinematicRafRef.current);
       resetCinematicCardTransforms(innerRef.current);
+      clearScrubExitHandoff(handoffTargetRef.current);
     };
   }, [count, progressFromViewport, useCinematicScrub]);
+
+  /** Следующая секция кейса — цель «наезда» после последней карточки. */
+  useEffect(() => {
+    if (!useCinematicScrub) return undefined;
+    const runway = runwayRef.current;
+    if (!runway) return undefined;
+    const target = resolveHandoffTarget(runway);
+    handoffTargetRef.current = target;
+    if (target) target.classList.add('scroll-scrub-handoff-target');
+    return () => clearScrubExitHandoff(target);
+  }, [useCinematicScrub, children]);
 
   useLayoutEffect(() => {
     if (!useCinematicScrub) return undefined;
@@ -364,10 +391,11 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const mx = readMx(viewport, inner);
     const runway = runwayRef.current;
     const sticky = stickyRef.current;
-    const p = runway ? scrollProgress01(runway, sticky, spacerRef.current) : progressFromViewport();
-    smoothXRef.current = p * mx;
+    const rawP = runway ? scrollProgress01(runway, sticky, spacerRef.current) : progressFromViewport();
+    const { scrubP } = splitScrubProgress(rawP);
+    smoothXRef.current = scrubP * mx;
     prevSmoothXRef.current = smoothXRef.current;
-    applyCinematicCardTransforms(inner, viewport, smoothXRef.current, p, 0);
+    applyCinematicCardTransforms(inner, viewport, smoothXRef.current, rawP, 0, splitScrubProgress(rawP).exitP);
     return undefined;
   }, [children, maxX, progressFromViewport, useCinematicScrub]);
 
@@ -468,7 +496,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       if (!runway || !inner || !viewport) return;
       const mx = readMx(viewport, inner);
       if (mx <= 1) return;
-      const targetP = count <= 1 ? 0 : index / (count - 1);
+      const scrubTarget = count <= 1 ? 0 : index / (count - 1);
+      const exitStart = 1 - SCRUB_EXIT_PHASE_RATIO;
+      const targetP = scrubTarget * exitStart;
       const currentP = progressFromViewport();
       const vh = readViewportHeight();
       const scrollSpan = sticky

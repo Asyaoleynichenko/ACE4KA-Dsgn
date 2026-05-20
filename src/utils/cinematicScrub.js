@@ -41,7 +41,14 @@ export function scrollProgress01(runway, sticky, spacer) {
  * Горизонтальный track + per-card depth (parallax, scale, Z, лёгкий rotate).
  * Без тяжёлого blur/glow — глубина через transform и opacity.
  */
-export function applyCinematicCardTransforms(inner, viewport, smoothX, progress01 = 0, velocityPx = 0) {
+export function applyCinematicCardTransforms(
+  inner,
+  viewport,
+  smoothX,
+  progress01 = 0,
+  velocityPx = 0,
+  exitP = 0,
+) {
   const slides = inner.querySelectorAll(':scope > *');
   if (!slides.length) return { mx: 0, step: 0 };
 
@@ -62,10 +69,12 @@ export function applyCinematicCardTransforms(inner, viewport, smoothX, progress0
   }
 
   const vw = viewport.clientWidth || 1;
-  const focus = smoothX + vw * 0.5;
-  const motionBlur = Math.min(1.25, Math.abs(velocityPx) * 0.04);
+  const holdAtEnd = exitP > 0.004;
+  const xTrack = holdAtEnd ? mx : smoothX;
+  const focus = xTrack + vw * 0.5;
+  const motionBlur = holdAtEnd ? 0 : Math.min(1.25, Math.abs(velocityPx) * 0.04);
 
-  inner.style.transform = `translate3d(${-smoothX.toFixed(2)}px, 0, 0)`;
+  inner.style.transform = `translate3d(${-xTrack.toFixed(2)}px, 0, 0)`;
 
   slides.forEach((slide, i) => {
     const layer = cardLayer(i);
@@ -76,17 +85,19 @@ export function applyCinematicCardTransforms(inner, viewport, smoothX, progress0
     const staggerT = clamp01((progress01 - layer.stagger) / Math.max(0.001, 1 - layer.stagger * 0.85));
     const enter = 0.88 + staggerT * 0.12;
 
-    const parallaxX = distSlides * step * 0.24 * layer.parallax;
-    const speedOffset = (progress01 - 0.5) * step * 0.08 * (layer.speed - 1);
-    const scale = Math.max(0.9, (1 - ad * 0.055) * layer.scale * enter);
-    const opacity = Math.max(0.65, (1 - ad * 0.22) * (0.78 + staggerT * 0.22));
+    /* Горизонтальный parallax не раздувает flex-gap (24px) — только Z/rotate/opacity */
+    const speedOffset = (progress01 - 0.5) * gap * 0.15 * (layer.speed - 1);
+    const exitDim = holdAtEnd && i < slides.length - 1 ? 0.72 : 1;
+    const lastCardSettle = holdAtEnd && i === slides.length - 1 ? 1 - exitP * 0.06 : 1;
+    const scale = Math.max(0.9, (1 - ad * 0.055) * layer.scale * enter * lastCardSettle);
+    const opacity = Math.max(0.65, (1 - ad * 0.22) * (0.78 + staggerT * 0.22) * exitDim);
     const tz = (1 - Math.min(ad, 1.2)) * 112 * layer.z - ad * 12;
     const ty = ad * 10;
     const ry = distSlides * -3.2 * layer.rotate;
     const blur = motionBlur > 0.12 && ad < 0.65 ? motionBlur : 0;
 
     slide.style.transform = [
-      `translate3d(${(parallaxX + speedOffset).toFixed(2)}px, ${ty.toFixed(2)}px, ${tz.toFixed(2)}px)`,
+      `translate3d(${speedOffset.toFixed(2)}px, ${ty.toFixed(2)}px, ${tz.toFixed(2)}px)`,
       `scale(${scale.toFixed(4)})`,
       `rotateY(${ry.toFixed(3)}deg)`,
     ].join(' ');

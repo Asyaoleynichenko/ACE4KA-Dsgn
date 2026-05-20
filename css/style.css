@@ -116,6 +116,12 @@
   --preview-image-inner-radius: 0.375rem;
   --preview-image-inset-x: 0.5rem;
   --effect-btn-show-all-border: #3a3a44;
+  /* Figma 573:19026 — фиксированная геометрия CTA на всех брейкпоинтах */
+  --btn-show-all-radius: 1.75rem;
+  --btn-show-all-height: 5.375rem;
+  --btn-show-all-width: 28.9375rem;
+  --btn-show-all-padding-x: 4rem;
+  --btn-show-all-font-size: 1.5rem;
   --preview-cta-border: 0.0625rem solid #f5f5f5;
   --preview-cta-radius: 0.375rem;
   --preview-cta-color: rgba(0, 0, 0, 0.5);
@@ -2162,9 +2168,18 @@ h3 {
     z-index: 3;
     display: flex;
     justify-content: center;
+    align-items: center;
     /* Top 5rem — фиксированный отступ от типографики до кнопки «Все проекты». */
     padding: 5rem clamp(1.25rem, 4vw, 2.5rem) clamp(1.75rem, 5vw, 2.5rem);
     pointer-events: auto;
+}
+
+.home-competencies__cta .btn-show-all {
+    flex-shrink: 0;
+    width: min(var(--btn-show-all-width), 100%);
+    height: var(--btn-show-all-height);
+    min-height: var(--btn-show-all-height);
+    border-radius: var(--btn-show-all-radius);
 }
 
 @media (max-width: 30rem) {
@@ -2529,6 +2544,7 @@ h3 {
 
 /* Figma 89:347 — плашки по координатам dev mode (см. --hi-left / --hi-top из JS) */
 .page-home .hero-first-screen .header-items--figma {
+    --header-items-aspect: calc(1275.452 / 312.784);
     display: block;
     position: relative;
     width: 100%;
@@ -2571,46 +2587,106 @@ h3 {
     .page-home .hero-first-screen {
         aspect-ratio: auto;
         min-height: min(20rem, 70vw);
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .page-home .hero-first-screen .header-items--figma {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(8.75rem, 1fr));
-        gap: 1.25rem 1rem;
-        align-items: start;
-        justify-items: center;
+    /* Mac-window превью — в центре видимой зоны первого экрана */
+    .page-home .hero-first-screen .hero__top {
         position: relative;
+        display: grid;
+        place-items: center;
+        width: 100%;
         height: auto;
-        min-height: 0;
-        padding: 1rem 0.75rem 0;
-        pointer-events: auto;
+        min-height: clamp(16rem, 48svh, 22rem);
+        padding: clamp(1.25rem, 5vw, 2.5rem) max(var(--layout-edge-left), env(safe-area-inset-left, 0))
+            clamp(1rem, 4vw, 1.75rem) max(var(--layout-edge-right), env(safe-area-inset-right, 0));
+        box-sizing: border-box;
     }
 
-    /* Папки и wells: координаты Figma только на широком экране; в сетке — обычный поток */
+    .page-home .hero-first-screen .hero__top .hero-vector {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        aspect-ratio: unset;
+        min-height: 0;
+        z-index: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .page-home .hero-first-screen .hero__top .hero-vector__inner {
+        top: 50%;
+        right: 0;
+        bottom: auto;
+        left: 0;
+        height: 85%;
+        transform: translateY(-50%);
+    }
+
+    .page-home .hero-first-screen .hero__top .hero-vector__inner img {
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .page-home .hero-first-screen .hero__top .hero__card {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        z-index: 2;
+        width: min(var(--hero-card-width), 100%);
+        max-width: min(21.25rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 1.5rem));
+        margin: 0 auto;
+        justify-self: center;
+    }
+
+    .page-home .hero-first-screen .hero__top .hero__card .preview-card-block:hover,
+    .page-home .hero-first-screen .hero__top .hero__card .preview-card-block:active {
+        transform: translateY(-0.25rem);
+    }
+
+    /* Адаптив: та же композиция Figma (%, не auto-fill grid) — масштаб через aspect-ratio */
+    .page-home .hero-first-screen .header-items--figma {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: auto;
+        aspect-ratio: var(--header-items-aspect);
+        min-height: clamp(10.5rem, 36vw, 19.5rem);
+        max-height: none;
+        margin: 0 auto;
+        padding: 0;
+        pointer-events: none;
+    }
+
     .page-home .hero-first-screen .header-items--figma .header-item--folder,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well {
-        position: relative;
-        left: auto !important;
-        top: auto !important;
-        transform: none;
-        width: auto;
-        max-width: min(12.5rem, 100%);
-        min-width: 0;
-        justify-self: center;
-        z-index: auto;
+        position: absolute;
+        left: var(--hi-left, 0);
+        top: var(--hi-top, 0);
+        transform: translateX(-50%);
+        z-index: 3;
         pointer-events: auto;
+    }
+
+    .page-home .hero-first-screen .header-items--figma .header-item--folder {
+        max-width: min(8.75rem, 22vw);
+        min-width: 4.25rem;
+    }
+
+    .page-home .hero-first-screen .header-items--figma .header-item--image-well {
+        width: clamp(4.25rem, 14vw, 6.1875rem);
+        max-width: none;
     }
 
     .page-home .hero-first-screen .section-nav--overlay {
         position: relative;
         inset: auto;
         pointer-events: auto;
-    }
-
-    /* Вектор: убираем горизонтальный «перелив» Figma — картинка в ровной колонке с hero/шапкой */
-    .page-home .hero-vector__inner {
-        left: 0;
-        right: 0;
     }
 
     .header-items {
@@ -3621,18 +3697,19 @@ h3 {
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    width: clamp(17.5rem, 70vw, 28.9375rem);
-    height: clamp(3.5rem, 9.2vw, 5.375rem);
-    padding: 0 clamp(1.75rem, 6vw, 4rem);
+    width: min(var(--btn-show-all-width), 100%);
+    height: var(--btn-show-all-height);
+    min-height: var(--btn-show-all-height);
+    padding: 0 var(--btn-show-all-padding-x);
     max-width: 100%;
     border: 0;
-    border-radius: 1.75rem;
+    border-radius: var(--btn-show-all-radius);
     box-sizing: border-box;
     background:
         linear-gradient(180deg, #ff8fd0 0%, #ff3d9c 42%, #e82488 78%, #c4186e 100%);
     color: #ffffff;
     font-weight: 600;
-    font-size: clamp(0.875rem, 2.5vw, 1.5rem);
+    font-size: var(--btn-show-all-font-size);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     text-decoration: none;
@@ -3773,6 +3850,12 @@ h3 {
 }
 
 @media (max-width: 40rem) {
+    .btn-show-all {
+        border-radius: var(--btn-show-all-radius);
+        height: var(--btn-show-all-height);
+        min-height: var(--btn-show-all-height);
+    }
+
     .btn-show-all__halftone {
         --btn-halftone-dot: 0.8125rem;
         --btn-halftone-dot-half: 0.4063rem;
@@ -3799,6 +3882,13 @@ h3 {
 }
 
 @media (max-width: 23.75rem) {
+    .btn-show-all {
+        border-radius: var(--btn-show-all-radius);
+        height: var(--btn-show-all-height);
+        min-height: var(--btn-show-all-height);
+        padding-inline: clamp(1.75rem, 8vw, var(--btn-show-all-padding-x));
+    }
+
     .btn-show-all__halftone {
         --btn-halftone-dot: 0.625rem;
         --btn-halftone-dot-half: 0.3125rem;
@@ -4063,7 +4153,7 @@ h3 {
         - env(safe-area-inset-right, 0px)
     );
     --scrub-pin-height: calc(100dvh - var(--scrub-sticky-top) - env(safe-area-inset-bottom, 0px));
-    --scrub-card-gap: var(--case-study-pad-x); /* 24px между карточками ленты */
+    --scrub-card-gap: 1.5rem; /* 24px между карточками ленты */
     display: flex;
     width: 100%;
     max-width: none;
@@ -4721,6 +4811,8 @@ h3 {
     max-width: 100%;
     margin-top: var(--space-8);
     height: var(--project-meta-cta-height);
+    min-height: var(--project-meta-cta-height);
+    border-radius: var(--btn-show-all-radius);
     padding-inline: clamp(1rem, 4vw, 1.75rem);
     font-size: var(--project-meta-cta-font-size);
 }
@@ -4770,6 +4862,37 @@ h3 {
     position: relative;
     z-index: 1;
     padding-top: var(--exhibition-section-gap);
+}
+
+/* Выход ленты: следующий блок наезжает на последнюю карточку (--scrub-exit 0…1 из JS) */
+.project-case-study-mail .scroll-scrub-handoff-target {
+    --scrub-exit: 0;
+    position: relative;
+    z-index: 1;
+    transform: translate3d(0, calc((1 - var(--scrub-exit)) * min(52vh, 28rem)), 0);
+    opacity: calc(0.42 + var(--scrub-exit) * 0.58);
+    will-change: transform, opacity;
+    background-color: var(--color-bg);
+    box-shadow: 0 -1.5rem 3.5rem rgba(0, 0, 0, 0.38);
+}
+
+.project-case-study-mail .scroll-scrub-handoff-target.is-scrub-exit-active {
+    z-index: 12;
+    padding-top: var(--exhibition-section-gap);
+}
+
+.project-case-study-mail .scroll-scrub-handoff-target.is-scrub-exit-done {
+    transform: none;
+    opacity: 1;
+    box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-case-study-mail .scroll-scrub-handoff-target {
+        transform: none;
+        opacity: 1;
+        box-shadow: none;
+    }
 }
 .project-case-study-mail .scroll-scrub-row__runway {
     position: relative;
@@ -4887,7 +5010,8 @@ h3 {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: stretch;
-    gap: var(--scrub-card-gap);
+    gap: 1.5rem;
+    column-gap: 1.5rem;
     width: max-content;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
@@ -8823,19 +8947,8 @@ canvas {
     }
 }
 
-/* md (641–900): hero первого экрана может казаться «пустым» — header-items в потоке,
-   уплотняем минимальную ширину ячеек, чтобы 4 пункта помещались в 2 ряда. */
+/* md (641–900): композиция плашек — только масштаб иконок/подписей */
 @media (max-width: 56.25rem) {
-    .page-home .hero-first-screen .header-items--figma {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--space-16) var(--space-12);
-    }
-
-    .page-home .hero-first-screen .header-items--figma .header-item--folder,
-    .page-home .hero-first-screen .header-items--figma .header-item--image-well {
-        max-width: min(10.5rem, 100%);
-    }
-
     .header-item__label {
         font-size: clamp(0.6875rem, 2.8vw, 0.8263rem);
         line-height: 1.35;
@@ -8891,7 +9004,7 @@ canvas {
     }
 
     .page-home .hero-first-screen .header-items--figma {
-        padding-top: var(--space-12);
+        min-height: clamp(9.5rem, 34vw, 17rem);
     }
 
     .text-condensed,
@@ -8925,15 +9038,18 @@ canvas {
     }
 
     .page-home .hero-first-screen .header-items--figma {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--space-12) var(--space-8);
+        min-height: clamp(8.75rem, 42vw, 15rem);
         padding-inline: var(--space-4);
+        box-sizing: border-box;
     }
 
-    .page-home .hero-first-screen .header-items--figma .header-item--folder,
+    .page-home .hero-first-screen .header-items--figma .header-item--folder {
+        max-width: min(7.25rem, 28vw);
+        min-width: 3.75rem;
+    }
+
     .page-home .hero-first-screen .header-items--figma .header-item--image-well {
-        max-width: 100%;
-        width: 100%;
+        width: clamp(3.75rem, 16vw, 5.5rem);
     }
 
     .header-item__icon-wrap {
