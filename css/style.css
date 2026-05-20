@@ -144,16 +144,22 @@
   --case-section-rhythm: clamp(3rem, 6vw, 5rem);
   --case-divider: rgba(255, 255, 255, 0.075);
   --case-feature-card-bg: #161616;
-  --case-feature-card-radius: 4rem;
-  --case-feature-card-radius-sm: 2rem;
-  --case-feature-card-padding: clamp(2rem, 4.5vw, 4.0625rem);
-  --case-feature-card-gap: clamp(1.5rem, 2.5vw, 2.0375rem);
-  --case-feature-card-title-size: clamp(1.125rem, 1.8vw, 1.7825rem);
+  /* Figma Problem/Solution block — desktop 1310×654, mobile 643×321 */
+  --case-feature-card-radius: 4rem; /* 64px */
+  --case-feature-card-radius-sm: 1.875rem; /* 30px */
+  --case-feature-card-padding: 4.075rem; /* 65.2px */
+  --case-feature-card-gap: 2.0375rem; /* 32.6px */
+  --case-feature-card-title-size: 1.7825rem; /* 28.52px */
   --case-feature-card-title-color: #949494;
-  --case-feature-card-title-tracking: -0.071em;
-  --case-feature-card-body-size: clamp(1.25rem, 3.2vw, 2.674rem);
-  --case-feature-card-body-lh: 1.2;
-  --case-feature-card-body-tracking: -0.048em;
+  --case-feature-card-title-tracking: -0.02em;
+  --case-feature-card-body-size: 2.67375rem; /* 42.78px */
+  --case-feature-card-body-lh: 1.2; /* 51.34px */
+  --case-feature-card-body-tracking: -0.01em;
+  --case-feature-card-padding-sm: 2rem; /* 32px */
+  --case-feature-card-gap-sm: 1rem; /* 16px */
+  --case-feature-card-title-size-sm: 0.875rem; /* 14px */
+  --case-feature-card-body-size-sm: 1.3125rem; /* 21px */
+  --case-feature-card-body-lh-sm: 1.2; /* 25.2px */
   --case-workflow-pill-bg: rgba(221, 221, 221, 0.92);
   --case-workflow-pill-color: #0a0a0a;
   --case-hyp-shell-padding-x: clamp(1.5rem, 7.5vw, 7.5rem);
@@ -436,7 +442,7 @@ html.snap-pages #root.snap-pages-root--home {
     }
     to {
         opacity: 1;
-        transform: translate3d(0, 0, 0);
+        transform: none;
         border-radius: 0;
         box-shadow: none;
     }
@@ -444,6 +450,7 @@ html.snap-pages #root.snap-pages-root--home {
 
 .page-project .page-transition {
     animation: page-transition-project-sheet-in var(--page-project-sheet-duration) var(--ease-smart) both;
+    transform: none;
     transform-origin: 50% 100%;
     background: #0a0a0a;
 }
@@ -1127,7 +1134,8 @@ button:focus-visible,
 .text-condensed--single-line,
 .hero-role .text-condensed,
 .hero-more .text-condensed,
-.filter-pill__text {
+.filter-pill__text,
+.btn-show-all__label {
     max-width: none;
     white-space: nowrap;
 }
@@ -3606,6 +3614,7 @@ h3 {
 .btn-show-all__label {
     position: relative;
     z-index: 50;
+    flex-shrink: 0;
     color: #ffffff;
     text-shadow: 0 0 0.625rem rgba(255, 255, 255, 0.3);
     /* Сильнее сжатый condensed — узкие, плотные буквы. */
@@ -3996,6 +4005,14 @@ h3 {
 }
 
 .project-page-wrap.project-page-wrap--case-study.project-case-study-mail {
+    --scrub-sticky-top: clamp(3.5rem, 11svh, 7.5rem);
+    --scrub-card-width: calc(
+        100vw
+        - 2 * var(--case-study-pad-x)
+        - env(safe-area-inset-left, 0px)
+        - env(safe-area-inset-right, 0px)
+    );
+    --scrub-pin-height: calc(100dvh - var(--scrub-sticky-top) - env(safe-area-inset-bottom, 0px));
     display: flex;
     width: 100%;
     max-width: none;
@@ -4005,6 +4022,7 @@ h3 {
     align-items: stretch;
     gap: var(--space-24);
     box-sizing: border-box;
+    /* clip/hidden на предке ломает position:sticky у ленты карточек */
     overflow-x: visible;
 }
 
@@ -4650,6 +4668,12 @@ h3 {
     width: 100%;
     max-width: 100%;
     margin-top: var(--space-8);
+    padding-inline: clamp(0.875rem, 3vw, 1.5rem);
+    font-size: clamp(0.8125rem, 2.2vw, 1.125rem);
+}
+
+.project-case-study-mail .project-info .btn-show-all .btn-show-all__label {
+    font-size: 1em;
 }
 .project-case-study-mail .case-study-narrative {
     max-width: var(--case-prose-max);
@@ -4665,15 +4689,23 @@ h3 {
 .project-case-study-mail .case-study-narrative__p:last-child {
     margin-bottom: 0;
 }
-/* Карточки кейса — горизонтальный scroll внутри ленты (ScrollScrubRow native-x), точки + клик по точке */
+/* Карточки кейса — в колонке контента (как intro), без отдельного full-bleed */
 .project-case-study-mail .cards-section {
-    margin: 0;
-    width: 100%;
     position: relative;
-    /* Pin-strip: runway создаёт длинный вертикальный буфер для горизонтального scroll-linked сдвига.
-       Чтобы во время пина не было пустого viewport под лентой — следующий блок поднимаем negative margin'ом
-       вверх, и он выглядывает снизу из-под прилипшей ленты. */
     z-index: 2;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.project-case-study-mail .section:has(.scroll-scrub-row--cards) {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 .project-case-study-mail .cards-section + .case-study-narrative,
 .project-case-study-mail .cards-section + .section,
@@ -4687,7 +4719,19 @@ h3 {
 }
 .project-case-study-mail .scroll-scrub-row__runway {
     width: 100%;
+    max-width: none;
     box-sizing: border-box;
+}
+/* Sticky-контейнер = высота видимой области; внутри — карточка на всю ширину экрана (24px поля) */
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__sticky--cards {
+    position: sticky;
+    top: var(--scrub-sticky-top);
+    z-index: 2;
+    width: 100%;
+    min-height: var(--scrub-pin-height);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 .project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards,
 .project-case-study-mail .scroll-scrub-row.scroll-scrub-row--cards {
@@ -4695,11 +4739,12 @@ h3 {
     width: 100%;
     box-sizing: border-box;
 }
-/* После relative: scroll-linked лента «прилипает»; умеренный top под шапку без лишней «дыры» */
-.project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards.scroll-scrub-row--scroll-linked {
-    position: sticky;
-    top: clamp(3.5rem, 11svh, 7.5rem);
-    z-index: 1;
+.project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards.scroll-scrub-row--scroll-linked,
+.project-case-study-mail .scroll-scrub-row.scroll-scrub-row--cards.scroll-scrub-row--scroll-linked {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__shell,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
@@ -4707,7 +4752,14 @@ h3 {
     box-sizing: border-box;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-content: stretch;
+    min-height: var(--scrub-pin-height);
+    height: 100%;
     padding-bottom: 0;
+    box-sizing: border-box;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__viewport--native-x {
     overflow-x: auto;
@@ -4728,11 +4780,15 @@ h3 {
     overflow-x: hidden;
     overflow-y: hidden;
     overscroll-behavior-x: none;
+    flex: 1 1 auto;
+    min-height: 0;
     width: 100%;
     max-width: none;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
     -webkit-overflow-scrolling: touch;
     container-type: inline-size;
     container-name: scrub-cards;
@@ -4743,33 +4799,36 @@ h3 {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: stretch;
-    gap: var(--space-24);
+    gap: 0;
     width: max-content;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
     will-change: transform;
+    align-items: stretch;
+    min-height: 100%;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
-    /* Figma 337:24724 — одна карточка на всю ширину ленты */
+    /* Одна карточка = ширина ленты (колонка контента, до 1310px) */
     --scrub-card-basis: 100cqi;
     flex: 0 0 var(--scrub-card-basis);
     width: var(--scrub-card-basis);
     max-width: var(--scrub-card-basis);
+    min-width: 0;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     container-type: inline-size;
     container-name: case-card;
-    background: var(--project-card-bg);
-    padding: var(--project-card-padding);
-    border-radius: var(--project-card-radius);
+    background: var(--case-feature-card-bg);
+    padding: var(--case-feature-card-padding);
+    border-radius: var(--case-feature-card-radius);
     border: 0.0625rem solid transparent;
     box-shadow: none;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: var(--project-card-gap);
+    gap: var(--case-feature-card-gap);
     min-height: 0;
     position: relative;
     overflow: hidden;
@@ -4778,6 +4837,12 @@ h3 {
         box-shadow var(--dur-premium) var(--ease-premium-out),
         border-color var(--dur-premium) var(--ease-premium-out),
         background-color var(--dur-premium) var(--ease-premium-out);
+}
+
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
+    min-height: 100%;
+    height: 100%;
+    align-self: stretch;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -4807,18 +4872,29 @@ h3 {
     letter-spacing: -0.03em;
 }
 .project-case-study-mail .scroll-scrub-row--cards .card h3 {
-    font-family: var(--font-body);
-    font-size: var(--project-card-title-font-size);
+    font-family: var(--font-competencies-display);
+    font-size: var(--case-feature-card-title-size);
     font-weight: 600;
-    line-height: var(--project-card-title-line-height);
+    line-height: 1.15;
+    letter-spacing: var(--case-feature-card-title-tracking);
     text-transform: uppercase;
-    letter-spacing: var(--project-card-title-letter-spacing);
     color: var(--case-feature-card-title-color);
     opacity: var(--project-card-title-opacity);
     margin: 0;
     width: 100%;
     max-width: 100%;
-    transform: none;
+}
+
+/* Figma — подпись карточки (ПРОБЛЕМА, КОНТЕКСТ…) condensed */
+.project-case-study-mail .scroll-scrub-row--cards .card h3 .text-condensed {
+    --tc-scale-x: 0.72;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: left center;
+    margin-inline-end: calc((var(--tc-scale-x) - 1) * 1em);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    color: inherit;
+    opacity: 1;
 }
 
 /* Figma 337:24521 — без декоративной иконки в углу */
@@ -4878,11 +4954,11 @@ h3 {
 
 .project-case-study-mail .scroll-scrub-row--cards .card p {
     font-family: var(--font-body);
-    font-size: var(--project-card-text-font-size);
+    font-size: var(--case-feature-card-body-size);
     font-weight: 400;
-    line-height: var(--project-card-text-line-height);
-    letter-spacing: var(--project-card-text-letter-spacing);
-    color: var(--project-title-color);
+    line-height: var(--case-feature-card-body-lh);
+    letter-spacing: var(--case-feature-card-body-tracking);
+    color: #fafafa;
     opacity: var(--project-card-text-opacity);
     margin: 0;
     width: 100%;
@@ -4892,45 +4968,87 @@ h3 {
 
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__indicator,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__indicator {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-8);
+    align-self: center;
+    gap: 0.25rem;
     margin-top: var(--space-8);
     flex-shrink: 0;
-    width: 100%;
+    width: auto;
+    min-width: 4rem;
+    height: 1rem;
+    padding: 0 0.25rem;
     box-sizing: border-box;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.11);
+    -webkit-backdrop-filter: blur(27.5px);
+    backdrop-filter: blur(27.5px);
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__indicator {
-    margin-top: var(--space-32);
+    margin-top: clamp(1.5rem, 4cqi, 2.5rem);
     margin-bottom: 0;
     padding-bottom: 0;
 }
 
-/* После базовых отступов индикатора: адаптив ширины ленты (container scrub-cards на viewport) */
-/* Узкая лента: плотнее gap и ширина карты; телефон — ниже компактные карточки и меньший отступ до точек */
-@container scrub-cards (max-width: 56.25rem) {
-    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner,
-    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
-        gap: var(--space-16);
-    }
-
+/* Desktop Figma — лента ≥1310px: карточка 1310×654, полный кегль */
+@container scrub-cards (min-width: 81.875rem) {
     .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
     .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
-        --scrub-card-basis: 100cqi;
-        border-radius: var(--case-feature-card-radius-sm);
-        padding: clamp(1.5rem, 5cqi, 2rem);
+        padding: var(--case-feature-card-padding);
+        gap: var(--case-feature-card-gap);
+        border-radius: var(--case-feature-card-radius);
+        min-height: 40.875rem;
     }
-}
 
-@container scrub-cards (max-width: 35rem) {
     .project-case-study-mail .scroll-scrub-row--cards .card h3 {
-        font-size: clamp(1rem, 4.5cqi, 1.125rem);
+        font-size: var(--case-feature-card-title-size);
     }
 
     .project-case-study-mail .scroll-scrub-row--cards .card p {
-        font-size: clamp(1.0625rem, 5.5cqi, 1.375rem);
-        line-height: 1.35;
+        font-size: var(--case-feature-card-body-size);
+        line-height: var(--case-feature-card-body-lh);
+    }
+}
+
+/* Планшет — между 643px и 1310px */
+@container scrub-cards (min-width: 40.25rem) and (max-width: 81.874rem) {
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
+        padding: clamp(2rem, 8.6cqi, var(--case-feature-card-padding));
+        gap: clamp(1rem, 4.3cqi, var(--case-feature-card-gap));
+        border-radius: clamp(1.875rem, 8cqi, var(--case-feature-card-radius));
+        min-height: clamp(20rem, 85cqi, 40.875rem);
+    }
+
+    .project-case-study-mail .scroll-scrub-row--cards .card h3 {
+        font-size: clamp(var(--case-feature-card-title-size-sm), 3.8cqi, var(--case-feature-card-title-size));
+    }
+
+    .project-case-study-mail .scroll-scrub-row--cards .card p {
+        font-size: clamp(var(--case-feature-card-body-size-sm), 5.65cqi, var(--case-feature-card-body-size));
+        line-height: var(--case-feature-card-body-lh);
+    }
+}
+
+/* Figma 643px — компактная карточка */
+@container scrub-cards (max-width: 40.1875rem) {
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
+        --scrub-card-basis: 100cqi;
+        padding: var(--case-feature-card-padding-sm);
+        min-height: 20.0625rem;
+        border-radius: var(--case-feature-card-radius-sm);
+        gap: var(--case-feature-card-gap-sm);
+    }
+
+    .project-case-study-mail .scroll-scrub-row--cards .card h3 {
+        font-size: var(--case-feature-card-title-size-sm);
+    }
+
+    .project-case-study-mail .scroll-scrub-row--cards .card p {
+        font-size: var(--case-feature-card-body-size-sm);
+        line-height: var(--case-feature-card-body-lh-sm);
     }
 
     .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__indicator {
@@ -4941,19 +5059,20 @@ h3 {
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__dot,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__dot {
     display: block;
-    width: var(--space-8);
-    height: var(--space-8);
+    flex: 0 0 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
     padding: 0;
     border: 0;
     border-radius: var(--radius-full);
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.4);
     cursor: pointer;
-    transition: transform var(--transition-fast), background var(--transition-fast);
+    transition: background var(--transition-fast), opacity var(--transition-fast);
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__dot.is-active,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__dot.is-active {
-    background: rgba(255, 255, 255, 0.9);
-    transform: scale(1.25);
+    background: #ffffff;
+    opacity: 1;
 }
 .project-case-study-mail .section {
     margin: 0;

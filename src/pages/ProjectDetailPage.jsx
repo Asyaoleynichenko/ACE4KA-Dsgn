@@ -410,7 +410,9 @@ export default function ProjectDetailPage() {
                 const cardTitle = translateCaseCardTitle(item.title, t);
                 return (
                   <div key={`${cardIdx}-${item.title}`} className="card" data-strip-kind={iconKind ?? undefined}>
-                    <h3>{cardTitle}</h3>
+                    <h3>
+                      <span className="text-condensed text-condensed--single-line">{cardTitle}</span>
+                    </h3>
                     <p>{item.value}</p>
                     {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
                   </div>
@@ -621,7 +623,11 @@ export default function ProjectDetailPage() {
                           const iconKind = caseStudyStripIconKind(item.title);
                           return (
                             <div key={item.title} className="card" data-strip-kind={iconKind ?? undefined}>
-                              <h3>{item.title}</h3>
+                              <h3>
+                                <span className="text-condensed text-condensed--single-line">
+                                  {translateCaseCardTitle(item.title, t)}
+                                </span>
+                              </h3>
                               <p>{item.value}</p>
                               {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
                             </div>

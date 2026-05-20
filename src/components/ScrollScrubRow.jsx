@@ -1,26 +1,87 @@
 import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { rem, remPx } from '../utils/cssRem.js';
 
-/** Вертикальный ход страницы на полный горизонтальный сдвиг — 1:1 маппинг, без избытка. */
-function getScrollSpan(mx, vh) {
-  return Math.max(remPx(150), Math.min(mx, vh * 0.7));
+/** Скролл страницы: window или #root (snap-pages), как ParallaxBackdrop / HomeCompetenciesScrub. */
+function getScrollRoot() {
+  const root = document.getElementById('root');
+  if (root && root.scrollHeight > root.clientHeight + 2) return root;
+  return null;
 }
 
-/** Без dwell — карточки сразу начинают скрабиться, никаких «прилипаний». */
-function getReadDwellPx() {
-  return 0;
+function bindScrollResize(onTick) {
+  const passive = { passive: true };
+  const capture = { passive: true, capture: true };
+  const appRoot = document.getElementById('root');
+  onTick();
+  window.addEventListener('scroll', onTick, passive);
+  document.addEventListener('scroll', onTick, capture);
+  appRoot?.addEventListener('scroll', onTick, passive);
+  window.addEventListener('resize', onTick, passive);
+  return () => {
+    window.removeEventListener('scroll', onTick, passive);
+    document.removeEventListener('scroll', onTick, capture);
+    appRoot?.removeEventListener('scroll', onTick, passive);
+    window.removeEventListener('resize', onTick, passive);
+  };
+}
+
+function scrollByPx(delta, behavior = 'auto') {
+  const root = getScrollRoot();
+  if (root) root.scrollBy({ top: delta, behavior });
+  else window.scrollBy({ top: delta, behavior });
+}
+
+/** Вертикальный ход: ~0.55vh на каждый переход между карточками, не меньше фактического mx. */
+function getScrollSpan(mx, vh, slideCount) {
+  const steps = Math.max(1, slideCount - 1);
+  const perStep = vh * 0.55;
+  return Math.max(mx + 1, perStep * steps, remPx(120));
 }
 
 /**
  * Прогресс 0…1 и scrollSpan (runwayRectTop — верх обёртки runway, см. sticky-pin ниже).
  */
-function linkedStripMetrics(runwayRectTop, mx, vh) {
-  const scrollSpan = Math.max(1, getScrollSpan(mx, vh));
-  /* enter + dwell: сначала лента в sticky без горизонтали, потом только сдвиг (дольше читать первую карту). */
-  const enter = vh * 0.22;
-  const dwellPx = getReadDwellPx(vh);
-  const p = Math.min(1, Math.max(0, (enter - runwayRectTop - dwellPx) / scrollSpan));
+function linkedStripMetrics(runwayRectTop, mx, vh, slideCount) {
+  const scrollSpan = Math.max(1, getScrollSpan(mx, vh, slideCount));
+  const enter = vh * 0.12;
+  const p = Math.min(1, Math.max(0, (enter - runwayRectTop) / scrollSpan));
   return { p, scrollSpan };
+}
+
+function activeIndexFromOffset(x, mx, count) {
+  if (count <= 1 || mx <= 1) return 0;
+  const step = mx / (count - 1);
+  return Math.min(count - 1, Math.round(x / step));
+}
+
+function readViewportHeight() {
+  const appRoot = document.getElementById('root');
+  if (appRoot?.classList.contains('snap-pages-root')) return appRoot.clientHeight || window.innerHeight || 1;
+  return window.innerHeight || 1;
+}
+
+/** Горизонтальный ход ленты: по ширине слайдов (надёжнее scrollWidth при 100cqi). */
+function readMx(viewport, inner) {
+  if (!viewport || !inner) return 0;
+  const slides = inner.querySelectorAll(':scope > *');
+  if (slides.length < 2) return 0;
+  const slideW = slides[0].getBoundingClientRect().width;
+  if (slideW > 1) return Math.max(0, slideW * (slides.length - 1));
+  return Math.max(0, inner.scrollWidth - viewport.clientWidth);
+}
+
+/**
+ * Прогресс 0…1 по вертикальному скроллу, пока runway проходит через viewport.
+ * Та же модель, что HomeCompetenciesScrub: scrolled / (runwayH − stickyH).
+ */
+function linkedProgress01(runway, sticky) {
+  if (!runway) return 0;
+  const vh = readViewportHeight();
+  const rect = runway.getBoundingClientRect();
+  const scrolled = -rect.top + vh * 0.45 + remPx(80);
+  const pinH = sticky?.offsetHeight ?? 0;
+  const span = Math.max(1, runway.offsetHeight - pinH);
+  return Math.min(1, Math.max(0, scrolled / span));
 }
 
 /**
@@ -34,6 +95,7 @@ function linkedStripMetrics(runwayRectTop, mx, vh) {
 export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel, className = '' }) {
   const count = Children.count(children);
   const runwayRef = useRef(null);
+  const stickyRef = useRef(null);
   const trackRef = useRef(null);
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
@@ -60,7 +122,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const inner = innerRef.current;
     const viewport = viewportRef.current;
     if (!inner || !viewport) return;
-    setMaxX(Math.max(0, inner.scrollWidth - viewport.clientWidth));
+    setMaxX(readMx(viewport, inner));
   }, []);
 
   useLayoutEffect(() => {
@@ -79,49 +141,53 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
 
   const measureRunwayMin = useCallback(() => {
     const runway = runwayRef.current;
+    const sticky = stickyRef.current;
     const track = trackRef.current;
     const viewport = viewportRef.current;
     const inner = innerRef.current;
     if (!runway || !track || !viewport || !inner) return;
-    const vh = window.innerHeight || 1;
-    const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
+    const vh = readViewportHeight();
+    const mx = readMx(viewport, inner);
     if (mx <= 1) {
       setRunwayMin((prev) => (prev === 0 ? prev : 0));
       return;
     }
-    const scrollSpan = getScrollSpan(mx, vh);
-    const dwellPx = getReadDwellPx(vh);
-    const trackH = track.offsetHeight;
-    const next = Math.ceil(trackH + dwellPx + scrollSpan + remPx(12));
+    const scrollSpan = getScrollSpan(mx, vh, count);
+    const pinH = sticky?.offsetHeight ?? track.offsetHeight;
+    const next = Math.ceil(pinH + scrollSpan + remPx(16));
     setRunwayMin((prev) => (prev === next ? prev : next));
-  }, []);
+  }, [count]);
 
-  /** Прогресс 0…1: скролл по высоте runway (sticky держит ленту в кадре на этом участке). */
   const progressFromViewport = useCallback(() => {
     const runway = runwayRef.current;
+    const sticky = stickyRef.current;
     const viewport = viewportRef.current;
+    const inner = innerRef.current;
     if (!runway || !viewport) return 0;
-    const mx = Math.max(0, innerRef.current ? innerRef.current.scrollWidth - viewport.clientWidth : 0);
-    const rect = runway.getBoundingClientRect();
-    const vh = window.innerHeight;
-    return linkedStripMetrics(rect.top, mx, vh).p;
-  }, []);
+    const mx = inner ? readMx(viewport, inner) : 0;
+    if (sticky) return linkedProgress01(runway, sticky);
+    const vh = readViewportHeight();
+    return linkedStripMetrics(runway.getBoundingClientRect().top, mx, vh, count).p;
+  }, [count]);
 
   useLayoutEffect(() => {
     if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
     measureRunwayMin();
-    return undefined;
+    const id = requestAnimationFrame(measureRunwayMin);
+    return () => cancelAnimationFrame(id);
   }, [children, maxX, measureRunwayMin, useNativeX, variant]);
 
   useEffect(() => {
     if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
     const runway = runwayRef.current;
+    const sticky = stickyRef.current;
     const track = trackRef.current;
     const vp = viewportRef.current;
     const inner = innerRef.current;
     if (!runway || !track || !vp || !inner) return undefined;
     const ro = new ResizeObserver(() => measureRunwayMin());
     ro.observe(runway);
+    if (sticky) ro.observe(sticky);
     ro.observe(track);
     ro.observe(vp);
     ro.observe(inner);
@@ -138,13 +204,11 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const inner = innerRef.current;
     const viewport = viewportRef.current;
     if (!inner || !viewport) return;
-    const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
+    const mx = readMx(viewport, inner);
     const p = progressFromViewport();
     const x = p * mx;
-    inner.style.transform = `translate3d(${rem(-x)},0,0)`;
-    const idx =
-      count <= 1 || mx <= 1 ? 0 : Math.min(count - 1, Math.round((x / mx) * (count - 1)));
-    setActiveIdx(idx);
+    inner.style.transform = mx > 1 ? `translate3d(${-x}px,0,0)` : 'none';
+    setActiveIdx(activeIndexFromOffset(x, mx, count));
   }, [count, useNativeX, progressFromViewport]);
 
   useEffect(() => {
@@ -162,14 +226,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       });
     };
 
-    tick();
-    window.addEventListener('scroll', onScrollOrResize, { passive: true });
-    window.addEventListener('resize', onScrollOrResize);
-    return () => {
-      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
-      window.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
-    };
+    return bindScrollResize(onScrollOrResize);
   }, [updateFromPageScroll, useNativeX, variant]);
 
   useEffect(() => {
@@ -268,18 +325,22 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   const scrollToSlideLinked = useCallback(
     (index) => {
       const runway = runwayRef.current;
+      const sticky = stickyRef.current;
       const inner = innerRef.current;
       const viewport = viewportRef.current;
       if (!runway || !inner || !viewport) return;
-      const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
+      const mx = readMx(viewport, inner);
       if (mx <= 1) return;
       const targetP = count <= 1 ? 0 : index / (count - 1);
-      const vh = window.innerHeight;
-      const { p: currentP, scrollSpan } = linkedStripMetrics(runway.getBoundingClientRect().top, mx, vh);
+      const currentP = progressFromViewport();
+      const vh = readViewportHeight();
+      const scrollSpan = sticky
+        ? Math.max(1, runway.offsetHeight - sticky.offsetHeight)
+        : linkedStripMetrics(runway.getBoundingClientRect().top, mx, vh, count).scrollSpan;
       const delta = (targetP - currentP) * scrollSpan;
-      window.scrollTo({ top: window.scrollY + delta, behavior: 'smooth' });
+      scrollByPx(delta, 'smooth');
     },
-    [count],
+    [count, progressFromViewport],
   );
 
   const rootClass = `scroll-scrub-row scroll-scrub-row__track scroll-scrub-row--${variant} ${className}`.trim();
@@ -334,8 +395,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
         className="scroll-scrub-row__runway"
         style={runwayMin > 0 ? { minHeight: rem(runwayMin) } : undefined}
       >
-        <div ref={trackRef} className={`${rootClass} scroll-scrub-row--scroll-linked`.trim()}>
-          <div className="scroll-scrub-row__shell">
+        <div ref={stickyRef} className="scroll-scrub-row__sticky scroll-scrub-row__sticky--cards">
+          <div ref={trackRef} className={`${rootClass} scroll-scrub-row--scroll-linked`.trim()}>
+            <div className="scroll-scrub-row__shell">
             <div
               ref={viewportRef}
               className="scroll-scrub-row__viewport scroll-scrub-row__viewport--linked"
@@ -360,6 +422,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
                 ))}
               </div>
             ) : null}
+            </div>
           </div>
         </div>
       </div>
