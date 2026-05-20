@@ -50,18 +50,17 @@ export const mailNaukiEn = {
         {
           title: 'H1',
           text: 'Thematic homepage blocks improve navigation and lift card CTR; we expected higher reading depth.',
-          outcome:
-            'Confirmed: higher homepage card CTR and reading depth (metrics summarized under NDA).',
+          outcome: 'Confirmed: CTR ↑ · depth ↑ (NDA)',
         },
         {
           title: 'H2',
           text: 'Recommendation and dynamic modules lift engagement and time on site.',
-          outcome: 'Confirmed: higher time on site and engagement on product metrics (NDA).',
+          outcome: 'Confirmed: time ↑ · engagement ↑ (NDA)',
         },
         {
           title: 'H3',
           text: 'Ads embedded in the content structure deliver better viewability than isolated ad units.',
-          outcome: 'Confirmed: better viewability and performance of ad integrations (NDA).',
+          outcome: 'Confirmed: viewability ↑ · performance ↑ (NDA)',
         },
       ],
     },
