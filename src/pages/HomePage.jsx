@@ -26,6 +26,12 @@ function headerItemPlacementStyle(placement) {
   };
 }
 
+/** Имя в hero: только целые слова — одна строка или две, без переноса с дефисом */
+function heroTitleLines(title) {
+  const parts = title.trim().split(/\s+/).filter(Boolean);
+  return parts.length > 0 ? parts : [title.trim()];
+}
+
 const heroLinks = [
   { href: 'https://t.me/pnkprty', label: 'Telegram' },
   { href: 'https://behance.net/', label: 'Behance' },
@@ -118,7 +124,13 @@ export default function HomePage() {
           <div className="hero__content">
             <div className="hero-content">
               <p className="hero-role"><span className="text-condensed">{t('hero.role')}</span></p>
-              <h1 className="hero-title" data-scale="hero-name">{t('hero.title')}</h1>
+              <h1 className="hero-title" data-scale="hero-name">
+                {heroTitleLines(t('hero.title')).map((part) => (
+                  <span key={part} className="hero-title__line">
+                    {part}
+                  </span>
+                ))}
+              </h1>
               <p className="hero-text">{t('hero.text')}</p>
               <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
                 <span className="hero-more__text"><span className="text-condensed">{t('hero.moreAbout')}</span></span>

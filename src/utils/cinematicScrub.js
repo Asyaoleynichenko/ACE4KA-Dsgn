@@ -1,14 +1,14 @@
-/** Инерция ленты: current += (target - current) * α */
+/** Инерция ленты: current += (target - current) * 0.08 — «тяжёлая» камера */
 export const SCRUB_LERP_ALPHA = 0.08;
 export const SCRUB_LERP_SNAP_PX = 0.35;
 
-/** Параметры «глубины» по индексу карточки — разная скорость / масштаб / parallax. */
+/** Слои глубины: разная скорость / parallax / scale — объекты в 3D-потоке, не синхронный сдвиг */
 const CARD_LAYERS = [
-  { speed: 1, parallax: 1, scale: 1, rotate: 1, z: 1, stagger: 0 },
-  { speed: 1.14, parallax: 1.22, scale: 0.98, rotate: 1.08, z: 1.12, stagger: 0.06 },
-  { speed: 0.9, parallax: 0.82, scale: 1.04, rotate: 0.92, z: 0.88, stagger: 0.12 },
-  { speed: 1.08, parallax: 1.1, scale: 0.96, rotate: 1.05, z: 1.06, stagger: 0.18 },
-  { speed: 0.94, parallax: 0.9, scale: 1.02, rotate: 0.96, z: 0.94, stagger: 0.24 },
+  { speed: 1, parallax: 1, scale: 1, rotate: 0.85, z: 1, stagger: 0 },
+  { speed: 1.12, parallax: 1.18, scale: 0.99, rotate: 1, z: 1.1, stagger: 0.05 },
+  { speed: 0.88, parallax: 0.78, scale: 1.03, rotate: 0.8, z: 0.86, stagger: 0.1 },
+  { speed: 1.06, parallax: 1.08, scale: 0.97, rotate: 0.95, z: 1.04, stagger: 0.16 },
+  { speed: 0.92, parallax: 0.88, scale: 1.01, rotate: 0.88, z: 0.92, stagger: 0.22 },
 ];
 
 export function lerpScalar(current, target, alpha = SCRUB_LERP_ALPHA) {
@@ -24,9 +24,7 @@ function clamp01(v) {
   return Math.min(1, Math.max(0, v));
 }
 
-/**
- * Scroll progress 0…1 по runway + sticky (scroll-bound, не trigger).
- */
+/** Scroll-bound progress 0…1: вертикальный скролл = timeline scrub */
 export function scrollProgress01(runway, sticky) {
   if (!runway) return 0;
   const pin = sticky ?? runway;
@@ -39,8 +37,8 @@ export function scrollProgress01(runway, sticky) {
 }
 
 /**
- * Базовый сдвиг ленты + per-card parallax / scale / opacity / rotateY / blur.
- * smoothX — сглаженная позиция (lerp), progress01 — сырой scrub от скролла.
+ * Горизонтальный track + per-card depth (parallax, scale, Z, лёгкий rotate).
+ * Без тяжёлого blur/glow — глубина через transform и opacity.
  */
 export function applyCinematicCardTransforms(inner, viewport, smoothX, progress01 = 0, velocityPx = 0) {
   const slides = inner.querySelectorAll(':scope > *');
@@ -64,7 +62,7 @@ export function applyCinematicCardTransforms(inner, viewport, smoothX, progress0
 
   const vw = viewport.clientWidth || 1;
   const focus = smoothX + vw * 0.5;
-  const motionBlur = Math.min(5, Math.abs(velocityPx) * 0.12);
+  const motionBlur = Math.min(1.25, Math.abs(velocityPx) * 0.04);
 
   inner.style.transform = `translate3d(${-smoothX.toFixed(2)}px, 0, 0)`;
 
@@ -75,27 +73,25 @@ export function applyCinematicCardTransforms(inner, viewport, smoothX, progress0
     const ad = Math.abs(distSlides);
 
     const staggerT = clamp01((progress01 - layer.stagger) / Math.max(0.001, 1 - layer.stagger * 0.85));
-    const enter = 0.82 + staggerT * 0.18;
+    const enter = 0.88 + staggerT * 0.12;
 
-    const parallaxX = distSlides * step * 0.2 * layer.parallax;
-    const speedOffset = (progress01 - 0.5) * step * 0.06 * (layer.speed - 1);
-    const scale = Math.max(0.82, (1 - ad * 0.075) * layer.scale * enter);
-    const opacity = Math.max(0.38, (1 - ad * 0.34) * (0.55 + staggerT * 0.45));
-    const tz = (1 - Math.min(ad, 1.35)) * 88 * layer.z - ad * 18;
-    const ty = ad * 18 + (1 - staggerT) * 8;
-    const ry = distSlides * -4.8 * layer.rotate;
-    const rx = distSlides * 0.35 * layer.rotate;
-    const blur = (ad > 0.42 ? Math.min(4.5, (ad - 0.42) * 5.5) : 0) + motionBlur * (0.35 + ad * 0.25);
+    const parallaxX = distSlides * step * 0.24 * layer.parallax;
+    const speedOffset = (progress01 - 0.5) * step * 0.08 * (layer.speed - 1);
+    const scale = Math.max(0.9, (1 - ad * 0.055) * layer.scale * enter);
+    const opacity = Math.max(0.65, (1 - ad * 0.22) * (0.78 + staggerT * 0.22));
+    const tz = (1 - Math.min(ad, 1.2)) * 112 * layer.z - ad * 12;
+    const ty = ad * 10;
+    const ry = distSlides * -3.2 * layer.rotate;
+    const blur = motionBlur > 0.12 && ad < 0.65 ? motionBlur : 0;
 
     slide.style.transform = [
       `translate3d(${(parallaxX + speedOffset).toFixed(2)}px, ${ty.toFixed(2)}px, ${tz.toFixed(2)}px)`,
       `scale(${scale.toFixed(4)})`,
       `rotateY(${ry.toFixed(3)}deg)`,
-      `rotateX(${rx.toFixed(3)}deg)`,
     ].join(' ');
     slide.style.opacity = opacity.toFixed(3);
     slide.style.filter = blur > 0.08 ? `blur(${blur.toFixed(2)}px)` : '';
-    slide.style.zIndex = String(100 + Math.round((1 - Math.min(ad, 1.6)) * 32 * layer.z));
+    slide.style.zIndex = String(100 + Math.round((1 - Math.min(ad, 1.4)) * 36 * layer.z));
   });
 
   return { mx, step };

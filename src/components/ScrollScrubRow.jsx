@@ -40,7 +40,7 @@ function scrollByPx(delta, behavior = 'auto') {
 /** Вертикальный ход runway: ~0.48vh на переход между карточками (не привязываем к px-ходу ленты mx). */
 function getRunwayScrollSpan(vh, slideCount) {
   const steps = Math.max(1, slideCount - 1);
-  const perStep = vh * 0.48;
+  const perStep = vh * 0.52;
   return Math.max(perStep * steps, remPx(96));
 }
 
@@ -159,7 +159,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       return;
     }
     const scrollSpan = getRunwayScrollSpan(vh, count);
-    const pinH = sticky?.offsetHeight ?? track.offsetHeight;
+    const stickyTop = sticky ? parseFloat(getComputedStyle(sticky).top) || 0 : 0;
+    const pinH = Math.round(vh - stickyTop - remPx(8));
     const next = Math.ceil(pinH + scrollSpan + remPx(8));
     setRunwayMin((prev) => (prev === next ? prev : next));
   }, [count]);
@@ -241,44 +242,75 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     updateFromPageScroll();
   }, [maxX, useCinematicScrub, useNativeX, variant, updateFromPageScroll]);
 
-  /** Кинематичный scrub (cards): непрерывный RAF + lerp к целевой позиции от вертикального скролла. */
+  /** Кинематичный scrub (cards): RAF + lerp, пока runway в зоне видимости */
   useEffect(() => {
     if (!useCinematicScrub) return undefined;
 
     let alive = true;
+    let inView = true;
+    let io = null;
 
-    const frame = () => {
-      if (!alive) return;
+    const tick = () => {
       const inner = innerRef.current;
       const viewport = viewportRef.current;
       const runway = runwayRef.current;
       const sticky = stickyRef.current;
-      if (inner && viewport) {
-        const targetP = progressFromViewport();
-        const mx = readMx(viewport, inner);
-        const targetX = targetP * mx;
-        const prevX = smoothXRef.current;
-        smoothXRef.current = lerpScalar(smoothXRef.current, targetX);
-        const velocityPx = smoothXRef.current - prevX;
-        prevSmoothXRef.current = smoothXRef.current;
-        const progress01 = runway ? scrollProgress01(runway, sticky) : targetP;
-        const { mx: layoutMx } = applyCinematicCardTransforms(
-          inner,
-          viewport,
-          smoothXRef.current,
-          progress01,
-          velocityPx,
-        );
-        const mxUse = layoutMx > 1 ? layoutMx : mx;
-        setActiveIdx(activeIndexFromOffset(smoothXRef.current, mxUse, count));
-      }
+      if (!inner || !viewport) return;
+
+      const targetP = progressFromViewport();
+      const mx = readMx(viewport, inner);
+      const targetX = targetP * mx;
+      const prevX = smoothXRef.current;
+      smoothXRef.current = lerpScalar(smoothXRef.current, targetX);
+      const velocityPx = smoothXRef.current - prevX;
+      const progress01 = runway ? scrollProgress01(runway, sticky) : targetP;
+      const { mx: layoutMx } = applyCinematicCardTransforms(
+        inner,
+        viewport,
+        smoothXRef.current,
+        progress01,
+        velocityPx,
+      );
+      const mxUse = layoutMx > 1 ? layoutMx : mx;
+      setActiveIdx(activeIndexFromOffset(smoothXRef.current, mxUse, count));
+    };
+
+    const frame = () => {
+      cinematicRafRef.current = null;
+      if (!alive || !inView) return;
+      tick();
       cinematicRafRef.current = requestAnimationFrame(frame);
     };
 
-    cinematicRafRef.current = requestAnimationFrame(frame);
+    const schedule = () => {
+      if (!inView || cinematicRafRef.current != null) return;
+      cinematicRafRef.current = requestAnimationFrame(frame);
+    };
+
+    const runwayEl = runwayRef.current;
+    if (runwayEl && typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(
+        ([entry]) => {
+          inView = entry.isIntersecting;
+          if (inView) schedule();
+          else if (cinematicRafRef.current != null) {
+            cancelAnimationFrame(cinematicRafRef.current);
+            cinematicRafRef.current = null;
+            tick();
+          }
+        },
+        { root: null, rootMargin: '15% 0px 15% 0px', threshold: 0 },
+      );
+      io.observe(runwayEl);
+    }
+
+    const unbind = bindScrollResize(schedule);
+    schedule();
 
     return () => {
       alive = false;
+      io?.disconnect();
+      unbind();
       if (cinematicRafRef.current != null) cancelAnimationFrame(cinematicRafRef.current);
       resetCinematicCardTransforms(innerRef.current);
     };
@@ -468,22 +500,24 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
         style={runwayMin > 0 ? { minHeight: rem(runwayMin) } : undefined}
       >
         <div ref={stickyRef} className="scroll-scrub-row__sticky scroll-scrub-row__sticky--cards">
-          <div
-            ref={trackRef}
-            className={`${rootClass} scroll-scrub-row--scroll-linked${useCinematicScrub ? ' scroll-scrub-row--cinematic' : ''}`.trim()}
-          >
-            <div className="scroll-scrub-row__shell">
+          <div className="scroll-scrub-row__pin">
             <div
-              ref={viewportRef}
-              className="scroll-scrub-row__viewport scroll-scrub-row__viewport--linked"
-              role="region"
-              aria-label={ariaLabel}
+              ref={trackRef}
+              className={`${rootClass} scroll-scrub-row--scroll-linked${useCinematicScrub ? ' scroll-scrub-row--cinematic' : ''}`.trim()}
             >
-              <div ref={innerRef} className="scroll-scrub-row__inner">
-                {children}
+              <div className="scroll-scrub-row__shell">
+                <div
+                  ref={viewportRef}
+                  className="scroll-scrub-row__viewport scroll-scrub-row__viewport--linked"
+                  role="region"
+                  aria-label={ariaLabel}
+                >
+                  <div ref={innerRef} className="scroll-scrub-row__inner">
+                    {children}
+                  </div>
+                </div>
+                {renderIndicator(scrollToSlideLinked)}
               </div>
-            </div>
-            {renderIndicator(scrollToSlideLinked)}
             </div>
           </div>
         </div>

@@ -48,8 +48,8 @@ function activeLineStretchFromScroll(n, t) {
     const wave = Math.sin(Math.PI * clampedT);
     return {
       idx: 0,
-      scaleX: 1 + 0.12 * wave,
-      scaleY: 1 - 0.1 * wave,
+      scaleX: 1 + 0.08 * wave,
+      scaleY: 1 - 0.06 * wave,
     };
   }
   const denom = n - 1;
@@ -63,8 +63,8 @@ function activeLineStretchFromScroll(n, t) {
   const stretchX = idx % 2 === 0;
   return {
     idx,
-    scaleX: stretchX ? 1 + 0.14 * wave : 1 - 0.1 * wave,
-    scaleY: stretchX ? 1 - 0.1 * wave : 1 + 0.14 * wave,
+    scaleX: stretchX ? 1 + 0.09 * wave : 1 - 0.065 * wave,
+    scaleY: stretchX ? 1 - 0.065 * wave : 1 + 0.09 * wave,
   };
 }
 

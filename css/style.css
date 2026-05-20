@@ -63,9 +63,22 @@
   --transition: var(--dur-smart-base) var(--ease-smart);
   --transition-fast: var(--dur-smart-fast) var(--ease-smart);
   --transition-base: var(--dur-smart-base) var(--ease-smart);
-  --page-transition-duration: 380ms;
-  --page-project-sheet-duration: 520ms;
+  --page-transition-duration: 420ms;
+  --page-project-sheet-duration: 680ms;
   --duration-micro: 220ms;
+
+  /* Exhibition — scroll as camera, physical inertia, editorial air */
+  --ease-exhibition: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-exhibition-heavy: cubic-bezier(0.16, 0.84, 0.24, 1);
+  --exhibition-lerp: 0.08;
+  --exhibition-section-gap: clamp(4rem, 11vh, 7rem);
+  --exhibition-depth-shadow:
+    0 1.5rem 4rem rgba(0, 0, 0, 0.42),
+    0 0.35rem 1.25rem rgba(0, 0, 0, 0.2);
+  --exhibition-float-shadow:
+    0 2rem 5.5rem rgba(0, 0, 0, 0.48),
+    0 0.5rem 2rem rgba(0, 0, 0, 0.24);
+  --exhibition-perspective: 75rem;
 
   --radius-xs: 0.5rem;
   --radius: 0.5rem;
@@ -126,7 +139,7 @@
   --space-80: 5rem;
   --card-gap: 0.5rem;
   --preview-card-media-body-gap: 1rem;
-  --grid-row-gap: 1.5rem;
+  --grid-row-gap: clamp(1.5rem, 4vw, 2.5rem);
   --grid-column-gap: 0.5rem;
   --preview-grid-max-width: 80.625rem; /* Figma 1:297 — 1290px */
 
@@ -134,7 +147,7 @@
   --hero-card-width: 23.0625rem;
   --hero-row-gap: 1.5rem;
   --hero-lead-max: min(52rem, 100%);
-  --hero-section-gap: 4rem;
+  --hero-section-gap: var(--exhibition-section-gap, 4rem);
 
   --case-prose-max: min(52.5rem, 100%);
   /* Figma 337:24521 — контент 1310px + поля 24px = 1358px */
@@ -416,7 +429,7 @@ html.snap-pages #root.snap-pages-root--home {
 }
 
 .page-transition {
-    animation: page-transition-in var(--page-transition-duration) var(--ease-page) both;
+    animation: page-transition-in var(--page-transition-duration) var(--ease-exhibition) both;
 }
 
 /* Главная: лёгкое проявление страницы (без сдвига — движение оставляем иконкам) */
@@ -433,26 +446,19 @@ html.snap-pages #root.snap-pages-root--home {
     animation: page-transition-in-home var(--dur-smart-page-home) var(--ease-smart) both;
 }
 
-/* Страница проекта: контент main «выезжает» снизу как окно / bottom sheet (шапка и фон остаются). */
-@keyframes page-transition-project-sheet-in {
+/* Страница проекта: только opacity — transform на .page-transition ломает position:sticky у ленты */
+@keyframes page-transition-project-fade-in {
     from {
-        opacity: 0.94;
-        transform: translate3d(0, min(88vh, 51.25rem), 0);
-        border-radius: 1.25rem 1.25rem 0 0;
-        box-shadow: 0 -1.75rem 4.5rem rgba(0, 0, 0, 0.55);
+        opacity: 0.55;
     }
     to {
         opacity: 1;
-        transform: none;
-        border-radius: 0;
-        box-shadow: none;
     }
 }
 
 .page-project .page-transition {
-    animation: page-transition-project-sheet-in var(--page-project-sheet-duration) var(--ease-smart) both;
+    animation: page-transition-project-fade-in var(--page-project-sheet-duration) var(--ease-exhibition-heavy) both;
     transform: none;
-    transform-origin: 50% 100%;
     background: #0a0a0a;
 }
 
@@ -2316,6 +2322,28 @@ h3 {
     margin: 0;
     color: var(--color-text);
     text-transform: uppercase;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    hyphens: none;
+    -webkit-hyphens: none;
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+.hero-title__line {
+    display: block;
+    white-space: nowrap;
+    line-height: inherit;
+}
+
+@media (min-width: 40rem) {
+    .hero-title {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.2em;
+    }
 }
 
 /* Figma 1:239–240: text 1.5rem, line-height 1.2, -0.0625rem tracking, max 41.3125rem */
@@ -3169,7 +3197,7 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-48);
+    gap: var(--exhibition-section-gap);
     width: 100%;
     box-sizing: border-box;
     padding-top: 0;
@@ -3382,9 +3410,7 @@ h3 {
     border-radius: var(--radius-lg);
     background: transparent;
     overflow: visible;
-    transition:
-        transform var(--duration-micro) var(--ease-micro-out),
-        box-shadow var(--duration-micro) var(--ease-micro-out);
+    transition: opacity var(--dur-smart-base) var(--ease-exhibition);
 }
 
 /* Figma 1:298 — flex-col gap 1rem items-start; 1:300 — body gap 0.5rem */
@@ -3402,8 +3428,9 @@ h3 {
 }
 
 .preview-card:hover {
-    transform: translateY(-0.25rem);
-    box-shadow: var(--shadow-card-hover);
+    transform: none;
+    box-shadow: none;
+    opacity: 0.88;
     outline: none;
     border: 0;
 }
@@ -3419,8 +3446,9 @@ h3 {
 }
 
 .preview-card:active {
-    transform: translateY(-0.125rem);
-    box-shadow: 0 0.375rem 1.25rem rgba(0, 0, 0, 0.28);
+    transform: none;
+    box-shadow: none;
+    opacity: 0.82;
 }
 
 /* Project covers use a strict 16:9 ratio. Без подложки — превью «лежит» прямо на странице. */
@@ -3446,7 +3474,7 @@ h3 {
     object-fit: cover;
     display: block;
     border-radius: var(--radius-lg);
-    transition: transform 320ms var(--ease-micro-out);
+    transition: opacity var(--dur-smart-slow) var(--ease-exhibition);
 }
 
 .preview-image__placeholder {
@@ -3456,8 +3484,10 @@ h3 {
     background: rgba(60, 60, 60, 0.5);
 }
 
-.preview-card:hover .preview-image img {
-    transform: scale(1.03);
+.preview-card:hover .preview-image img,
+.preview-card:hover .preview-image video {
+    transform: none;
+    opacity: 0.94;
 }
 
 .preview-card--demo .preview-image {
@@ -4714,6 +4744,7 @@ h3 {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow: visible;
 }
 
 .project-case-study-mail .section:has(.scroll-scrub-row--cards) {
@@ -4726,45 +4757,62 @@ h3 {
 .project-case-study-mail .cards-section + .case-study-narrative,
 .project-case-study-mail .cards-section + .section,
 .project-case-study-mail .cards-section + section {
-    /* Подъём следующего блока в зону runway: пока лента закреплена sticky,
-       нижний блок уже выглядывает снизу из viewport вместо пустого пространства. */
-    margin-top: -40vh;
+    margin-top: 0;
     position: relative;
     z-index: 1;
-    padding-top: clamp(2.5rem, 6vw, 4rem);
+    padding-top: var(--exhibition-section-gap);
 }
 .project-case-study-mail .scroll-scrub-row__runway {
+    position: relative;
     width: 100%;
     max-width: none;
     box-sizing: border-box;
+    overflow: visible;
 }
-/* Sticky pin: пока скроллим runway — сцена на высоту viewport */
+
+/* Sticky pin: сцена = viewport минус шапка; карточки hug внутри pin */
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__sticky--cards {
     position: sticky;
     top: var(--scrub-sticky-top);
-    z-index: 2;
+    z-index: 5;
     width: 100%;
-    min-height: 0;
+    height: var(--scrub-pin-height);
+    min-height: var(--scrub-pin-height);
+    max-height: var(--scrub-pin-height);
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+    display: block;
+    align-self: flex-start;
+    overflow: visible;
+    isolation: isolate;
 }
 
-.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__sticky--cards {
-    min-height: var(--scrub-pin-height);
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__pin {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    box-sizing: border-box;
 }
+
 .project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards,
 .project-case-study-mail .scroll-scrub-row.scroll-scrub-row--cards {
     position: relative;
     width: 100%;
+    height: fit-content;
     box-sizing: border-box;
 }
+
 .project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards.scroll-scrub-row--scroll-linked,
 .project-case-study-mail .scroll-scrub-row.scroll-scrub-row--cards.scroll-scrub-row--scroll-linked {
-    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    min-height: 100%;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__shell,
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
@@ -4772,10 +4820,11 @@ h3 {
     box-sizing: border-box;
 }
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__shell {
-    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    width: 100%;
+    height: fit-content;
     min-height: 0;
     padding-bottom: 0;
     box-sizing: border-box;
@@ -4797,17 +4846,18 @@ h3 {
 /* Та же лента, но горизонтальное смещение через transform от вертикального скролла страницы */
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__viewport--linked {
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: visible;
     overscroll-behavior-x: none;
-    flex: 1 1 auto;
-    min-height: 0;
+    flex: 0 0 auto;
     width: 100%;
     max-width: none;
+    height: fit-content;
+    min-height: 0;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     display: flex;
-    align-items: stretch;
+    align-items: center;
     -webkit-overflow-scrolling: touch;
     container-type: inline-size;
     container-name: scrub-cards;
@@ -4824,28 +4874,30 @@ h3 {
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner {
     will-change: transform;
     align-items: stretch;
-    min-height: 100%;
+    min-height: 0;
+    height: fit-content;
 }
 
 /* Cinematic scrub — perspective, GPU-слои, без CSS-hover поверх JS-transform */
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__shell {
     overflow-x: clip;
     overflow-y: visible;
-    flex: 1 1 auto;
-    min-height: var(--scrub-pin-height);
+    height: fit-content;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__viewport--linked {
     overflow: visible;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
+    height: fit-content;
     min-height: 0;
     display: flex;
     align-items: center;
-    perspective: 68.75rem;
-    perspective-origin: 50% 46%;
+    perspective: var(--exhibition-perspective);
+    perspective-origin: 50% 44%;
 }
 
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__inner {
@@ -4888,7 +4940,7 @@ h3 {
     padding: var(--case-feature-card-padding);
     border-radius: var(--case-feature-card-radius);
     border: 0.0625rem solid transparent;
-    box-shadow: none;
+    box-shadow: var(--exhibition-depth-shadow);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -4897,25 +4949,31 @@ h3 {
     min-height: 0;
     position: relative;
     overflow: hidden;
-    transition:
-        transform var(--dur-premium) var(--ease-premium-out),
-        box-shadow var(--dur-premium) var(--ease-premium-out),
-        border-color var(--dur-premium) var(--ease-premium-out),
-        background-color var(--dur-premium) var(--ease-premium-out);
+    transition: opacity var(--dur-smart-slow) var(--ease-exhibition);
 }
 
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
-    min-height: min(40.875rem, calc(100dvh - var(--scrub-sticky-top) - 5rem));
+    min-height: 0;
     height: auto;
+    max-height: min(40.875rem, calc(100dvh - var(--scrub-sticky-top) - 7rem));
     align-self: stretch;
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card:hover,
-    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card:hover {
-        transform: translateY(-0.125rem);
-        border-color: rgba(255, 255, 255, 0.12);
-        box-shadow: var(--shadow-case-card-hover);
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card:hover {
+        transform: none;
+        border-color: transparent;
+        box-shadow: var(--exhibition-depth-shadow);
+        opacity: 0.92;
+    }
+
+    .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked:not(.scroll-scrub-row--cinematic)
+        .scroll-scrub-row__inner
+        > .card:hover {
+        transform: none;
+        border-color: transparent;
+        box-shadow: var(--exhibition-depth-shadow);
+        opacity: 0.92;
     }
 }
 
@@ -5077,7 +5135,8 @@ h3 {
         padding: var(--case-feature-card-padding);
         gap: var(--case-feature-card-gap);
         border-radius: var(--case-feature-card-radius);
-        min-height: 40.875rem;
+        min-height: 0;
+        max-height: 40.875rem;
     }
 
     .project-case-study-mail .scroll-scrub-row--cards .card h3 {
@@ -8241,6 +8300,8 @@ h1:not(.hero-title):not(.projects-title-main) {
     line-height: 1.05;
     font-weight: 700;
     letter-spacing: -0.06em;
+    hyphens: none;
+    -webkit-hyphens: none;
 }
 
 h2,

@@ -65,7 +65,7 @@ export default function Layout() {
   const mainWithHomeShell = isHome ? `${mainClass} page-home__main` : mainClass;
 
   return (
-    <div className={`page ${pageClass} ${pageSnapClass}`.trim()}>
+    <div className={`page site-exhibition ${pageClass} ${pageSnapClass}`.trim()}>
       <ParallaxBackdrop />
       <Header />
       <main className={mainWithHomeShell}>

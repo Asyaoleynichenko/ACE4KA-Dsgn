@@ -16,7 +16,7 @@ export default function ParallaxBackdrop() {
 
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     /** Плавное следование за скроллом: τ секунд — чем больше, тем мягче движение слоёв */
-    const TAU_SEC = 0.32;
+    const TAU_SEC = 0.48;
     const EPS_PX = 0.2;
 
     let tickRaf = null;
@@ -36,9 +36,9 @@ export default function ParallaxBackdrop() {
     };
 
     const applyParallaxFromY = (y) => {
-      root.style.setProperty('--parallax-y1', rem(y * 0.06));
-      root.style.setProperty('--parallax-y2', rem(y * 0.12));
-      root.style.setProperty('--parallax-y3', rem(y * 0.18));
+      root.style.setProperty('--parallax-y1', rem(y * 0.04));
+      root.style.setProperty('--parallax-y2', rem(y * 0.08));
+      root.style.setProperty('--parallax-y3', rem(y * 0.12));
     };
 
     const tick = (now) => {
