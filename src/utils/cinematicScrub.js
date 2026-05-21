@@ -59,12 +59,13 @@ export function applyCinematicCardTransforms(
 
   if (mx <= 1) {
     inner.style.transform = 'none';
-    slides.forEach((slide) => {
-      slide.style.transform = '';
-      slide.style.opacity = '';
-      slide.style.filter = '';
-      slide.style.zIndex = '';
-    });
+  inner.querySelectorAll(':scope > *').forEach((slide) => {
+    slide.style.transform = '';
+    slide.style.opacity = '';
+    slide.style.filter = '';
+    slide.style.zIndex = '';
+    slide.style.pointerEvents = '';
+  });
     return { mx: 0, step };
   }
 
@@ -72,7 +73,6 @@ export function applyCinematicCardTransforms(
   const holdAtEnd = exitP > 0.004;
   const xTrack = holdAtEnd ? mx : smoothX;
   const focus = xTrack + vw * 0.5;
-  const motionBlur = holdAtEnd ? 0 : Math.min(1.25, Math.abs(velocityPx) * 0.04);
 
   inner.style.transform = `translate3d(${-xTrack.toFixed(2)}px, 0, 0)`;
 
@@ -85,25 +85,18 @@ export function applyCinematicCardTransforms(
     const staggerT = clamp01((progress01 - layer.stagger) / Math.max(0.001, 1 - layer.stagger * 0.85));
     const enter = 0.88 + staggerT * 0.12;
 
-    /* Горизонтальный parallax не раздувает flex-gap (24px) — только Z/rotate/opacity */
-    const speedOffset = (progress01 - 0.5) * gap * 0.15 * (layer.speed - 1);
     const exitDim = holdAtEnd && i < slides.length - 1 ? 0.72 : 1;
     const lastCardSettle = holdAtEnd && i === slides.length - 1 ? 1 - exitP * 0.06 : 1;
-    const scale = Math.max(0.9, (1 - ad * 0.055) * layer.scale * enter * lastCardSettle);
-    const opacity = Math.max(0.65, (1 - ad * 0.22) * (0.78 + staggerT * 0.22) * exitDim);
-    const tz = (1 - Math.min(ad, 1.2)) * 112 * layer.z - ad * 12;
-    const ty = ad * 10;
-    const ry = distSlides * -3.2 * layer.rotate;
-    const blur = motionBlur > 0.12 && ad < 0.65 ? motionBlur : 0;
+    /* Без scale/rotate/blur на карточках — только сдвиг ленты; текст остаётся резким */
+    const inView = ad < 0.72;
+    const opacity = inView ? Math.max(0.92, exitDim * (0.96 + staggerT * 0.04)) : 0;
+    const scale = inView ? lastCardSettle : 1;
 
-    slide.style.transform = [
-      `translate3d(${speedOffset.toFixed(2)}px, ${ty.toFixed(2)}px, ${tz.toFixed(2)}px)`,
-      `scale(${scale.toFixed(4)})`,
-      `rotateY(${ry.toFixed(3)}deg)`,
-    ].join(' ');
+    slide.style.transform = inView ? `scale(${scale.toFixed(4)})` : 'none';
     slide.style.opacity = opacity.toFixed(3);
-    slide.style.filter = blur > 0.08 ? `blur(${blur.toFixed(2)}px)` : '';
-    slide.style.zIndex = String(100 + Math.round((1 - Math.min(ad, 1.4)) * 36 * layer.z));
+    slide.style.filter = '';
+    slide.style.zIndex = String(100 + Math.round((1 - Math.min(ad, 1.4)) * 20));
+    slide.style.pointerEvents = inView ? '' : 'none';
   });
 
   return { mx, step };
@@ -117,5 +110,6 @@ export function resetCinematicCardTransforms(inner) {
     slide.style.opacity = '';
     slide.style.filter = '';
     slide.style.zIndex = '';
+    slide.style.pointerEvents = '';
   });
 }
