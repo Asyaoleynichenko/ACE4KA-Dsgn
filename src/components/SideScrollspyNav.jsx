@@ -1,7 +1,9 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useState } from 'react';
+import { useLenisInstance } from '../context/LenisProvider.jsx';
 import { useIntersectionScrollSpy } from '../hooks/useIntersectionScrollSpy.js';
 import { smartTween, smartTweenReduced } from '../motion/smartAnimate.js';
+import { scrollToElement } from '../utils/scrollRoot.js';
 import { rem } from '../utils/cssRem.js';
 
 function dashWidths(level, isActive) {
@@ -18,6 +20,7 @@ function dashWidths(level, isActive) {
  */
 export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
   const reduceMotion = useReducedMotion();
+  const { lenis } = useLenisInstance();
   const sectionIds = items.map((i) => i.id);
   const activeId = useIntersectionScrollSpy(sectionIds);
   const [expanded, setExpanded] = useState(false);
@@ -25,8 +28,10 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
   const scrollToId = (id) => {
     const el = document.getElementById(id);
     if (!el) return;
-    const instant = reduceMotion || (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    el.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', block: 'start' });
+    const instant =
+      reduceMotion ||
+      (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    scrollToElement(el, { lenis, immediate: instant, block: 'start' });
   };
 
   if (!items.length) return null;

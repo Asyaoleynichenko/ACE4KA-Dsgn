@@ -389,6 +389,17 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Lenis — плавность и inertia; нативный smooth-scroll и snap отключаем */
+html.lenis {
+    scroll-behavior: auto;
+}
+
+html.lenis #root.snap-pages-root,
+html.lenis #root.snap-pages-root.snap-pages-root--home {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+}
+
 /* Полноэкранный snap: корневой скролл на #root — при body{display:flex} snap на html часто не срабатывает */
 html.snap-pages {
     height: 100%;

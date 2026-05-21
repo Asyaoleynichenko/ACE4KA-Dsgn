@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useLenisInstance } from '../context/LenisProvider.jsx';
+import { bindScrollResize } from '../utils/scrollRoot.js';
 
 /**
  * Подсветка текущего блока при вертикальном скролле (якоря с id).
- * Учитывает и window, и #root (если скролл перенесён на контейнер).
+ * Учитывает Lenis и нативный скролл window / #root.
  */
 export function useScrollSpy(sectionIds) {
   const [activeId, setActiveId] = useState(() => sectionIds[0] ?? '');
+  const { lenis } = useLenisInstance();
 
   useEffect(() => {
     if (!sectionIds.length) {
@@ -36,20 +39,13 @@ export function useScrollSpy(sectionIds) {
       });
     };
 
-    const rootEl = document.getElementById('root');
-
-    compute();
-    window.addEventListener('scroll', onScrollOrResize, { passive: true });
-    rootEl?.addEventListener('scroll', onScrollOrResize, { passive: true });
-    window.addEventListener('resize', onScrollOrResize, { passive: true });
+    const unbind = bindScrollResize(onScrollOrResize, { lenis });
 
     return () => {
-      window.removeEventListener('scroll', onScrollOrResize);
-      rootEl?.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
+      unbind();
       if (raf != null) cancelAnimationFrame(raf);
     };
-  }, [sectionIds.join('\0')]);
+  }, [sectionIds.join('\0'), lenis]);
 
   return activeId;
 }

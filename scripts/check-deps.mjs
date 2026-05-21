@@ -8,6 +8,7 @@ const checks = [
   ['react', join(root, 'node_modules', 'react', 'package.json')],
   ['react-dom', join(root, 'node_modules', 'react-dom', 'package.json')],
   ['@vitejs/plugin-react', join(root, 'node_modules', '@vitejs', 'plugin-react', 'package.json')],
+  ['gsap', join(root, 'node_modules', 'gsap', 'package.json')],
 ];
 
 const missing = checks.filter(([, path]) => !existsSync(path));

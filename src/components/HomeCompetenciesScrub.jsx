@@ -1,26 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useScrollTriggerCompetenciesScrub } from '../hooks/useScrollTriggerCompetenciesScrub.js';
 import { rem, remPx } from '../utils/cssRem.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import ProjectCard from './ProjectCard.jsx';
-
-/** Слушаем и window, и #root (snap-pages-root), и capture на document — как ParallaxBackdrop. */
-function bindScrollResize(onTick) {
-  const passive = { passive: true };
-  const capture = { passive: true, capture: true };
-  const appRoot = document.getElementById('root');
-  onTick();
-  window.addEventListener('scroll', onTick, passive);
-  document.addEventListener('scroll', onTick, capture);
-  appRoot?.addEventListener('scroll', onTick, passive);
-  window.addEventListener('resize', onTick, passive);
-  return () => {
-    window.removeEventListener('scroll', onTick, passive);
-    document.removeEventListener('scroll', onTick, capture);
-    appRoot?.removeEventListener('scroll', onTick, passive);
-    window.removeEventListener('resize', onTick, passive);
-  };
-}
 
 /** Figma 416:12975 — порядок H-уровней в стопке (H1 — самый большой, H5 — самый маленький). */
 const COMPETENCIES_HEADING_ORDER = [2, 4, 1, 5, 3];
@@ -84,7 +67,6 @@ export default function HomeCompetenciesScrub({
   const runwayRef = useRef(null);
   const stickyRef = useRef(null);
   const stageRef = useRef(null);
-  const rafRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [runwayMin, setRunwayMin] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(
@@ -137,43 +119,27 @@ export default function HomeCompetenciesScrub({
     return () => ro.disconnect();
   }, [measureRunway, reducedMotion]);
 
-  const updateActiveFromScroll = useCallback(() => {
-    if (reducedMotion || n < 1) return;
-    const runway = runwayRef.current;
-    const sticky = stickyRef.current;
-    if (!runway || !sticky) return;
-    const appRoot = document.getElementById('root');
-    const vh = appRoot?.clientHeight ?? window.innerHeight ?? 800;
-    const rect = runway.getBoundingClientRect();
-    /* Pre-trigger 5rem + 45vh so the scrub starts as soon as the runway enters the viewport. */
-    const scrolled = -rect.top + vh * 0.45 + remPx(80);
-    /* Span = full distance the sticky stays pinned. Guarantees t reaches 1 (last line: Branding) before unstick. */
-    const span = Math.max(1, runway.offsetHeight - sticky.offsetHeight);
-    const t = Math.min(1, Math.max(0, scrolled / span));
-    const { idx, scaleX, scaleY } = activeLineStretchFromScroll(n, t);
-    setActiveIdx((prev) => (prev === idx ? prev : idx));
-    const stage = stageRef.current;
-    if (stage) {
-      stage.style.setProperty('--comp-active-scale-x', scaleX.toFixed(4));
-      stage.style.setProperty('--comp-active-scale-y', scaleY.toFixed(4));
-    }
-  }, [n, reducedMotion]);
+  const onScrub = useCallback(
+    (t) => {
+      if (n < 1) return;
+      const { idx, scaleX, scaleY } = activeLineStretchFromScroll(n, t);
+      setActiveIdx((prev) => (prev === idx ? prev : idx));
+      const stage = stageRef.current;
+      if (stage) {
+        stage.style.setProperty('--comp-active-scale-x', scaleX.toFixed(4));
+        stage.style.setProperty('--comp-active-scale-y', scaleY.toFixed(4));
+      }
+    },
+    [n],
+  );
 
-  useEffect(() => {
-    if (reducedMotion) return undefined;
-    const tick = () => {
-      rafRef.current = null;
-      updateActiveFromScroll();
-    };
-    const schedule = () => {
-      if (rafRef.current != null) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        tick();
-      });
-    };
-    return bindScrollResize(schedule);
-  }, [updateActiveFromScroll, reducedMotion]);
+  useScrollTriggerCompetenciesScrub({
+    enabled: !reducedMotion,
+    runwayRef,
+    stickyRef,
+    runwayMinPx: runwayMin,
+    onScrub,
+  });
 
   const activeSlugs = slugRows[activeIdx] ?? [];
   const activeProjects = activeSlugs.map(resolveProject).filter(Boolean);

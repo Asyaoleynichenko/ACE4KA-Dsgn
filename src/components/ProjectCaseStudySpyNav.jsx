@@ -1,6 +1,8 @@
 import { createPortal } from 'react-dom';
 import { useEffect, useMemo, useState } from 'react';
+import { useLenisInstance } from '../context/LenisProvider.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
+import { scrollToElement } from '../utils/scrollRoot.js';
 
 /** Сидробар-кейса: вертикальная колонка точек на правом краю.
  *  Активная точка пульсирует var(--accent); остальные приглушены.
@@ -8,6 +10,7 @@ import { useI18n } from '../i18n/I18nProvider.jsx';
  */
 export default function ProjectCaseStudySpyNav({ sections, activeId }) {
   const { t } = useI18n();
+  const { lenis } = useLenisInstance();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -24,7 +27,7 @@ export default function ProjectCaseStudySpyNav({ sections, activeId }) {
     e.preventDefault();
     const el = document.getElementById(id);
     if (!el) return;
-    el.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    scrollToElement(el, { lenis, immediate: prefersReducedMotion, block: 'start' });
   };
 
   const nav = (

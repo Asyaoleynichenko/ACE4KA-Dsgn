@@ -17,6 +17,7 @@ import Page89_915 from './pages/Page89_915';
 import Page89_920 from './pages/Page89_920';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ScrollPolish from './components/ScrollPolish.jsx';
+import LenisProvider from './context/LenisProvider.jsx';
 
 const routerBasename =
   import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '') || undefined;
@@ -38,9 +39,10 @@ export default function App() {
   return (
     <BrowserRouter basename={routerBasename}>
       <I18nProvider>
-        <ScrollToTop />
-        <ScrollPolish />
-        <Routes>
+        <LenisProvider>
+          <ScrollToTop />
+          <ScrollPolish />
+          <Routes>
           <Route path="/" element={<RootLocaleRedirect />} />
           <Route path="/project/:slug" element={<LegacyLocaleRedirect />} />
           {LEGACY_TOP_PATHS.map((path) => (
@@ -62,7 +64,8 @@ export default function App() {
               <Route path="project/:slug" element={<ProjectDetailPage />} />
             </Route>
           </Route>
-        </Routes>
+          </Routes>
+        </LenisProvider>
       </I18nProvider>
     </BrowserRouter>
   );

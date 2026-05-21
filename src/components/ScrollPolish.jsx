@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { useLenisInstance } from '../context/LenisProvider.jsx';
+import { bindScroll } from '../utils/scrollRoot.js';
 
 /**
  * Effect-only: no DOM. Drives `--scale-y` on `[data-scale]` and
@@ -6,6 +8,8 @@ import { useEffect } from 'react';
  * Skipped when native `animation-timeline: view()` is supported (CSS owns it).
  */
 export default function ScrollPolish() {
+  const { lenis } = useLenisInstance();
+
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
@@ -61,15 +65,15 @@ export default function ScrollPolish() {
     );
     document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const unbind = bindScroll(onScroll, { lenis });
     onScroll();
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      unbind();
       io.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [lenis]);
 
   return null;
 }

@@ -1,78 +1,11 @@
-import { Children, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Children, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { SCRUB_EXIT_PHASE_RATIO } from '../utils/scrubExitHandoff.js';
+import { useLenisInstance } from '../context/LenisProvider.jsx';
+import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
 import {
-  applyCinematicCardTransforms,
-  lerpScalar,
-  resetCinematicCardTransforms,
-  scrollProgress01,
-} from '../utils/cinematicScrub.js';
-import { rem, remPx } from '../utils/cssRem.js';
-import {
-  applyScrubExitHandoff,
-  clearScrubExitHandoff,
-  resolveHandoffTarget,
-  scrubExitSpanPx,
-  SCRUB_EXIT_PHASE_RATIO,
-  splitScrubProgress,
-} from '../utils/scrubExitHandoff.js';
-
-/** Скролл страницы: window или #root (snap-pages), как ParallaxBackdrop / HomeCompetenciesScrub. */
-function getScrollRoot() {
-  const root = document.getElementById('root');
-  if (root && root.scrollHeight > root.clientHeight + 2) return root;
-  return null;
-}
-
-function bindScrollResize(onTick) {
-  const passive = { passive: true };
-  const capture = { passive: true, capture: true };
-  const appRoot = document.getElementById('root');
-  onTick();
-  window.addEventListener('scroll', onTick, passive);
-  document.addEventListener('scroll', onTick, capture);
-  appRoot?.addEventListener('scroll', onTick, passive);
-  window.addEventListener('resize', onTick, passive);
-  return () => {
-    window.removeEventListener('scroll', onTick, passive);
-    document.removeEventListener('scroll', onTick, capture);
-    appRoot?.removeEventListener('scroll', onTick, passive);
-    window.removeEventListener('resize', onTick, passive);
-  };
-}
-
-function scrollByPx(delta, behavior = 'auto') {
-  const root = getScrollRoot();
-  if (root) root.scrollBy({ top: delta, behavior });
-  else window.scrollBy({ top: delta, behavior });
-}
-
-/** Вертикальный ход runway: привязан к горизонтальному ходу ленты (без лишней пустоты). */
-function getRunwayScrollSpan(vh, slideCount, mx) {
-  const steps = Math.max(1, slideCount - 1);
-  const perStep = Math.max(vh * 0.38, mx > 1 ? mx * 0.55 : vh * 0.38);
-  return Math.max(perStep * steps, remPx(72));
-}
-
-/**
- * Прогресс 0…1 и scrollSpan (runwayRectTop — верх обёртки runway, см. sticky-pin ниже).
- */
-function linkedStripMetrics(runwayRectTop, mx, vh, slideCount) {
-  const scrollSpan = Math.max(1, getRunwayScrollSpan(vh, slideCount, mx));
-  const enter = vh * 0.12;
-  const p = Math.min(1, Math.max(0, (enter - runwayRectTop) / scrollSpan));
-  return { p, scrollSpan };
-}
-
-function activeIndexFromOffset(x, mx, count) {
-  if (count <= 1 || mx <= 1) return 0;
-  const step = mx / (count - 1);
-  return Math.min(count - 1, Math.round(x / step));
-}
-
-function readViewportHeight() {
-  const appRoot = document.getElementById('root');
-  if (appRoot?.classList.contains('snap-pages-root')) return appRoot.clientHeight || window.innerHeight || 1;
-  return window.innerHeight || 1;
-}
+  scrollToHorizontalScrubProgress,
+  useScrollTriggerHorizontalScrub,
+} from '../hooks/useScrollTriggerHorizontalScrub.js';
 
 /** Горизонтальный ход ленты (ширина слайдов + gap между ними). */
 function readMx(viewport, inner) {
@@ -88,11 +21,6 @@ function readMx(viewport, inner) {
   return Math.max(0, slideW * gaps + gap * gaps);
 }
 
-/** Scroll-bound progress 0…1 (runway + sticky pin). */
-function linkedProgress01(runway, sticky) {
-  return scrollProgress01(runway, sticky);
-}
-
 /**
  * Лента карточек / контактов:
  * — обычный режим: горизонталь сдвигается при вертикальном скролле; наружная **runway** + `sticky` на ленте
@@ -102,6 +30,8 @@ function linkedProgress01(runway, sticky) {
  * variant="hypothesis" — статичный вертикальный стек.
  */
 export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel, className = '' }) {
+  const { lenis } = useLenisInstance();
+  const scrubTriggerId = `scrub-row-${useId().replace(/:/g, '')}`;
   const count = Children.count(children);
   const runwayRef = useRef(null);
   const stickyRef = useRef(null);
@@ -110,14 +40,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   const trackRef = useRef(null);
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
-  const rafRef = useRef(null);
-  const cinematicRafRef = useRef(null);
-  const handoffTargetRef = useRef(null);
-  const smoothXRef = useRef(0);
-  const prevSmoothXRef = useRef(0);
   const [activeIdx, setActiveIdx] = useState(0);
   const [maxX, setMaxX] = useState(0);
-  const [scrollSpanPx, setScrollSpanPx] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
@@ -130,10 +54,25 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return () => mq.removeEventListener('change', sync);
   }, []);
 
-  /** Native horizontal scroll включается только при reduced-motion; в остальных случаях — scroll-linked auto-scrub. */
+  /** Native horizontal scroll — только при reduced-motion. */
   const useNativeX = reducedMotion;
-  /** Кинематичный scrub с lerp + parallax — только лента карточек кейса. */
-  const useCinematicScrub = variant === 'cards' && !useNativeX;
+  /** GSAP ScrollTrigger scrub — горизонтальная лента привязана к скроллу. */
+  const useScrollLinked = !useNativeX && (variant === 'cards' || variant === 'contact');
+  /** Кинематичный handoff + layered motion — лента карточек кейса. */
+  const useCinematicScrub = variant === 'cards' && useScrollLinked;
+
+  useScrollTriggerHorizontalScrub({
+    enabled: useScrollLinked,
+    triggerId: scrubTriggerId,
+    runwayRef,
+    pinRef: stickyRef,
+    innerRef,
+    viewportRef,
+    spacerRef,
+    slideCount: count,
+    cinematic: useCinematicScrub,
+    onActiveIndex: setActiveIdx,
+  });
 
   const recalcMaxX = useCallback(() => {
     const inner = innerRef.current;
@@ -158,247 +97,20 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return () => ro.disconnect();
   }, [recalcMaxX]);
 
-  const measureRunwayMin = useCallback(() => {
-    const runway = runwayRef.current;
-    const sticky = stickyRef.current;
-    const track = trackRef.current;
-    const viewport = viewportRef.current;
-    const inner = innerRef.current;
-    if (!runway || !track || !viewport || !inner) return;
-    const vh = readViewportHeight();
-    const mx = readMx(viewport, inner);
-    if (mx <= 1) {
-      setScrollSpanPx((prev) => (prev === 0 ? prev : 0));
-      return;
-    }
-    const scrollSpan = getRunwayScrollSpan(vh, count, mx);
-    const exitSpan = useCinematicScrub ? scrubExitSpanPx(vh) : 0;
-    const totalSpan = scrollSpan + exitSpan;
-    setScrollSpanPx((prev) => (prev === totalSpan ? prev : totalSpan));
-    const spacer = spacerRef.current;
-    if (spacer) spacer.style.height = rem(totalSpan);
-  }, [count, useCinematicScrub]);
-
-  const progressFromViewport = useCallback(() => {
-    const runway = runwayRef.current;
-    const sticky = stickyRef.current;
-    const viewport = viewportRef.current;
-    const inner = innerRef.current;
-    if (!runway || !viewport) return 0;
-    const mx = inner ? readMx(viewport, inner) : 0;
-    if (sticky) return scrollProgress01(runway, sticky, spacerRef.current);
-    const vh = readViewportHeight();
-    return linkedStripMetrics(runway.getBoundingClientRect().top, mx, vh, count).p;
-  }, [count]);
-
-  useLayoutEffect(() => {
-    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
-    measureRunwayMin();
-    const id = requestAnimationFrame(measureRunwayMin);
-    return () => cancelAnimationFrame(id);
-  }, [children, maxX, measureRunwayMin, useNativeX, variant]);
-
-  /** CSS sticky часто ломается на кейсах (flex/clip у предков) — дублируем pin через fixed. */
+  /** Пересчёт ScrollTrigger после resize контента. */
   useEffect(() => {
-    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
-
-    const updatePin = () => {
-      const runway = runwayRef.current;
-      const sticky = stickyRef.current;
-      const pin = pinRef.current;
-      const spacer = spacerRef.current;
-      if (!runway || !sticky || !pin) return;
-
-      const stickyTop = parseFloat(getComputedStyle(sticky).top) || 0;
-      const runwayRect = runway.getBoundingClientRect();
-      const track = trackRef.current;
-      const contentH = Math.max(1, track?.offsetHeight ?? pin.offsetHeight);
-      /* Пин на всю длину runway (включая spacer), пока блок не ушёл вверх — иначе пустой скролл без карточек. */
-      const inPin = runwayRect.top <= stickyTop && runwayRect.bottom > stickyTop;
-
-      if (inPin) {
-        pin.classList.add('scroll-scrub-row__pin--fixed');
-        pin.style.top = `${stickyTop}px`;
-        pin.style.left = `${Math.round(runwayRect.left)}px`;
-        pin.style.width = `${Math.round(runwayRect.width)}px`;
-        sticky.style.minHeight = `${Math.round(contentH)}px`;
-      } else {
-        pin.classList.remove('scroll-scrub-row__pin--fixed');
-        pin.style.top = '';
-        pin.style.left = '';
-        pin.style.width = '';
-        sticky.style.minHeight = '';
-      }
-    };
-
-    return bindScrollResize(updatePin);
-  }, [useNativeX, variant]);
-
-  useEffect(() => {
-    if (useNativeX || (variant !== 'cards' && variant !== 'contact')) return undefined;
-    const runway = runwayRef.current;
-    const sticky = stickyRef.current;
-    const track = trackRef.current;
-    const vp = viewportRef.current;
-    const inner = innerRef.current;
-    if (!runway || !track || !vp || !inner) return undefined;
-    const ro = new ResizeObserver(() => measureRunwayMin());
-    ro.observe(runway);
-    if (sticky) ro.observe(sticky);
-    const spacer = spacerRef.current;
-    if (spacer) ro.observe(spacer);
-    ro.observe(track);
-    ro.observe(vp);
-    ro.observe(inner);
-    const onResize = () => measureRunwayMin();
-    window.addEventListener('resize', onResize);
+    if (!useScrollLinked) return undefined;
+    const nodes = [runwayRef.current, stickyRef.current, innerRef.current, viewportRef.current].filter(Boolean);
+    if (!nodes.length) return undefined;
+    const schedule = () => requestAnimationFrame(refreshScrollTrigger);
+    const ro = new ResizeObserver(schedule);
+    nodes.forEach((n) => ro.observe(n));
+    window.addEventListener('resize', schedule);
     return () => {
       ro.disconnect();
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', schedule);
     };
-  }, [measureRunwayMin, useNativeX, variant]);
-
-  const updateFromPageScroll = useCallback(() => {
-    if (useNativeX || useCinematicScrub) return;
-    const inner = innerRef.current;
-    const viewport = viewportRef.current;
-    if (!inner || !viewport) return;
-    const mx = readMx(viewport, inner);
-    const rawP = progressFromViewport();
-    const { scrubP } = splitScrubProgress(rawP);
-    const x = scrubP * mx;
-    inner.style.transform = mx > 1 ? `translate3d(${-x}px,0,0)` : 'none';
-    setActiveIdx(activeIndexFromOffset(x, mx, count));
-  }, [count, useCinematicScrub, useNativeX, progressFromViewport]);
-
-  /** Линейный scrub (contact): обновление по scroll + resize. */
-  useEffect(() => {
-    if (useNativeX || useCinematicScrub || (variant !== 'cards' && variant !== 'contact')) return undefined;
-
-    const tick = () => {
-      rafRef.current = null;
-      updateFromPageScroll();
-    };
-    const onScrollOrResize = () => {
-      if (rafRef.current != null) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        tick();
-      });
-    };
-
-    return bindScrollResize(onScrollOrResize);
-  }, [updateFromPageScroll, useCinematicScrub, useNativeX, variant]);
-
-  useEffect(() => {
-    if (useNativeX || useCinematicScrub || (variant !== 'cards' && variant !== 'contact')) return undefined;
-    updateFromPageScroll();
-  }, [maxX, useCinematicScrub, useNativeX, variant, updateFromPageScroll]);
-
-  /** Кинематичный scrub (cards): RAF + lerp, пока runway в зоне видимости */
-  useEffect(() => {
-    if (!useCinematicScrub) return undefined;
-
-    let alive = true;
-    let inView = true;
-    let io = null;
-
-    const tick = () => {
-      const inner = innerRef.current;
-      const viewport = viewportRef.current;
-      const runway = runwayRef.current;
-      const sticky = stickyRef.current;
-      if (!inner || !viewport) return;
-
-      const rawP = progressFromViewport();
-      const { scrubP, exitP } = splitScrubProgress(rawP);
-      const mx = readMx(viewport, inner);
-      const targetX = scrubP * mx;
-      const prevX = smoothXRef.current;
-      smoothXRef.current = lerpScalar(smoothXRef.current, targetX);
-      const velocityPx = smoothXRef.current - prevX;
-      const progress01 = runway ? scrollProgress01(runway, sticky, spacerRef.current) : rawP;
-      applyScrubExitHandoff(handoffTargetRef.current, exitP);
-      const { mx: layoutMx } = applyCinematicCardTransforms(
-        inner,
-        viewport,
-        smoothXRef.current,
-        progress01,
-        velocityPx,
-        exitP,
-      );
-      const mxUse = layoutMx > 1 ? layoutMx : mx;
-      setActiveIdx(activeIndexFromOffset(smoothXRef.current, mxUse, count));
-    };
-
-    const frame = () => {
-      cinematicRafRef.current = null;
-      if (!alive || !inView) return;
-      tick();
-      cinematicRafRef.current = requestAnimationFrame(frame);
-    };
-
-    const schedule = () => {
-      if (!inView || cinematicRafRef.current != null) return;
-      cinematicRafRef.current = requestAnimationFrame(frame);
-    };
-
-    const runwayEl = runwayRef.current;
-    if (runwayEl && typeof IntersectionObserver !== 'undefined') {
-      io = new IntersectionObserver(
-        ([entry]) => {
-          inView = entry.isIntersecting;
-          if (inView) schedule();
-          else if (cinematicRafRef.current != null) {
-            cancelAnimationFrame(cinematicRafRef.current);
-            cinematicRafRef.current = null;
-            tick();
-          }
-        },
-        { root: null, rootMargin: '15% 0px 15% 0px', threshold: 0 },
-      );
-      io.observe(runwayEl);
-    }
-
-    const unbind = bindScrollResize(schedule);
-    schedule();
-
-    return () => {
-      alive = false;
-      io?.disconnect();
-      unbind();
-      if (cinematicRafRef.current != null) cancelAnimationFrame(cinematicRafRef.current);
-      resetCinematicCardTransforms(innerRef.current);
-      clearScrubExitHandoff(handoffTargetRef.current);
-    };
-  }, [count, progressFromViewport, useCinematicScrub]);
-
-  /** Следующая секция кейса — цель «наезда» после последней карточки. */
-  useEffect(() => {
-    if (!useCinematicScrub) return undefined;
-    const runway = runwayRef.current;
-    if (!runway) return undefined;
-    const target = resolveHandoffTarget(runway);
-    handoffTargetRef.current = target;
-    if (target) target.classList.add('scroll-scrub-handoff-target');
-    return () => clearScrubExitHandoff(target);
-  }, [useCinematicScrub, children]);
-
-  useLayoutEffect(() => {
-    if (!useCinematicScrub) return undefined;
-    const inner = innerRef.current;
-    const viewport = viewportRef.current;
-    if (!inner || !viewport) return undefined;
-    const mx = readMx(viewport, inner);
-    const runway = runwayRef.current;
-    const sticky = stickyRef.current;
-    const rawP = runway ? scrollProgress01(runway, sticky, spacerRef.current) : progressFromViewport();
-    const { scrubP } = splitScrubProgress(rawP);
-    smoothXRef.current = scrubP * mx;
-    prevSmoothXRef.current = smoothXRef.current;
-    applyCinematicCardTransforms(inner, viewport, smoothXRef.current, rawP, 0, splitScrubProgress(rawP).exitP);
-    return undefined;
-  }, [children, maxX, progressFromViewport, useCinematicScrub]);
+  }, [useScrollLinked, children, maxX]);
 
   const syncDotsFromViewportScroll = useCallback(() => {
     const vp = viewportRef.current;
@@ -490,25 +202,12 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
 
   const scrollToSlideLinked = useCallback(
     (index) => {
-      const runway = runwayRef.current;
-      const sticky = stickyRef.current;
-      const inner = innerRef.current;
-      const viewport = viewportRef.current;
-      if (!runway || !inner || !viewport) return;
-      const mx = readMx(viewport, inner);
-      if (mx <= 1) return;
-      const scrubTarget = count <= 1 ? 0 : index / (count - 1);
       const exitStart = 1 - SCRUB_EXIT_PHASE_RATIO;
+      const scrubTarget = count <= 1 ? 0 : index / (count - 1);
       const targetP = scrubTarget * exitStart;
-      const currentP = progressFromViewport();
-      const vh = readViewportHeight();
-      const scrollSpan = sticky
-        ? Math.max(1, runway.offsetHeight - sticky.offsetHeight)
-        : linkedStripMetrics(runway.getBoundingClientRect().top, mx, vh, count).scrollSpan;
-      const delta = (targetP - currentP) * scrollSpan;
-      scrollByPx(delta, 'smooth');
+      scrollToHorizontalScrubProgress(scrubTriggerId, targetP, { lenis });
     },
-    [count, progressFromViewport],
+    [count, lenis, scrubTriggerId],
   );
 
   const rootClass = `scroll-scrub-row scroll-scrub-row__track scroll-scrub-row--${variant} ${className}`.trim();
