@@ -37,7 +37,7 @@ export default function PreviewCardBlock() {
         <div className="preview-card-block__titlebar-start" data-node-id="I1:231;103:8916">
           <MacTrafficLights t={t} />
         </div>
-        <span className="preview-card-block__title" data-node-id="I1:231;153:9332">
+        <span className="preview-card-block__title" data-node-id="I1:231;153:9332" data-float="0.55" data-float-range="8">
           {t('previewCard.title')}
         </span>
         <div className="preview-card-block__trailing" data-node-id="I1:231;103:8929">
@@ -46,8 +46,8 @@ export default function PreviewCardBlock() {
           </span>
         </div>
       </div>
-      <div className="preview-card-block__image" data-node-id="I1:231;103:8833">
-        <img src={previewImageSrc} alt="" />
+      <div className="preview-card-block__image" data-node-id="I1:231;103:8833" data-float="1.25" data-float-range="22">
+        <img src={previewImageSrc} alt="" data-float="1.5" data-float-range="16" />
       </div>
     </a>
   );
