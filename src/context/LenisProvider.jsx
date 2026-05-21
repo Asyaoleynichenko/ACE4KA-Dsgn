@@ -6,6 +6,7 @@ import {
   onScrollTriggerScrollerChange,
 } from '../gsap/lenisScrollTrigger.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
+import { MOTION_LERP } from '../motion/motionSystem.js';
 
 const LenisContext = createContext({ lenis: null, enabled: false });
 
@@ -17,11 +18,11 @@ const LENIS_OPTIONS = {
   /** RAF через GSAP ticker — синхрон с ScrollTrigger scrub */
   autoRaf: false,
   /** Inertia / «тяжёлый» скролл — ниже = плавнее и дольше затухание */
-  lerp: 0.075,
+  lerp: MOTION_LERP,
   wheelMultiplier: 0.92,
   smoothWheel: true,
   syncTouch: true,
-  syncTouchLerp: 0.08,
+  syncTouchLerp: MOTION_LERP,
   touchInertiaExponent: 1.65,
   allowNestedScroll: true,
   anchors: true,

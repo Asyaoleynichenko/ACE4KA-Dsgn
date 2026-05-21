@@ -13,8 +13,8 @@ export default function ParallaxBackdrop() {
     if (!root) return;
 
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    /** Плавное следование за скроллом: τ секунд — чем больше, тем мягче движение слоёв */
-    const TAU_SEC = 0.48;
+    /** τ согласован с motion lerp 0.08 (~тяжёлая камера) */
+    const TAU_SEC = 0.52;
     const EPS_PX = 0.2;
 
     let tickRaf = null;

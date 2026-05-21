@@ -8,6 +8,8 @@ import ProjectCard from '../components/ProjectCard';
 import DotIcon from '../components/DotIcon.jsx';
 import HomeCompetenciesScrub from '../components/HomeCompetenciesScrub.jsx';
 import HalftoneButton from '../components/HalftoneButton.jsx';
+import TypographyReveal from '../components/TypographyReveal.jsx';
+import HomeCameraScroll from '../components/HomeCameraScroll.jsx';
 import FilterPills from '../components/FilterPills';
 import { projects } from '../data/projects';
 import {
@@ -16,7 +18,6 @@ import {
   headerItemsFolder,
   headerItemsWell,
 } from '../data/sectionHeaderItems';
-import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
 import { publicUrl } from '../utils/publicUrl.js';
 
 function headerItemPlacementStyle(placement) {
@@ -61,16 +62,21 @@ const HOME_COMPETENCIES_FIGMA_URL =
   'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=418-21263&m=dev';
 
 export default function HomePage() {
-  const { t, localizedPath, messages } = useI18n();
+  const { t, localizedPath, messages, locale } = useI18n();
   const competencyLines = messages.hero?.competencies?.lines ?? [];
   const competencyLineProjectSlugs = messages.hero?.competencies?.lineProjectSlugs;
 
   return (
-    <div className="home-page home-page--chrome" data-node-id="89:347" data-name="Главная">
-      <div className="home-page__scroll">
-        <section className="hero snap-screen" data-node-id="1-202" data-figma-node="1-202">
-        <div className="hero-first-screen" data-node-id="70:343" data-name="First screen">
-          <div className="hero__top">
+    <HomeCameraScroll bridgeLabel={t('hero.projectsSectionTitle')}>
+      <div className="home-page__scroll" data-camera-rail data-node-id="89:347" data-name="Главная">
+        <section
+          className="hero snap-screen home-scene home-scene--hero"
+          data-scene="hero"
+          data-node-id="1-202"
+          data-figma-node="1-202"
+        >
+        <div className="hero-first-screen" data-node-id="70:343" data-name="First screen" data-camera-depth="1.15">
+          <div className="hero__top" data-camera-depth="0.85">
             <div className="hero-vector" aria-hidden="true" data-node-id="1:203">
               <div className="hero-vector__inner" data-float="1.2" data-float-range="24">
                 <img src={publicUrl('/images/main%20title%20vector.svg')} alt="" data-float="1.4" data-float-range="18" />
@@ -121,21 +127,57 @@ export default function HomePage() {
           </nav>
         </div>
 
-        <div className="hero__row" data-node-id="1:232">
+        <div className="hero__row home-scene__camera-body" data-node-id="1:232" data-camera-depth="0.55">
           <div className="hero__content">
             <div className="hero__intro">
               <div className="hero-content">
-                <p className="hero-role" data-float="0.5" data-float-range="10">
+                <TypographyReveal
+                  as="p"
+                  className="hero-role"
+                  data-float="0.5"
+                  data-float-range="10"
+                  variant="cinematic"
+                  trigger="load"
+                  split="block"
+                  delay={0.06}
+                  weightTo="regular"
+                >
                   <span className="text-condensed">{t('hero.role')}</span>
-                </p>
-                <h1 className="hero-title" data-scale="hero-name" data-float="0.85" data-float-range="16">
+                </TypographyReveal>
+                <TypographyReveal
+                  as="h1"
+                  className="hero-title"
+                  data-scale="hero-name"
+                  data-float="0.85"
+                  data-float-range="16"
+                  variant="cinematic"
+                  trigger="load"
+                  split="children"
+                  delay={0.18}
+                  stagger={0.1}
+                  key={`hero-title-${locale}`}
+                >
                   {heroTitleLines(t('hero.title')).map((part) => (
                     <span key={part} className="hero-title__line">
                       {part}
                     </span>
                   ))}
-                </h1>
-                <p className="hero-text" data-float="0.6" data-float-range="12">{t('hero.text')}</p>
+                </TypographyReveal>
+                <TypographyReveal
+                  as="p"
+                  className="hero-text"
+                  data-float="0.6"
+                  data-float-range="12"
+                  variant="cinematic"
+                  trigger="load"
+                  split="lines"
+                  delay={0.42}
+                  stagger={0.07}
+                  weightTo="regular"
+                  key={`hero-text-${locale}`}
+                >
+                  {t('hero.text')}
+                </TypographyReveal>
                 <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
                   <span className="hero-more__text"><span className="text-condensed">{t('hero.moreAbout')}</span></span>
                   <span className="hero-more__chevron" aria-hidden="true" />
@@ -185,7 +227,8 @@ export default function HomePage() {
 
       {competencyLines.length ? (
         <section
-          className="home-competencies"
+          className="home-competencies home-scene home-scene--competencies"
+          data-scene="competencies"
           data-node-id="418:21263"
           data-figma-url={HOME_COMPETENCIES_FIGMA_URL}
           aria-label={t('hero.competencies.aria')}
@@ -204,24 +247,39 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="section section-projects snap-screen" data-node-id="1:285" data-figma-node="1-285">
-        <div className="logo-section" data-node-id="1:286">
-          <h2
+      <section
+        className="section section-projects snap-screen home-scene home-scene--projects"
+        data-scene="projects"
+        data-node-id="1:285"
+        data-figma-node="1-285"
+      >
+        <div className="logo-section home-scene__camera-body" data-node-id="1:286" data-camera-depth="0.45">
+          <TypographyReveal
+            as="h2"
             className="projects-title-main"
             data-node-id="1:289"
             data-scale="section-title"
             data-float="0.7"
             data-float-range="14"
+            variant="cinematic"
+            trigger="scroll"
+            split="lines"
+            stagger={0.08}
+            key={`projects-title-${locale}`}
           >
             {t('hero.projectsSectionTitle')}
-          </h2>
+          </TypographyReveal>
           <FilterPills />
         </div>
-        <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">
-          {homeProjects.map((item, index) => (
+        <div
+          className="preview-grid home-scene__cards-handoff"
+          data-node-id="1:297"
+          data-figma-node="1-297"
+          data-camera-depth="0.7"
+        >
+          {homeProjects.map((item) => (
             <ProjectCard
               key={item.slug}
-              depthSpeed={DEPTH_SPEED_PRESETS[index % DEPTH_SPEED_PRESETS.length]}
               slug={item.slug}
               title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
               meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}
@@ -234,6 +292,6 @@ export default function HomePage() {
         </div>
         </section>
       </div>
-    </div>
+    </HomeCameraScroll>
   );
 }

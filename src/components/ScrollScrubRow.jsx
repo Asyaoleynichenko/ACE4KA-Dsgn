@@ -1,5 +1,4 @@
-import { Children, cloneElement, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
+import { Children, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { SCRUB_EXIT_PHASE_RATIO } from '../utils/scrubExitHandoff.js';
 import { useLenisInstance } from '../context/LenisProvider.jsx';
 import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
@@ -201,16 +200,6 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     [reducedMotion],
   );
 
-  const depthChildren = Children.map(children, (child, index) => {
-    if (!child || typeof child !== 'object') return child;
-    const speed = child.props?.['data-speed'] ?? DEPTH_SPEED_PRESETS[index % DEPTH_SPEED_PRESETS.length];
-    const className = [child.props?.className, 'parallax-depth'].filter(Boolean).join(' ');
-    return cloneElement(child, {
-      'data-speed': String(speed),
-      className,
-    });
-  });
-
   const scrollToSlideLinked = useCallback(
     (index) => {
       const exitStart = 1 - SCRUB_EXIT_PHASE_RATIO;
@@ -247,7 +236,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return (
       <div className={`${rootClass} scroll-scrub-row--hypothesis-static`}>
         <div className="hypothesis-stack" role="region" aria-label={ariaLabel}>
-          {depthChildren}
+          {children}
         </div>
       </div>
     );
@@ -265,7 +254,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
               aria-label={ariaLabel}
             >
               <div ref={innerRef} className="scroll-scrub-row__inner">
-                {depthChildren}
+                {children}
               </div>
             </div>
             {renderIndicator(scrollToSlideReduced)}
@@ -295,7 +284,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
                   aria-label={ariaLabel}
                 >
                   <div ref={innerRef} className="scroll-scrub-row__inner">
-                    {depthChildren}
+                    {children}
                   </div>
                 </div>
                 {renderIndicator(scrollToSlideLinked)}

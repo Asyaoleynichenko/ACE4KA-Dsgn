@@ -20,6 +20,7 @@ import MouseInertia from './components/MouseInertia.jsx';
 import SvgDisplacementDefs from './components/SvgDisplacementDefs.jsx';
 import ParallaxDepth from './components/ParallaxDepth.jsx';
 import ScrollPolish from './components/ScrollPolish.jsx';
+import TypographyRevealHost from './components/TypographyRevealHost.jsx';
 import LenisProvider from './context/LenisProvider.jsx';
 
 const routerBasename =
@@ -48,6 +49,7 @@ export default function App() {
           <ParallaxDepth />
           <MouseInertia />
           <ScrollPolish />
+          <TypographyRevealHost />
           <Routes>
           <Route path="/" element={<RootLocaleRedirect />} />
           <Route path="/project/:slug" element={<LegacyLocaleRedirect />} />

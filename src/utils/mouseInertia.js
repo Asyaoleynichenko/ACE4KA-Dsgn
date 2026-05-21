@@ -1,6 +1,8 @@
-/** Mouse float: current += (target - current) * 0.08 */
-export const FLOAT_LERP_ALPHA = 0.08;
-export const FLOAT_SNAP_PX = 0.08;
+import { MOTION_LERP } from '../motion/motionSystem.js';
+
+/** Mouse float — та же физика, что Lenis и scrub */
+export const FLOAT_LERP_ALPHA = MOTION_LERP;
+export const FLOAT_SNAP_PX = MOTION_LERP;
 
 export function lerpFloat(current, target, alpha = FLOAT_LERP_ALPHA) {
   if (Math.abs(target - current) <= FLOAT_SNAP_PX) return target;
@@ -32,9 +34,8 @@ export function readFloatRange(el) {
 
 function defaultFloatRange(el) {
   if (el.matches?.('.hero-title, h1, h2.projects-title-main')) return 16;
-  if (el.matches?.('.hero-text, .hero-role, .preview-card__title, .preview-card__meta')) return 10;
-  if (el.matches?.('.preview-image, .preview-card-block__image, .preview-card-block__image img')) return 30;
-  if (el.matches?.('.preview-card-block, .hero__card .preview-card-block')) return 18;
+  if (el.matches?.('.hero-text, .hero-role')) return 10;
+  if (el.matches?.('.preview-card-block, .hero__card .preview-card-block')) return 24;
   if (el.matches?.('.hero-vector__inner, .hero-vector__inner img')) return 22;
   if (el.matches?.('.card, .scroll-scrub-row__inner > .card')) return 20;
   if (el.matches?.('.header-item')) return 12;
@@ -101,6 +102,9 @@ export function decayMouseFloat(elements) {
 
 export function collectFloatElements(root = document) {
   return Array.from(root.querySelectorAll('[data-float]')).filter(
-    (el) => el instanceof HTMLElement && !el.closest('[data-float="off"]'),
+    (el) =>
+      el instanceof HTMLElement &&
+      !el.closest('[data-float="off"]') &&
+      !el.closest('.preview-card'),
   );
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { collectFloatElements, decayMouseFloat, tickMouseFloat } from '../utils/mouseInertia.js';
 
 /**
- * Mouse inertia / floating — hero, карточки, изображения, типографика с data-float.
+ * Mouse inertia / floating — hero, окно-превью, типографика с data-float (не карточки проектов).
  */
 export default function MouseInertia() {
   const pointerRef = useRef({ x: 0, y: 0, active: false });

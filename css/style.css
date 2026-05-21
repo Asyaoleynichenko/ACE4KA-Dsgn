@@ -35,6 +35,7 @@
   --color-focus-ring-strong: rgba(245, 245, 245, 0.56);
   --color-preview-titlebar-text: #a3a3a3;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-variable: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   /* Figma 418:21263 — Suisse Intl 600 в макете; при отсутствии файлов в `public/fonts` — Inter 600. */
   --font-competencies-display: 'Suisse Intl', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   /* Figma 337:24521 — VK Sans Display для крупных заголовков case-study; проприетарный, fallback Inter Black uppercase. */
@@ -59,6 +60,10 @@
   --dur-smart-slow: 400ms;
   --dur-smart-page-home: 500ms;
   --dur-smart-reveal: 640ms;
+  /* Motion system — один lerp / rhythm / pacing (см. src/motion/motionSystem.js) */
+  --motion-lerp: 0.08;
+  --motion-stagger-beat: 0.09s;
+  --motion-duration-reveal: 0.63s;
   --dur-smart-image: 720ms;
   --transition: var(--dur-smart-base) var(--ease-smart);
   --transition-fast: var(--dur-smart-fast) var(--ease-smart);
@@ -496,13 +501,9 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     will-change: transform, filter;
 }
 
-/* SVG displacement — feTurbulence + displacementMap (organic hover) */
+/* SVG displacement — только halftone CTA (не на карточках/изображениях) */
 .btn-show-all__halftone--liquid {
     filter: url(#ace-halftone-liquid);
-}
-
-.liquid-displace-host .preview-image.liquid-surface {
-    filter: url(#ace-preview-liquid);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -512,15 +513,81 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
         display: none;
     }
 
-    .liquid-displace-host .btn-show-all__halftone--liquid,
-    .liquid-displace-host .liquid-surface,
-    .liquid-displace-host .preview-image.liquid-surface {
+    .btn-show-all__halftone--liquid {
         filter: none !important;
     }
 
     .parallax-depth--active {
         filter: none !important;
         transition: none;
+    }
+}
+
+/* Typography reveals — mask + line stagger + variable font + blur sharpen (не fade-in-up) */
+.type-reveal {
+    position: relative;
+}
+
+.type-reveal__line {
+    display: block;
+    overflow: visible;
+}
+
+.type-reveal__mask {
+    display: block;
+    overflow: hidden;
+    line-height: inherit;
+}
+
+.type-reveal__inner {
+    display: inline-block;
+    will-change: clip-path, filter, font-variation-settings, transform;
+}
+
+.type-reveal__inner.type-reveal__vf {
+    font-family: var(--font-variable);
+}
+
+.type-reveal--pending .type-reveal__inner {
+    clip-path: inset(100% 0% 0% 0%);
+    filter: blur(16px);
+    font-variation-settings: "wght" 320, "wdth" 92;
+}
+
+.type-reveal--done .type-reveal__inner {
+    clip-path: inset(0% 0% 0% 0%);
+    filter: blur(0);
+}
+
+.hero-title.type-reveal {
+    display: inline-flex;
+}
+
+.hero-title.type-reveal .type-reveal__line {
+    display: block;
+}
+
+.hero-text.type-reveal .type-reveal__line {
+    text-align: center;
+}
+
+.projects-title-main.type-reveal,
+.project-intro .title h1.type-reveal {
+    display: block;
+}
+
+/* Case-study display face: маска/blur без подмены гарнитуры */
+.project-intro .title h1 .type-reveal__inner.type-reveal__vf {
+    font-family: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .type-reveal--pending .type-reveal__inner,
+    .type-reveal--done .type-reveal__inner {
+        clip-path: none !important;
+        filter: none !important;
+        font-variation-settings: normal !important;
+        transform: none !important;
     }
 }
 
@@ -534,7 +601,7 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
 }
 
 .hero .hero-vector__inner[data-float],
-.hero .preview-card-block__image[data-float] {
+.hero .preview-card-block[data-float] {
     transition: none;
 }
 
@@ -1976,6 +2043,184 @@ h3 {
     width: 100%;
 }
 
+/* ——— Бесшовная главная: scroll = camera, одна среда, сцены перетекают ——— */
+.home-page--seamless {
+    position: relative;
+    isolation: isolate;
+    --camera-p: 0;
+    --hero-exit: 0;
+    --scene-comp: 0;
+    --scene-projects: 0;
+    --type-bridge: 0;
+    --world-hue: 280;
+}
+
+.home-page--seamless .snap-screen,
+.home-page--seamless .home-competencies {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+}
+
+.home-world {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.home-world__glow {
+    position: absolute;
+    width: min(92vw, 56rem);
+    height: min(72vh, 40rem);
+    border-radius: 50%;
+    filter: blur(4.5rem);
+    opacity: calc(0.22 + var(--camera-p, 0) * 0.28);
+    will-change: transform, opacity;
+}
+
+.home-world__glow--a {
+    left: 50%;
+    top: 38%;
+    transform: translate(
+        calc(-50% + (var(--camera-p, 0) - 0.5) * 14vw),
+        calc(-50% + var(--camera-p, 0) * 16vh)
+    );
+    background: radial-gradient(
+        circle at 40% 42%,
+        hsl(calc(var(--world-hue, 280)) 72% 58% / 0.42) 0%,
+        transparent 68%
+    );
+}
+
+.home-world__glow--b {
+    left: 62%;
+    top: 58%;
+    width: min(70vw, 44rem);
+    height: min(50vh, 32rem);
+    transform: translate(
+        calc(-50% - (var(--camera-p, 0) - 0.5) * 10vw),
+        calc(-50% + var(--hero-exit, 0) * 12vh)
+    );
+    background: radial-gradient(
+        circle at 50% 50%,
+        hsl(calc(var(--world-hue, 280) + 40) 65% 52% / 0.28) 0%,
+        transparent 70%
+    );
+    opacity: calc(0.14 + var(--scene-comp, 0) * 0.32);
+}
+
+.home-world__grain {
+    position: absolute;
+    inset: -20%;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+}
+
+.home-world__vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 120% 80% at 50% 45%, transparent 35%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.home-page__scroll {
+    position: relative;
+    z-index: 1;
+}
+
+.home-type-bridge {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: clamp(28vh, 38vh, 44vh);
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.home-type-bridge__word {
+    font-family: var(--font-competencies-display);
+    font-size: clamp(3.5rem, 16vw, 10rem);
+    font-weight: 600;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.04);
+    -webkit-text-stroke: 0.0625rem rgba(255, 255, 255, 0.1);
+    transform: scale(calc(0.9 + var(--type-bridge, 0) * 0.14));
+    filter: blur(calc((1 - var(--type-bridge, 0)) * 14px));
+    font-variation-settings: "wght" calc(420 + var(--type-bridge, 0) * 280), "wdth" calc(88 + var(--type-bridge, 0) * 12);
+}
+
+[data-camera-depth] {
+    transform: translate3d(0, var(--camera-shift-y, 0), 0);
+    will-change: transform;
+}
+
+.home-page--seamless .home-scene--hero .hero__row {
+    opacity: calc(1 - var(--hero-exit, 0) * 0.9);
+    transform: translate3d(0, calc(var(--hero-exit, 0) * -9vh), 0)
+        scale(calc(1 - var(--hero-exit, 0) * 0.03));
+    filter: blur(calc(var(--hero-exit, 0) * 4px));
+    transition: none;
+}
+
+.home-page--seamless .home-scene--hero .hero-first-screen {
+    opacity: calc(1 - var(--hero-exit, 0) * 0.35);
+}
+
+.home-page--seamless .home-scene--competencies {
+    margin-top: calc(var(--hero-section-gap) * (1 - var(--hero-exit, 0) * 0.7));
+    opacity: calc(0.4 + var(--scene-comp, 0) * 0.6);
+}
+
+.home-page--seamless .home-competencies__panel {
+    box-shadow:
+        0 0 calc(3rem + var(--scene-comp, 0) * 5rem)
+            hsl(calc(var(--world-hue, 280)) 55% 50% / calc(0.1 + var(--scene-comp, 0) * 0.2)),
+        0 1.5rem 5rem rgba(0, 0, 0, 0.45);
+    border: 0.0625rem solid hsl(calc(var(--world-hue, 280)) 40% 40% / calc(0.06 + var(--scene-comp, 0) * 0.14));
+}
+
+.home-page--seamless .home-scene--projects .projects-title-main {
+    transform: scale(calc(0.88 + var(--type-bridge, 0) * 0.12));
+    opacity: calc(0.45 + var(--type-bridge, 0) * 0.55);
+    filter: blur(calc((1 - var(--type-bridge, 0)) * 8px));
+}
+
+.home-page--seamless .home-scene--projects .preview-grid {
+    transform: translate3d(0, calc((1 - var(--scene-projects, 0)) * 3.25rem), 0);
+    opacity: calc(0.42 + var(--scene-projects, 0) * 0.58);
+}
+
+.page-home .page-parallax {
+    opacity: 0.26;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page--seamless .home-scene--hero .hero__row,
+    .home-page--seamless .home-scene--hero .hero-first-screen,
+    .home-page--seamless .home-scene--competencies,
+    .home-page--seamless .home-scene--projects .projects-title-main,
+    .home-page--seamless .home-scene--projects .preview-grid,
+    [data-camera-depth],
+    .home-type-bridge__word {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+    }
+
+    .home-world__glow {
+        opacity: 0.18;
+        transform: translate(-50%, -50%);
+    }
+}
+
 /* Figma 418:21263 — главная: стек компетенций на чёрном + карточки + CTA «Все проекты» */
 .page-home .home-competencies {
     width: 100%;
@@ -2059,17 +2304,33 @@ h3 {
     z-index: 2;
     width: 100%;
     box-sizing: border-box;
+    /* Заполняем видимую высоту под шапкой — стек типографики по центру */
+    --comp-sticky-top: max(6.5rem, calc(env(safe-area-inset-top, 0) + 5.5rem));
+    min-height: calc(100dvh - var(--comp-sticky-top));
+    min-height: calc(100vh - var(--comp-sticky-top));
+    height: calc(100dvh - var(--comp-sticky-top));
+    height: calc(100vh - var(--comp-sticky-top));
+    display: flex;
+    flex-direction: column;
+}
+
+.home-competencies-scrub__sticky .home-competencies__panel {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .home-competencies__inner--scrub {
     position: relative;
-    /* Высота — по содержимому, но с разумным минимумом, чтобы плавающие карточки умещались. */
-    min-height: min(40rem, 80vh);
-    padding: clamp(3.5rem, 9vw, 7.5rem) clamp(1.5rem, 4vw, 3.5rem);
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 3.5rem)
+        clamp(1.5rem, 4vw, 2.5rem);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: stretch;
 }
 
@@ -2085,7 +2346,12 @@ h3 {
     z-index: 1;
     width: 100%;
     max-width: 100%;
-    margin-bottom: clamp(0.5rem, 2vw, 1rem);
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
 }
 
 /* Центр — типографика на всю ширину панели. Превью-карточки удалены — min-height больше не нужен. */
@@ -2095,11 +2361,11 @@ h3 {
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
-    /* Колонная схема: типография сверху, карточки превью снизу — детерминированно без overlap. */
+    /* Колонная схема: типография по центру, превью снизу */
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    justify-content: flex-start;
+    justify-content: center;
     padding-left: clamp(0.5rem, 2.5vw, 1.25rem);
     padding-right: clamp(0.5rem, 2.5vw, 1.25rem);
     box-sizing: border-box;
@@ -2118,6 +2384,10 @@ h3 {
     text-align: center;
     pointer-events: none;
     flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .home-competencies-scrub__center .home-competencies-scrub__lines {
@@ -2257,9 +2527,11 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    justify-content: center;
     gap: clamp(0.125rem, 0.8vw, 0.5rem);
     text-align: center;
     min-height: 0;
+    width: 100%;
 }
 
 .home-competencies-scrub__line-wrap {
@@ -2309,6 +2581,15 @@ h3 {
 .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
     opacity: 1;
     transform: scale(var(--comp-active-scale-x, 1.05), var(--comp-active-scale-y, 1.05));
+}
+
+.home-page--seamless .home-competencies-scrub__line.home-competencies__line {
+    filter: blur(3px);
+    transition: filter 0.52s var(--ease-smart), opacity 0.52s var(--ease-smart);
+}
+
+.home-page--seamless .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
+    filter: blur(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2378,6 +2659,12 @@ h3 {
     /* Top 5rem — фиксированный отступ от типографики до кнопки «Все проекты». */
     padding: 5rem clamp(1.25rem, 4vw, 2.5rem) clamp(1.75rem, 5vw, 2.5rem);
     pointer-events: auto;
+}
+
+.home-competencies__inner--scrub .home-competencies__cta {
+    flex: 0 0 auto;
+    margin-top: auto;
+    padding-top: clamp(1.25rem, 3vw, 2.5rem);
 }
 
 .home-competencies__cta .btn-show-all {
@@ -2949,6 +3236,14 @@ h3 {
         transform: translateY(-0.25rem);
     }
 
+    .page-home .hero-first-screen .hero__top .hero__card .preview-card-block[data-float]:hover {
+        transform: translate3d(var(--float-x), calc(var(--float-y) - 0.25rem), 0);
+    }
+
+    .page-home .hero-first-screen .hero__top .hero__card .preview-card-block[data-float]:active {
+        transform: translate3d(var(--float-x), calc(var(--float-y) - 0.125rem), 0);
+    }
+
     .page-home .hero__row {
         position: static;
         margin: 0;
@@ -3280,9 +3575,17 @@ h3 {
     border: 0;
 }
 
+.preview-card-block[data-float]:hover {
+    transform: translate3d(var(--float-x), calc(var(--float-y) - 0.25rem), 0);
+}
+
 .preview-card-block:active {
     transform: translateY(-0.125rem);
     box-shadow: 0 0.625rem 1.625rem rgba(0, 0, 0, 0.38);
+}
+
+.preview-card-block[data-float]:active {
+    transform: translate3d(var(--float-x), calc(var(--float-y) - 0.125rem), 0);
 }
 
 /* Слой 1: сплошная база (Figma mix-blend-plus-lighter — в CSS опускаем) */

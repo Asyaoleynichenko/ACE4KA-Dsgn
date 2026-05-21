@@ -57,6 +57,14 @@ function formatTransform({ x, y, scale }) {
   return `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${sx}, ${sy})`;
 }
 
+function skipDepthBlur(el) {
+  return Boolean(
+    el.classList?.contains('preview-card') ||
+      el.classList?.contains('card') ||
+      el.closest?.('.preview-card, .scroll-scrub-row__inner > .card'),
+  );
+}
+
 export function applyDepthStyles(el, transform, { clear = false, blurPx = 0 } = {}) {
   if (!el) return;
   if (clear) {
@@ -102,9 +110,11 @@ export function applyParallaxDepthToSlides(inner, viewport, { progress01 = 0, ve
       progress01,
       velocityPx,
     });
-    const blurPx = depthBlurPx(slideCenterX, vpCenterX, vpRect.width, {
-      maxBlur: 4 + (speed - 1) * 3,
-    });
+    const blurPx = skipDepthBlur(slide)
+      ? 0
+      : depthBlurPx(slideCenterX, vpCenterX, vpRect.width, {
+          maxBlur: 4 + (speed - 1) * 3,
+        });
     applyDepthStyles(slide, t, { blurPx });
   });
 }
@@ -124,7 +134,7 @@ export function applyVerticalParallaxDepth(root = document) {
   const nodes = root.querySelectorAll('[data-speed]');
 
   nodes.forEach((el, index) => {
-    if (el.closest('.scroll-scrub-row__inner')) return;
+    if (el.closest('.scroll-scrub-row__inner, .preview-grid, .project-grid')) return;
 
     const rect = el.getBoundingClientRect();
     if (rect.bottom < -vh * 0.2 || rect.top > vh * 1.2) {
@@ -136,10 +146,12 @@ export function applyVerticalParallaxDepth(root = document) {
     const centerY = rect.top + rect.height / 2;
     const centerX = rect.left + rect.width / 2;
     const t = depthVerticalTransform({ speed, elementCenterY: centerY, viewportHeight: vh });
-    const blurPx = depthBlurPx(centerX, window.innerWidth / 2, window.innerWidth, {
-      maxBlur: 2.2 + (speed - 1) * 1.5,
-      sharpRadius: 0.28,
-    });
+    const blurPx = skipDepthBlur(el)
+      ? 0
+      : depthBlurPx(centerX, window.innerWidth / 2, window.innerWidth, {
+          maxBlur: 2.2 + (speed - 1) * 1.5,
+          sharpRadius: 0.28,
+        });
     applyDepthStyles(el, t, { blurPx });
   });
 }

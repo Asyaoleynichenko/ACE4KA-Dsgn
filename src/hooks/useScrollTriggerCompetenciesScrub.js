@@ -12,8 +12,15 @@ function readViewportHeight() {
   return window.innerHeight || 1;
 }
 
+/** Верх pin = тот же offset, что в CSS у .home-competencies-scrub__sticky { top } */
+function readStickyPinTop(sticky) {
+  if (!sticky) return remPx(80);
+  const top = parseFloat(getComputedStyle(sticky).top);
+  return Number.isFinite(top) ? top : remPx(80);
+}
+
 /**
- * Sticky-сцена компетенций: pin + scrub:true, layered motion на активной строке.
+ * Сцена компетенций: scrub по runway, без GSAP pin (липкость — CSS sticky + центрирование в CSS).
  */
 export function useScrollTriggerCompetenciesScrub({
   enabled,
@@ -29,18 +36,19 @@ export function useScrollTriggerCompetenciesScrub({
     const sticky = stickyRef.current;
     if (!runway || !sticky) return undefined;
 
-    const vh = readViewportHeight();
     const scroller = getScrollWrapper() === window ? undefined : getScrollWrapper();
-    const startOffset = Math.round(remPx(80) + vh * 0.45);
+    const pinTop = readStickyPinTop(sticky);
 
     const st = ScrollTrigger.create({
       id: 'home-competencies-scrub',
       trigger: runway,
-      start: `top ${startOffset}`,
-      end: () => `+=${runwayMinPx}`,
-      pin: sticky,
+      start: () => `top top+=${Math.round(pinTop)}`,
+      end: () => {
+        const vh = readViewportHeight();
+        const scrollSpan = Math.max(1, runway.offsetHeight - vh);
+        return `+=${scrollSpan}`;
+      },
       scrub: true,
-      anticipatePin: 1,
       invalidateOnRefresh: true,
       scroller,
       onUpdate(self) {
@@ -48,7 +56,12 @@ export function useScrollTriggerCompetenciesScrub({
       },
     });
 
-    requestAnimationFrame(refreshScrollTrigger);
+    onScrub?.(st.progress);
+
+    requestAnimationFrame(() => {
+      refreshScrollTrigger();
+      onScrub?.(st.progress);
+    });
 
     return () => {
       st.kill();

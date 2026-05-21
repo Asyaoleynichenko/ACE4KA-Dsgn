@@ -21,7 +21,6 @@ import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
 import ScrollScrubRow from '../components/ScrollScrubRow.jsx';
-import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
 import DotIcon from '../components/DotIcon.jsx';
 import HalftoneButton from '../components/HalftoneButton.jsx';
 import { pillArrowReplace } from '../utils/pillArrowKeywords.js';
@@ -368,7 +367,15 @@ export default function ProjectDetailPage() {
 
           <section className="project-intro" id={`case-${project.slug}-intro`}>
             <div className="title">
-              <h1>{displayTitle}</h1>
+              <h1
+                data-type-reveal="cinematic"
+                data-type-reveal-trigger="scroll"
+                data-type-reveal-split="lines"
+                data-type-reveal-stagger="0.085"
+                data-type-reveal-delay="0.05"
+              >
+                {displayTitle}
+              </h1>
               {caseStudyIntroParas.map((para, idx) => (
                 <p key={idx}>{para}</p>
               ))}
@@ -412,8 +419,7 @@ export default function ProjectDetailPage() {
                 return (
                   <div
                     key={`${cardIdx}-${item.title}`}
-                    className="card parallax-depth"
-                    data-speed={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])}
+                    className="card"
                     data-strip-kind={iconKind ?? undefined}
                   >
                     <h3 data-float={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])} data-float-range="14">
@@ -630,8 +636,7 @@ export default function ProjectDetailPage() {
                           return (
                             <div
                               key={item.title}
-                              className="card parallax-depth"
-                              data-speed={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])}
+                              className="card"
                               data-strip-kind={iconKind ?? undefined}
                             >
                               <h3

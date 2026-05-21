@@ -1,10 +1,9 @@
-import {
-  applyParallaxDepthToSlides,
-  resetParallaxDepthIn,
-} from './parallaxDepth.js';
+import { resetParallaxDepthIn } from './parallaxDepth.js';
 
-/** Инерция ленты: current += (target - current) * 0.08 — «тяжёлая» камера */
-export const SCRUB_LERP_ALPHA = 0.08;
+import { MOTION_LERP } from '../motion/motionSystem.js';
+
+/** Инерция ленты — та же физика, что scroll/camera */
+export const SCRUB_LERP_ALPHA = MOTION_LERP;
 export const SCRUB_LERP_SNAP_PX = 0.35;
 
 export function lerpScalar(current, target, alpha = SCRUB_LERP_ALPHA) {
@@ -65,9 +64,10 @@ export function applyCinematicCardTransforms(
 
   inner.style.transform = `translate3d(${-Math.round(xTrack)}px, 0, 0)`;
 
-  applyParallaxDepthToSlides(inner, viewport, {
-    progress01,
-    velocityPx: exitP > 0.004 ? 0 : velocityPx,
+  slides.forEach((slide) => {
+    slide.style.transform = '';
+    slide.style.filter = '';
+    slide.style.zIndex = '';
   });
 
   return { mx, step };
