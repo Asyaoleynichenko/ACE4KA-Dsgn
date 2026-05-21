@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useScrollTriggerCompetenciesScrub } from '../hooks/useScrollTriggerCompetenciesScrub.js';
+import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
 import { rem, remPx } from '../utils/cssRem.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
@@ -146,9 +147,13 @@ export default function HomeCompetenciesScrub({
   const leftProject = activeProjects[0] ?? null;
   const rightProject = activeProjects[1] ?? null;
 
-  const projectCard = (item) =>
+  const projectCard = (item, cardIndex = 0) =>
     item ? (
-      <div key={item.slug} className="home-competencies-scrub__card-wrap">
+      <div
+        key={item.slug}
+        className="home-competencies-scrub__card-wrap parallax-depth"
+        data-speed={String(DEPTH_SPEED_PRESETS[(activeIdx * 2 + cardIndex) % DEPTH_SPEED_PRESETS.length])}
+      >
         <ProjectCard
           slug={item.slug}
           title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
@@ -213,8 +218,8 @@ export default function HomeCompetenciesScrub({
               </div>
               {leftProject || rightProject ? (
                 <div className="home-competencies-scrub__previews" key={activeIdx}>
-                  {projectCard(leftProject)}
-                  {projectCard(rightProject)}
+                  {projectCard(leftProject, 0)}
+                  {projectCard(rightProject, 1)}
                 </div>
               ) : null}
             </div>

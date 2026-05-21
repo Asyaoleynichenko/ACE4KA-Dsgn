@@ -16,6 +16,7 @@ import {
   headerItemsFolder,
   headerItemsWell,
 } from '../data/sectionHeaderItems';
+import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
 import { publicUrl } from '../utils/publicUrl.js';
 
 function headerItemPlacementStyle(placement) {
@@ -71,8 +72,8 @@ export default function HomePage() {
         <div className="hero-first-screen" data-node-id="70:343" data-name="First screen">
           <div className="hero__top">
             <div className="hero-vector" aria-hidden="true" data-node-id="1:203">
-              <div className="hero-vector__inner">
-                <img src={publicUrl('/images/main%20title%20vector.svg')} alt="" />
+              <div className="hero-vector__inner" data-float="1.2" data-float-range="24">
+                <img src={publicUrl('/images/main%20title%20vector.svg')} alt="" data-float="1.4" data-float-range="18" />
               </div>
             </div>
             <div className="hero__card">
@@ -124,15 +125,17 @@ export default function HomePage() {
           <div className="hero__content">
             <div className="hero__intro">
               <div className="hero-content">
-                <p className="hero-role"><span className="text-condensed">{t('hero.role')}</span></p>
-                <h1 className="hero-title" data-scale="hero-name">
+                <p className="hero-role" data-float="0.5" data-float-range="10">
+                  <span className="text-condensed">{t('hero.role')}</span>
+                </p>
+                <h1 className="hero-title" data-scale="hero-name" data-float="0.85" data-float-range="16">
                   {heroTitleLines(t('hero.title')).map((part) => (
                     <span key={part} className="hero-title__line">
                       {part}
                     </span>
                   ))}
                 </h1>
-                <p className="hero-text">{t('hero.text')}</p>
+                <p className="hero-text" data-float="0.6" data-float-range="12">{t('hero.text')}</p>
                 <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
                   <span className="hero-more__text"><span className="text-condensed">{t('hero.moreAbout')}</span></span>
                   <span className="hero-more__chevron" aria-hidden="true" />
@@ -203,13 +206,22 @@ export default function HomePage() {
 
       <section className="section section-projects snap-screen" data-node-id="1:285" data-figma-node="1-285">
         <div className="logo-section" data-node-id="1:286">
-          <h2 className="projects-title-main" data-node-id="1:289" data-scale="section-title">{t('hero.projectsSectionTitle')}</h2>
+          <h2
+            className="projects-title-main"
+            data-node-id="1:289"
+            data-scale="section-title"
+            data-float="0.7"
+            data-float-range="14"
+          >
+            {t('hero.projectsSectionTitle')}
+          </h2>
           <FilterPills />
         </div>
         <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">
-          {homeProjects.map((item) => (
+          {homeProjects.map((item, index) => (
             <ProjectCard
               key={item.slug}
+              depthSpeed={DEPTH_SPEED_PRESETS[index % DEPTH_SPEED_PRESETS.length]}
               slug={item.slug}
               title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
               meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}

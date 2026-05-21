@@ -21,6 +21,7 @@ import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
 import ScrollScrubRow from '../components/ScrollScrubRow.jsx';
+import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
 import DotIcon from '../components/DotIcon.jsx';
 import HalftoneButton from '../components/HalftoneButton.jsx';
 import { pillArrowReplace } from '../utils/pillArrowKeywords.js';
@@ -409,8 +410,13 @@ export default function ProjectDetailPage() {
                 const iconKind = caseStudyStripIconKind(item.title);
                 const cardTitle = translateCaseCardTitle(item.title, t);
                 return (
-                  <div key={`${cardIdx}-${item.title}`} className="card" data-strip-kind={iconKind ?? undefined}>
-                    <h3>
+                  <div
+                    key={`${cardIdx}-${item.title}`}
+                    className="card parallax-depth"
+                    data-speed={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])}
+                    data-strip-kind={iconKind ?? undefined}
+                  >
+                    <h3 data-float={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])} data-float-range="14">
                       <span className="text-condensed text-condensed--single-line">{cardTitle}</span>
                     </h3>
                     <p>{item.value}</p>
@@ -622,8 +628,16 @@ export default function ProjectDetailPage() {
                         {sectionCards.map((item, cardIdx) => {
                           const iconKind = caseStudyStripIconKind(item.title);
                           return (
-                            <div key={item.title} className="card" data-strip-kind={iconKind ?? undefined}>
-                              <h3>
+                            <div
+                              key={item.title}
+                              className="card parallax-depth"
+                              data-speed={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])}
+                              data-strip-kind={iconKind ?? undefined}
+                            >
+                              <h3
+                                data-float={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])}
+                                data-float-range="14"
+                              >
                                 <span className="text-condensed text-condensed--single-line">
                                   {translateCaseCardTitle(item.title, t)}
                                 </span>

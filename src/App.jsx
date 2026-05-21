@@ -16,6 +16,8 @@ import Page89_909 from './pages/Page89_909';
 import Page89_915 from './pages/Page89_915';
 import Page89_920 from './pages/Page89_920';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import MouseInertia from './components/MouseInertia.jsx';
+import ParallaxDepth from './components/ParallaxDepth.jsx';
 import ScrollPolish from './components/ScrollPolish.jsx';
 import LenisProvider from './context/LenisProvider.jsx';
 
@@ -41,6 +43,8 @@ export default function App() {
       <I18nProvider>
         <LenisProvider>
           <ScrollToTop />
+          <ParallaxDepth />
+          <MouseInertia />
           <ScrollPolish />
           <Routes>
           <Route path="/" element={<RootLocaleRedirect />} />

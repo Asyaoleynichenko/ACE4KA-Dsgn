@@ -11,6 +11,7 @@ import {
   splitScrubProgress,
 } from '../utils/scrubExitHandoff.js';
 import { applyCinematicCardTransforms, resetCinematicCardTransforms } from '../utils/cinematicScrub.js';
+import { applyParallaxDepthToSlides } from '../utils/parallaxDepth.js';
 
 function readViewportHeight() {
   const appRoot = document.getElementById('root');
@@ -103,6 +104,7 @@ export function useScrollTriggerHorizontalScrub({
           applyCinematicCardTransforms(inner, viewport, x, rawP, 0, exitP);
         } else {
           gsap.set(inner, { x: -x, force3D: true });
+          applyParallaxDepthToSlides(inner, viewport, { progress01: scrubP });
         }
 
         onActiveIndex?.(activeIndexFromOffset(x, mx, slideCount));

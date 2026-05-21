@@ -1,3 +1,8 @@
+import {
+  applyParallaxDepthToSlides,
+  resetParallaxDepthIn,
+} from './parallaxDepth.js';
+
 /** Инерция ленты: current += (target - current) * 0.08 — «тяжёлая» камера */
 export const SCRUB_LERP_ALPHA = 0.08;
 export const SCRUB_LERP_SNAP_PX = 0.35;
@@ -25,14 +30,14 @@ export function scrollProgress01(runway, sticky, spacer) {
 }
 
 /**
- * Горизонтальный сдвиг ленты; карточки не трогаем (opacity/scale в JS давали «чёрный экран»).
+ * Горизонтальный сдвиг ленты + parallax depth на каждой карточке (data-speed).
  */
 export function applyCinematicCardTransforms(
   inner,
   viewport,
   smoothX,
-  _progress01 = 0,
-  _velocityPx = 0,
+  progress01 = 0,
+  velocityPx = 0,
   exitP = 0,
 ) {
   const slides = inner.querySelectorAll(':scope > *');
@@ -60,12 +65,9 @@ export function applyCinematicCardTransforms(
 
   inner.style.transform = `translate3d(${-Math.round(xTrack)}px, 0, 0)`;
 
-  slides.forEach((slide) => {
-    slide.style.transform = '';
-    slide.style.opacity = '';
-    slide.style.filter = '';
-    slide.style.zIndex = '';
-    slide.style.pointerEvents = '';
+  applyParallaxDepthToSlides(inner, viewport, {
+    progress01,
+    velocityPx: exitP > 0.004 ? 0 : velocityPx,
   });
 
   return { mx, step };
@@ -74,15 +76,14 @@ export function applyCinematicCardTransforms(
 export function resetCinematicCardTransforms(inner) {
   if (!inner) return;
   inner.style.transform = '';
+  resetParallaxDepthIn(inner);
   inner.querySelectorAll(':scope > *').forEach((slide) => {
     slide.style.flex = '';
     slide.style.width = '';
     slide.style.maxWidth = '';
     slide.style.minWidth = '';
-    slide.style.transform = '';
     slide.style.opacity = '';
     slide.style.filter = '';
-    slide.style.zIndex = '';
     slide.style.pointerEvents = '';
   });
 }

@@ -400,6 +400,75 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     scroll-behavior: auto;
 }
 
+/* Parallax depth — разные data-speed, scale, z-слои */
+.parallax-depth {
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.preview-grid,
+.project-grid,
+.home-competencies-scrub__stage {
+    perspective: 75rem;
+    perspective-origin: 50% 42%;
+}
+
+.scroll-scrub-row__viewport--linked,
+.scroll-scrub-row__viewport--native-x {
+    perspective: 90rem;
+    perspective-origin: 50% 48%;
+}
+
+.scroll-scrub-row--cinematic .scroll-scrub-row__inner {
+    transform-style: preserve-3d;
+}
+
+.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card.parallax-depth,
+.scroll-scrub-row--cinematic .scroll-scrub-row__inner > .card.parallax-depth,
+.scroll-scrub-row__inner > .parallax-depth {
+    transform-style: preserve-3d;
+    transition: none;
+}
+
+.scroll-scrub-row__inner > .card h3[data-float] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Mouse inertia / floating — data-float + lerp 0.08 via --float-x/y */
+[data-float] {
+    --float-x: 0px;
+    --float-y: 0px;
+    transform: translate3d(var(--float-x), var(--float-y), 0);
+    transform-origin: center center;
+    will-change: transform;
+}
+
+.hero .hero-vector__inner[data-float],
+.hero .preview-card-block__image[data-float] {
+    transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .parallax-depth,
+    [data-speed],
+    [data-float] {
+        transform: none !important;
+        z-index: auto !important;
+    }
+
+    [data-float] {
+        --float-x: 0px !important;
+        --float-y: 0px !important;
+    }
+
+    .preview-grid,
+    .scroll-scrub-row__viewport--linked {
+        perspective: none;
+    }
+}
+
 /* Полноэкранный snap: корневой скролл на #root — при body{display:flex} snap на html часто не срабатывает */
 html.snap-pages {
     height: 100%;
@@ -5242,23 +5311,22 @@ h3 {
     min-height: 0;
     display: flex;
     align-items: stretch;
-    perspective: none;
-    perspective-origin: 50% 50%;
+    perspective: 90rem;
+    perspective-origin: 50% 48%;
 }
 
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__inner {
-    transform-style: flat;
+    transform-style: preserve-3d;
 }
 
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__inner > .card {
-    transform-style: flat;
-    backface-visibility: visible;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
     transition: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
     .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--cinematic .scroll-scrub-row__inner > .card:hover {
-        transform: unset;
         border-color: transparent;
         box-shadow: none;
     }

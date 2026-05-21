@@ -3,6 +3,7 @@ import FilterPills from '../components/FilterPills';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import { CASE_STUDY_PAGE_GROUPS, projects } from '../data/projects';
+import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
 
 function projectBySlug(slug) {
   return projects.find((p) => p.slug === slug);
@@ -28,12 +29,13 @@ export default function ProjectsPage() {
             </h2>
             <p className="projects-page__group-intro">{t(`projectsPage.groups.${group.id}.intro`)}</p>
             <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">
-              {group.slugs.map((slug) => {
+              {group.slugs.map((slug, index) => {
                 const p = projectBySlug(slug);
                 if (!p) return null;
                 return (
                   <ProjectCard
                     key={slug}
+                    depthSpeed={DEPTH_SPEED_PRESETS[index % DEPTH_SPEED_PRESETS.length]}
                     slug={slug}
                     title={tWithFallback(t, `projects.cards.${slug}.title`, p.title)}
                     meta={tWithFallback(t, `projects.cards.${slug}.meta`, p.meta)}
