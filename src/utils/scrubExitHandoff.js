@@ -35,7 +35,7 @@ export function applyScrubExitHandoff(target, exitP) {
   if (!target) return;
   const eased = easeOutCubic(exitP);
   target.style.setProperty('--scrub-exit', eased.toFixed(4));
-  target.classList.toggle('is-scrub-exit-active', exitP > 0.002);
+  target.classList.toggle('is-scrub-exit-active', exitP > 0.14);
   target.classList.toggle('is-scrub-exit-done', exitP >= 0.995);
 }
 

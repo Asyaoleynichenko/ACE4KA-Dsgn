@@ -149,10 +149,12 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   useEffect(() => {
     const inner = innerRef.current;
     const viewport = viewportRef.current;
+    const runway = runwayRef.current;
     if (!inner || !viewport) return undefined;
     const ro = new ResizeObserver(() => recalcMaxX());
     ro.observe(inner);
     ro.observe(viewport);
+    if (runway) ro.observe(runway);
     return () => ro.disconnect();
   }, [recalcMaxX]);
 
@@ -209,18 +211,17 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
 
       const stickyTop = parseFloat(getComputedStyle(sticky).top) || 0;
       const runwayRect = runway.getBoundingClientRect();
-      const pinH = Math.max(1, pin.offsetHeight);
-      /* Пин до тех пор, пока низ runway не дошёл до низа зоны pin (не вычитаем spacer — он уже в bottom). */
-      const inPin = runwayRect.top <= stickyTop && runwayRect.bottom > stickyTop + pinH;
+      const track = trackRef.current;
+      const contentH = Math.max(1, track?.offsetHeight ?? pin.offsetHeight);
+      /* Пин на всю длину runway (включая spacer), пока блок не ушёл вверх — иначе пустой скролл без карточек. */
+      const inPin = runwayRect.top <= stickyTop && runwayRect.bottom > stickyTop;
 
       if (inPin) {
-        const left = runwayRect.left;
-        const width = runwayRect.width;
         pin.classList.add('scroll-scrub-row__pin--fixed');
         pin.style.top = `${stickyTop}px`;
-        pin.style.left = `${left}px`;
-        pin.style.width = `${width}px`;
-        sticky.style.minHeight = `${pinH}px`;
+        pin.style.left = `${Math.round(runwayRect.left)}px`;
+        pin.style.width = `${Math.round(runwayRect.width)}px`;
+        sticky.style.minHeight = `${Math.round(contentH)}px`;
       } else {
         pin.classList.remove('scroll-scrub-row__pin--fixed');
         pin.style.top = '';
