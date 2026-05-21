@@ -436,6 +436,94 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     z-index: 2;
 }
 
+/* Scroll-bound horizontal track — vertical scroll → horizontal jail (Jailhouse / Apple style) */
+.scroll-bound-track {
+    position: relative;
+    width: 100%;
+}
+
+.scroll-bound-track__pin {
+    top: 0;
+}
+
+.scroll-bound-track__jail {
+    position: relative;
+    isolation: isolate;
+}
+
+.scroll-bound-track__jail::before,
+.scroll-bound-track__jail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: min(12vw, 7.5rem);
+    z-index: 25;
+    pointer-events: none;
+}
+
+.scroll-bound-track__jail::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--color-bg, #0a0a0a) 0%, transparent 100%);
+}
+
+.scroll-bound-track__jail::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--color-bg, #0a0a0a) 0%, transparent 100%);
+}
+
+.scroll-bound-track__viewport::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 22;
+    pointer-events: none;
+    border-radius: inherit;
+    background: radial-gradient(
+        ellipse 58% 72% at 50% 50%,
+        transparent 42%,
+        rgba(0, 0, 0, 0.06) 72%,
+        rgba(0, 0, 0, 0.14) 100%
+    );
+}
+
+/* Depth blur — центр sharp, края soft (задаётся из JS: filter + --depth-blur) */
+.parallax-depth--active {
+    transition: filter 0.12s linear;
+}
+
+.scroll-scrub-row--cinematic .scroll-scrub-row__inner > .card.parallax-depth--active {
+    will-change: transform, filter;
+}
+
+/* SVG displacement — feTurbulence + displacementMap (organic hover) */
+.btn-show-all__halftone--liquid {
+    filter: url(#ace-halftone-liquid);
+}
+
+.liquid-displace-host .preview-image.liquid-surface {
+    filter: url(#ace-preview-liquid);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-bound-track__jail::before,
+    .scroll-bound-track__jail::after,
+    .scroll-bound-track__viewport::after {
+        display: none;
+    }
+
+    .liquid-displace-host .btn-show-all__halftone--liquid,
+    .liquid-displace-host .liquid-surface,
+    .liquid-displace-host .preview-image.liquid-surface {
+        filter: none !important;
+    }
+
+    .parallax-depth--active {
+        filter: none !important;
+        transition: none;
+    }
+}
+
 /* Mouse inertia / floating — data-float + lerp 0.08 via --float-x/y */
 [data-float] {
     --float-x: 0px;

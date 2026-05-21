@@ -1,3 +1,5 @@
+import { depthBlurFilter, depthBlurPx } from './depthBlur.js';
+
 /** Пресеты глубины: фон → передний план */
 export const DEPTH_SPEED_PRESETS = [0.8, 1, 1.2, 1.6];
 
@@ -55,18 +57,24 @@ function formatTransform({ x, y, scale }) {
   return `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${sx}, ${sy})`;
 }
 
-export function applyDepthStyles(el, transform, { clear = false } = {}) {
+export function applyDepthStyles(el, transform, { clear = false, blurPx = 0 } = {}) {
   if (!el) return;
   if (clear) {
     el.style.transform = '';
     el.style.zIndex = '';
+    el.style.filter = '';
     el.style.removeProperty('--depth-scale');
+    el.style.removeProperty('--depth-blur');
     el.classList.remove('parallax-depth--active');
     return;
   }
   el.style.transform = formatTransform(transform);
   el.style.zIndex = String(transform.zIndex);
   el.style.setProperty('--depth-scale', transform.scale.toFixed(4));
+  const blur = depthBlurFilter(blurPx);
+  el.style.filter = blur;
+  if (blur) el.style.setProperty('--depth-blur', `${blurPx.toFixed(2)}px`);
+  else el.style.removeProperty('--depth-blur');
   el.classList.add('parallax-depth--active');
 }
 
@@ -94,7 +102,10 @@ export function applyParallaxDepthToSlides(inner, viewport, { progress01 = 0, ve
       progress01,
       velocityPx,
     });
-    applyDepthStyles(slide, t);
+    const blurPx = depthBlurPx(slideCenterX, vpCenterX, vpRect.width, {
+      maxBlur: 4 + (speed - 1) * 3,
+    });
+    applyDepthStyles(slide, t, { blurPx });
   });
 }
 
@@ -123,7 +134,12 @@ export function applyVerticalParallaxDepth(root = document) {
 
     const speed = readElementSpeed(el, index);
     const centerY = rect.top + rect.height / 2;
+    const centerX = rect.left + rect.width / 2;
     const t = depthVerticalTransform({ speed, elementCenterY: centerY, viewportHeight: vh });
-    applyDepthStyles(el, t);
+    const blurPx = depthBlurPx(centerX, window.innerWidth / 2, window.innerWidth, {
+      maxBlur: 2.2 + (speed - 1) * 1.5,
+      sharpRadius: 0.28,
+    });
+    applyDepthStyles(el, t, { blurPx });
   });
 }

@@ -17,6 +17,7 @@ import Page89_915 from './pages/Page89_915';
 import Page89_920 from './pages/Page89_920';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import MouseInertia from './components/MouseInertia.jsx';
+import SvgDisplacementDefs from './components/SvgDisplacementDefs.jsx';
 import ParallaxDepth from './components/ParallaxDepth.jsx';
 import ScrollPolish from './components/ScrollPolish.jsx';
 import LenisProvider from './context/LenisProvider.jsx';
@@ -42,6 +43,7 @@ export default function App() {
     <BrowserRouter basename={routerBasename}>
       <I18nProvider>
         <LenisProvider>
+          <SvgDisplacementDefs />
           <ScrollToTop />
           <ParallaxDepth />
           <MouseInertia />

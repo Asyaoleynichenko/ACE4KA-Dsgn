@@ -275,17 +275,22 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     }
 
     return (
-      <div ref={runwayRef} className="scroll-scrub-row__runway">
-        <div ref={stickyRef} className="scroll-scrub-row__sticky scroll-scrub-row__sticky--cards">
+      <section
+        ref={runwayRef}
+        className="scroll-scrub-row__runway scroll-bound-track"
+        data-scroll-bound="horizontal"
+        aria-roledescription="scroll-driven horizontal sequence"
+      >
+        <div ref={stickyRef} className="scroll-scrub-row__sticky scroll-scrub-row__sticky--cards scroll-bound-track__pin">
           <div ref={pinRef} className="scroll-scrub-row__pin">
             <div
               ref={trackRef}
               className={`${rootClass} scroll-scrub-row--scroll-linked${useCinematicScrub ? ' scroll-scrub-row--cinematic' : ''}`.trim()}
             >
-              <div className="scroll-scrub-row__shell">
+              <div className="scroll-scrub-row__shell scroll-bound-track__shell">
                 <div
                   ref={viewportRef}
-                  className="scroll-scrub-row__viewport scroll-scrub-row__viewport--linked"
+                  className="scroll-scrub-row__viewport scroll-scrub-row__viewport--linked scroll-bound-track__viewport scroll-bound-track__jail"
                   role="region"
                   aria-label={ariaLabel}
                 >
@@ -298,8 +303,8 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
             </div>
           </div>
         </div>
-        <div ref={spacerRef} className="scroll-scrub-row__runway-spacer" aria-hidden="true" />
-      </div>
+        <div ref={spacerRef} className="scroll-scrub-row__runway-spacer scroll-bound-track__spacer" aria-hidden="true" />
+      </section>
     );
   }
 

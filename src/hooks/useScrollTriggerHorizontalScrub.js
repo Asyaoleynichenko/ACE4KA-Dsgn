@@ -34,10 +34,11 @@ function readMx(viewport, inner) {
   return Math.max(0, slideW * gaps + gap * gaps);
 }
 
+/** Cinematic pacing — больше вертикального хода на слайд (Apple / immersive). */
 function getRunwayScrollSpan(vh, slideCount, mx) {
   const steps = Math.max(1, slideCount - 1);
-  const perStep = Math.max(vh * 0.38, mx > 1 ? mx * 0.55 : vh * 0.38);
-  return Math.max(perStep * steps, remPx(72));
+  const perStep = Math.max(vh * 0.5, mx > 1 ? mx * 0.72 : vh * 0.44);
+  return Math.max(perStep * steps, remPx(96));
 }
 
 function activeIndexFromOffset(x, mx, count) {
