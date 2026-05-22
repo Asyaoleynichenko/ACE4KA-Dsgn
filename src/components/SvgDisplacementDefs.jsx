@@ -77,6 +77,25 @@ export default function SvgDisplacementDefs() {
           />
         </filter>
 
+        {/* Gooey metaball — rail compact / scroll-spy точки */}
+        <filter
+          id="ace-rail-metaball"
+          x="-80%"
+          y="-40%"
+          width="260%"
+          height="180%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="ace-rail-blur" />
+          <feColorMatrix
+            in="ace-rail-blur"
+            type="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10"
+            result="ace-rail-goo"
+          />
+          <feBlend in="ace-rail-goo" in2="SourceGraphic" mode="normal" />
+        </filter>
+
         <filter id="ace-preview-liquid" x="-15%" y="-15%" width="130%" height="130%">
           <feTurbulence
             type="fractalNoise"

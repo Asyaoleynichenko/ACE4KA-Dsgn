@@ -617,6 +617,8 @@ export const projects = [
     meta: 'Growth · Space, Почта, Облако · 2025 — н.в.',
     desc: 'Тарифы, подписка и freemium в Space, Облаке и Почте',
     image: '/images/figma-sync-20260205-mail-monetization-1777996715638/69a5576029c9bc37482dc4c38a879aa35b910ebe.png',
+    cardImage:
+      '/images/figma-sync-20260205-mail-monetization-1777996715638/715ac81eb7e1771c8fa40cf1d295038c6244f931.png',
     lead:
       'Growth-монетизация экосистемы Mail.ru. Серия экспериментов в Mail Space, Облаке и Почте: тарифы, точки входа в подписку, freemium-фичи, ограничения шеринга.',
     layout: 'case-study',

@@ -19,7 +19,7 @@ export const homeProjectsCatalog = [
     meta: 'Growth · Space, Почта, Облако · 2025 — н.в.',
     desc: 'Тарифы, подписка и freemium в Space, Облаке и Почте',
     image:
-      '/images/figma-sync-20260205-mail-monetization-1777996715638/69a5576029c9bc37482dc4c38a879aa35b910ebe.png',
+      '/images/figma-sync-20260205-mail-monetization-1777996715638/715ac81eb7e1771c8fa40cf1d295038c6244f931.png',
     video: null,
   },
   {

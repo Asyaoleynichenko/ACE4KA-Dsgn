@@ -7,6 +7,7 @@ const MouseInertia = lazy(() => import('./MouseInertia.jsx'));
 const ScrollPolish = lazy(() => import('./ScrollPolish.jsx'));
 const SvgDisplacementDefs = lazy(() => import('./SvgDisplacementDefs.jsx'));
 const TypographyRevealHost = lazy(() => import('./TypographyRevealHost.jsx'));
+const InteractiveTextCondensedHost = lazy(() => import('./InteractiveTextCondensedHost.jsx'));
 
 /** Motion/GSAP — после первого кадра, не блокирует initial bundle. */
 export default function MotionEffects() {
@@ -39,15 +40,20 @@ export default function MotionEffects() {
     };
   }, []);
 
-  if (!ready) return null;
-
   return (
-    <Suspense fallback={null}>
-      <SvgDisplacementDefs />
-      <ParallaxDepth />
-      <MouseInertia />
-      <ScrollPolish />
-      {isHome ? <TypographyRevealHost /> : null}
-    </Suspense>
+    <>
+      <Suspense fallback={null}>
+        <InteractiveTextCondensedHost />
+      </Suspense>
+      {!ready ? null : (
+        <Suspense fallback={null}>
+          <SvgDisplacementDefs />
+          <ParallaxDepth />
+          <MouseInertia />
+          <ScrollPolish />
+          {isHome ? <TypographyRevealHost /> : null}
+        </Suspense>
+      )}
+    </>
   );
 }

@@ -18,6 +18,12 @@ export const MOTION_STAGGER_BEAT = 0.09;
 /** Базовая длительность reveal = 7 beats × stagger */
 export const MOTION_DURATION_REVEAL = MOTION_STAGGER_BEAT * 7;
 
+/** Микро-раскрытия (аккордеон, панели, hover) — синхрон с --dur-smart-base */
+export const MOTION_DURATION_MICRO = MOTION_STAGGER_BEAT * 2.9;
+
+/** Быстрый микро-отклик — синхрон с --dur-smart-nav */
+export const MOTION_DURATION_MICRO_FAST = MOTION_STAGGER_BEAT * 2;
+
 /** ScrollTrigger scrub — true = привязка к скроллу с той же «тяжестью» */
 export const MOTION_SCRUB = true;
 

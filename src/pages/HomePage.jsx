@@ -127,19 +127,20 @@ export default function HomePage() {
             data-node-id="416-13006"
             data-figma-node="416-13006"
             data-name="About Section"
+            data-float="off"
           >
             <div className="hero-content">
-              <p className="hero-role" data-float="0.5" data-float-range="10">
+              <p className="hero-role">
                 <span className="text-condensed">{t('hero.role')}</span>
               </p>
-              <h1 className="hero-title" data-scale="hero-name" data-float="0.85" data-float-range="16">
+              <h1 className="hero-title" data-scale="hero-name">
                 {heroTitleLines(t('hero.title')).map((part) => (
                   <span key={part} className="hero-title__line">
                     {part}
                   </span>
                 ))}
               </h1>
-              <p className="hero-text" data-float="0.6" data-float-range="12">
+              <p className="hero-text">
                 {t('hero.text')}
               </p>
               <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">

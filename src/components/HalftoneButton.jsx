@@ -5,7 +5,7 @@ import { useSvgDisplacementHover } from '../hooks/useSvgDisplacementHover.js';
 /**
  * Glossy fintech CTA + Swap-style halftone: static dots × radial map + SVG displacement on hover.
  */
-export default function HalftoneButton({ to, href, children, ariaLabel, className = '' }) {
+export default function HalftoneButton({ to, href, children, ariaLabel, className = '', ...rest }) {
   const rootRef = useRef(null);
   useSvgDisplacementHover(rootRef, { mapId: 'ace-halftone-liquid-map', scaleHover: 18 });
 
@@ -26,6 +26,7 @@ export default function HalftoneButton({ to, href, children, ariaLabel, classNam
         aria-label={ariaLabel}
         target="_blank"
         rel="noopener noreferrer"
+        {...rest}
       >
         {inner}
       </a>
@@ -33,7 +34,7 @@ export default function HalftoneButton({ to, href, children, ariaLabel, classNam
   }
 
   return (
-    <SeamlessProjectsLink ref={rootRef} to={to} className={cls} aria-label={ariaLabel}>
+    <SeamlessProjectsLink ref={rootRef} to={to} className={cls} aria-label={ariaLabel} {...rest}>
       {inner}
     </SeamlessProjectsLink>
   );

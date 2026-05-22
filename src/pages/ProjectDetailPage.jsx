@@ -476,15 +476,13 @@ export default function ProjectDetailPage() {
                         {section.description ? <p data-node-id="300:107832">{section.description}</p> : null}
                       </div>
                       {section.ctaLabel ? (
-                        <a
+                        <HalftoneButton
                           href={section.ctaHref ?? publicUrl(section.galleryImage)}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           className="title-info-card__cta"
                           data-node-id="300:107833"
                         >
                           {section.ctaLabel}
-                        </a>
+                        </HalftoneButton>
                       ) : null}
                     </div>
                     <div className="title-info-card__media" data-node-id="300:107834">
@@ -593,10 +591,12 @@ export default function ProjectDetailPage() {
                             <span className="hyp-list__icon" aria-hidden="true" />
                           </summary>
                           <div className="hyp-list__body">
-                            <p className="hyp-list__text">{h.text}</p>
-                            {h.outcome ? (
-                              <span className="hyp-list__outcome">{pillArrowReplace(h.outcome)}</span>
-                            ) : null}
+                            <div className="hyp-list__body-inner">
+                              <p className="hyp-list__text">{h.text}</p>
+                              {h.outcome ? (
+                                <span className="hyp-list__outcome">{pillArrowReplace(h.outcome)}</span>
+                              ) : null}
+                            </div>
                           </div>
                         </details>
                       </li>
