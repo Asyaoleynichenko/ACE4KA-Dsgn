@@ -41,14 +41,15 @@
   /* Figma 337:24521 — VK Sans Display для крупных заголовков case-study; проприетарный, fallback Inter Black uppercase. */
   --font-display: 'VK Sans Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Figma 592:38775 — стопка H2/H4/H1/H5/H3; ряд 96px, gap 12px на десктопе. */
-  --comp-line-size-1: clamp(2.75rem, 9.2vw, 6rem);
-  --comp-line-size-2: clamp(2.5rem, 8.4vw, 6rem);
-  --comp-line-size-3: clamp(2rem, 6.4vw, 4.5rem);
-  --comp-line-size-4: clamp(2.25rem, 7.2vw, 6rem);
-  --comp-line-size-5: clamp(1.75rem, 5.2vw, 4rem);
-  --comp-stack-gap: clamp(0.5rem, 1.2vw, 0.75rem);
+  /* Figma 592:38775 — стопка H2/H4/H1/H5/H3; ряд 96px, gap 12px. */
+  --comp-line-size-1: clamp(2.25rem, 8.8vw, 5.25rem);
+  --comp-line-size-2: clamp(2rem, 8vw, 5rem);
+  --comp-line-size-3: clamp(1.75rem, 6.4vw, 4rem);
+  --comp-line-size-4: clamp(2rem, 7.2vw, 5rem);
+  --comp-line-size-5: clamp(1.5rem, 5.2vw, 3.5rem);
+  --comp-stack-gap: 0.75rem;
   --comp-stack-pad-top: clamp(3rem, 8vw, 5rem);
+  --comp-row-min-h: clamp(3rem, 9.2vw, 6rem);
 
   /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
   --ease-smart: cubic-bezier(0.32, 0.72, 0, 1);
@@ -449,11 +450,6 @@
         --text-89-756-label-font-size: var(--type-label-size);
         --case-feature-card-title-size-sm: var(--type-label-size);
         --case-feature-card-body-size-sm: var(--type-statement-size);
-        --comp-line-size-1: clamp(3rem, 12vw, 4.5rem);
-        --comp-line-size-2: clamp(2.5rem, 10.5vw, 3.75rem);
-        --comp-line-size-3: clamp(2rem, 8.5vw, 3rem);
-        --comp-line-size-4: clamp(2.25rem, 9vw, 3.25rem);
-        --comp-line-size-5: clamp(1.75rem, 7vw, 2.75rem);
     }
 }
 
@@ -2586,9 +2582,11 @@ h3 {
     position: relative;
     z-index: 2;
     width: 100%;
+    max-width: 100%;
     margin-top: clamp(1.5rem, 4vw, var(--hero-section-gap));
     margin-bottom: clamp(2rem, 5vw, var(--space-48));
     isolation: isolate;
+    overflow-x: clip;
     /* Возвращаем боковые поля страницы — панель не должна упираться в края экрана. */
     padding-left: var(--layout-edge-left);
     padding-right: var(--layout-edge-right);
@@ -2601,15 +2599,15 @@ h3 {
 .home-competencies__panel {
     position: relative;
     width: 100%;
-    /* Figma: контейнер 56rem, скруглён, чуть приподнят тенью на фоне страницы. */
-    max-width: min(68.125rem, 100%);
+    /* Figma 592:38775 — панель 896px (56rem). */
+    max-width: min(56rem, 100%);
     margin-left: auto;
     margin-right: auto;
     border-radius: 1.5rem;
-    background: #000000;
     color: #fafafa;
     box-sizing: border-box;
     overflow: hidden;
+    background: #000000;
     box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.45);
 }
 
@@ -2656,8 +2654,9 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-left: clamp(1rem, 5.15vw, 2.875rem);
-    padding-right: clamp(1rem, 5.15vw, 2.875rem);
+    min-width: 0;
+    padding-left: clamp(0.75rem, 5.15vw, 2.875rem);
+    padding-right: clamp(0.75rem, 5.15vw, 2.875rem);
     box-sizing: border-box;
 }
 
@@ -2665,12 +2664,11 @@ h3 {
     margin: 0;
     max-width: 100%;
     font-family: var(--font-competencies-display);
-    font-size: var(--comp-line-size, clamp(2rem, 9.5vw, 6rem));
+    font-size: var(--comp-line-size, clamp(2rem, 8.8vw, 5.25rem));
     font-weight: 600;
     line-height: 1;
     letter-spacing: -0.03em;
     text-transform: uppercase;
-    text-wrap: balance;
     text-align: center;
     color: #ffffff;
     white-space: nowrap;
@@ -2693,18 +2691,58 @@ h3 {
 }
 
 .home-competencies-scrub--static .home-competencies__line-wrap {
-    min-height: clamp(3rem, 10vw, 6rem);
+    min-height: var(--comp-row-min-h);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: clamp(0.75rem, 4vw, 2.5rem);
-    padding-right: clamp(0.75rem, 4vw, 2.5rem);
     box-sizing: border-box;
 }
 
-@media (max-width: 30rem) {
-    .home-competencies-scrub--static .home-competencies__line {
+@media (max-width: 64rem) {
+    .home-competencies-scrub--static .home-competencies__line-wrap[data-heading='1'] .home-competencies__line {
+        font-size: min(var(--comp-line-size-1), 7.8vw);
+    }
+}
+
+/* sm: компетенции — перенос строк, фиксированная H-рамп (без auto-scale по длине) */
+@media (max-width: 40rem) {
+    :root {
+        --comp-row-min-h: auto;
+    }
+
+    .home-competencies-scrub.home-competencies-scrub--static .home-competencies__line-wrap {
+        min-height: auto;
+        padding-block: 0.35rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .home-competencies-scrub.home-competencies-scrub--static .home-competencies__line {
         white-space: normal;
+        text-wrap: balance;
+        overflow-wrap: anywhere;
+        hyphens: none;
+        max-width: 100%;
+    }
+
+    .home-competencies-scrub--static .home-competencies__line-wrap[data-heading='1'] .home-competencies__line {
+        font-size: clamp(1.375rem, 5.4vw, 2.25rem);
+    }
+
+    .home-competencies-scrub--static .home-competencies__line-wrap[data-heading='2'] .home-competencies__line {
+        font-size: clamp(1.25rem, 5vw, 2rem);
+    }
+
+    .home-competencies-scrub--static .home-competencies__line-wrap[data-heading='3'] .home-competencies__line {
+        font-size: clamp(1.125rem, 4.6vw, 1.875rem);
+    }
+
+    .home-competencies-scrub--static .home-competencies__line-wrap[data-heading='4'] .home-competencies__line {
+        font-size: clamp(1.25rem, 5vw, 2rem);
+    }
+
+    .home-competencies-scrub--static .home-competencies__line-wrap[data-heading='5'] .home-competencies__line {
+        font-size: clamp(1.125rem, 4.6vw, 1.75rem);
     }
 }
 
@@ -3023,8 +3061,9 @@ h3 {
 .home-competencies-scrub__line-wrap[data-heading="4"] { --comp-line-size: var(--comp-line-size-4); }
 .home-competencies-scrub__line-wrap[data-heading="5"] { --comp-line-size: var(--comp-line-size-5); }
 
-/* Scrub: размер по H-уровню, без полупрозрачного «стека» и scale-деформации */
-.home-competencies-scrub__line.home-competencies__line {
+/* Scrub (не static): размер по H-уровню */
+.home-competencies-scrub:not(.home-competencies-scrub--static)
+    .home-competencies-scrub__line.home-competencies__line {
     font-size: var(--comp-line-size, clamp(2rem, 7.6vw, 5.5rem));
     font-weight: 600;
     white-space: nowrap;
@@ -3184,24 +3223,17 @@ h3 {
 
 .page-home .hero-about .hero-content {
     gap: var(--space-12);
-    width: min(
-        100%,
-        var(--hero-text-max-ch),
-        var(--hero-lead-max),
-        calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem)
-    );
-    max-width: min(
-        var(--hero-text-max-ch),
-        var(--hero-lead-max),
-        calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem)
-    );
+    /* Колонка = ширина lead (70 символов в строке), не shrink-to-fit по заголовку */
+    width: min(100%, var(--hero-text-max-ch));
+    max-width: min(100%, var(--hero-text-max-ch));
     margin-inline: auto;
     box-sizing: border-box;
 }
 
 .page-home .hero-about .hero-text {
-    width: 100%;
-    max-width: 100%;
+    width: min(100%, var(--hero-text-max-ch));
+    max-width: var(--hero-text-max-ch);
+    margin-inline: auto;
     box-sizing: border-box;
 }
 
@@ -3360,8 +3392,6 @@ h3 {
     line-height: var(--type-body-lg-line);
     letter-spacing: -0.02em;
     color: var(--color-text);
-    width: 100%;
-    max-width: min(var(--hero-text-max-ch), var(--hero-lead-max), 100%);
     margin: 0;
     text-wrap: pretty;
     box-sizing: border-box;
@@ -3751,12 +3781,10 @@ h3 {
         width: min(
             100%,
             var(--hero-text-max-ch),
-            var(--hero-lead-max),
             calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem)
         );
         max-width: min(
             var(--hero-text-max-ch),
-            var(--hero-lead-max),
             calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem)
         );
         margin: 0 auto;
@@ -9869,10 +9897,9 @@ p + p {
     max-width: var(--content-max-readable);
 }
 
-.page-home .hero-about .hero-text,
-.hero-text {
-    width: 100%;
-    max-width: min(var(--hero-text-max-ch), var(--hero-lead-max), 100%);
+.page-home .hero-about .hero-text {
+    width: min(100%, var(--hero-text-max-ch));
+    max-width: var(--hero-text-max-ch);
     box-sizing: border-box;
 }
 
@@ -10364,10 +10391,52 @@ canvas {
     .page-home .header-item__label .text-condensed {
         line-height: 1.4;
     }
+
+    .page-home .hero-about .hero-title {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .page-home .hero-about .hero-title__line {
+        white-space: normal;
+        text-wrap: balance;
+    }
+
+    .page-home .hero-about__meta,
+    .page-home .hero-about__meta .info-grid {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .page-home .hero-about__meta .info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .page-home .hero-about__meta .info-value {
+        overflow-wrap: anywhere;
+    }
+
+    .page-home .hero-about .hero-links {
+        width: 100%;
+        max-width: 100%;
+        justify-content: center;
+        row-gap: 0.25rem;
+    }
 }
 
 /* sm (481–640): группы и заголовки страниц — снизить вертикальный воздух */
 @media (max-width: 40rem) {
+    .page-home .hero-about .hero-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .page-home .hero-about .hero-text {
+        width: 100%;
+        max-width: 100%;
+        text-wrap: pretty;
+    }
+
     .projects-page__groups {
         gap: clamp(2rem, 6vw, 2.75rem);
     }
@@ -10378,11 +10447,6 @@ canvas {
 
     .projects-page__group-intro {
         font-size: clamp(1.0625rem, 3.8vw, 1.25rem);
-    }
-
-    /* Тип-рамп компетенций — mobile display scale */
-    .home-competencies__line {
-        font-size: var(--comp-line-size-1);
     }
 
     /* Кейс-секция — section title ramp */
@@ -10425,7 +10489,8 @@ canvas {
 @media (max-width: 30rem) {
     .page-home .hero-about__meta .info-grid {
         grid-template-columns: 1fr;
-        max-width: 20rem;
+        max-width: 100%;
+        width: 100%;
     }
 
     .header-item__icon-wrap {
