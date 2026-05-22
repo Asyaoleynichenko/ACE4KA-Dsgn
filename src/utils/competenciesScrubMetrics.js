@@ -13,9 +13,9 @@ export function competenciesScrollTravelPx(lineCount, vh) {
   return (lineCount - 1) * step;
 }
 
-/** min-height runway = видимая зона sticky + travel */
+/** min-height runway = высота панели (одна строка) + вертикальный travel scrub */
 export function competenciesRunwayMinPx({ lineCount, vh, pinTopPx }) {
-  const stickyVisible = Math.max(vh * 0.5, vh - pinTopPx);
   const travel = competenciesScrollTravelPx(lineCount, vh);
-  return Math.ceil(stickyVisible + travel);
+  const panel = Math.min(Math.max(vh - pinTopPx, vh * 0.55), remPx(720));
+  return Math.ceil(panel + travel);
 }

@@ -1,5 +1,5 @@
 /**
- * Данные и изображения секции «Папки» на главной (Figma 89:347 / 1-206 … 1-227).
+ * Данные и изображения секции «Папки» на главной (Figma 416:12977 / 416:12981 …).
  * Подписи — ключи `src/dictionaries/*.json` → `sectionNav.*`.
  */
 import folderIconFromFigma from '../assets/header/folder-1-210.png';
@@ -8,7 +8,7 @@ import { publicUrl } from '../utils/publicUrl.js';
 /** Экспорты главной 89:347 / impl — миниатюры Image Well как в Figma (не плейсхолдеры SVG). */
 const FIGMA_HOME_IMPL = '/images/figma-impl-89-347';
 
-/** Размеры фрейма First screen из макета (node 70:343) */
+/** Размеры фрейма First screen из макета (node 416:12977) */
 export const HEADER_FIRST_SCREEN = { w: 1275.452, h: 312.784 };
 
 export const SECTION_HEADER_IMAGES = {

@@ -11,8 +11,6 @@ export default function HomeCameraScroll({ children, bridgeLabel = '' }) {
       <div className="home-world" aria-hidden="true">
         <div className="home-world__glow home-world__glow--a" />
         <div className="home-world__glow home-world__glow--b" />
-        <div className="home-world__grain" />
-        <div className="home-world__vignette" />
       </div>
       {bridgeLabel ? (
         <div className="home-type-bridge" aria-hidden="true">

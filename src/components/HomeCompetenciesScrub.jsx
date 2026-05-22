@@ -199,20 +199,26 @@ export default function HomeCompetenciesScrub({
       <div ref={stickyRef} className="home-competencies-scrub__sticky">
         <div className="home-competencies__panel">
           <div className="home-competencies__inner home-competencies__inner--scrub">
-            <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
+            <div className="home-competencies-scrub__stack">
               <div ref={stageRef} className="home-competencies-scrub__stage">
                 <div className="home-competencies-scrub__center">
-                  <div className="home-competencies-scrub__lines">
-                    {lines.map((line, i) => (
+                  <div
+                    className="home-competencies-scrub__lines"
+                    role="group"
+                    aria-label={ariaLabel}
+                    aria-live="polite"
+                  >
+                    {lines[activeIdx] ? (
                       <div
-                        key={i}
-                        className={`home-competencies-scrub__line-wrap${i === activeIdx ? ' is-active' : ''}`}
-                        data-heading={COMPETENCIES_HEADING_ORDER[i] ?? 3}
-                        aria-current={i === activeIdx ? 'true' : undefined}
+                        key={activeIdx}
+                        className="home-competencies-scrub__line-wrap is-active"
+                        data-heading={COMPETENCIES_HEADING_ORDER[activeIdx] ?? 3}
                       >
-                        <p className="home-competencies__line home-competencies-scrub__line">{line}</p>
+                        <p className="home-competencies__line home-competencies-scrub__line">
+                          {lines[activeIdx]}
+                        </p>
                       </div>
-                    ))}
+                    ) : null}
                   </div>
                 </div>
               </div>

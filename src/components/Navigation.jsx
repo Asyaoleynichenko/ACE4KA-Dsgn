@@ -24,7 +24,7 @@ export function Navigation() {
   const { t, localizedPath } = useI18n();
 
   return (
-    <ul className="nav-list" aria-label={t('header.navListAria')}>
+    <ul className="nav-list" data-node-id="573-19068">
       {NAV_ROUTE_KEYS.map(({ path, labelKey }) => {
         const label = t(labelKey);
         const active = itemIsActive(pathname, path);
@@ -32,8 +32,12 @@ export function Navigation() {
         const NavItem = path === '/projects' ? SeamlessProjectsLink : Link;
         return (
           <li key={path}>
-            <NavItem to={to} className={`nav-link${active ? ' active' : ''}`}>
-              <span>{label}</span>
+            <NavItem
+              to={to}
+              className={`nav-link${active ? ' active' : ''}`}
+              data-node-id={path === '/projects' ? '573-20954' : path === '/' ? '573-20958' : '573-20956'}
+            >
+              <span className="text-condensed--single-line">{label}</span>
             </NavItem>
           </li>
         );

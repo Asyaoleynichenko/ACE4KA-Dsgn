@@ -7,7 +7,7 @@ import { useLenisScroll } from '../hooks/useLenisScroll.js';
 import { getScrollY } from '../utils/scrollRoot.js';
 
 /**
- * Шапка — Figma: имя | навигация | язык, mix-blend-mode: difference.
+ * Шапка — Figma 573:18422: имя | навигация | язык.
  * Поведение: при скролле вниз — прячется (translateY -100%), при остановке/скролле вверх — появляется.
  */
 export default function Header() {
@@ -41,13 +41,18 @@ export default function Header() {
   });
 
   return (
-    <header className={`header${hidden ? ' header--hidden' : ''}`} data-name="Header">
-      <nav className="nav">
-        <Link to={localizedPath('/')} className="logo">
-          <span>{t('common.brandName')}</span>
+    <header
+      className={`header${hidden ? ' header--hidden' : ''}`}
+      data-name="Header"
+      data-node-id="573-18422"
+      data-figma-node="573-18422"
+    >
+      <nav className="nav" aria-label={t('header.navListAria')}>
+        <Link to={localizedPath('/')} className="logo" data-node-id="573-20950">
+          <span className="text-condensed--single-line">{t('common.brandName')}</span>
         </Link>
         <Navigation />
-        <span className="lang-switch">
+        <span className="lang-switch" data-node-id="573-20952">
           <LanguageSwitcher />
         </span>
       </nav>

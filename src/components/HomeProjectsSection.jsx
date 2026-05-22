@@ -8,7 +8,11 @@ export default function HomeProjectsSection() {
   const { t } = useI18n();
 
   return (
-    <section className="section section-projects snap-screen" data-node-id="1:285" data-figma-node="1-285">
+    <section
+      className="section section-projects"
+      data-node-id="1:285"
+      data-figma-node="1-285"
+    >
       <div className="logo-section" data-node-id="1:286">
         <h2 className="projects-title-main" data-node-id="1:289" data-scale="section-title">
           {t('hero.projectsSectionTitle')}

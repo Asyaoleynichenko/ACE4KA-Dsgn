@@ -43,11 +43,11 @@
 
   /* Figma 416:12975 — компетенции: смешанный тайп-рамп H2/H4/H1/H5/H3 для строк; H1 — максимум, H5 — минимум. */
   /* Figma 416:12975 — H-рамп компетенций: H1 ~6.5rem доминирует, H5 ~3.75rem самый маленький. */
-  --comp-line-size-1: clamp(2.25rem, 10vw, 7rem);
-  --comp-line-size-2: clamp(2rem, 8.8vw, 6rem);
-  --comp-line-size-3: clamp(1.5rem, 6.8vw, 4.75rem);
-  --comp-line-size-4: clamp(1.75rem, 7.6vw, 5.25rem);
-  --comp-line-size-5: clamp(1.25rem, 5.6vw, 4rem);
+  --comp-line-size-1: clamp(3rem, 10vw, 7.5rem);
+  --comp-line-size-2: clamp(2.5rem, 8.8vw, 6rem);
+  --comp-line-size-3: clamp(2rem, 6.8vw, 3rem);
+  --comp-line-size-4: clamp(2.25rem, 7.6vw, 5.25rem);
+  --comp-line-size-5: clamp(1.75rem, 5.6vw, 4rem);
 
   /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
   --ease-smart: cubic-bezier(0.32, 0.72, 0, 1);
@@ -76,7 +76,7 @@
   --ease-exhibition: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-exhibition-heavy: cubic-bezier(0.16, 0.84, 0.24, 1);
   --exhibition-lerp: 0.08;
-  --exhibition-section-gap: clamp(4rem, 11vh, 7rem);
+  --exhibition-section-gap: var(--layout-section-gap);
   --exhibition-depth-shadow:
     0 1.5rem 4rem rgba(0, 0, 0, 0.42),
     0 0.35rem 1.25rem rgba(0, 0, 0, 0.2);
@@ -133,32 +133,57 @@
   --preview-cta-mix-blend: plus-darker;
   --mix-blend-exclusion: normal;
 
-  /* 8pt spacing scale (4 = half-step) */
-  --space-2: 0.25rem;
-  --space-4: 0.5rem;
+  /* Spacing rhythm — 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96 / 128 (px) */
+  --space-4: 0.25rem;
   --space-8: 0.5rem;
-  --space-12: 1rem;
+  --space-12: 0.75rem;
+  --space-14: 0.875rem;
   --space-16: 1rem;
-  --space-20: 1.5rem;
   --space-24: 1.5rem;
   --space-32: 2rem;
-  --space-40: 2.5rem;
   --space-48: 3rem;
-  --space-56: 3.5rem;
   --space-64: 4rem;
-  --space-72: 4.5rem;
-  --space-80: 5rem;
-  --card-gap: 0.5rem;
-  --preview-card-media-body-gap: 1rem;
-  --grid-row-gap: clamp(1.5rem, 4vw, 2.5rem);
-  --grid-column-gap: 0.5rem;
+  --space-96: 6rem;
+  --space-128: 8rem;
+  /* Legacy aliases — keep existing rules on-scale */
+  --space-2: var(--space-4);
+  --space-20: var(--space-24);
+  --space-40: var(--space-48);
+  --space-56: var(--space-48);
+  --space-72: var(--space-64);
+  --space-80: var(--space-96);
+  /* Compositional rhythm (vertical flow, section breathing room) */
+  --rhythm-micro: var(--space-8);
+  --rhythm-tight: var(--space-16);
+  --rhythm-inline: var(--space-24);
+  --rhythm-stack: var(--space-32);
+  --rhythm-group: var(--space-48);
+  --rhythm-block: var(--space-64);
+  --rhythm-section: var(--space-96);
+  --rhythm-canvas: var(--space-128);
+  --layout-section-gap: clamp(var(--space-64), 11vh, var(--space-96));
+  --layout-stack-gap: var(--space-32);
+  --layout-heading-gap: var(--space-24);
+  --card-gap: var(--space-8);
+  --preview-card-media-body-gap: var(--space-16);
+  --grid-row-gap: clamp(var(--space-24), 4vw, var(--space-48));
+  --grid-column-gap: var(--space-8);
   --preview-grid-max-width: 80.625rem; /* Figma 1:297 — 1290px */
 
-  --hero-content-max: 56rem;
+  /* Figma 573:18422 — Header */
+  --header-figma-pad-x: 2.125rem; /* 34px */
+  --header-figma-pad-y: 1.3125rem; /* 21px */
+  --header-figma-bar-min: 5.578125rem; /* 89.25px */
+  --header-figma-nav-gap: 7.5rem; /* 120px между пунктами Nav Links */
+  --header-figma-type-size: 1.25rem;
+  --header-figma-type-line: 2.953125rem; /* 47.25px */
+
+  --hero-about-max: 80.625rem; /* Figma 416:13006 — 1290px */
+  --hero-content-max: var(--hero-about-max);
   --hero-card-width: 23.0625rem;
-  --hero-row-gap: 1.5rem;
-  --hero-lead-max: min(52rem, 100%);
-  --hero-section-gap: var(--exhibition-section-gap, 4rem);
+  --hero-row-gap: var(--space-24);
+  --hero-lead-max: 47.9375rem; /* Figma 416:13013 — 767px */
+  --hero-section-gap: var(--exhibition-section-gap);
 
   /* Первый экран главной — респонсивные якоря (переопределяются в media) */
   --hero-fs-height: 100dvh;
@@ -167,8 +192,8 @@
   --hero-fs-card-top: clamp(5.5rem, 13svh, 7.5rem);
   --hero-fs-card-width: min(var(--hero-card-width), calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem));
   --hero-fs-card-height: calc(var(--hero-fs-card-width) * 280 / 369);
-  --hero-fs-intro-gap: 1.25rem;
-  --hero-fs-float-slack: 1.75rem; /* data-float на окне превью (~24px range) */
+  --hero-fs-intro-gap: var(--space-24);
+  --hero-fs-float-slack: var(--space-32); /* data-float на окне превью */
   --hero-fs-intro-min: clamp(17.5rem, 50svh, 23rem);
   --hero-fs-nav-zone-h: calc(
     var(--hero-fs-card-top) + var(--hero-fs-card-height) + var(--hero-fs-float-slack)
@@ -187,22 +212,22 @@
   --case-study-pad-x: 1.5rem;
   --case-content-max: min(81.875rem, 100%);
   --case-frame-max: calc(var(--case-content-max) + 2 * var(--case-study-pad-x));
-  --case-section-rhythm: clamp(3rem, 6vw, 5rem);
+  --case-section-rhythm: clamp(var(--space-48), 6vw, var(--space-80));
   --case-divider: rgba(255, 255, 255, 0.075);
   --case-feature-card-bg: #161616;
   /* Figma Problem/Solution block — desktop 1310×654, mobile 643×321 */
   --case-feature-card-radius: 4rem; /* 64px */
   --case-feature-card-radius-sm: 1.875rem; /* 30px */
-  --case-feature-card-padding: 4.075rem; /* 65.2px */
-  --case-feature-card-gap: 2.0375rem; /* 32.6px */
+  --case-feature-card-padding: var(--space-64);
+  --case-feature-card-gap: var(--space-32);
   --case-feature-card-title-size: 1.7825rem; /* 28.52px */
   --case-feature-card-title-color: #949494;
   --case-feature-card-title-tracking: -0.02em;
   --case-feature-card-body-size: 2.67375rem; /* 42.78px */
   --case-feature-card-body-lh: 1.2; /* 51.34px */
   --case-feature-card-body-tracking: -0.01em;
-  --case-feature-card-padding-sm: 2rem; /* 32px */
-  --case-feature-card-gap-sm: 1rem; /* 16px */
+  --case-feature-card-padding-sm: var(--space-32);
+  --case-feature-card-gap-sm: var(--space-16);
   --case-feature-card-title-size-sm: 0.875rem; /* 14px */
   --case-feature-card-body-size-sm: 1.3125rem; /* 21px */
   --case-feature-card-body-lh-sm: 1.2; /* 25.2px */
@@ -212,20 +237,51 @@
   --case-hyp-title-gap: var(--case-feature-card-gap);
   --case-hyp-row-gap: var(--case-feature-card-gap);
   --case-hyp-body-gap: var(--case-feature-card-gap);
-  /* Figma 337:24703 — заголовок case-study на 862×10.125rem (3 строки ~3.375rem). */
-  --type-case-study-title: clamp(2.25rem, 4.2vw, 3.5rem);
-  --type-case-study-lead: clamp(1rem, 0.6vw + 0.85rem, 1.125rem);
+  /* Editorial type ramp — desktop (hero / section / statement / body / label) */
+  --type-hero-display-size: clamp(4.5rem, 6.5vw + 2rem, 7.5rem);
+  --type-hero-display-line: 0.98;
+  --type-hero-display-tracking: -0.04em;
+  --type-section-title-size: clamp(3rem, 4vw + 1.5rem, 4.5rem);
+  --type-section-title-line: 1;
+  --type-section-title-tracking: -0.03em;
+  --type-statement-size: clamp(2rem, 2.5vw + 1rem, 3rem);
+  --type-statement-line: 1.1;
+  --type-statement-tracking: -0.02em;
+  --type-body-lg-size: clamp(1.25rem, 1vw + 1rem, 1.5rem);
+  --type-body-lg-line: 1.5;
+  --type-body-size: clamp(1rem, 0.5vw + 0.9rem, 1.125rem);
+  --type-body-line: 1.6;
+  --type-label-size: clamp(0.75rem, 0.35vw + 0.65rem, 0.875rem);
+  --type-label-line: 1.4;
+  --type-label-tracking: 0.04em;
+  /* Semantic aliases (components + legacy hooks) */
+  --type-h1-size: var(--type-section-title-size);
+  --type-h1-line: var(--type-section-title-line);
+  --type-h1-weight: 600;
+  --type-h2-size: var(--type-section-title-size);
+  --type-h2-line: var(--type-section-title-line);
+  --type-h2-weight: 600;
+  --type-h3-size: var(--type-statement-size);
+  --type-h3-line: var(--type-statement-line);
+  --type-h3-weight: 500;
+  --type-secondary-size: var(--type-body-size);
+  --type-secondary-line: var(--type-body-line);
+  --type-caption-size: var(--type-label-size);
+  --type-caption-line: var(--type-label-line);
+  --type-body-weight: 400;
+  --type-case-study-title: clamp(3rem, 4.2vw, var(--type-section-title-size));
+  --type-case-study-lead: var(--type-body-lg-size);
   --ease-premium-out: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-premium: 200ms;
 
   --project-page-max-width: 77.5rem;
-  --project-page-padding-y: 3rem;
-  --project-page-padding-x: 1.5rem;
-  --project-page-padding-bottom: 4rem;
-  --project-page-gap: 3rem;
-  --project-detail-pt: 2rem;
-  --project-detail-gap: 3rem;
-  --project-detail-top-gap: 1.5rem;
+  --project-page-padding-y: var(--space-48);
+  --project-page-padding-x: var(--space-24);
+  --project-page-padding-bottom: var(--space-64);
+  --project-page-gap: var(--space-48);
+  --project-detail-pt: var(--space-32);
+  --project-detail-gap: var(--space-48);
+  --project-detail-top-gap: var(--space-24);
   --project-title-color: #fafafa;
   --project-hero-max-width: 77.5rem;
   --project-hero-aspect-w: 1310;
@@ -234,21 +290,21 @@
   --project-hero-bg: #000000;
   --project-hero-gradient: linear-gradient(135deg, #2b2b2b 0%, #1d1d1d 100%);
   --project-hero-placeholder-bg: #c4c4c4;
-  --project-heading-gap: 0.75rem;
+  --project-heading-gap: var(--space-12);
   --project-heading-max-width: min(52rem, 100%);
-  --project-title-font-size: 2rem;
+  --project-title-font-size: var(--type-section-title-size);
   --project-title-line-height: 1.2;
   --project-title-letter-spacing: -0.02em;
-  --project-lead-font-size: 1.125rem;
+  --project-lead-font-size: var(--type-body-lg-size);
   --project-lead-line-height: 1.5;
   --project-lead-letter-spacing: 0;
   --project-lead-color: #737373;
-  --project-meta-card-gap: 1rem;
+  --project-meta-card-gap: var(--space-16);
   --project-meta-card-bg: var(--case-feature-card-bg);
   --project-meta-card-radius: var(--case-feature-card-radius-sm);
   --project-meta-card-padding: var(--case-study-pad-x);
   --project-meta-card-max-width: 25.9375rem;
-  --project-meta-item-gap: 0.5rem;
+  --project-meta-item-gap: var(--space-8);
   --project-meta-label-font-size: clamp(0.875rem, 1.2vw, 1.25rem);
   --project-meta-label-line-height: 1.15;
   --project-meta-label-letter-spacing: -0.02em;
@@ -259,11 +315,11 @@
   --project-meta-value-opacity: 1;
   --project-meta-cta-font-size: clamp(1.0625rem, 2.8vw, 1.375rem);
   --project-meta-cta-height: clamp(3.5rem, 10vw, 4.5rem);
-  --project-grid-gap: 1.5rem;
+  --project-grid-gap: var(--space-24);
   --project-footer-border-top: 4.0625rem;
   --project-footer-pt: 4.0625rem;
   --project-footer-border: 0.0625rem solid var(--color-elevated-mid);
-  --project-footer-gap: 3rem;
+  --project-footer-gap: var(--space-48);
   --project-footer-label-font-size: 0.875rem;
   --project-footer-label-line-height: 1.4;
   --project-footer-label-letter-spacing: 0;
@@ -293,20 +349,20 @@
   --project-ext-link-color: #0a0a0a;
   --Text-Secondary: var(--color-preview-titlebar-text);
 
-  --text-89-756-title-font-size: 2rem;
+  --text-89-756-title-font-size: var(--type-section-title-size);
   --text-89-756-title-line-height: 1.25;
   --text-89-756-title-letter-spacing: -0.02em;
   --text-89-756-title-color: #0a0a0a;
-  --text-89-756-lead-font-size: 1.125rem;
+  --text-89-756-lead-font-size: var(--type-body-lg-size);
   --text-89-756-lead-line-height: 1.5;
   --text-89-756-lead-letter-spacing: 0;
   --text-89-756-lead-color: #9a9aa0;
   --text-89-756-lead-max-width: min(52.5rem, 100%);
-  --text-89-756-label-font-size: 0.875rem;
+  --text-89-756-label-font-size: var(--type-label-size);
   --text-89-756-label-line-height: 1.4;
   --text-89-756-label-letter-spacing: 0;
   --text-89-756-label-opacity: 1;
-  --text-89-756-body-font-size: 1.125rem;
+  --text-89-756-body-font-size: var(--type-body-size);
   --text-89-756-body-line-height: 1.5;
   --text-89-756-body-letter-spacing: 0;
   --text-89-756-body-opacity: 1;
@@ -316,66 +372,98 @@
   --text-89-756-link-color: #0a0a0a;
 
   --layout-89-756-wrap-width: 100%;
-  --layout-89-756-header-margin-bottom: 4rem;
-  --layout-89-756-grid-gap: 1rem;
+  --layout-89-756-header-margin-bottom: var(--space-64);
+  --layout-89-756-grid-gap: var(--space-16);
   --layout-89-756-grid-max-width: 35rem;
   --layout-89-756-grid-columns: 2;
-  --layout-89-756-item-padding-y: 1rem;
-  --layout-89-756-item-padding-x: 1.5rem;
-  --layout-89-756-item-gap: 1.5rem;
+  --layout-89-756-item-padding-y: var(--space-16);
+  --layout-89-756-item-padding-x: var(--space-24);
+  --layout-89-756-item-gap: var(--space-24);
   --layout-89-756-item-radius: var(--radius-lg);
-  --layout-89-756-item-inner-gap: 0.25rem;
+  --layout-89-756-item-inner-gap: var(--space-4);
 
-  /* Горизонтальный gutter: пользовательский запрос — 1.5rem на всех страницах + safe-area. */
-  --layout-page-pad-x: 1.5rem;
+  /* Горизонтальный gutter: 24px на всех страницах + safe-area. */
+  --layout-page-pad-x: var(--space-24);
   --layout-edge-left: calc(var(--layout-page-pad-x) + env(safe-area-inset-left, 0));
   --layout-edge-right: calc(var(--layout-page-pad-x) + env(safe-area-inset-right, 0));
-  --layout-page-pad-y-top: 3rem;
-  --layout-page-pad-y-bottom: 4rem;
+  --layout-page-pad-y-top: var(--space-48);
+  --layout-page-pad-y-bottom: var(--space-64);
 }
 
 /* Адаптив: вертикальные поля плотнее на планшетах/телефонах; горизонтальный gutter — строго 1.5rem + safe-area (--layout-edge-*). */
 @media (max-width: 64rem) {
     :root {
-        --hero-row-gap: 1.25rem;
+        --hero-row-gap: var(--space-24);
+        --layout-section-gap: clamp(var(--space-48), 10vh, var(--space-80));
+        --type-body-size: clamp(0.9375rem, 1.5vw + 0.85rem, 1.0625rem);
+        --type-body-lg-size: clamp(1.125rem, 2vw + 0.9rem, 1.25rem);
+        --type-label-size: clamp(0.6875rem, 1vw + 0.6rem, 0.8125rem);
     }
 }
 
 @media (max-width: 40rem) {
     :root {
-        --layout-page-pad-y-top: 2.25rem;
-        --layout-page-pad-y-bottom: 3rem;
-        --layout-page-pad-x: 1.25rem;
-        --project-page-padding-y: 2.25rem;
-        --project-page-padding-bottom: 3rem;
-        --hero-section-gap: 3rem;
-        --hero-row-gap: 1.125rem;
-        --project-detail-gap: 2.5rem;
-        --project-card-padding: 1.5rem;
-        --case-section-rhythm: clamp(2.25rem, 8vw, 3.5rem);
-        --preview-card-media-body-gap: 0.75rem;
+        --layout-page-pad-y-top: var(--space-32);
+        --layout-page-pad-y-bottom: var(--space-48);
+        --layout-page-pad-x: var(--space-24);
+        --project-page-padding-y: var(--space-32);
+        --project-page-padding-bottom: var(--space-48);
+        --hero-section-gap: var(--space-48);
+        --hero-row-gap: var(--space-24);
+        --project-detail-gap: var(--space-48);
+        --project-card-padding: var(--space-24);
+        --case-section-rhythm: clamp(var(--space-48), 8vw, var(--space-64));
+        --preview-card-media-body-gap: var(--space-12);
+        --layout-section-gap: clamp(var(--space-48), 9vh, var(--space-64));
         --tc-scale-x: 0.68;
         --hero-fs-card-top: clamp(5rem, 12svh, 6.75rem);
-        --hero-fs-card-width: min(20rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 1.5rem));
+        --hero-fs-card-width: min(20rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - var(--space-24)));
         --hero-fs-intro-min: clamp(16rem, 48svh, 21rem);
         --hero-fs-folder-max-w: min(7rem, 26vw);
         --hero-fs-well-size: clamp(3.5rem, 14vw, 5.25rem);
-        --hero-fs-label-size: clamp(0.5625rem, 2.4vw, 0.6875rem);
+        --hero-fs-label-size: clamp(0.6875rem, 2.8vw, 0.8125rem);
+        /* Mobile editorial ramp */
+        --type-hero-display-size: clamp(3rem, 12vw, 4.5rem);
+        --type-hero-display-line: 0.95;
+        --type-section-title-size: clamp(2rem, 8vw, 3rem);
+        --type-section-title-line: 1.05;
+        --type-statement-size: clamp(1.5rem, 6vw, 2rem);
+        --type-statement-line: 1.15;
+        --type-body-lg-size: clamp(1.125rem, 4vw, 1.25rem);
+        --type-body-lg-line: 1.5;
+        --type-body-size: clamp(0.9375rem, 3.6vw, 1.0625rem);
+        --type-body-line: 1.55;
+        --type-label-size: clamp(0.6875rem, 2.8vw, 0.8125rem);
+        --type-case-study-title: var(--type-section-title-size);
+        --type-case-study-lead: var(--type-body-lg-size);
+        --project-title-font-size: var(--type-section-title-size);
+        --project-lead-font-size: var(--type-body-lg-size);
+        --text-89-756-title-font-size: var(--type-section-title-size);
+        --text-89-756-lead-font-size: var(--type-body-lg-size);
+        --text-89-756-body-font-size: var(--type-body-size);
+        --text-89-756-label-font-size: var(--type-label-size);
+        --case-feature-card-title-size-sm: var(--type-label-size);
+        --case-feature-card-body-size-sm: var(--type-statement-size);
+        --comp-line-size-1: clamp(3rem, 12vw, 4.5rem);
+        --comp-line-size-2: clamp(2.5rem, 10.5vw, 3.75rem);
+        --comp-line-size-3: clamp(2rem, 8.5vw, 3rem);
+        --comp-line-size-4: clamp(2.25rem, 9vw, 3.25rem);
+        --comp-line-size-5: clamp(1.75rem, 7vw, 2.75rem);
     }
 }
 
 @media (max-width: 30rem) {
     :root {
         --layout-page-pad-x: 1rem;
-        --hero-section-gap: 2.5rem;
+        --hero-section-gap: var(--space-48);
         --tc-scale-x: 0.72;
         --hero-fs-card-top: clamp(4.75rem, 11svh, 6rem);
-        --hero-fs-card-width: min(18.75rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 1rem));
+        --hero-fs-card-width: min(18.75rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - var(--space-16)));
         --hero-fs-intro-min: clamp(14.5rem, 45svh, 18.5rem);
-        --hero-fs-intro-gap: 1.25rem;
+        --hero-fs-intro-gap: var(--space-24);
         --hero-fs-folder-max-w: min(6.5rem, 30vw);
         --hero-fs-well-size: clamp(3.25rem, 16vw, 5rem);
-        --hero-fs-label-size: clamp(0.5rem, 2.6vw, 0.625rem);
+        --hero-fs-label-size: clamp(0.625rem, 2.9vw, 0.75rem);
         --hero-fs-nav-pad-top: max(4.75rem, calc(env(safe-area-inset-top, 0) + 4rem));
         --hero-fs-nav-pad-bottom: max(5.5rem, calc(env(safe-area-inset-bottom, 0) + 4rem));
     }
@@ -701,13 +789,13 @@ html.snap-pages #root.snap-pages-root--home {
     scroll-snap-stop: normal;
 }
 
-/* Главная: hero сбрасывал min-height — для snap возвращаем высоту экрана */
+/* Главная: hero snap — первый экран + about */
 .page-home .hero.snap-screen {
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 0;
 }
 
 .page-home .snap-screen {
+    min-height: 0;
     scroll-margin-top: 0;
 }
 
@@ -1097,9 +1185,10 @@ button:focus-visible,
     position: -webkit-sticky;
     top: 0;
     z-index: 100;
-    background: transparent;
+    background: var(--color-bg);
     mix-blend-mode: normal;
-    isolation: auto;
+    isolation: isolate;
+    min-height: var(--header-figma-bar-min);
     will-change: transform;
     transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -1124,16 +1213,16 @@ button:focus-visible,
     }
 }
 
-/* Figma 573:18422 — Logo: совпадает по размеру с nav-link, uppercase, без mix-blend (хедер чёрный). */
+/* Figma 573:18422 — Logo: тот же кегль что nav-link, uppercase, без mix-blend. */
 .logo {
-    font-size: clamp(0.875rem, 1.4vw, 1.125rem);
+    font-size: var(--header-figma-type-size, 1.25rem);
     font-weight: 400;
-    line-height: 1.5rem;
+    line-height: var(--header-figma-type-line, 2.953125rem);
     letter-spacing: 0;
     text-transform: uppercase;
     display: inline-block;
     color: var(--color-text);
-    mix-blend-mode: difference;
+    mix-blend-mode: normal;
     flex-shrink: 0;
     text-decoration: none;
     transition:
@@ -1272,16 +1361,16 @@ button:focus-visible,
     justify-content: center;
 }
 
-/* Figma 573:18422 — Lang в виде [ENG / RUS], тот же размер и uppercase что у nav-item. */
+/* Figma 573:20952 — Lang [ENG / RUS], тот же размер что nav-item. */
 .lang-switch {
-    font-size: clamp(0.875rem, 1.4vw, 1.125rem);
+    font-size: var(--header-figma-type-size, 1.25rem);
     font-weight: 400;
-    line-height: 1.5rem;
+    line-height: var(--header-figma-type-line, 2.953125rem);
     letter-spacing: 0;
     text-transform: uppercase;
     display: inline-block;
     color: var(--color-text);
-    mix-blend-mode: difference;
+    mix-blend-mode: normal;
     min-width: 0;
     text-align: right;
     flex-shrink: 0;
@@ -1325,14 +1414,18 @@ button:focus-visible,
     -webkit-backdrop-filter: blur(0.25rem);
 }
 
-/* Figma Header — одна строка: имя | навигация | язык; padding 34/21 */
+/* Figma 573:18422 — одна строка: имя | навигация | язык; padding 34×21 */
 .header .nav {
     position: relative;
     z-index: 1;
     width: 100%;
+    min-height: var(--header-figma-bar-min);
     margin: 0;
-    padding: 1.3125rem 2.125rem max(1.3125rem, env(safe-area-inset-bottom, 0));
-    padding-top: max(1.3125rem, env(safe-area-inset-top, 0));
+    padding:
+        max(var(--header-figma-pad-y), env(safe-area-inset-top, 0))
+        max(var(--header-figma-pad-x), env(safe-area-inset-right, 0))
+        max(var(--header-figma-pad-y), env(safe-area-inset-bottom, 0))
+        max(var(--header-figma-pad-x), env(safe-area-inset-left, 0));
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -1382,13 +1475,13 @@ button:focus-visible,
 .header .logo,
 .header .lang-switch {
     font-family: var(--font-competencies-display);
-    font-size: 1.125rem;
+    font-size: var(--header-figma-type-size);
     font-weight: 400;
-    line-height: 1.1;
+    line-height: var(--header-figma-type-line);
     letter-spacing: 0;
     text-transform: uppercase;
-    color: #fff;
-    mix-blend-mode: difference;
+    color: var(--color-text);
+    mix-blend-mode: normal;
 }
 
 /* Имитация condensed-варианта: scaleX на текстовых нодах. Глобальная утилита — `.text-condensed`.
@@ -1398,8 +1491,6 @@ button:focus-visible,
    transform-origin: left → весь «пустой» зазор смещается вправо, его компенсируем negative margin-inline-end.
    width: fit-content + max-width: 100%. Только scaleX — scaleY ломает межстрочный интервал при переносах. */
 .text-condensed,
-.header .logo > span,
-.header .lang-switch .lang-switch__toggle-row,
 .btn-show-all__label {
     display: inline-block;
     width: fit-content;
@@ -1413,6 +1504,20 @@ button:focus-visible,
     transition:
         transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
         margin-inline-end 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Figma 573:20950 — логотип без scaleX, нативный condensed display */
+.header .logo > span,
+.header .lang-switch .lang-switch__toggle-row {
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+    vertical-align: middle;
+    transform: none;
+    margin-inline-end: 0;
+    letter-spacing: -0.03em;
+    line-height: inherit;
+    transition: letter-spacing var(--duration-micro) var(--ease-micro-out);
 }
 
 /* Центрированные контексты: scaleX(0.62) с origin left прижимает визуал к ЛЕВОМУ
@@ -1488,10 +1593,7 @@ h3 {
     letter-spacing: -0.02em;
 }
 
-/* Display-condensed: больший кегль (для шапки и CTA-кнопки). */
-.header .logo > span,
-.header .lang-switch .lang-switch__toggle-row,
-.header .nav-list .nav-link > span,
+/* Display-condensed: больший кегль (CTA; шапка — фикс. кегль Figma 573:18422). */
 .btn-show-all__label {
     font-size: 1.45em;
 }
@@ -1516,7 +1618,7 @@ h3 {
 }
 
 .header .logo:hover > span {
-    --tc-scale-x: 0.88;
+    letter-spacing: 0.02em;
 }
 
 /* Кнопка «ВСЕ ПРОЕКТЫ»: hover раскрывает лейбл */
@@ -1622,13 +1724,13 @@ h3 {
     color: inherit;
 }
 
-/* Figma Frame 2131330000 — gap 7.5rem, плоский ряд; difference на тексте, не на контейнере */
+/* Figma 573:19068 Nav Links — gap 7.5rem (120px), плоский ряд */
 .header .nav-list {
     display: inline-flex;
     justify-content: flex-start;
     align-items: center;
     padding: 0;
-    gap: clamp(2.5rem, 8vw, 7.5rem);
+    gap: var(--header-figma-nav-gap);
     border-radius: 0;
     min-height: 0;
     height: auto;
@@ -1713,22 +1815,22 @@ h3 {
     z-index: 1;
 }
 
-/* Figma — текст Suisse, uppercase, weight 400; активный — 600. Кегль базовый 1.125rem, span внутри увеличивается 1.45em */
+/* Figma 573:18422 — Suisse display, 1.25rem / 47.25px, uppercase; активный — bold */
 .header .nav-list .nav-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0;
-    min-height: 0;
+    min-height: var(--header-figma-type-line);
     min-width: 0;
     height: auto;
     font-family: var(--font-competencies-display);
-    font-size: 1.125rem;
+    font-size: var(--header-figma-type-size);
     font-weight: 400;
-    line-height: 1.1;
+    line-height: var(--header-figma-type-line);
     letter-spacing: 0;
     text-transform: uppercase;
-    color: #fff;
+    color: var(--color-text);
     opacity: 1;
     padding: 0;
     border-radius: 0;
@@ -1737,7 +1839,7 @@ h3 {
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    mix-blend-mode: difference;
+    mix-blend-mode: normal;
 }
 
 .header .nav-list .nav-link > span {
@@ -1772,7 +1874,7 @@ h3 {
 }
 
 .header .nav-list .nav-link.active {
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0;
     border: 0;
     outline: none;
@@ -1940,7 +2042,12 @@ h3 {
 
 @media (max-width: 56.25rem) {
     .header .nav {
-        padding: 1rem 1.25rem;
+        min-height: 0;
+        padding:
+            max(1rem, env(safe-area-inset-top, 0))
+            max(1.25rem, env(safe-area-inset-right, 0))
+            max(1rem, env(safe-area-inset-bottom, 0))
+            max(1.25rem, env(safe-area-inset-left, 0));
         gap: 0.75rem;
     }
 
@@ -1954,7 +2061,9 @@ h3 {
     .header .logo,
     .header .nav-list .nav-link,
     .header .lang-switch {
-        font-size: clamp(0.8125rem, 3.4vw, 1rem);
+        font-size: clamp(1rem, 3.8vw, var(--header-figma-type-size));
+        line-height: 1.2;
+        min-height: 2.75rem;
     }
 }
 
@@ -2124,6 +2233,11 @@ h3 {
     );
 }
 
+/* Главная — чистый чёрный фон (Figma 416:12975), без цветных бликов */
+.home-page--seamless .home-world__glow {
+    opacity: 0;
+}
+
 .home-world__glow--b {
     left: 62%;
     top: 58%;
@@ -2141,19 +2255,7 @@ h3 {
     opacity: calc(0.14 + var(--scene-comp, 0) * 0.32);
 }
 
-.home-world__grain {
-    position: absolute;
-    inset: -20%;
-    opacity: 0.045;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: soft-light;
-}
-
-.home-world__vignette {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 120% 80% at 50% 45%, transparent 35%, rgba(0, 0, 0, 0.55) 100%);
-}
+/* Figma 416:12975 — чистый чёрный фон, без film grain */
 
 .home-page__scroll {
     position: relative;
@@ -2193,29 +2295,19 @@ h3 {
     will-change: transform;
 }
 
-.home-page--seamless .home-scene--hero .hero__row {
-    opacity: calc(1 - var(--hero-exit, 0) * 0.9);
-    transform: translate3d(0, calc(var(--hero-exit, 0) * -9vh), 0)
-        scale(calc(1 - var(--hero-exit, 0) * 0.03));
-    filter: blur(calc(var(--hero-exit, 0) * 4px));
+.home-page--seamless .home-scene--hero .hero-about {
+    opacity: calc(1 - var(--hero-exit, 0) * 0.25);
+    transform: translate3d(0, calc(var(--hero-exit, 0) * -2vh), 0);
+    filter: none;
     transition: none;
 }
 
 .home-page--seamless .home-scene--hero .hero-first-screen {
-    opacity: calc(1 - var(--hero-exit, 0) * 0.35);
+    opacity: calc(1 - var(--hero-exit, 0) * 0.15);
 }
 
 .home-page--seamless .home-scene--competencies {
-    margin-top: calc(clamp(1rem, 3vw, 2.5rem) * (1 - var(--hero-exit, 0) * 0.5));
     opacity: 1;
-}
-
-.home-page--seamless .home-competencies__panel {
-    box-shadow:
-        0 0 calc(3rem + var(--scene-comp, 0) * 5rem)
-            hsl(calc(var(--world-hue, 280)) 55% 50% / calc(0.1 + var(--scene-comp, 0) * 0.2)),
-        0 1.5rem 5rem rgba(0, 0, 0, 0.45);
-    border: 0.0625rem solid hsl(calc(var(--world-hue, 280)) 40% 40% / calc(0.06 + var(--scene-comp, 0) * 0.14));
 }
 
 .home-page--seamless .home-scene--projects .projects-title-main {
@@ -2230,11 +2322,211 @@ h3 {
 }
 
 .page-home .page-parallax {
-    opacity: 0.26;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ——— Seamless interface: one scene, scroll = camera ——— */
+.site-exhibition {
+    background: var(--color-bg);
+}
+
+.site-exhibition .main,
+.site-exhibition .page-transition:not(.page-transition--case-study) {
+    background: transparent;
+}
+
+.home-page--seamless {
+    --scene-overlap: clamp(3rem, 8vh, 6rem);
+    --scene-fade-h: clamp(6rem, 18vh, 12rem);
+}
+
+.home-page--seamless [data-camera-rail] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.home-page--seamless .home-scene {
+    position: relative;
+    isolation: isolate;
+    margin-bottom: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.home-page--seamless .hero,
+.home-page--seamless .home-competencies,
+.home-page--seamless .section-projects,
+.home-page--seamless .section-nav {
+    margin-bottom: 0;
+}
+
+.home-page--seamless .snap-screen {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+    min-height: auto;
+}
+
+.home-page--seamless .hero.snap-screen {
+    padding-bottom: calc(var(--layout-section-gap) - var(--scene-overlap));
+}
+
+.home-page--seamless .home-scene--hero::after,
+.home-page--seamless .home-scene--competencies::after,
+.home-page--seamless .home-scene--projects::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.home-page--seamless .home-scene--hero::after {
+    bottom: 0;
+    height: var(--scene-fade-h);
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.2) 55%,
+        rgba(0, 0, 0, 0.5) 100%
+    );
+}
+
+.home-page--seamless .home-scene--competencies {
+    margin-top: calc(
+        var(--scene-overlap) * -1 + clamp(0rem, 3vw, 1.5rem) * (1 - var(--hero-exit, 0) * 0.65)
+    );
+    padding-top: calc(var(--layout-section-gap) * 0.35);
+    z-index: 2;
+}
+
+.home-page--seamless .home-scene--competencies::after {
+    bottom: 0;
+    height: var(--scene-fade-h);
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.25) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+}
+
+.home-page--seamless .home-scene--projects {
+    margin-top: calc(var(--scene-overlap) * -1.15);
+    padding-top: calc(var(--layout-section-gap) * 0.5);
+    padding-bottom: var(--layout-section-gap);
+    z-index: 3;
+}
+
+.home-page--seamless .home-scene--projects::before {
+    top: 0;
+    height: var(--scene-fade-h);
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.72) 0%,
+        rgba(0, 0, 0, 0.2) 45%,
+        transparent 100%
+    );
+}
+
+.home-page--seamless .home-competencies {
+    margin-top: 0;
+    margin-bottom: 0;
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+}
+
+.home-page--seamless .home-competencies__panel {
+    background: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(1.125rem) saturate(1.15);
+    -webkit-backdrop-filter: blur(1.125rem) saturate(1.15);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.07);
+    box-shadow:
+        0 0 calc(3rem + var(--scene-comp, 0) * 5rem)
+            hsl(calc(var(--world-hue, 280)) 55% 50% / calc(0.08 + var(--scene-comp, 0) * 0.18)),
+        0 2.5rem 6rem rgba(0, 0, 0, 0.38);
+}
+
+.home-page--seamless .section-projects {
+    padding-top: 0;
+    background: transparent;
+}
+
+.home-page--seamless .section-projects .logo-section {
+    position: relative;
+    z-index: 1;
+    margin-bottom: var(--rhythm-stack);
+}
+
+.home-page--seamless .preview-grid {
+    position: relative;
+    z-index: 1;
+    gap: var(--grid-row-gap) var(--grid-column-gap);
+}
+
+.home-page--seamless .preview-card,
+.home-page--seamless .preview-card-block:not(.preview-card-block--mac-window) {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.home-page--seamless .preview-card__link {
+    gap: var(--preview-card-media-body-gap);
+}
+
+.home-page--seamless .filter-pills {
+    background: rgba(22, 22, 25, 0.42);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.08);
+}
+
+.home-page--seamless .hero-about,
+.home-page--seamless .hero-about__meta,
+.home-page--seamless .hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.home-page--seamless .hero-first-screen {
+    overflow: visible;
+}
+
+/* Лёгкий bleed за край viewport — cinematic crop */
+.home-page--seamless .home-competencies__panel,
+.home-page--seamless .preview-grid .preview-card {
+    transform: translateZ(0);
+}
+
+@media (min-width: 64.0625rem) {
+    .home-page--seamless .preview-grid .preview-card:nth-child(3n + 2) {
+        margin-top: var(--space-16);
+    }
+
+    .home-page--seamless .preview-grid .preview-card:nth-child(3n) {
+        margin-top: calc(var(--space-32) * -1);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .home-page--seamless .home-scene--hero .hero__row,
+    .home-page--seamless .home-scene--hero::after,
+    .home-page--seamless .home-scene--competencies::after,
+    .home-page--seamless .home-scene--projects::before {
+        display: none;
+    }
+
+    .home-page--seamless .home-competencies__panel {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: #000000;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page--seamless .home-scene--hero .hero-about,
     .home-page--seamless .home-scene--hero .hero-first-screen,
     .home-page--seamless .home-scene--competencies,
     .home-page--seamless .home-scene--projects .projects-title-main,
@@ -2254,9 +2546,12 @@ h3 {
 
 /* Figma 418:21263 — главная: стек компетенций на чёрном + карточки + CTA «Все проекты» */
 .page-home .home-competencies {
+    position: relative;
+    z-index: 2;
     width: 100%;
     margin-top: clamp(1.5rem, 4vw, var(--hero-section-gap));
     margin-bottom: clamp(2rem, 5vw, var(--space-48));
+    isolation: isolate;
     /* Возвращаем боковые поля страницы — панель не должна упираться в края экрана. */
     padding-left: var(--layout-edge-left);
     padding-right: var(--layout-edge-right);
@@ -2277,9 +2572,11 @@ h3 {
     background: #000000;
     color: #fafafa;
     box-sizing: border-box;
-    overflow: visible;
+    overflow: hidden;
     box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.45);
 }
+
+/* Вне seamless-режима панель остаётся плотной; seamless переопределяет выше */
 
 .home-competencies__inner {
     position: relative;
@@ -2328,6 +2625,10 @@ h3 {
     width: 100%;
 }
 
+.page-home .home-competencies-scrub__runway {
+    background: #000000;
+}
+
 .home-competencies-scrub__sticky {
     position: sticky;
     /* Ниже липкой шапки (логотип ~2rem + nav — иначе текст уезжает под прозрачный header) */
@@ -2335,12 +2636,23 @@ h3 {
     z-index: 2;
     width: 100%;
     box-sizing: border-box;
-    /* Заполняем видимую высоту под шапкой — стек типографики по центру */
     --comp-sticky-top: max(6.5rem, calc(env(safe-area-inset-top, 0) + 5.5rem));
     min-height: calc(100dvh - var(--comp-sticky-top));
     min-height: calc(100vh - var(--comp-sticky-top));
     display: flex;
     flex-direction: column;
+}
+
+/* Главная: не дублировать 100dvh в sticky + runway — панель по контенту */
+.page-home .home-competencies-scrub__sticky {
+    min-height: auto;
+    background: #000000;
+}
+
+/* Вордмарк футера не должен просвечивать под блоком компетенций при скролле */
+.page-home .site-footer__wordmark {
+    position: relative;
+    z-index: 0;
 }
 
 .home-competencies-scrub__sticky .home-competencies__panel {
@@ -2563,6 +2875,37 @@ h3 {
     width: 100%;
 }
 
+/* Одна видимая строка по высоте — остальные в стопке по центру (без раздувания скролла) */
+.page-home .home-competencies-scrub__lines {
+    position: relative;
+    min-height: clamp(3.25rem, 11vw, 6.5rem);
+}
+
+.page-home .home-competencies-scrub__line-wrap:not(.is-active) {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin: 0;
+    transform: translateY(-50%);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.page-home .home-competencies-scrub__line-wrap.is-active {
+    position: relative;
+    top: auto;
+    transform: none;
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+}
+
+.page-home .home-competencies-scrub__line-wrap:not(.is-active) .home-competencies-scrub__line {
+    opacity: 0;
+}
+
 .home-competencies-scrub__line-wrap {
     display: flex;
     justify-content: center;
@@ -2574,10 +2917,8 @@ h3 {
         transform 0.28s var(--ease-smart, ease);
 }
 
-/* Figma: все строки одинаково крупные и непрозрачные (без активного/неактивного состояния) */
-.home-competencies-scrub__line-wrap,
-.home-competencies-scrub__line-wrap:not(.is-active),
-.home-competencies-scrub__line-wrap.is-active {
+/* Reduced-motion / static: все строки в потоке */
+.home-competencies-scrub--reduced-motion .home-competencies-scrub__line-wrap {
     opacity: 1;
     transform: none;
     max-height: none;
@@ -2705,7 +3046,7 @@ h3 {
     }
 }
 
-/* Hero — Figma 89:347 / 1-202: первый экран + блок вводного текста (1:232) */
+/* Hero — Figma 416:12975: First screen + About Section */
 .hero {
     position: relative;
     min-height: 100vh;
@@ -2722,10 +3063,17 @@ h3 {
 
 .page-home .hero {
     min-height: 0;
+    padding-top: 0;
     padding-bottom: var(--space-64);
     display: flex;
     flex-direction: column;
-    gap: var(--hero-section-gap); /* Figma 89:347 — 4rem между 70:343 и 1:232 */
+    align-items: stretch;
+    gap: var(--hero-section-gap);
+}
+
+.page-home .home-first-screen-section {
+    flex: 0 0 auto;
+    width: 100%;
 }
 
 .hero__row {
@@ -2753,14 +3101,60 @@ h3 {
     align-items: center;
 }
 
-.hero__intro,
-.hero__details {
+.hero__intro {
     width: 100%;
     max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--hero-row-gap);
+    gap: var(--space-12);
+}
+
+/* Figma 416:13006 — About Section: intro stack + info + footer links */
+.page-home .hero-about.hero__intro {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--hero-about-max);
+    margin-inline: auto;
+    text-align: center;
+}
+
+.page-home .hero-about .hero-content {
+    gap: var(--space-12);
+    width: 100%;
+}
+
+.page-home .hero-about .hero-text {
+    max-width: var(--hero-lead-max);
+}
+
+.page-home .hero-about .hero-title {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.page-home .hero-about .hero-title__line {
+    white-space: normal;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+    overflow: visible;
+}
+
+.page-home .hero-about,
+.page-home .hero-about .hero-content,
+.page-home .hero-first-screen {
+    filter: none;
+    opacity: 1;
+    transform: none;
+}
+
+.page-home .hero-about__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-12);
+    width: 100%;
 }
 
 .hero__card {
@@ -2768,14 +3162,14 @@ h3 {
     max-width: 100%;
 }
 
-/* Figma 70:343 — First screen: 1275.452×312.784, вектор + превью + абсолютные плашки */
+/* Figma 416:12977 — First screen: 1275.452×312.784, превью + абсолютные плашки */
 .page-home .hero-first-screen {
     position: relative;
     width: 100%;
     max-width: none;
-    margin: 0;
+    margin: var(--space-24) 0 0;
     aspect-ratio: 1275.452 / 312.784;
-    /* Не короче окна превью — иначе карточка наезжает на hero-role в hero__row */
+    /* Не короче окна превью — иначе карточка наезжает на блок «О себе» ниже */
     min-height: calc(var(--hero-card-width) * 280 / 369 + var(--space-24));
 }
 
@@ -2799,39 +3193,7 @@ h3 {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    z-index: 2;
-}
-
-/* Figma 1:203 — декоративный SVG под плашками: статичный фон на весь экран */
-.page-home .hero-first-screen > .hero-vector {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    z-index: 0;
-    display: block;
-    width: 100vw;
-    height: 100%;
-    min-height: 100svh;
-    max-width: none;
-    margin: 0;
-    overflow: hidden;
-    pointer-events: none;
-    opacity: 0.26;
-    transform: translateX(-50%);
-}
-
-.page-home .hero-first-screen > .hero-vector .hero-vector__inner {
-    position: absolute;
-    inset: 0;
-}
-
-.page-home .hero-first-screen > .hero-vector .hero-vector__inner img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    object-fit: cover;
-    object-position: center center;
+    z-index: 4;
 }
 
 /* Hero content block — выравнивание по центру (Figma 1-202).
@@ -2840,7 +3202,7 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--hero-row-gap);
+    gap: var(--space-12);
     max-width: 100%;
     margin: 0 auto;
 }
@@ -2903,12 +3265,12 @@ h3 {
     }
 }
 
-/* Figma 1:239–240: text 1.5rem, line-height 1.2, -0.0625rem tracking, max 41.3125rem */
+/* Figma 1:239–240 — body large, editorial lead */
 .hero-text {
-    font-size: 1.5rem;
+    font-size: var(--type-body-lg-size);
     font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.0625rem;
+    line-height: var(--type-body-lg-line);
+    letter-spacing: -0.02em;
     color: var(--color-text);
     max-width: var(--hero-lead-max);
     margin: 0;
@@ -2966,11 +3328,12 @@ h3 {
     opacity: 0.9;
 }
 
-/* Info grid - Figma 1-245: gap 32, cols 148 147 148 254 184 */
+/* Info grid — Figma 416:13019: cols 165 161 182 257 179, column-gap 0 */
 .info-grid {
     display: grid;
-    grid-template-columns: 9.25rem 9.1875rem 9.25rem 15.875rem 11.5rem;
-    gap: 2rem 1rem;
+    grid-template-columns: 10.3125rem 10.0625rem 11.375rem 16.0625rem 11.1875rem;
+    column-gap: 0;
+    row-gap: var(--space-24);
     margin: 0 auto;
     max-width: 100%;
     justify-content: center;
@@ -2995,23 +3358,23 @@ h3 {
     overflow-wrap: break-word;
 }
 
-/* Figma 89:347 / 1:247–248: label 0.75rem, #a3a3a3, 0.0625rem tracking, uppercase */
+/* Figma 89:347 / 1:247–248 — small labels */
 .info-label {
-    font-size: 0.75rem;
+    font-size: var(--type-label-size);
     font-weight: 400;
-    line-height: 1rem;
-    letter-spacing: 0.0625rem;
+    line-height: var(--type-label-line);
+    letter-spacing: var(--type-label-tracking);
     text-transform: uppercase;
     color: var(--color-text-label);
     opacity: 1;
 }
 
-/* Figma 1:249–250: value 1.125rem, 1.75rem line-height, -0.0625rem tracking */
+/* Figma 1:249–250 — body regular values */
 .info-value {
-    font-size: 1.125rem;
+    font-size: var(--type-body-size);
     font-weight: 400;
-    line-height: 1.75rem;
-    letter-spacing: -0.0625rem;
+    line-height: var(--type-body-line);
+    letter-spacing: -0.01em;
     color: var(--color-text);
 }
 
@@ -3040,21 +3403,45 @@ h3 {
     }
 }
 
-/* Hero links - Figma 1:274: gap 1rem, 0.875rem, 1.25rem line-height, 0.0625rem tracking, uppercase */
+/* Hero links — Figma 416:13048: bold uppercase, dot separators */
 .hero-links {
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0;
+}
+
+.hero-links > a,
+.hero-links > .hero-links__item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.hero-links__item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.hero-links__sep {
+    display: inline-block;
+    width: 0.25rem;
+    height: 0.25rem;
+    margin: 0 1rem;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+    opacity: 0.9;
 }
 
 .hero-links a {
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.25rem;
-    letter-spacing: 0.0625rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.0313rem;
     text-transform: uppercase;
     color: var(--color-text);
+    text-decoration: none;
 }
 
 .hero-links a:hover {
@@ -3143,25 +3530,25 @@ h3 {
 
     .page-home .hero-first-screen {
         position: relative;
-        aspect-ratio: auto;
+        aspect-ratio: 1275.452 / 312.784;
         width: 100%;
-        min-height: max(100svh, calc(var(--hero-fs-intro-top) + 11rem));
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        margin-top: var(--space-32);
+        min-height: max(
+            calc(100vw * 312.784 / 1275.452),
+            calc(var(--hero-fs-nav-zone-h) + var(--space-24))
+        );
+        display: block;
         overflow: visible;
     }
 
+    /* Плашки — координаты Figma на весь первый экран (не только зона карточки) */
     .page-home .hero-first-screen .section-nav--overlay {
         position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: auto;
-        height: var(--hero-fs-nav-zone-h);
+        inset: 0;
+        height: auto;
         z-index: 2;
         margin: 0;
-        padding: var(--hero-fs-nav-pad-top) 0 0;
+        padding: 0;
         box-sizing: border-box;
         pointer-events: none;
     }
@@ -3171,10 +3558,10 @@ h3 {
         position: relative;
         width: 100%;
         height: 100%;
-        min-height: 0;
+        min-height: 100%;
         max-width: none;
         margin: 0;
-        padding: 0 clamp(0.25rem, 2vw, 0.75rem);
+        padding: 0;
         aspect-ratio: auto;
         pointer-events: none;
         box-sizing: border-box;
@@ -3185,7 +3572,7 @@ h3 {
         position: absolute;
         left: var(--hi-left, 0);
         top: var(--hi-top, 0);
-        transform: translate(-50%, -4%);
+        transform: translateX(-50%);
         z-index: 3;
         pointer-events: auto;
     }
@@ -3204,7 +3591,7 @@ h3 {
     .page-home .hero-first-screen .header-items--figma .header-item--folder:active,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well:hover,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well:active {
-        transform: translate(-50%, -4%);
+        transform: translateX(-50%);
     }
 
     .page-home .hero-first-screen .header-items--figma .header-item__label {
@@ -3214,21 +3601,20 @@ h3 {
     }
 
     .page-home .hero-first-screen .hero__top {
-        position: relative;
-        left: auto;
-        top: auto;
-        transform: none;
+        position: absolute;
+        inset: 0;
         width: 100%;
-        height: auto;
-        min-height: var(--hero-fs-nav-zone-h);
+        height: 100%;
+        min-height: 0;
         z-index: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: var(--hero-fs-card-top) 0 0;
+        justify-content: center;
+        padding: var(--hero-fs-card-top) 0 var(--hero-fs-float-slack);
         margin: 0;
         pointer-events: none;
-        flex: 0 0 auto;
+        box-sizing: border-box;
     }
 
     .page-home .hero-first-screen .hero__top .hero__card {
@@ -3238,11 +3624,10 @@ h3 {
         transform: none;
         z-index: 2;
         width: 100%;
-        max-width: 100%;
+        max-width: min(var(--hero-card-width), 100%);
         margin: 0 auto;
         pointer-events: auto;
-        /* Не перекрывать hero-role при parallax float */
-        margin-bottom: var(--hero-fs-float-slack);
+        margin-bottom: 0;
     }
 
     .page-home .hero-first-screen .hero__top .hero__card .preview-card-block {
@@ -3262,72 +3647,51 @@ h3 {
         transform: translate3d(var(--float-x), calc(var(--float-y) - 0.125rem), 0);
     }
 
-    .page-home .hero__row {
-        position: static;
-        margin: 0;
-        padding: 0;
-    }
-
-    .page-home .hero__row .hero__content {
-        display: block;
-        max-width: none;
-        width: 100%;
-    }
-
-    .page-home .hero-first-screen .hero__intro {
+    .page-home .hero-about.hero__intro {
         position: relative;
-        left: auto;
-        right: auto;
-        top: auto;
         z-index: 8;
         isolation: isolate;
         width: 100%;
         max-width: none;
         margin: var(--hero-fs-intro-gap) 0 0;
-        padding: 0 max(var(--layout-edge-left), env(safe-area-inset-left, 0))
-            0 max(var(--layout-edge-right), env(safe-area-inset-right, 0));
+        padding-inline: max(var(--layout-edge-left), env(safe-area-inset-left, 0))
+            max(var(--layout-edge-right), env(safe-area-inset-right, 0));
         box-sizing: border-box;
-        pointer-events: none;
-        flex: 0 0 auto;
     }
 
-    .page-home .hero-first-screen .hero__intro .hero-content {
-        pointer-events: auto;
+    .page-home .hero-about .hero-content {
         gap: var(--space-12);
         max-width: min(22.5rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem));
         margin: 0 auto;
     }
 
-    .page-home .hero-first-screen .hero__intro .hero-title {
-        font-size: clamp(1.75rem, 7.8vw, 2.75rem);
+    .page-home .hero-about .hero-title {
+        font-size: var(--type-hero-display-size);
     }
 
-    .page-home .hero-first-screen .hero__intro .hero-title__line {
+    .page-home .hero-about .hero-title__line {
         white-space: normal;
         text-wrap: balance;
     }
 
-    .page-home .hero-first-screen .hero__intro .hero-text {
-        font-size: clamp(0.9375rem, 3.4vw, 1.0625rem);
-        line-height: 1.45;
+    .page-home .hero-about .hero-text {
+        font-size: var(--type-body-lg-size);
+        line-height: var(--type-body-lg-line);
         max-width: min(20rem, 100%);
         margin-inline: auto;
     }
 
-    .page-home .hero-first-screen .hero__intro .hero-role {
+    .page-home .hero-about .hero-role {
         white-space: normal;
         position: relative;
         z-index: 1;
     }
 
-    .page-home .hero__details {
-        margin-top: 0;
-        padding: var(--space-32) max(var(--layout-edge-left), env(safe-area-inset-left, 0)) 0
-            max(var(--layout-edge-right), env(safe-area-inset-right, 0));
-        box-sizing: border-box;
+    .page-home .hero-about__meta {
+        padding-top: var(--space-24);
     }
 
-    .page-home .hero__details .info-grid {
+    .page-home .hero-about__meta .info-grid {
         max-width: 32.5rem;
         margin-inline: auto;
     }
@@ -3349,19 +3713,14 @@ h3 {
         box-sizing: border-box;
     }
 
-    .page-home .hero-first-screen .hero__intro {
+    .page-home .hero-about.hero__intro {
         position: relative;
         width: 100%;
-        max-width: var(--hero-content-max);
-        margin: var(--hero-section-gap) auto 0;
-        padding: 0;
+        max-width: var(--hero-about-max);
+        margin: 0 auto;
         pointer-events: auto;
         z-index: 3;
         isolation: isolate;
-    }
-
-    .page-home .hero__details {
-        padding: 0;
     }
 }
 
@@ -3933,19 +4292,21 @@ h3 {
 
 /* Section */
 .section {
-    margin-bottom: 4rem;
+    margin-bottom: var(--rhythm-block);
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: var(--type-statement-size);
     font-weight: 600;
-    margin-bottom: 2rem;
+    line-height: var(--type-statement-line);
+    letter-spacing: var(--type-statement-tracking);
+    margin-bottom: var(--rhythm-stack);
 }
 
 .section-projects-sub {
     display: block;
     font-weight: 500;
-    font-size: 3.75rem;
+    font-size: var(--type-section-title-size);
 }
 
 .section-projects-main {
@@ -4057,12 +4418,12 @@ h3 {
 .projects-header .projects-title-main,
 .projects-title-main {
     font-weight: 700;
-    line-height: 1.05;
+    line-height: var(--type-section-title-line);
     text-transform: uppercase;
     color: var(--color-text-primary);
     margin: 0;
-    font-size: clamp(2rem, 4.5vw + 1.25rem, 6rem);
-    letter-spacing: -0.06em;
+    font-size: var(--type-section-title-size);
+    letter-spacing: var(--type-section-title-tracking);
 }
 
 /* «Все проекты»: больше воздуха под шапкой; горизонтальный gutter только у .page-projects__wrap (иначе двойной отступ с .main) */
@@ -7047,7 +7408,7 @@ h3 {
     }
 
     .project-case-study-mail .mvp-slider__text {
-        font-size: 0.875rem;
+        font-size: clamp(1rem, 3.6vw, 1.125rem);
         line-height: 1.55;
     }
 }
@@ -7385,7 +7746,12 @@ h3 {
 @media (max-width: 48rem) {
     .project-detail__heading h1,
     .project-detail h1 {
-        font-size: clamp(2rem, 8vw, var(--project-title-font-size));
+        font-size: clamp(2.25rem, 9vw, var(--project-title-font-size));
+    }
+
+    .project-detail__heading .lead,
+    .project-detail .lead {
+        font-size: clamp(1.125rem, 4vw, var(--project-lead-font-size));
     }
 }
 
@@ -7757,7 +8123,7 @@ h3 {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--space-64);
+    gap: var(--layout-section-gap);
     padding-bottom: 0;
     box-sizing: border-box;
 }
@@ -7770,7 +8136,7 @@ h3 {
 }
 
 .about-page__name {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: var(--type-hero-display-size);
     font-weight: 600;
     line-height: 1.05;
     letter-spacing: -0.02em;
@@ -7782,9 +8148,9 @@ h3 {
     display: flex;
     flex-direction: column;
     gap: var(--space-16);
-    font-size: 1.125rem;
+    font-size: var(--type-body-lg-size);
     font-weight: 400;
-    line-height: 1.55;
+    line-height: var(--type-body-lg-line);
     letter-spacing: -0.01em;
     color: rgba(250, 250, 250, 0.85);
 }
@@ -9028,17 +9394,17 @@ h3 {
     }
 
     .filter-pill__text {
-        font-size: 0.8125rem;
+        font-size: clamp(0.875rem, 2.8vw, 1rem);
     }
 
     .preview-card__title {
-        font-size: clamp(1.125rem, 4.8vw, 1.375rem);
+        font-size: clamp(1.25rem, 5vw, 1.5rem);
         line-height: 1.25;
         letter-spacing: -0.025rem;
     }
 
     .preview-card__meta {
-        font-size: 0.6875rem;
+        font-size: clamp(0.8125rem, 2.6vw, 0.9375rem);
         line-height: 1.65;
         letter-spacing: 0.0281rem;
     }
@@ -9048,7 +9414,7 @@ h3 {
     }
 
     .preview-card__desc {
-        font-size: 0.8125rem;
+        font-size: clamp(0.9375rem, 3.2vw, 1.0625rem);
         line-height: 1.45;
     }
 }
@@ -9084,15 +9450,15 @@ h3 {
     }
 
     .page-home .hero-first-screen {
-        min-height: max(100dvh, calc(var(--hero-fs-intro-top) + 9rem));
+        min-height: max(100dvh, calc(var(--hero-fs-nav-zone-h) + 3rem));
     }
 
-    .page-home .hero-first-screen .hero__intro .hero-title {
-        font-size: clamp(1.375rem, 6vw, 2rem);
+    .page-home .hero-about .hero-title {
+        font-size: clamp(1.75rem, 6.5vw, 2.25rem);
     }
 
-    .page-home .hero-first-screen .hero__intro .hero-text {
-        font-size: clamp(0.8125rem, 2.8vw, 0.9375rem);
+    .page-home .hero-about .hero-text {
+        font-size: clamp(1rem, 3.5vw, 1.125rem);
         line-height: 1.35;
     }
 }
@@ -9145,25 +9511,11 @@ h3 {
 /* =========================
    8) Visual Consistency Overrides (global hierarchy polish)
    ========================= */
-/* System refresh: clean light UI, strict typography/spacing/radius */
+/* Editorial layout + type wiring (colors/effects unchanged) */
 :root {
-    --type-h1-size: 2.75rem;
-    --type-h1-line: 1.2;
-    --type-h1-weight: 600;
-    --type-h2-size: 2rem;
-    --type-h2-line: 1.25;
-    --type-h2-weight: 600;
-    --type-h3-size: 1.5rem;
-    --type-h3-line: 1.3;
-    --type-h3-weight: 500;
-    --type-body-size: 1.125rem;
-    --type-body-line: 1.5;
-    --type-body-weight: 400;
-    --type-secondary-size: 1rem;
-    --type-secondary-line: 1.5;
-    --type-caption-size: 0.875rem;
-    --type-caption-line: 1.4;
     --content-max-readable: 45rem;
+    --type-optical-heading-after: var(--space-24);
+    --type-optical-body-after: var(--space-16);
 }
 
 body {
@@ -9172,45 +9524,51 @@ body {
     line-height: var(--type-body-line);
 }
 
-h1:not(.hero-title):not(.projects-title-main) {
-    font-size: var(--type-h1-size);
-    line-height: var(--type-h1-line);
-    font-weight: var(--type-h1-weight);
-    letter-spacing: -0.02em;
-}
-
-/* Герой: крупный заголовок на всех ширинах (не «документный» h1 2.75rem) */
+/* Hero display — editorial composition scale */
 .hero-title {
-    font-size: clamp(2rem, 4.5vw + 1.25rem, 6rem);
-    line-height: 1.05;
+    font-size: var(--type-hero-display-size);
+    line-height: var(--type-hero-display-line);
     font-weight: 700;
-    letter-spacing: -0.06em;
+    letter-spacing: var(--type-hero-display-tracking);
     hyphens: none;
     -webkit-hyphens: none;
 }
 
+.projects-title-main,
+.section-projects-sub,
+.section-projects-title {
+    font-size: var(--type-section-title-size);
+    line-height: var(--type-section-title-line);
+    font-weight: 700;
+    letter-spacing: var(--type-section-title-tracking);
+}
+
+h1:not(.hero-title):not(.projects-title-main) {
+    font-size: var(--type-section-title-size);
+    line-height: var(--type-section-title-line);
+    letter-spacing: var(--type-section-title-tracking);
+}
+
 h2,
-.section-projects-title,
 .project-title {
-    font-size: var(--type-h2-size);
-    line-height: var(--type-h2-line);
+    font-size: var(--type-section-title-size);
+    line-height: var(--type-section-title-line);
     font-weight: var(--type-h2-weight);
-    letter-spacing: -0.02em;
+    letter-spacing: var(--type-section-title-tracking);
 }
 
 h3,
 .project-subtitle {
-    font-size: var(--type-h3-size);
-    line-height: var(--type-h3-line);
+    font-size: var(--type-statement-size);
+    line-height: var(--type-statement-line);
     font-weight: var(--type-h3-weight);
-    letter-spacing: 0;
+    letter-spacing: var(--type-statement-tracking);
 }
 
 p,
-.hero-text,
-.hero-more,
 .info-value,
-.project-lead {
+.project-lead,
+.text-89-756-body {
     font-size: var(--type-body-size);
     line-height: var(--type-body-line);
     font-weight: var(--type-body-weight);
@@ -9218,13 +9576,22 @@ p,
     color: var(--color-text);
 }
 
+.hero-text,
+.hero-more,
+.text-89-756-lead,
+.about-page__lead {
+    font-size: var(--type-body-lg-size);
+    line-height: var(--type-body-lg-line);
+    font-weight: var(--type-body-weight);
+}
+
 .hero-role,
 .nav-link,
 .hero-links a,
 .project-ext-link,
 .text-89-756-link {
-    font-size: var(--type-secondary-size);
-    line-height: var(--type-secondary-line);
+    font-size: var(--type-body-size);
+    line-height: var(--type-body-line);
     font-weight: 400;
     letter-spacing: 0;
     color: var(--color-text-label);
@@ -9234,12 +9601,29 @@ p,
 .project-meta-label,
 .project-card-title,
 .project-footer-label,
-.header-item__label {
-    font-size: var(--type-caption-size);
-    line-height: var(--type-caption-line);
+.header-item__label,
+.text-89-756-label {
+    font-size: var(--type-label-size);
+    line-height: var(--type-label-line);
     font-weight: 400;
-    letter-spacing: 0;
+    letter-spacing: var(--type-label-tracking);
+    text-transform: uppercase;
     color: var(--color-text-extra-muted);
+}
+
+/* Optical spacing — headings breathe before body copy */
+.hero-title + .hero-text,
+.hero-title + .hero-role,
+h1 + p,
+h2 + p,
+.section-projects-title + p,
+.project-title + .lead {
+    margin-top: var(--type-optical-heading-after);
+}
+
+.hero-text + .hero-more,
+p + p {
+    margin-top: var(--type-optical-body-after);
 }
 
 .hero-text,
@@ -9266,7 +9650,7 @@ p,
 .project-page,
 .section-projects,
 .section-nav {
-    margin-bottom: var(--space-48);
+    margin-bottom: var(--layout-section-gap);
 }
 
 .hero-content,
@@ -9274,7 +9658,13 @@ p,
 .project-meta-card,
 .project-card,
 .text-89-756-grid {
-    gap: var(--space-24);
+    gap: var(--layout-stack-gap);
+}
+
+.home-page--seamless .snap-screen + .snap-screen,
+.home-page--seamless .home-competencies + .section-projects {
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .preview-card-block:not(.preview-card-block--mac-window),
@@ -9329,6 +9719,12 @@ p,
     color: var(--color-text-label);
 }
 
+.header .logo,
+.header .lang-switch,
+.header .nav-list .nav-link {
+    color: var(--color-text);
+}
+
 .info-label,
 .project-meta-label,
 .project-card-title,
@@ -9375,6 +9771,23 @@ p,
     text-underline-offset: 0.125rem;
 }
 
+/* Figma 416:13048 — footer links в блоке About (перебивает общий type ramp) */
+.page-home .hero-about .hero-links a {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.0313rem;
+    color: var(--color-text);
+}
+
+.page-home .hero-about .hero-content > .hero-text + .hero-more {
+    margin-top: 0;
+}
+
+.page-home .hero-about .hero-content {
+    gap: var(--space-12);
+}
+
 .site-footer,
 .site-footer__surface,
 .project-footer {
@@ -9405,17 +9818,18 @@ p,
     }
 
     .hero-title {
-        font-size: clamp(1.75rem, 3.5vw + 1rem, 3rem);
-        line-height: 1.12;
-        letter-spacing: -0.04em;
+        font-size: var(--type-hero-display-size);
+        line-height: var(--type-hero-display-line);
+        letter-spacing: var(--type-hero-display-tracking);
     }
 
     .section-projects-title,
     .project-title,
-    .text-89-756-title {
-        font-size: var(--type-h3-size);
-        line-height: var(--type-h3-line);
-        letter-spacing: 0;
+    .text-89-756-title,
+    .projects-title-main {
+        font-size: var(--type-section-title-size);
+        line-height: var(--type-section-title-line);
+        letter-spacing: var(--type-section-title-tracking);
     }
 
     /* Drawer — фон панели, без pill-подложки у активного пункта */
@@ -9450,6 +9864,7 @@ p,
 /* ---- 8.1 Project shell consistency (gutters / type fallbacks) ---- */
 /* Project pages own their 1.5rem gutter inside .project-page-wrap / case-study containers. */
 .page-home__main {
+    padding-top: 0;
     padding-left: 0;
     padding-right: 0;
 }
@@ -9471,24 +9886,9 @@ p,
 
 @media (max-width: 30rem) {
     .hero-title {
-        font-size: clamp(1.5rem, 7vw, 2.25rem);
-        line-height: 1.15;
-        letter-spacing: -0.03em;
-    }
-
-    .hero-text,
-    .project-lead,
-    .text-89-756-body {
-        font-size: var(--type-secondary-size);
-        line-height: var(--type-secondary-line);
-    }
-
-    .hero-role,
-    .nav-link,
-    .hero-links a,
-    .project-ext-link {
-        font-size: var(--type-caption-size);
-        line-height: var(--type-caption-line);
+        font-size: var(--type-hero-display-size);
+        line-height: var(--type-hero-display-line);
+        letter-spacing: var(--type-hero-display-tracking);
     }
 }
 
@@ -9624,11 +10024,35 @@ canvas {
 
 @media (max-width: 40rem) {
     .page-header h1 {
-        font-size: clamp(1.5rem, 7vw, var(--text-89-756-title-font-size));
+        font-size: var(--type-section-title-size);
     }
 
     .section-projects-sub {
-        font-size: clamp(1.75rem, 9vw, 3rem);
+        font-size: var(--type-section-title-size);
+    }
+
+    .info-label {
+        font-size: clamp(0.875rem, 3vw, 1rem);
+    }
+
+    .info-value {
+        font-size: clamp(1.125rem, 4vw, 1.375rem);
+    }
+
+    .hero-links a {
+        font-size: clamp(0.9375rem, 3.2vw, 1.0625rem);
+    }
+
+    .about-page__lead {
+        font-size: clamp(1.125rem, 4vw, 1.375rem);
+    }
+
+    .about-page__job-title {
+        font-size: clamp(1.375rem, 5vw, 1.5rem);
+    }
+
+    .about-page__job-text {
+        font-size: clamp(1.0625rem, 3.8vw, 1.25rem);
     }
 
     .logo-section {
@@ -9705,31 +10129,34 @@ canvas {
         gap: clamp(2rem, 6vw, 2.75rem);
     }
 
+    .projects-page__group-title {
+        font-size: clamp(1.25rem, 4.5vw, 1.5rem);
+    }
+
     .projects-page__group-intro {
-        font-size: clamp(0.875rem, 0.9vw + 0.75rem, 1rem);
+        font-size: clamp(1.0625rem, 3.8vw, 1.25rem);
     }
 
-    /* Тип-рамп компетенций: ограничиваем максимум на узких, чтобы H1 не «упирался» */
+    /* Тип-рамп компетенций — mobile display scale */
     .home-competencies__line {
-        font-size: clamp(1.75rem, 11vw, 3.5rem);
+        font-size: var(--comp-line-size-1);
     }
 
-    /* Кейс-секция: heading и pills меньше */
-    .project-case-study-mail .section h2 {
-        font-size: clamp(1.5rem, 6vw, 2rem);
-    }
-
+    /* Кейс-секция — section title ramp */
+    .project-case-study-mail .section h2,
     .project-case-study-mail .dual-outcomes__title {
-        font-size: clamp(1.5rem, 6vw, 2rem);
+        font-size: var(--type-section-title-size);
+        line-height: var(--type-section-title-line);
+        letter-spacing: var(--type-section-title-tracking);
     }
 
     /* About: панель с экспи + скиллы — стек уже на ≤900; добавляем gap collapse */
     .about-page {
-        gap: var(--space-40);
+        gap: var(--rhythm-group);
     }
 
     .about-page__name {
-        font-size: clamp(2rem, 9vw, 3rem);
+        font-size: var(--type-hero-display-size);
     }
 
     .text-condensed,
@@ -9748,15 +10175,12 @@ canvas {
         line-height: 1.65;
     }
 
-    .projects-title-main {
-        font-size: clamp(1.75rem, 8vw, 2.5rem);
-    }
 }
 
 /* xs (≤480): крайние сценарии — стек всего, что было колоночным; никакого
    фиксированного px по горизонтали. */
 @media (max-width: 30rem) {
-    .page-home .hero__details .info-grid {
+    .page-home .hero-about__meta .info-grid {
         grid-template-columns: 1fr;
         max-width: 20rem;
     }
@@ -9767,7 +10191,7 @@ canvas {
     }
 
     .header-item__label {
-        font-size: clamp(0.625rem, 2.9vw, 0.75rem);
+        font-size: clamp(0.6875rem, 3vw, 0.8125rem);
         line-height: 1.35;
     }
 
@@ -9824,7 +10248,7 @@ canvas {
     }
 
     .filter-pill__text {
-        font-size: 0.75rem;
+        font-size: clamp(0.875rem, 3.2vw, 1rem);
     }
 
     .page-home .logo-section .filter-pills,
@@ -9833,17 +10257,17 @@ canvas {
     }
 
     .preview-card__meta {
-        font-size: 0.625rem;
-        line-height: 1.7;
+        font-size: clamp(0.8125rem, 3vw, 0.9375rem);
+        line-height: 1.65;
         letter-spacing: 0.0219rem;
     }
 
     .preview-card__meta .text-condensed {
-        line-height: 1.7;
+        line-height: 1.65;
     }
 
     .preview-card__title {
-        font-size: clamp(1.0625rem, 5.2vw, 1.25rem);
+        font-size: clamp(1.125rem, 5.5vw, 1.375rem);
     }
 
     .hero__card .preview-card-block {
@@ -9866,9 +10290,8 @@ canvas {
         line-height: 1.3;
     }
 
-    /* Logo тоже уменьшим */
     .logo {
-        font-size: 1.125rem;
+        font-size: clamp(1.125rem, 4vw, 1.375rem);
         line-height: 1.2;
     }
 }
