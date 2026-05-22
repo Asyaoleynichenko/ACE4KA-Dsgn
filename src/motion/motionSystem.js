@@ -29,9 +29,9 @@ export const MOTION = {
   durationReveal: MOTION_DURATION_REVEAL,
   scrub: MOTION_SCRUB,
   competencies: {
-    /** vh на один шаг смены строки в sticky-сцене */
-    stepVh: 0.14,
-    stepMinPx: 88,
+    /** vh на один шаг смены строки — достаточно, чтобы scrub читался при скролле */
+    stepVh: 0.22,
+    stepMinPx: 96,
   },
   /** Горизонтальная лента карточек кейса — вертикальный scrub (не от mx 100cqi) */
   horizontalStrip: {

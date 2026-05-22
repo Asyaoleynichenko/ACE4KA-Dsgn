@@ -3,16 +3,11 @@ import { ScrollTrigger } from '../gsap/setup.js';
 import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
 import { remPx } from '../utils/cssRem.js';
-import { competenciesScrollTravelPx } from '../utils/competenciesScrubMetrics.js';
+import {
+  competenciesScrollTravelPx,
+  competenciesViewportHeightPx,
+} from '../utils/competenciesScrubMetrics.js';
 import { MOTION_SCRUB } from '../motion/motionSystem.js';
-
-function readViewportHeight() {
-  const appRoot = document.getElementById('root');
-  if (appRoot?.classList.contains('snap-pages-root')) {
-    return appRoot.clientHeight || window.innerHeight || 1;
-  }
-  return window.innerHeight || 1;
-}
 
 /** Верх pin = тот же offset, что в CSS у .home-competencies-scrub__sticky { top } */
 function readStickyPinTop(sticky) {
@@ -28,12 +23,12 @@ export function useScrollTriggerCompetenciesScrub({
   enabled,
   runwayRef,
   stickyRef,
-  runwayMinPx,
+  scrollTravelPx,
   lineCount = 1,
   onScrub,
 }) {
   useLayoutEffect(() => {
-    if (!enabled || runwayMinPx <= 0 || lineCount < 1) return undefined;
+    if (!enabled || lineCount < 1) return undefined;
 
     const runway = runwayRef.current;
     const sticky = stickyRef.current;
@@ -41,14 +36,21 @@ export function useScrollTriggerCompetenciesScrub({
 
     const scroller = getScrollWrapper() === window ? undefined : getScrollWrapper();
     const pinTop = readStickyPinTop(sticky);
-    const vh = readViewportHeight();
-    const scrollTravel = competenciesScrollTravelPx(lineCount, vh);
+    const vh = competenciesViewportHeightPx();
+    const travel = Math.max(
+      1,
+      Math.round(
+        scrollTravelPx > 0
+          ? scrollTravelPx
+          : competenciesScrollTravelPx(lineCount, vh),
+      ),
+    );
 
     const st = ScrollTrigger.create({
       id: 'home-competencies-scrub',
       trigger: runway,
       start: () => `top top+=${Math.round(pinTop)}`,
-      end: () => `+=${Math.max(1, Math.round(scrollTravel))}`,
+      end: () => `+=${travel}`,
       scrub: MOTION_SCRUB,
       invalidateOnRefresh: true,
       scroller,
@@ -57,15 +59,16 @@ export function useScrollTriggerCompetenciesScrub({
       },
     });
 
-    onScrub?.(st.progress);
+    const sync = () => onScrub?.(st.progress);
+    sync();
 
     requestAnimationFrame(() => {
       refreshScrollTrigger();
-      onScrub?.(st.progress);
+      sync();
     });
 
     return () => {
       st.kill();
     };
-  }, [enabled, runwayMinPx, lineCount, onScrub]);
+  }, [enabled, scrollTravelPx, lineCount, onScrub]);
 }
