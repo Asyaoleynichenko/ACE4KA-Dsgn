@@ -11,8 +11,6 @@ import {
   headerItemsFolder,
   headerItemsWell,
 } from '../data/sectionHeaderItems';
-import { HOME_PROJECT_SLUGS } from '../data/homeProjectsCatalog.js';
-
 const HomeCompetenciesScrub = lazy(() => import('../components/HomeCompetenciesScrub.jsx'));
 const HomeProjectsSection = lazy(() => import('../components/HomeProjectsSection.jsx'));
 
@@ -44,7 +42,6 @@ function SectionFallback({ minHeight = '50vh' }) {
 export default function HomePage() {
   const { t, localizedPath, messages } = useI18n();
   const competencyLines = messages.hero?.competencies?.lines ?? [];
-  const competencyLineProjectSlugs = messages.hero?.competencies?.lineProjectSlugs;
 
   return (
     <div className="home-page home-page--chrome">
@@ -221,8 +218,6 @@ export default function HomePage() {
             <Suspense fallback={<SectionFallback minHeight="40vh" />}>
               <HomeCompetenciesScrub
                 lines={competencyLines}
-                lineProjectSlugs={competencyLineProjectSlugs}
-                homeProjectSlugs={HOME_PROJECT_SLUGS}
                 ariaLabel={t('hero.competencies.aria')}
               >
                 <div className="home-competencies__cta">
