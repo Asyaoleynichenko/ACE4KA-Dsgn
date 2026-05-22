@@ -54,22 +54,43 @@ export default function HomePage() {
     <div className="home-page home-page--chrome" data-node-id="89:347" data-name="Главная">
       <section className="hero snap-screen" data-node-id="1-202" data-figma-node="1-202">
         <div className="hero-first-screen" data-node-id="70:343" data-name="First screen">
-          <div className="hero__top">
-            <div className="hero-vector" aria-hidden="true" data-node-id="1:203">
-              <div className="hero-vector__inner" data-float="1.2" data-float-range="24">
-                <img
-                  src={publicUrl('/images/main%20title%20vector.svg')}
-                  alt=""
-                  width={1200}
-                  height={400}
-                  decoding="async"
-                  data-float="1.4"
-                  data-float-range="18"
-                />
-              </div>
+          <div className="hero-vector" aria-hidden="true" data-node-id="1:203">
+            <div className="hero-vector__inner">
+              <img
+                src={publicUrl('/images/main%20title%20vector.svg')}
+                alt=""
+                width={1200}
+                height={400}
+                decoding="async"
+              />
             </div>
+          </div>
+          <div className="hero__top">
             <div className="hero__card">
               <PreviewCardBlock />
+            </div>
+          </div>
+          <div className="hero__intro">
+            <div className="hero-content">
+              <p className="hero-role" data-float="0.5" data-float-range="10">
+                <span className="text-condensed">{t('hero.role')}</span>
+              </p>
+              <h1 className="hero-title" data-scale="hero-name" data-float="0.85" data-float-range="16">
+                {heroTitleLines(t('hero.title')).map((part) => (
+                  <span key={part} className="hero-title__line">
+                    {part}
+                  </span>
+                ))}
+              </h1>
+              <p className="hero-text" data-float="0.6" data-float-range="12">
+                {t('hero.text')}
+              </p>
+              <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
+                <span className="hero-more__text">
+                  <span className="text-condensed">{t('hero.moreAbout')}</span>
+                </span>
+                <span className="hero-more__chevron" aria-hidden="true" />
+              </Link>
             </div>
           </div>
           <nav className="section-nav section-nav--home section-nav--overlay" aria-label={t('hero.sectionNavAria')}>
@@ -129,29 +150,6 @@ export default function HomePage() {
 
         <div className="hero__row" data-node-id="1:232">
           <div className="hero__content">
-            <div className="hero__intro">
-              <div className="hero-content">
-                <p className="hero-role" data-float="0.5" data-float-range="10">
-                  <span className="text-condensed">{t('hero.role')}</span>
-                </p>
-                <h1 className="hero-title" data-scale="hero-name" data-float="0.85" data-float-range="16">
-                  {heroTitleLines(t('hero.title')).map((part) => (
-                    <span key={part} className="hero-title__line">
-                      {part}
-                    </span>
-                  ))}
-                </h1>
-                <p className="hero-text" data-float="0.6" data-float-range="12">
-                  {t('hero.text')}
-                </p>
-                <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
-                  <span className="hero-more__text">
-                    <span className="text-condensed">{t('hero.moreAbout')}</span>
-                  </span>
-                  <span className="hero-more__chevron" aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
             <div className="hero__details">
               <div className="info-grid">
                 <div className="info-card">
