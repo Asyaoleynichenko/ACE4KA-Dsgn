@@ -17,7 +17,6 @@ import { publicUrl } from '../utils/publicUrl.js';
 import { caseStudyStripIconKind } from '../utils/caseStudyStripIcons.js';
 import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
 import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
-import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
 import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
@@ -423,7 +422,7 @@ export default function ProjectDetailPage() {
                     className="card"
                     data-strip-kind={iconKind ?? undefined}
                   >
-                    <h3 data-float={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])} data-float-range="14">
+                    <h3>
                       <span className="text-condensed text-condensed--single-line">{cardTitle}</span>
                     </h3>
                     <p>{item.value}</p>
@@ -640,10 +639,7 @@ export default function ProjectDetailPage() {
                               className="card"
                               data-strip-kind={iconKind ?? undefined}
                             >
-                              <h3
-                                data-float={String(DEPTH_SPEED_PRESETS[cardIdx % DEPTH_SPEED_PRESETS.length])}
-                                data-float-range="14"
-                              >
+                              <h3>
                                 <span className="text-condensed text-condensed--single-line">
                                   {translateCaseCardTitle(item.title, t)}
                                 </span>

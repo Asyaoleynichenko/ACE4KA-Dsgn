@@ -105,6 +105,7 @@ export function collectFloatElements(root = document) {
     (el) =>
       el instanceof HTMLElement &&
       !el.closest('[data-float="off"]') &&
-      !el.closest('.preview-card'),
+      !el.closest('.preview-card') &&
+      !el.closest('.scroll-scrub-row'),
   );
 }

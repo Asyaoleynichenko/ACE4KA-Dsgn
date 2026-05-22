@@ -2,15 +2,14 @@ import { useLayoutEffect } from 'react';
 import { gsap, ScrollTrigger } from '../gsap/setup.js';
 import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
-import { rem, remPx } from '../utils/cssRem.js';
 import {
   applyScrubExitHandoff,
   clearScrubExitHandoff,
   resolveHandoffTarget,
-  scrubExitSpanPx,
   splitScrubProgress,
 } from '../utils/scrubExitHandoff.js';
 import { applyCinematicCardTransforms, resetCinematicCardTransforms } from '../utils/cinematicScrub.js';
+import { horizontalScrubRunwaySpanPx } from '../utils/horizontalScrubMetrics.js';
 
 function readViewportHeight() {
   const appRoot = document.getElementById('root');
@@ -31,13 +30,6 @@ function readMx(viewport, inner) {
   const gap = parseFloat(getComputedStyle(inner).columnGap || getComputedStyle(inner).gap) || 0;
   const gaps = slides.length - 1;
   return Math.max(0, slideW * gaps + gap * gaps);
-}
-
-/** Cinematic pacing — больше вертикального хода на слайд (Apple / immersive). */
-function getRunwayScrollSpan(vh, slideCount, mx) {
-  const steps = Math.max(1, slideCount - 1);
-  const perStep = Math.max(vh * 0.5, mx > 1 ? mx * 0.72 : vh * 0.44);
-  return Math.max(perStep * steps, remPx(96));
 }
 
 function activeIndexFromOffset(x, mx, count) {
@@ -71,30 +63,43 @@ export function useScrollTriggerHorizontalScrub({
     const spacer = spacerRef.current;
     if (!runway || !pin || !inner || !viewport) return undefined;
 
-    const vh = readViewportHeight();
-    const mx = readMx(viewport, inner);
-    const scrollSpan = getRunwayScrollSpan(vh, slideCount, mx);
-    const exitSpan = cinematic ? scrubExitSpanPx(vh) : 0;
-    const totalSpan = scrollSpan + exitSpan;
-
-    if (spacer) spacer.style.height = rem(totalSpan);
-
     const handoffTarget = cinematic ? resolveHandoffTarget(runway) : null;
     if (handoffTarget) handoffTarget.classList.add('scroll-scrub-handoff-target');
 
     const scroller = getScrollWrapper() === window ? undefined : getScrollWrapper();
 
+    const readPinTopPx = () => {
+      const raw = parseFloat(getComputedStyle(pin).top);
+      return Number.isFinite(raw) && raw > 0 ? raw : 0;
+    };
+
+    let totalSpan = 0;
+    const updateRunwaySpan = () => {
+      const vh = readViewportHeight();
+      const mx = readMx(viewport, inner);
+      totalSpan = horizontalScrubRunwaySpanPx(slideCount, vh, { cinematic, mx });
+      // Высоту прокрутки даёт pin-spacer ScrollTrigger — ручной spacer дублировал пустоту под карточками.
+      if (spacer) {
+        spacer.style.height = '0';
+        spacer.style.minHeight = '0';
+      }
+      return totalSpan;
+    };
+    updateRunwaySpan();
+
     const st = ScrollTrigger.create({
       id: triggerId,
       trigger: runway,
-      start: 'top top',
+      start: () => `top top+=${Math.round(readPinTopPx())}`,
       end: () => `+=${totalSpan}`,
       pin,
       scrub: true,
-      anticipatePin: 1,
+      anticipatePin: 0,
       invalidateOnRefresh: true,
       scroller,
+      onRefresh: updateRunwaySpan,
       onUpdate(self) {
+        const mx = readMx(viewport, inner);
         const rawP = self.progress;
         const { scrubP, exitP } = splitScrubProgress(rawP);
         const x = scrubP * mx;

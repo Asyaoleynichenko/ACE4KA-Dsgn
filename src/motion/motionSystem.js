@@ -33,6 +33,12 @@ export const MOTION = {
     stepVh: 0.14,
     stepMinPx: 88,
   },
+  /** Горизонтальная лента карточек кейса — вертикальный scrub (не от mx 100cqi) */
+  horizontalStrip: {
+    /** ~1 экран на 3–4 карточки; без дубля spacer + pin */
+    stepVh: 0.28,
+    stepMinPx: 140,
+  },
   camera: {
     /** px сдвига слоя на полный проход главной */
     parallaxSpan: 80,

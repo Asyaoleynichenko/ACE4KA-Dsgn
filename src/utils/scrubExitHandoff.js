@@ -1,10 +1,10 @@
 import { remPx } from './cssRem.js';
 
 /** Доля вертикального хода runway, отведённая под «наезд» следующего блока (горизонт = 1). */
-export const SCRUB_EXIT_PHASE_RATIO = 0.22;
+export const SCRUB_EXIT_PHASE_RATIO = 0.08;
 
 export function scrubExitSpanPx(vh) {
-  return Math.max(remPx(220), vh * 0.42);
+  return Math.max(remPx(72), vh * 0.1);
 }
 
 export function splitScrubProgress(rawP) {

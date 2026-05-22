@@ -208,7 +208,10 @@
   --case-feature-card-body-lh-sm: 1.2; /* 25.2px */
   --case-workflow-pill-bg: rgba(221, 221, 221, 0.92);
   --case-workflow-pill-color: #0a0a0a;
-  --case-hyp-row-pad-y: clamp(1.25rem, 2.2vw, 1.625rem);
+  /* Accordion гипотез (337:24763) */
+  --case-hyp-title-gap: var(--case-feature-card-gap);
+  --case-hyp-row-gap: var(--case-feature-card-gap);
+  --case-hyp-body-gap: var(--case-feature-card-gap);
   /* Figma 337:24703 — заголовок case-study на 862×10.125rem (3 строки ~3.375rem). */
   --type-case-study-title: clamp(2.25rem, 4.2vw, 3.5rem);
   --type-case-study-lead: clamp(1rem, 0.6vw + 0.85rem, 1.125rem);
@@ -440,6 +443,14 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     perspective-origin: 50% 48%;
 }
 
+/* ScrollTrigger pin-spacer уже задаёт вертикальный ход — не дублировать пустым блоком */
+.scroll-scrub-row__runway:has(.scroll-scrub-row--scroll-linked) .scroll-scrub-row__runway-spacer {
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
 .scroll-scrub-row--cinematic .scroll-scrub-row__inner {
     transform-style: preserve-3d;
 }
@@ -451,7 +462,7 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     transition: none;
 }
 
-.scroll-scrub-row__inner > .card h3[data-float] {
+.scroll-scrub-row__inner > .card h3 {
     position: relative;
     z-index: 2;
 }
@@ -615,7 +626,6 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     will-change: transform;
 }
 
-.hero .hero-vector__inner[data-float],
 .hero .preview-card-block[data-float] {
     transition: none;
 }
@@ -2792,19 +2802,22 @@ h3 {
     z-index: 2;
 }
 
-/* Figma 1:203 — декоративный SVG под плашками: статичный фон на весь первый экран */
+/* Figma 1:203 — декоративный SVG под плашками: статичный фон на весь экран */
 .page-home .hero-first-screen > .hero-vector {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 50%;
     z-index: 0;
     display: block;
-    width: 100%;
+    width: 100vw;
     height: 100%;
+    min-height: 100svh;
     max-width: none;
     margin: 0;
     overflow: hidden;
     pointer-events: none;
     opacity: 0.26;
+    transform: translateX(-50%);
 }
 
 .page-home .hero-first-screen > .hero-vector .hero-vector__inner {
@@ -5551,12 +5564,11 @@ h3 {
 
 .project-case-study-mail .scroll-scrub-handoff-target.is-scrub-exit-active {
     z-index: 12;
-    padding-top: var(--exhibition-section-gap);
-    transform: translate3d(0, calc((1 - var(--scrub-exit)) * min(40vh, 22rem)), 0);
-    opacity: calc(0.72 + var(--scrub-exit) * 0.28);
+    transform: translate3d(0, calc((1 - var(--scrub-exit)) * min(14vh, 9rem)), 0);
+    opacity: calc(0.88 + var(--scrub-exit) * 0.12);
     will-change: transform, opacity;
     background-color: var(--color-bg);
-    box-shadow: 0 -1.5rem 3.5rem rgba(0, 0, 0, 0.38);
+    box-shadow: 0 -0.75rem 2rem rgba(0, 0, 0, 0.28);
 }
 
 .project-case-study-mail .scroll-scrub-handoff-target.is-scrub-exit-done {
@@ -5580,8 +5592,23 @@ h3 {
     overflow: visible;
 }
 
-/* Sticky pin: sticky — сосед runway-spacer, не потомок .scroll-scrub-row--scroll-linked */
-.project-case-study-mail .scroll-scrub-row__runway .scroll-scrub-row__sticky--cards {
+/* Scroll-linked: pin только через GSAP (без CSS sticky — иначе отскок при входе/выходе). */
+.project-case-study-mail .scroll-scrub-row__runway:has(.scroll-scrub-row--scroll-linked) .scroll-scrub-row__sticky--cards {
+    position: relative;
+    top: 0;
+    z-index: 5;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    box-sizing: border-box;
+    display: block;
+    align-self: flex-start;
+    overflow: visible;
+    isolation: isolate;
+}
+
+/* Native-x / reduced-motion: липкость в CSS */
+.project-case-study-mail .scroll-scrub-row__runway:has(.scroll-scrub-row--native-x) .scroll-scrub-row__sticky--cards {
     position: sticky;
     top: var(--scrub-sticky-top);
     z-index: 5;
@@ -5618,8 +5645,11 @@ h3 {
 
 .project-case-study-mail .scroll-scrub-row__runway-spacer {
     width: 100%;
+    height: 0;
+    min-height: 0;
     flex-shrink: 0;
     pointer-events: none;
+    overflow: hidden;
 }
 
 .project-case-study-mail .scroll-scrub-row__track.scroll-scrub-row--cards,
@@ -5820,12 +5850,9 @@ h3 {
     }
 }
 
-/* Метрики (NDA): тот же каркас, чуть компактнее тело */
+/* Метрики: тот же размер текста, что у остальных карточек; только tabular-nums */
 .project-case-study-mail .scroll-scrub-row--cards .card[data-strip-kind='metrics'] p {
-    font-size: clamp(1.125rem, 2.4vw, 1.75rem);
-    line-height: 1.35;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.03em;
 }
 .project-case-study-mail .scroll-scrub-row--cards .card h3 {
     font-family: var(--font-competencies-display);
@@ -6271,6 +6298,10 @@ h3 {
     max-width: var(--case-prose-max);
     white-space: pre-line;
 }
+.project-case-study-mail .section h2:has(+ .hyp-list),
+.project-case-study-mail .section h2:has(+ .case-study-subanchor + .hyp-list) {
+    margin-bottom: var(--case-hyp-title-gap);
+}
 .project-case-study-mail .section__tasks-heading {
     max-width: var(--case-prose-max);
     color: rgba(245, 245, 245, 0.92);
@@ -6525,11 +6556,13 @@ h3 {
     color: rgba(220, 220, 224, 0.95);
 }
 
-/* Figma 337:24763 — Hypothesis accordion: те же поля, что у feature-card (65px / 32px gap). */
+/* Figma 337:24763 — Hypothesis accordion: равный inset; перебивает .section ul { margin; padding-left } */
+.project-case-study-mail .section ul.hyp-list,
 .project-case-study-mail .hyp-list {
+    --hyp-list-inset: var(--case-feature-card-padding);
     list-style: none;
     margin: 0;
-    padding: var(--case-feature-card-padding);
+    padding: var(--hyp-list-inset);
     background: var(--case-feature-card-bg);
     border-radius: var(--case-feature-card-radius);
     border: 0.0625rem solid transparent;
@@ -6539,30 +6572,39 @@ h3 {
     width: 100%;
     box-sizing: border-box;
 }
+.project-case-study-mail .section ul.hyp-list > .hyp-list__item,
 .project-case-study-mail .hyp-list__item {
     list-style: none;
     margin: 0;
+    padding-inline: 0;
+    padding-block: var(--case-hyp-row-gap);
+}
+.project-case-study-mail .section ul.hyp-list > .hyp-list__item:first-child,
+.project-case-study-mail .hyp-list__item:first-child {
+    padding-top: 0;
+}
+.project-case-study-mail .section ul.hyp-list > .hyp-list__item:last-child,
+.project-case-study-mail .hyp-list__item:last-child {
+    padding-bottom: 0;
 }
 .project-case-study-mail .hyp-list__item + .hyp-list__item {
     border-top: 0.0625rem solid var(--case-divider);
 }
 .project-case-study-mail .hyp-list__row {
     width: 100%;
+    margin: 0;
 }
 .project-case-study-mail .hyp-list__summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-16);
-    padding: var(--case-hyp-row-pad-y) 0;
+    padding: 0;
     margin: 0;
     border-bottom: none;
     cursor: pointer;
     list-style: none;
     user-select: none;
-}
-.project-case-study-mail .hyp-list__row[open] .hyp-list__summary {
-    padding-bottom: clamp(0.75rem, 1.4vw, 1rem);
 }
 .project-case-study-mail .hyp-list__summary::-webkit-details-marker {
     display: none;
@@ -6622,8 +6664,9 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--case-feature-card-gap);
-    padding: 0 0 var(--case-hyp-row-pad-y);
+    gap: var(--case-hyp-body-gap);
+    padding: 0;
+    margin: var(--case-hyp-row-gap) 0 0;
     max-width: 100%;
 }
 .project-case-study-mail .hyp-list__text {
@@ -6635,20 +6678,21 @@ h3 {
     white-space: pre-line;
 }
 .project-case-study-mail .hyp-list__outcome {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.75rem 1.25rem;
     border-radius: var(--radius-full);
     background: var(--case-workflow-pill-bg);
     border: 0.0625rem solid rgba(0, 0, 0, 0.06);
     font-family: var(--font-body);
     font-size: clamp(0.8125rem, 1vw, 0.875rem);
-    line-height: 1.2;
+    line-height: 1.45;
     font-weight: 400;
     letter-spacing: -0.03em;
     text-transform: uppercase;
     color: var(--case-workflow-pill-color);
+    box-sizing: border-box;
 }
 @media (prefers-reduced-motion: reduce) {
     .project-case-study-mail .hyp-list__icon::before,
@@ -6663,18 +6707,14 @@ h3 {
         max-width: 100%;
     }
 
+    .project-case-study-mail .section ul.hyp-list,
     .project-case-study-mail .hyp-list {
+        --hyp-list-inset: var(--case-feature-card-padding-sm);
+        --case-hyp-title-gap: var(--case-feature-card-gap-sm);
+        --case-hyp-row-gap: var(--case-feature-card-gap-sm);
+        --case-hyp-body-gap: var(--case-feature-card-gap-sm);
         border-radius: var(--case-feature-card-radius-sm);
-        padding: var(--case-feature-card-padding-sm);
-    }
-
-    .project-case-study-mail .hyp-list__summary {
-        padding-block: var(--case-feature-card-gap-sm);
-    }
-
-    .project-case-study-mail .hyp-list__body {
-        gap: var(--case-feature-card-gap-sm);
-        padding-bottom: var(--case-feature-card-gap-sm);
+        padding: var(--hyp-list-inset);
     }
 
     .project-case-study-mail .hyp-list__title {
