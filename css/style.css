@@ -413,10 +413,14 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
 }
 
 .preview-grid,
-.project-grid,
-.home-competencies-scrub__stage {
+.project-grid {
     perspective: 75rem;
     perspective-origin: 50% 42%;
+}
+
+/* Без perspective на stage — иначе типографика выглядит «мыльной» */
+.home-competencies-scrub__stage {
+    perspective: none;
 }
 
 .scroll-scrub-row__viewport--linked,
@@ -2043,6 +2047,12 @@ h3 {
     width: 100%;
 }
 
+.home-section-fallback,
+.page-route-fallback {
+    width: 100%;
+    pointer-events: none;
+}
+
 /* ——— Бесшовная главная: scroll = camera, одна среда, сцены перетекают ——— */
 .home-page--seamless {
     position: relative;
@@ -2139,7 +2149,7 @@ h3 {
     justify-content: center;
     align-items: center;
     pointer-events: none;
-    opacity: 0;
+    opacity: var(--type-bridge, 0);
 }
 
 .home-type-bridge__word {
@@ -2150,11 +2160,11 @@ h3 {
     letter-spacing: -0.04em;
     text-transform: uppercase;
     text-align: center;
-    color: rgba(255, 255, 255, 0.04);
-    -webkit-text-stroke: 0.0625rem rgba(255, 255, 255, 0.1);
-    transform: scale(calc(0.9 + var(--type-bridge, 0) * 0.14));
-    filter: blur(calc((1 - var(--type-bridge, 0)) * 14px));
-    font-variation-settings: "wght" calc(420 + var(--type-bridge, 0) * 280), "wdth" calc(88 + var(--type-bridge, 0) * 12);
+    color: rgba(255, 255, 255, 0.06);
+    -webkit-text-stroke: 0.0625rem rgba(255, 255, 255, 0.12);
+    transform: scale(calc(0.92 + var(--type-bridge, 0) * 0.1));
+    filter: none;
+    font-variation-settings: "wght" calc(500 + var(--type-bridge, 0) * 200), "wdth" 100;
 }
 
 [data-camera-depth] {
@@ -2175,8 +2185,8 @@ h3 {
 }
 
 .home-page--seamless .home-scene--competencies {
-    margin-top: calc(var(--hero-section-gap) * (1 - var(--hero-exit, 0) * 0.7));
-    opacity: calc(0.4 + var(--scene-comp, 0) * 0.6);
+    margin-top: calc(clamp(1rem, 3vw, 2.5rem) * (1 - var(--hero-exit, 0) * 0.5));
+    opacity: 1;
 }
 
 .home-page--seamless .home-competencies__panel {
@@ -2188,9 +2198,9 @@ h3 {
 }
 
 .home-page--seamless .home-scene--projects .projects-title-main {
-    transform: scale(calc(0.88 + var(--type-bridge, 0) * 0.12));
-    opacity: calc(0.45 + var(--type-bridge, 0) * 0.55);
-    filter: blur(calc((1 - var(--type-bridge, 0)) * 8px));
+    transform: scale(calc(0.94 + var(--type-bridge, 0) * 0.06));
+    opacity: calc(0.7 + var(--type-bridge, 0) * 0.3);
+    filter: none;
 }
 
 .home-page--seamless .home-scene--projects .preview-grid {
@@ -2224,8 +2234,8 @@ h3 {
 /* Figma 418:21263 — главная: стек компетенций на чёрном + карточки + CTA «Все проекты» */
 .page-home .home-competencies {
     width: 100%;
-    margin-top: var(--hero-section-gap);
-    margin-bottom: var(--space-48);
+    margin-top: clamp(1.5rem, 4vw, var(--hero-section-gap));
+    margin-bottom: clamp(2rem, 5vw, var(--space-48));
     /* Возвращаем боковые поля страницы — панель не должна упираться в края экрана. */
     padding-left: var(--layout-edge-left);
     padding-right: var(--layout-edge-right);
@@ -2308,8 +2318,6 @@ h3 {
     --comp-sticky-top: max(6.5rem, calc(env(safe-area-inset-top, 0) + 5.5rem));
     min-height: calc(100dvh - var(--comp-sticky-top));
     min-height: calc(100vh - var(--comp-sticky-top));
-    height: calc(100dvh - var(--comp-sticky-top));
-    height: calc(100vh - var(--comp-sticky-top));
     display: flex;
     flex-direction: column;
 }
@@ -2569,7 +2577,8 @@ h3 {
     font-size: clamp(2rem, 7.6vw, 5.5rem);
     font-weight: 600;
     white-space: nowrap;
-    opacity: 0.28;
+    opacity: 0.32;
+    filter: none;
     transform: scale(1);
     transform-origin: center center;
     transition:
@@ -2580,16 +2589,8 @@ h3 {
 
 .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
     opacity: 1;
+    filter: none;
     transform: scale(var(--comp-active-scale-x, 1.05), var(--comp-active-scale-y, 1.05));
-}
-
-.home-page--seamless .home-competencies-scrub__line.home-competencies__line {
-    filter: blur(3px);
-    transition: filter 0.52s var(--ease-smart), opacity 0.52s var(--ease-smart);
-}
-
-.home-page--seamless .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line.home-competencies__line {
-    filter: blur(0);
 }
 
 @media (prefers-reduced-motion: reduce) {

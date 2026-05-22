@@ -28,9 +28,14 @@ export const MOTION = {
   staggerBeat: MOTION_STAGGER_BEAT,
   durationReveal: MOTION_DURATION_REVEAL,
   scrub: MOTION_SCRUB,
+  competencies: {
+    /** vh на один шаг смены строки в sticky-сцене */
+    stepVh: 0.14,
+    stepMinPx: 88,
+  },
   camera: {
     /** px сдвига слоя на полный проход главной */
-    parallaxSpan: 120,
+    parallaxSpan: 80,
     glowDriftVw: 14,
     glowDriftVh: 20,
   },

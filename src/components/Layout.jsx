@@ -13,8 +13,8 @@ export default function Layout() {
   const isProjectRoute = basePath.startsWith('/project/');
   const isAbout = basePath === '/about';
   const isHome = basePath === '/';
-  /** Snap отключён на главной — бесшовный camera-scroll через hero → компетенции → проекты. */
-  const snapScreens = !isHome && !isProjectsListing && !isProjectRoute && !isAbout;
+  /** Полноэкранный snap: не на списке проектов, не на кейсах и не на «О себе». */
+  const snapScreens = !isProjectsListing && !isProjectRoute && !isAbout;
 
   useLayoutEffect(() => {
     const appRoot = document.getElementById('root');

@@ -118,9 +118,7 @@ export function useHomeCameraScroll(rootRef) {
               '--scene-projects': p.toFixed(4),
               '--type-bridge': p.toFixed(4),
             });
-            if (bridgeType) {
-              bridgeType.style.opacity = String(Math.min(1, p * 1.12));
-            }
+            /* opacity — только через --type-bridge в CSS, без inline blur */
           },
         });
       }

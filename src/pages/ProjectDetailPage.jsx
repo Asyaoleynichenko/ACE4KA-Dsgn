@@ -17,6 +17,7 @@ import { publicUrl } from '../utils/publicUrl.js';
 import { caseStudyStripIconKind } from '../utils/caseStudyStripIcons.js';
 import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
 import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
+import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
 import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';

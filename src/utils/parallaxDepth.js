@@ -61,7 +61,9 @@ function skipDepthBlur(el) {
   return Boolean(
     el.classList?.contains('preview-card') ||
       el.classList?.contains('card') ||
-      el.closest?.('.preview-card, .scroll-scrub-row__inner > .card'),
+      el.closest?.(
+        '.preview-card, .scroll-scrub-row__inner > .card, .home-competencies, .home-competencies-scrub__stage, .home-competencies-scrub__lines',
+      ),
   );
 }
 
@@ -134,7 +136,13 @@ export function applyVerticalParallaxDepth(root = document) {
   const nodes = root.querySelectorAll('[data-speed]');
 
   nodes.forEach((el, index) => {
-    if (el.closest('.scroll-scrub-row__inner, .preview-grid, .project-grid')) return;
+    if (
+      el.closest(
+        '.scroll-scrub-row__inner, .preview-grid, .project-grid, .home-competencies-scrub, .home-competencies-scrub__lines, .home-competencies-scrub__center',
+      )
+    ) {
+      return;
+    }
 
     const rect = el.getBoundingClientRect();
     if (rect.bottom < -vh * 0.2 || rect.top > vh * 1.2) {

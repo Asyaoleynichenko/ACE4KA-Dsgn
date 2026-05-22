@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useScrollTriggerCompetenciesScrub } from '../hooks/useScrollTriggerCompetenciesScrub.js';
-import { DEPTH_SPEED_PRESETS } from '../utils/parallaxDepth.js';
-import { rem, remPx } from '../utils/cssRem.js';
+import { rem } from '../utils/cssRem.js';
+import { competenciesRunwayMinPx } from '../utils/competenciesScrubMetrics.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import ProjectCard from './ProjectCard.jsx';
+import { homeProjectsCatalog } from '../data/homeProjectsCatalog.js';
 
 /** Figma 416:12975 — порядок H-уровней в стопке (H1 — самый большой, H5 — самый маленький). */
 const COMPETENCIES_HEADING_ORDER = [2, 4, 1, 5, 3];
@@ -60,7 +61,6 @@ export default function HomeCompetenciesScrub({
   lines,
   lineProjectSlugs,
   homeProjectSlugs,
-  projects,
   ariaLabel,
   children,
 }) {
@@ -81,8 +81,8 @@ export default function HomeCompetenciesScrub({
       : chunkSlugsForLines(n, homeProjectSlugs);
 
   const resolveProject = useCallback(
-    (slug) => projects.find((p) => p.slug === slug) || null,
-    [projects],
+    (slug) => homeProjectsCatalog.find((p) => p.slug === slug) || null,
+    [],
   );
 
   useEffect(() => {
@@ -99,9 +99,9 @@ export default function HomeCompetenciesScrub({
     if (!runway || !sticky || reducedMotion || n < 1) return;
     const appRoot = document.getElementById('root');
     const vh = appRoot?.clientHeight ?? window.innerHeight ?? 800;
-    const stickyH = sticky.offsetHeight;
-    const perStep = Math.max(remPx(280), vh * 0.52);
-    const next = Math.ceil(stickyH + n * perStep + vh * 0.12);
+    const pinTop = parseFloat(getComputedStyle(sticky).top);
+    const pinTopPx = Number.isFinite(pinTop) ? pinTop : 80;
+    const next = competenciesRunwayMinPx({ lineCount: n, vh, pinTopPx });
     setRunwayMin((prev) => (prev === next ? prev : next));
   }, [n, reducedMotion]);
 
@@ -139,6 +139,7 @@ export default function HomeCompetenciesScrub({
     runwayRef,
     stickyRef,
     runwayMinPx: runwayMin,
+    lineCount: n,
     onScrub,
   });
 
@@ -151,8 +152,7 @@ export default function HomeCompetenciesScrub({
     item ? (
       <div
         key={item.slug}
-        className="home-competencies-scrub__card-wrap parallax-depth"
-        data-speed={String(DEPTH_SPEED_PRESETS[(activeIdx * 2 + cardIndex) % DEPTH_SPEED_PRESETS.length])}
+        className="home-competencies-scrub__card-wrap"
       >
         <ProjectCard
           slug={item.slug}

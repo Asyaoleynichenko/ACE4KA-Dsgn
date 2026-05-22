@@ -69,6 +69,19 @@ export default defineConfig(({ command }) => {
     clearScreen: false,
     base,
     plugins: [react(), devListenHintPlugin(), prefixPublicUrlsInCssPlugin(baseRoot)],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/gsap')) return 'gsap';
+            if (id.includes('node_modules/lenis')) return 'lenis';
+            if (id.includes('node_modules/framer-motion')) return 'framer-motion';
+            if (id.includes('node_modules/react-router')) return 'router';
+            if (id.includes('/src/data/projects.js')) return 'projects-data';
+          },
+        },
+      },
+    },
     server: {
       /** 5174 — чтобы совпадало с типичным URL в браузере Cursor / закладками; при занятом порту Vite возьмёт следующий (strictPort: false). */
       port: 5174,

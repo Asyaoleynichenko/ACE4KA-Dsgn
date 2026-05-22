@@ -1,0 +1,1 @@
+const o="project-hero";function i(t){return!t||typeof t!="string"?"":`${o}-${t}`}function s(t,e){if(!t)return;const r=i(e);r?t.style.setProperty("view-transition-name",r):t.style.removeProperty("view-transition-name")}function a(t,e,r){const n=t(e);return n===e?r:n}export{s,a as t};

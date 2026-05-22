@@ -3,6 +3,8 @@ import { ScrollTrigger } from '../gsap/setup.js';
 import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
 import { remPx } from '../utils/cssRem.js';
+import { competenciesScrollTravelPx } from '../utils/competenciesScrubMetrics.js';
+import { MOTION_SCRUB } from '../motion/motionSystem.js';
 
 function readViewportHeight() {
   const appRoot = document.getElementById('root');
@@ -20,17 +22,18 @@ function readStickyPinTop(sticky) {
 }
 
 /**
- * Сцена компетенций: scrub по runway, без GSAP pin (липкость — CSS sticky + центрирование в CSS).
+ * Sticky-сцена компетенций: scrub по runway (без GSAP pin — липкость в CSS).
  */
 export function useScrollTriggerCompetenciesScrub({
   enabled,
   runwayRef,
   stickyRef,
   runwayMinPx,
+  lineCount = 1,
   onScrub,
 }) {
   useLayoutEffect(() => {
-    if (!enabled || runwayMinPx <= 0) return undefined;
+    if (!enabled || runwayMinPx <= 0 || lineCount < 1) return undefined;
 
     const runway = runwayRef.current;
     const sticky = stickyRef.current;
@@ -38,17 +41,15 @@ export function useScrollTriggerCompetenciesScrub({
 
     const scroller = getScrollWrapper() === window ? undefined : getScrollWrapper();
     const pinTop = readStickyPinTop(sticky);
+    const vh = readViewportHeight();
+    const scrollTravel = competenciesScrollTravelPx(lineCount, vh);
 
     const st = ScrollTrigger.create({
       id: 'home-competencies-scrub',
       trigger: runway,
       start: () => `top top+=${Math.round(pinTop)}`,
-      end: () => {
-        const vh = readViewportHeight();
-        const scrollSpan = Math.max(1, runway.offsetHeight - vh);
-        return `+=${scrollSpan}`;
-      },
-      scrub: true,
+      end: () => `+=${Math.max(1, Math.round(scrollTravel))}`,
+      scrub: MOTION_SCRUB,
       invalidateOnRefresh: true,
       scroller,
       onUpdate(self) {
@@ -66,5 +67,5 @@ export function useScrollTriggerCompetenciesScrub({
     return () => {
       st.kill();
     };
-  }, [enabled, runwayMinPx, onScrub]);
+  }, [enabled, runwayMinPx, lineCount, onScrub]);
 }
