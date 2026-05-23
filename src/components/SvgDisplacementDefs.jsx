@@ -77,20 +77,20 @@ export default function SvgDisplacementDefs() {
           />
         </filter>
 
-        {/* Gooey metaball — rail compact / scroll-spy точки */}
+        {/* Gooey metaball — rail compact / scroll-spy точки. Большой blur + жёсткий threshold = «жидкое» перетекание между точками. */}
         <filter
           id="ace-rail-metaball"
-          x="-80%"
-          y="-40%"
-          width="260%"
-          height="180%"
+          x="-200%"
+          y="-100%"
+          width="500%"
+          height="300%"
           colorInterpolationFilters="sRGB"
         >
-          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="ace-rail-blur" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="ace-rail-blur" />
           <feColorMatrix
             in="ace-rail-blur"
             type="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 30 -14"
             result="ace-rail-goo"
           />
           <feBlend in="ace-rail-goo" in2="SourceGraphic" mode="normal" />

@@ -23,6 +23,7 @@ import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
 import ScrollScrubRow from '../components/ScrollScrubRow.jsx';
 import DotIcon from '../components/DotIcon.jsx';
 import HalftoneButton from '../components/HalftoneButton.jsx';
+import ProjectsListNavigation from '../components/ProjectsListNavigation.jsx';
 import { pillArrowReplace } from '../utils/pillArrowKeywords.js';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
@@ -670,6 +671,7 @@ export default function ProjectDetailPage() {
             </Fragment>
           );
           })}
+          <ProjectsListNavigation currentSlug={project.slug} />
         </div>
       </div>
     );
@@ -741,6 +743,7 @@ export default function ProjectDetailPage() {
             ) : null}
           </footer>
         ) : null}
+        <ProjectsListNavigation currentSlug={project.slug} />
       </div>
     </div>
   );

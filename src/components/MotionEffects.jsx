@@ -1,11 +1,12 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { stripLocaleFromPathname } from '../i18n/localePath.js';
+/* SVG-фильтр-defs — eager: нужен сразу для metaball-эффекта в side-nav, иначе filter url() не резолвится. */
+import SvgDisplacementDefs from './SvgDisplacementDefs.jsx';
 
 const ParallaxDepth = lazy(() => import('./ParallaxDepth.jsx'));
 const MouseInertia = lazy(() => import('./MouseInertia.jsx'));
 const ScrollPolish = lazy(() => import('./ScrollPolish.jsx'));
-const SvgDisplacementDefs = lazy(() => import('./SvgDisplacementDefs.jsx'));
 const TypographyRevealHost = lazy(() => import('./TypographyRevealHost.jsx'));
 const InteractiveTextCondensedHost = lazy(() => import('./InteractiveTextCondensedHost.jsx'));
 
@@ -42,12 +43,12 @@ export default function MotionEffects() {
 
   return (
     <>
+      <SvgDisplacementDefs />
       <Suspense fallback={null}>
         <InteractiveTextCondensedHost />
       </Suspense>
       {!ready ? null : (
         <Suspense fallback={null}>
-          <SvgDisplacementDefs />
           <ParallaxDepth />
           <MouseInertia />
           <ScrollPolish />

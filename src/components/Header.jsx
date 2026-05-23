@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import LanguageSwitcher from './LanguageSwitcher.jsx';
 import { Navigation } from './Navigation';
 import { useLenisScroll } from '../hooks/useLenisScroll.js';
 import { getScrollY } from '../utils/scrollRoot.js';
+import { fitScaledNavWidths } from '../utils/fitScaledNavWidths.js';
 
 /**
  * Шапка — Figma 573:18422: имя | навигация | язык.
  * Видна на верху; при скролле вниз — прячется, при скролле вверх / остановке — появляется.
  */
 export default function Header() {
-  const { localizedPath, t } = useI18n();
+  const { localizedPath, t, locale } = useI18n();
+  const { pathname } = useLocation();
   const [hidden, setHidden] = useState(false);
   const lastYRef = useRef(0);
   const stopTimerRef = useRef(null);
@@ -19,6 +21,13 @@ export default function Header() {
   useEffect(() => {
     lastYRef.current = getScrollY();
   }, []);
+
+  /* JS-фикс: подгоняем layout-ширину пунктов шапки к visible (scaleX) ширине,
+     чтобы пункты с разной длиной выравнивались равномерно. */
+  useEffect(() => {
+    const cleanup = fitScaledNavWidths(document);
+    return cleanup;
+  }, [pathname, locale]);
 
   useLenisScroll(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
