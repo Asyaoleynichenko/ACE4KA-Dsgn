@@ -1202,28 +1202,33 @@ button:focus-visible,
 /* Sticky шапка — прилипает к верху на любой странице.
    Состояние `header--hidden` (translateY -100%): прячется при скролле вниз, возвращается при остановке/скролле вверх. */
 .header {
-    position: sticky;
-    position: -webkit-sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
     background: transparent;
+    mix-blend-mode: difference;
     min-height: var(--header-figma-bar-min);
-    will-change: transform;
+    transition: transform var(--transition-micro-expand);
 }
 
-/* difference применяем НЕПОСРЕДСТВЕННО на текстовые spans — они в нашей же sticky-области, но их blend применяется при composite поверх backdrop. */
+/* Текст в шапке должен быть белым для максимального difference-эффекта. */
 .header .logo > span,
 .header .nav-list .nav-link > span,
+.header .nav-list .nav-link.active > span,
 .header .lang-switch .lang-switch__toggle-row {
-    mix-blend-mode: difference;
     color: #ffffff !important;
+    mix-blend-mode: normal;
 }
 
-/* Гарантируем sticky на страницах проектов: ничто из page-project не должно сломать его. */
+/* Гарантируем fixed на страницах проектов. */
 .page-project .header,
 .project-page-wrap .header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
 }
 
 .header--hidden {
