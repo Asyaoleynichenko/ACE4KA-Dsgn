@@ -78,6 +78,9 @@ export default function HomePage() {
                       to={localizedPath(to)}
                       className="header-item header-item--folder"
                       data-node-id={nodeId}
+                      data-float="1"
+                      data-float-range="22"
+                      data-float-mode="local"
                       style={headerItemPlacementStyle(placement)}
                     >
                       <div className="header-item__icon-wrap">
@@ -102,6 +105,8 @@ export default function HomePage() {
                     to={localizedPath(to)}
                     className="header-item header-item--image-well"
                     data-node-id={nodeId}
+                    data-float="2.2"
+                    data-float-range="64"
                     style={headerItemPlacementStyle(placement)}
                   >
                     <div className="header-item__well">

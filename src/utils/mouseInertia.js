@@ -66,9 +66,30 @@ export function tickMouseFloat(pointer, elements) {
     const s = getFloatState(el);
     const strength = readFloatStrength(el);
     const range = (readFloatRange(el) ?? defaultFloatRange(el)) * strength;
+    const mode = el.dataset.floatMode;
 
-    s.tx = nx * range;
-    s.ty = ny * range * 0.85;
+    if (mode === 'local') {
+      /* Локальный режим: папка реагирует на собственное расстояние до курсора. Чем ближе курсор — тем сильнее притяжение, далеко — почти не двигается. */
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2 - s.cx;
+      const cy = rect.top + rect.height / 2 - s.cy;
+      const dx = pointer.x - cx;
+      const dy = pointer.y - cy;
+      const dist = Math.hypot(dx, dy);
+      const reach = 380;
+      const falloff = Math.max(0, 1 - dist / reach);
+      const pull = 0.18 * strength;
+      let tx = dx * pull * falloff;
+      let ty = dy * pull * falloff;
+      if (Math.abs(tx) > range) tx = Math.sign(tx) * range;
+      if (Math.abs(ty) > range) ty = Math.sign(ty) * range;
+      s.tx = tx;
+      s.ty = ty;
+    } else {
+      s.tx = nx * range;
+      s.ty = ny * range * 0.85;
+    }
+
     s.cx = lerpFloat(s.cx, s.tx);
     s.cy = lerpFloat(s.cy, s.ty);
     applyFloatVars(el, s.cx, s.cy);

@@ -1206,12 +1206,17 @@ button:focus-visible,
     position: -webkit-sticky;
     top: 0;
     z-index: 100;
-    background: var(--color-bg);
-    mix-blend-mode: normal;
-    isolation: isolate;
+    background: transparent;
     min-height: var(--header-figma-bar-min);
     will-change: transform;
-    transition: transform var(--transition-micro-expand);
+}
+
+/* difference применяем НЕПОСРЕДСТВЕННО на текстовые spans — они в нашей же sticky-области, но их blend применяется при composite поверх backdrop. */
+.header .logo > span,
+.header .nav-list .nav-link > span,
+.header .lang-switch .lang-switch__toggle-row {
+    mix-blend-mode: difference;
+    color: #ffffff !important;
 }
 
 /* Гарантируем sticky на страницах проектов: ничто из page-project не должно сломать его. */
@@ -3615,7 +3620,7 @@ h3 {
 
 .hero-links a {
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
     letter-spacing: 0.0313rem;
     text-transform: uppercase;
@@ -3673,10 +3678,12 @@ h3 {
     position: absolute;
     left: var(--hi-left, 0);
     top: var(--hi-top, 0);
-    transform: translateX(-50%);
+    /* center via -50% + mouse-follow offset из MouseInertia (--float-x/y). */
+    transform: translate(calc(-50% + var(--float-x, 0px)), var(--float-y, 0px));
     box-sizing: border-box;
     z-index: 3;
     pointer-events: auto;
+    will-change: transform;
 }
 
 .page-home .hero-first-screen .header-items--figma .header-item--folder {
@@ -3694,7 +3701,7 @@ h3 {
 .page-home .hero-first-screen .header-items--figma .header-item--folder:active,
 .page-home .hero-first-screen .header-items--figma .header-item--image-well:hover,
 .page-home .hero-first-screen .header-items--figma .header-item--image-well:active {
-    transform: translateX(-50%);
+    transform: translate(calc(-50% + var(--float-x, 0px)), var(--float-y, 0px));
 }
 
 /* ≤1024px: первый экран — фото + имя + описание в viewport, папки разбросаны (Figma %) */
@@ -3751,7 +3758,7 @@ h3 {
         position: absolute;
         left: var(--hi-left, 0);
         top: var(--hi-top, 0);
-        transform: translateX(-50%);
+        transform: translate(calc(-50% + var(--float-x, 0px)), var(--float-y, 0px));
         z-index: 3;
         pointer-events: auto;
     }
@@ -3770,7 +3777,7 @@ h3 {
     .page-home .hero-first-screen .header-items--figma .header-item--folder:active,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well:hover,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well:active {
-        transform: translateX(-50%);
+        transform: translate(calc(-50% + var(--float-x, 0px)), var(--float-y, 0px));
     }
 
     .page-home .hero-first-screen .header-items--figma .header-item__label {
@@ -4371,7 +4378,7 @@ h3 {
     font-family: var(--font-body);
     font-size: 0.8125rem;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1rem;
     white-space: nowrap;
     overflow: hidden;
@@ -5641,7 +5648,7 @@ h3 {
 }
 
 .case-study-rail__link--stack.is-active .case-study-rail__kw {
-    font-weight: 700;
+    font-weight: 600;
     color: var(--color-text-primary);
 }
 
@@ -10108,7 +10115,7 @@ p + p {
 /* Figma 416:13048 — footer links в блоке About (перебивает общий type ramp) */
 .page-home .hero-about .hero-links a {
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
     letter-spacing: 0.0313rem;
     color: var(--color-text);
