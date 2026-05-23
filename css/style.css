@@ -310,8 +310,8 @@
   --project-detail-top-gap: var(--space-24);
   --project-title-color: #fafafa;
   --project-hero-max-width: 77.5rem;
-  --project-hero-aspect-w: 1310;
-  --project-hero-aspect-h: 721;
+  --project-hero-aspect-w: 16;
+  --project-hero-aspect-h: 9;
   --project-hero-radius: 1.3125rem; /* Figma 337:24536 — 21px */
   --project-hero-bg: #000000;
   --project-hero-gradient: linear-gradient(135deg, #2b2b2b 0%, #1d1d1d 100%);
@@ -2719,13 +2719,17 @@ h3 {
     white-space: nowrap;
 }
 
-/* Унифицированный кегль для всех 5 строк competencies (Aся: «должно быть консистентно»). Понижен относительно прежних размеров, чтобы длинные строки типа RESEARCH AND UX/UI не обрезались в панели 56rem с Suisse Intl. */
+/* Унифицированный кегль для всех 5 строк competencies — крупный display, font-weight 600. */
 .home-competencies-scrub--static .home-competencies__line-wrap[data-heading="1"],
 .home-competencies-scrub--static .home-competencies__line-wrap[data-heading="2"],
 .home-competencies-scrub--static .home-competencies__line-wrap[data-heading="3"],
 .home-competencies-scrub--static .home-competencies__line-wrap[data-heading="4"],
 .home-competencies-scrub--static .home-competencies__line-wrap[data-heading="5"] {
-    --comp-line-size: clamp(1.5rem, 4.2vw, 3rem);
+    --comp-line-size: clamp(2.25rem, 6.5vw, 4.5rem);
+}
+
+.home-competencies__line {
+    font-weight: 600;
 }
 
 .home-competencies-scrub--static .home-competencies__line-wrap {
@@ -2977,7 +2981,7 @@ h3 {
 }
 
 .home-competencies-scrub__card-wrap .preview-image {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
 }
 
 @media (max-width: 32.5rem) {
@@ -3932,14 +3936,24 @@ h3 {
 }
 
 .preview-image {
+    position: relative;
     min-height: 0;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
     border: 0;
     border-radius: var(--radius-lg);
     background: rgba(38, 38, 38, 0.4);
 }
 
-.preview-image img {
+.preview-image img,
+.preview-image video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
     border-radius: var(--radius-lg);
+    display: block;
 }
 
 .preview-card__body {
@@ -5362,7 +5376,13 @@ h3 {
 
 /* Figma 300:104226 / 1-522 — Mail media redesign (case study): навигация, hero 1310×721 r21, intro, 2×2, секции */
 .project-page-wrap--case-study {
+    /* Хедер fixed — даём место сверху, чтобы hero-обложка не уезжала под него. */
+    padding-top: calc(var(--header-figma-bar-min) + 0.75rem);
     padding-bottom: var(--space-64);
+}
+
+.project-page-wrap--layout-89 {
+    padding-top: calc(var(--header-figma-bar-min) + 0.75rem);
 }
 
 .main:has(.project-page-wrap--case-study) {

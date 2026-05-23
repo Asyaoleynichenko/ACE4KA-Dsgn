@@ -23,6 +23,22 @@ function headerItemPlacementStyle(placement) {
   };
 }
 
+/** Индивидуальный «вес» mouse-follow для каждой папки — чтобы они двигались по-разному (parallax-depth). */
+const FOLDER_FLOAT_VARIATIONS = [
+  { strength: 1.6, range: 24 },
+  { strength: 0.8, range: 16 },
+  { strength: 2.0, range: 30 },
+  { strength: 1.1, range: 20 },
+  { strength: 0.6, range: 12 },
+  { strength: 1.8, range: 26 },
+  { strength: 1.3, range: 18 },
+  { strength: 0.9, range: 14 },
+];
+
+function folderFloatProps(index) {
+  return FOLDER_FLOAT_VARIATIONS[index % FOLDER_FLOAT_VARIATIONS.length];
+}
+
 function heroTitleLines(title) {
   const parts = title.trim().split(/\s+/).filter(Boolean);
   return parts.length > 0 ? parts : [title.trim()];
@@ -70,17 +86,17 @@ export default function HomePage() {
             </div>
             <nav className="section-nav section-nav--home section-nav--overlay" aria-label={t('hero.sectionNavAria')}>
               <div className="header-items header-items--figma">
-                {headerItemsFolder.map(({ nodeId, labelKey, iconKey, to, placement }) => {
+                {headerItemsFolder.map(({ nodeId, labelKey, iconKey, to, placement }, fi) => {
                   const FolderLink = to === '/projects' ? SeamlessProjectsLink : Link;
+                  const { strength, range } = folderFloatProps(fi);
                   return (
                     <FolderLink
                       key={nodeId}
                       to={localizedPath(to)}
                       className="header-item header-item--folder"
                       data-node-id={nodeId}
-                      data-float="1"
-                      data-float-range="22"
-                      data-float-mode="local"
+                      data-float={strength}
+                      data-float-range={range}
                       style={headerItemPlacementStyle(placement)}
                     >
                       <div className="header-item__icon-wrap">
@@ -99,14 +115,17 @@ export default function HomePage() {
                     </FolderLink>
                   );
                 })}
-                {headerItemsWell.map(({ nodeId, labelKey, iconKey, to, placement }) => (
+                {headerItemsWell.map(({ nodeId, labelKey, iconKey, to, placement }, wi) => {
+                  /* image-well индексируем со сдвигом, чтобы их вариации НЕ совпадали с фолдерами */
+                  const { strength, range } = folderFloatProps(wi + 3);
+                  return (
                   <Link
                     key={nodeId}
                     to={localizedPath(to)}
                     className="header-item header-item--image-well"
                     data-node-id={nodeId}
-                    data-float="2.2"
-                    data-float-range="64"
+                    data-float={strength}
+                    data-float-range={range}
                     style={headerItemPlacementStyle(placement)}
                   >
                     <div className="header-item__well">
@@ -123,7 +142,8 @@ export default function HomePage() {
                       <span className="text-condensed">{t(labelKey)}</span>
                     </span>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             </nav>
           </div>
