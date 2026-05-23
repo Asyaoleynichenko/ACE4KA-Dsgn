@@ -137,7 +137,7 @@ function HorizontalMvpGallery({ slides }) {
                 onClick={() => setLightboxIndex(activeIndex)}
                 aria-label={t('projectDetail.openLightbox')}
               >
-                <img src={publicUrl(slide.image)} alt="" />
+                <img src={publicUrl(slide.image)} alt="" loading="lazy" decoding="async" />
               </button>
             </div>
           </div>
@@ -179,6 +179,7 @@ function HorizontalMvpGallery({ slides }) {
             src={publicUrl(slides[lightboxIndex].image)}
             alt=""
             className="gallery-lightbox__image"
+            decoding="async"
             onClick={(event) => event.stopPropagation()}
           />
         </div>
@@ -251,7 +252,7 @@ function HorizontalGallery({ images }) {
             onClick={() => setLightboxIndex(index)}
             aria-label={t('projectDetail.openImageN', { n: index + 1 })}
           >
-            <img src={publicUrl(src)} alt="" />
+            <img src={publicUrl(src)} alt="" loading="lazy" decoding="async" />
           </button>
         ))}
       </div>
@@ -276,6 +277,7 @@ function HorizontalGallery({ images }) {
             src={publicUrl(images[lightboxIndex])}
             alt=""
             className="gallery-lightbox__image"
+            decoding="async"
             onClick={(event) => event.stopPropagation()}
           />
         </div>
@@ -357,6 +359,9 @@ export default function ProjectDetailPage() {
                     src={publicUrl(src)}
                     alt={index === heroImages.length - 1 ? displayTitle : ''}
                     aria-hidden={index === heroImages.length - 1 ? undefined : 'true'}
+                    decoding="async"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    fetchpriority={index === 0 ? 'high' : 'auto'}
                   />
                 ))}
               </div>
@@ -486,7 +491,7 @@ export default function ProjectDetailPage() {
                       ) : null}
                     </div>
                     <div className="title-info-card__media" data-node-id="300:107834">
-                      <img src={publicUrl(section.galleryImage)} alt={section.title} />
+                      <img src={publicUrl(section.galleryImage)} alt={section.title} loading="lazy" decoding="async" />
                     </div>
                   </article>
                 ) : section.mvpSlides?.length > 0 ? (
@@ -495,7 +500,7 @@ export default function ProjectDetailPage() {
                   <>
                 {section.galleryAboveTitle ? (
                   <div className="gallery">
-                    <img src={publicUrl(section.galleryAboveTitle)} alt="" />
+                    <img src={publicUrl(section.galleryAboveTitle)} alt="" loading="lazy" decoding="async" />
                   </div>
                 ) : null}
                 {!section.hideTitle && section.title ? <h2>{section.title}</h2> : null}
@@ -569,7 +574,7 @@ export default function ProjectDetailPage() {
                 ) : null}
                 {section.galleryBeforeHypotheses ? (
                   <div className="gallery gallery--before-hypotheses">
-                    <img src={publicUrl(section.galleryBeforeHypotheses)} alt="" />
+                    <img src={publicUrl(section.galleryBeforeHypotheses)} alt="" loading="lazy" decoding="async" />
                   </div>
                 ) : null}
                 {section.hypotheses?.length > 0 ? (
@@ -605,7 +610,7 @@ export default function ProjectDetailPage() {
                 )}
                 {section.galleryImage ? (
                   <div className="gallery">
-                    <img src={publicUrl(section.galleryImage)} alt="" />
+                    <img src={publicUrl(section.galleryImage)} alt="" loading="lazy" decoding="async" />
                   </div>
                 ) : null}
                 {section.galleryImages?.length > 0 ? (
@@ -614,7 +619,7 @@ export default function ProjectDetailPage() {
                   ) : (
                     section.galleryImages.map((src, gi) => (
                       <div key={gi} className="gallery">
-                        <img src={publicUrl(src)} alt="" />
+                        <img src={publicUrl(src)} alt="" loading="lazy" decoding="async" />
                       </div>
                     ))
                   )
@@ -658,8 +663,8 @@ export default function ProjectDetailPage() {
               </section>
               {i === 0 && (caseImages.before || caseImages.after) && (
                 <section className="images" id={`case-${project.slug}-compare`}>
-                  {caseImages.before && <img src={publicUrl(caseImages.before)} alt={t('common.altBefore')} />}
-                  {caseImages.after && <img src={publicUrl(caseImages.after)} alt={t('common.altAfter')} />}
+                  {caseImages.before && <img src={publicUrl(caseImages.before)} alt={t('common.altBefore')} loading="lazy" decoding="async" />}
+                  {caseImages.after && <img src={publicUrl(caseImages.after)} alt={t('common.altAfter')} loading="lazy" decoding="async" />}
                 </section>
               )}
             </Fragment>
@@ -678,6 +683,8 @@ export default function ProjectDetailPage() {
             ref={(el) => setProjectHeroVtName(el, project.slug)}
             src={publicUrl(project.image)}
             alt={displayTitle}
+            decoding="async"
+            fetchpriority="high"
           />
         </div>
       )}

@@ -5,6 +5,7 @@ import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import IconAssembleFromDots from '../components/IconAssembleFromDots.jsx';
 import PreviewCardBlock from '../components/PreviewCardBlock';
 import HalftoneButton from '../components/HalftoneButton.jsx';
+import DotIcon from '../components/DotIcon.jsx';
 import {
   SECTION_HEADER_IMAGES,
   HEADER_FIRST_SCREEN,
@@ -147,7 +148,7 @@ export default function HomePage() {
                 <span className="hero-more__text">
                   <span className="text-condensed">{t('hero.moreAbout')}</span>
                 </span>
-                <span className="hero-more__chevron" aria-hidden="true" />
+                <DotIcon name="dot-chevron-right" size={24} className="hero-more__chevron-icon" />
               </Link>
             </div>
             <div className="hero-about__meta">

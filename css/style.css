@@ -6,13 +6,34 @@
 /* Tailwind utilities (раньше были в src/styles/tailwind.css) */
 @tailwind utilities;
 
-/* Fonts: только файлы из `public/fonts` (отсутствующие @font-face дают 404 и предупреждения Vite). */
+/* Единственный шрифт проекта — Suisse Intl. Self-hosted из `public/fonts`, subset latin+cyrillic. */
 @font-face {
-  font-family: 'Ice Kingdom';
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/suisse-intl-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/suisse-intl-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/suisse-intl-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Suisse Intl';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/ice-kingdom-frozen-cyrillic-bold.woff') format('woff');
+  src: url('/fonts/suisse-intl-700.woff2') format('woff2');
 }
 
 /* Design tokens (раньше были в css/design-tokens.css) */
@@ -34,12 +55,11 @@
   --color-focus-ring: rgba(245, 245, 245, 0.4);
   --color-focus-ring-strong: rgba(245, 245, 245, 0.56);
   --color-preview-titlebar-text: #a3a3a3;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-variable: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  /* Figma 418:21263 — Suisse Intl 600 в макете; при отсутствии файлов в `public/fonts` — Inter 600. */
-  --font-competencies-display: 'Suisse Intl', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  /* Figma 337:24521 — VK Sans Display для крупных заголовков case-study; проприетарный, fallback Inter Black uppercase. */
-  --font-display: 'VK Sans Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Единственный шрифт проекта — Suisse Intl (см. @font-face выше). Все токены указывают на него; system fallback на случай блокировки сети. */
+  --font-body: 'Suisse Intl', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-variable: 'Suisse Intl', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-competencies-display: 'Suisse Intl', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Suisse Intl', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Figma 592:38775 — стопка H2/H4/H1/H5/H3; ряд 96px, gap 12px. */
   --comp-line-size-1: clamp(2.25rem, 8.8vw, 5.25rem);
@@ -1330,7 +1350,7 @@ button:focus-visible,
 }
 
 .nav-link.active {
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0;
     border-radius: 0;
     border: 0;
@@ -1497,28 +1517,38 @@ button:focus-visible,
     width: fit-content;
     max-width: 100%;
     vertical-align: middle;
-    --tc-scale-x: 0.62;
+    /* Suisse Intl шире Inter; Aся хочет более жёсткое визуальное сжатие чем стоковые 0.62 (Inter-калибровка). */
+    --tc-scale-x: 0.5;
     transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
-    margin-inline-end: calc((var(--tc-scale-x, 0.62) - 1) * 1em);
+    margin-inline-end: calc((var(--tc-scale-x, 0.5) - 1) * 1em);
     line-height: 1.3;
     transition:
         transform var(--transition-micro-expand),
         margin-inline-end var(--transition-micro-expand);
 }
 
-/* Figma 573:20950 — логотип без scaleX, нативный condensed display */
+/* Логотип и lang-switcher — единая scaleX-анимация со всеми condensed-элементами проекта (default 0.5 → hover 0.88). */
 .header .logo > span,
 .header .lang-switch .lang-switch__toggle-row {
     display: inline-block;
     width: fit-content;
     max-width: 100%;
     vertical-align: middle;
-    transform: none;
+    --tc-scale-x: 0.5;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: center center;
     margin-inline-end: 0;
-    letter-spacing: -0.03em;
+    letter-spacing: 0;
     line-height: inherit;
-    transition: letter-spacing var(--duration-micro) var(--ease-micro-out);
+    transition: transform var(--transition-micro-expand);
+}
+
+.header .logo:hover > span,
+.header .logo:focus-visible > span,
+.header .lang-switch:hover .lang-switch__toggle-row,
+.header .lang-switch:focus-within .lang-switch__toggle-row {
+    --tc-scale-x: 0.88;
 }
 
 /* Центрированные контексты: scaleX(0.62) с origin left прижимает визуал к ЛЕВОМУ
@@ -1573,6 +1603,8 @@ button:focus-visible,
 h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
     font-weight: 600;
+    /* Suisse Intl шире Inter — слегка стягиваем трекинг, чтобы крупные сеты не вылезали за контейнер. */
+    letter-spacing: -0.01em;
     max-width: 100%;
     overflow-wrap: break-word;
     word-break: normal;
@@ -1639,21 +1671,28 @@ h3 {
     --tc-scale-x: 0.95;
 }
 
-/* Хедер nav: без scaleX (иначе при mix-blend/difference — тёмная «подложка» за активным пунктом) */
+/* Хедер nav: condensed-вид по умолчанию, на hover/active — раскрытие. (Mix-blend в шапке = normal, conflict из старого комментария неактуален.) */
 .header .nav-list .nav-link > span {
-    --tc-scale-x: 1;
-    transform: none !important;
+    display: inline-block;
+    --tc-scale-x: 0.5;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: center center;
     margin-inline-end: 0 !important;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.03em;
+    transition:
+        transform var(--transition-micro-expand),
+        letter-spacing var(--duration-micro) var(--ease-micro-out);
 }
 
 .header .nav-list .nav-link.active > span {
+    --tc-scale-x: 1;
     letter-spacing: 0;
 }
 
-/* Хедер: hover по неактивной вкладке */
+/* Хедер: hover по неактивной вкладке — те же 0.5 → 0.88, что у всех condensed-текстов проекта. */
 .header .nav-list .nav-link:hover:not(.active) > span {
-    letter-spacing: -0.03em;
+    --tc-scale-x: 0.88;
+    letter-spacing: 0;
 }
 
 .header .logo:hover > span {
@@ -1907,7 +1946,7 @@ h3 {
 }
 
 .header .nav-list .nav-link.active {
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0;
     border: 0;
     outline: none;
@@ -2674,20 +2713,13 @@ h3 {
     white-space: nowrap;
 }
 
-.home-competencies-scrub--static .home-competencies__line-wrap[data-heading="1"] {
-    --comp-line-size: var(--comp-line-size-1);
-}
-.home-competencies-scrub--static .home-competencies__line-wrap[data-heading="2"] {
-    --comp-line-size: var(--comp-line-size-2);
-}
-.home-competencies-scrub--static .home-competencies__line-wrap[data-heading="3"] {
-    --comp-line-size: var(--comp-line-size-3);
-}
-.home-competencies-scrub--static .home-competencies__line-wrap[data-heading="4"] {
-    --comp-line-size: var(--comp-line-size-4);
-}
+/* Унифицированный кегль для всех 5 строк competencies (Aся: «должно быть консистентно»). Понижен относительно прежних размеров, чтобы длинные строки типа RESEARCH AND UX/UI не обрезались в панели 56rem с Suisse Intl. */
+.home-competencies-scrub--static .home-competencies__line-wrap[data-heading="1"],
+.home-competencies-scrub--static .home-competencies__line-wrap[data-heading="2"],
+.home-competencies-scrub--static .home-competencies__line-wrap[data-heading="3"],
+.home-competencies-scrub--static .home-competencies__line-wrap[data-heading="4"],
 .home-competencies-scrub--static .home-competencies__line-wrap[data-heading="5"] {
-    --comp-line-size: var(--comp-line-size-5);
+    --comp-line-size: clamp(1.5rem, 4.2vw, 3rem);
 }
 
 .home-competencies-scrub--static .home-competencies__line-wrap {
@@ -3238,7 +3270,11 @@ h3 {
 }
 
 .page-home .hero-about .hero-title {
-    max-width: 100%;
+    /* hero-title — единственный элемент, который должен выйти за ширину readable-колонки .hero-content и центрироваться по viewport. */
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     flex-wrap: nowrap;
     justify-content: center;
     font-size: clamp(1.75rem, 6.5vw + 1.25rem, var(--type-hero-display-size));
@@ -3340,13 +3376,13 @@ h3 {
 
 /* Figma 1:235–236: role 0.875rem, 1.25rem line-height, 0.0625rem tracking, uppercase, opacity 60% */
 .hero-role {
-    font-size: 0.875rem;
+    font-size: 1.25rem;
     font-weight: 400;
-    line-height: 1.25rem;
+    line-height: 1.5rem;
     letter-spacing: 0.0625rem;
     text-transform: uppercase;
     color: var(--color-text);
-    opacity: 0.6;
+    opacity: 1;
     margin: 0;
     /* Если на десктопе хватает места — держим в одну строку. */
     white-space: nowrap;
@@ -3397,10 +3433,10 @@ h3 {
     box-sizing: border-box;
 }
 
-/* Figma 416:13015 — «Больше обо мне» bold UPPERCASE + chevron справа. */
+/* Figma 416:13015 — «Больше обо мне» UPPERCASE + chevron справа. */
 .hero-more {
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.2;
     letter-spacing: 0.0313rem;
     text-transform: uppercase;
@@ -3414,15 +3450,39 @@ h3 {
 }
 
 .hero-more:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* Figma 1:241 — gap 0.5rem (сетка), иконка 20×24 (chevron) */
 .hero-more--with-icon {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-8);
+    gap: 0.5rem;
     text-decoration: none;
+}
+
+/* hero-more: scaleX-анимация из .text-condensed (0.5 → 0.88) + транс-ориджин left + negative margin на chevron, чтобы:
+   – видимый текст начинался слева от своего layout-бокса,
+   – chevron подтягивался к концу видимого текста,
+   – вся пара text+chevron центрировалась относительно flex-контейнера. */
+.hero-more .text-condensed,
+.hero-more__text .text-condensed {
+    transform-origin: left center;
+}
+
+.hero-more__chevron-icon {
+    /* Calibration для русского «БОЛЬШЕ ОБО МНЕ» (~10em). При scaleX 0.5 фантомное пространство = 5em → -5em. */
+    margin-inline-start: -5em;
+    transition:
+        margin-inline-start var(--transition-micro-expand),
+        transform var(--transition-micro-expand);
+}
+
+.hero-more:hover .hero-more__chevron-icon,
+.hero-more:focus-visible .hero-more__chevron-icon {
+    /* При scaleX 0.88 фантом ≈ 1.2em. */
+    margin-inline-start: -1.2em;
+    transform: translateX(0.25rem);
 }
 
 .hero-more--with-icon:hover {
@@ -3430,19 +3490,21 @@ h3 {
 }
 
 .hero-more--with-icon:hover .hero-more__text {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
-.hero-more__chevron {
-    display: inline-block;
-    width: 1.25rem;
-    height: 1.25rem;
+/* Стрелка — <DotIcon name="dot-chevron-right" />, центрируем по cap-height bold-текста через line-height: 1 и flex align center. */
+.hero-more__chevron-icon {
+    display: block;
+    align-self: center;
     flex-shrink: 0;
-    box-sizing: border-box;
-    border-right: 0.125rem solid currentColor;
-    border-bottom: 0.125rem solid currentColor;
-    transform: rotate(-45deg) translate(-0.125rem, -0.125rem);
-    opacity: 0.9;
+    line-height: 1;
+}
+
+/* hero-more__text — также сжимаем line-height до cap-height, чтобы flex-align по box совпадал с visual-center caps */
+.hero-more__text {
+    line-height: 1;
+    display: inline-block;
 }
 
 /* Info grid — Figma 416:13019: cols 165 161 182 257 179, column-gap 0 */
@@ -3562,7 +3624,7 @@ h3 {
 }
 
 .hero-links a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* Figma 1-206, 1-224 — Header Items на главной */
@@ -4207,6 +4269,7 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: center;
+    /* macOS traffic-light close-glyph — system UI font (SF Pro / SF Pro Text), часть имитации чрома. */
     font-family: system-ui, -apple-system, 'SF Pro Text', sans-serif;
     font-size: 0.5rem;
     font-weight: 700;
@@ -4543,7 +4606,7 @@ h3 {
 /* Заголовок страниц «Проекты» / детали — выравниваем с hero-title главной (Figma 6rem). */
 .projects-header .projects-title-main,
 .projects-title-main {
-    font-weight: 700;
+    font-weight: 600;
     line-height: var(--type-section-title-line);
     text-transform: uppercase;
     color: var(--color-text-primary);
@@ -4847,7 +4910,7 @@ h3 {
 
 .preview-card__link:hover .card-link {
     color: var(--color-text);
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* Figma 1:397 — блок «Смотреть все проекты», glass pill */
@@ -5927,15 +5990,16 @@ h3 {
     aspect-ratio: var(--project-hero-aspect-w) / var(--project-hero-aspect-h);
 }
 .project-case-study-mail .hero__media--carousel {
-    position: absolute;
-    inset: 0;
+    /* Класс применяется поверх .hero__media (оставляем position: relative и aspect-ratio оттуда), иначе section.hero схлопывается до 0 высоты. */
+    position: relative;
+    inset: auto;
     display: flex;
     flex-flow: row nowrap;
     align-items: stretch;
     gap: 0;
     width: 100%;
-    height: 100%;
-    max-height: 100%;
+    height: auto;
+    max-height: none;
     min-height: 0;
     overflow-x: auto;
     overflow-y: hidden;
@@ -6029,7 +6093,7 @@ h3 {
 }
 .project-case-study-mail .project-intro .title .project-intro__related a {
     color: rgba(245, 245, 245, 0.95);
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 0.18em;
 }
 .project-case-study-mail .project-intro .title .project-intro__related a:hover {
@@ -8197,7 +8261,7 @@ h3 {
     line-height: var(--project-ext-link-line-height);
     letter-spacing: var(--project-ext-link-letter-spacing);
     color: var(--project-ext-link-color);
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .project-detail .ext-link:hover {
@@ -8209,7 +8273,7 @@ h3 {
     line-height: var(--text-89-756-link-line-height);
     letter-spacing: var(--text-89-756-link-letter-spacing);
     color: rgba(245, 245, 245, 0.88);
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 0.1875rem;
 }
 .project-page-wrap--layout-89 .ext-link:hover {
@@ -8308,7 +8372,7 @@ h3 {
     color: var(--text-89-756-link-color);
     font-size: var(--text-89-756-link-font-size);
     letter-spacing: var(--text-89-756-link-letter-spacing);
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 0.1875rem;
 }
 .page-contact .page-header p a:hover {
@@ -9235,7 +9299,7 @@ h3 {
     padding: 0;
     box-sizing: border-box;
     align-items: baseline;
-    font-family: var(--font-body), Inter, sans-serif;
+    font-family: var(--font-body);
     font-size: clamp(2.5rem, calc(100cqw / 3.72), 32rem);
     font-style: normal;
     font-weight: 600;
@@ -9338,7 +9402,7 @@ h3 {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #fff;
-    text-decoration: underline;
+    text-decoration: none;
     text-decoration-color: transparent;
     text-underline-offset: 0.18em;
     text-decoration-thickness: 0.0625rem;
@@ -9375,7 +9439,7 @@ h3 {
 
 .site-footer__note a {
     color: inherit;
-    text-decoration: underline;
+    text-decoration: none;
     text-decoration-skip-ink: none;
 }
 
@@ -9793,7 +9857,7 @@ body {
 .hero-title {
     font-size: var(--type-hero-display-size);
     line-height: var(--type-hero-display-line);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: var(--type-hero-display-tracking);
     hyphens: none;
     -webkit-hyphens: none;
@@ -9804,7 +9868,7 @@ body {
 .section-projects-title {
     font-size: var(--type-section-title-size);
     line-height: var(--type-section-title-line);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: var(--type-section-title-tracking);
 }
 
@@ -10037,7 +10101,7 @@ p + p {
 .hero-links a:hover,
 .project-ext-link:hover {
     color: var(--color-text);
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 0.125rem;
 }
 
@@ -10113,7 +10177,7 @@ p + p {
     }
 
     .nav-link.active {
-        font-weight: 700;
+        font-weight: 600;
         color: var(--color-text-label);
         background: transparent;
         backdrop-filter: none;
@@ -10211,7 +10275,8 @@ p + p {
 }
 
 .hero__card .preview-card-block__title {
-    font-family: 'SF Pro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* macOS-окошко в hero — намеренная имитация чрома macOS, SF Pro по дизайну Figma 420:21377. Единое правило «всё Suisse Intl» сюда не применяется. */
+    font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1rem;
@@ -10229,7 +10294,8 @@ p + p {
     border: var(--preview-cta-border);
     border-radius: var(--preview-cta-radius);
     padding: 0.1875rem 0.4375rem;
-    font-family: 'SF Pro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* macOS CTA в hero — SF Pro по Figma 420:21377 (имитация чрома macOS). */
+    font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 0.8125rem;
     font-weight: 400;
     line-height: 1rem;

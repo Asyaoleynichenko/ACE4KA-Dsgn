@@ -1,0 +1,1 @@
+import{f as a,h as r}from"./index-66e6cb29.js";const n=[.32,.72,0,1];function o(e=a,t={}){return{type:"tween",ease:n,duration:e,...t}}function u(e=r,t={}){return{type:"tween",ease:n,duration:e,...t}}function T(){return{duration:0}}export{o as a,u as b,T as s};
