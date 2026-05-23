@@ -5742,15 +5742,42 @@ h3 {
     gap: 0;
 }
 
+/* Кружки теперь рендерятся через <svg> — старый .metaball-visual не нужен */
 .case-study-rail__metaball-visual {
+    display: none;
+}
+
+.case-study-rail__dashes--metaball {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.5rem;
-    filter: url(#ace-rail-metaball);
+}
+
+.case-study-rail__metaball-svg {
+    display: block;
+    margin-left: auto;
     pointer-events: none;
     z-index: 0;
+    overflow: visible;
+}
+
+.case-study-rail__metaball-hits {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 24px;
+    z-index: 1;
+}
+
+.case-study-rail__metaball-hits .case-study-rail__dash-hit {
+    flex-shrink: 0;
+    width: 100%;
+    cursor: pointer;
 }
 
 /* === Список проектов как side-panel в нижнем правом углу страницы кейса.
@@ -5914,7 +5941,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .case-study-rail__metaball-slot {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     min-height: 0.75rem;
     padding: 0.1875rem 0;
@@ -5925,7 +5952,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     display: block;
     flex-shrink: 0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.36);
+    background: rgba(255, 255, 255, 1);
     transition: opacity var(--transition-micro-fast);
 }
 
@@ -5935,8 +5962,10 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .case-study-rail__metaball-blob {
     position: absolute;
-    right: 0;
-    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    /* 999px = pill: при stretching высота меняется, концы остаются полукруглыми → peanut/liquid look */
+    border-radius: 999px;
     background: #ffffff;
     pointer-events: none;
     z-index: 2;
@@ -6683,8 +6712,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     background: var(--case-feature-card-bg);
     padding: var(--case-feature-card-padding);
     border-radius: var(--case-feature-card-radius);
-    border: 0.0625rem solid transparent;
-    box-shadow: var(--exhibition-depth-shadow);
+    border: 0;
+    box-shadow: none;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

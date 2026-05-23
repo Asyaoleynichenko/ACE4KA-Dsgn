@@ -21,12 +21,9 @@
   <!-- Глобальные SVG-фильтры: в DOM с первого парса, не зависят от React. Нужны для metaball-эффекта (.case-study-rail__metaball-visual). -->
   <svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">
     <defs>
-      <filter id="ace-rail-metaball" x="-200%" y="-100%" width="500%" height="300%" color-interpolation-filters="sRGB">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="ace-rail-blur" />
-        <feColorMatrix in="ace-rail-blur" type="matrix"
-          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -12"
-          result="ace-rail-goo" />
-        <feBlend in="ace-rail-goo" in2="SourceGraphic" mode="normal" />
+      <filter id="ace-rail-metaball" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" />
       </filter>
     </defs>
   </svg>

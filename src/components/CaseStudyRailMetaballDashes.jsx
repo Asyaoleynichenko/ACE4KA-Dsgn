@@ -1,29 +1,33 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { smartTween, smartTweenReduced } from '../motion/smartAnimate.js';
+import { smartTweenReduced } from '../motion/smartAnimate.js';
 
-/** Диаметр точки в compact rail (px). */
-function dashDotPx(level, isActive) {
+/** Радиус кружка в compact rail (px). */
+function dashDotRadius(level, isActive) {
   const l1 = (level ?? 2) <= 1;
-  if (isActive) return l1 ? 8 : 6;
-  return l1 ? 6 : 4;
+  if (isActive) return l1 ? 8 : 7;
+  return l1 ? 5 : 4;
 }
 
+const ROW_HEIGHT = 18;
+const TRACK_WIDTH = 36;
+const FILTER_ID = 'rail-gooey-local';
+
 /**
- * Compact rail: gooey metaball — при скролле активная «капля» перетекает между точками.
+ * Compact rail с metaball-эффектом, реализованным в чистом SVG (filter в том же
+ * стейкинг-контексте, что и circles — гарантированно применяется и сливает
+ * близкие кружки в peanut/blob форму).
  */
 export default function CaseStudyRailMetaballDashes({
   rows,
   activeId,
-  hasChapter,
   onNavigate,
   dashRowVariants,
   reduceMotion: reduceMotionProp,
+  hasChapter,
 }) {
   const reduceMotionHook = useReducedMotion() === true;
   const reduceMotion = reduceMotionProp ?? reduceMotionHook;
-
-  const visualRef = useRef(null);
   const rowRefs = useRef([]);
 
   const activeIndex = useMemo(() => {
@@ -31,78 +35,82 @@ export default function CaseStudyRailMetaballDashes({
     return idx >= 0 ? idx : 0;
   }, [rows, activeId]);
 
-  const [blob, setBlob] = useState({ top: 0, size: 6 });
+  const rowCenters = useMemo(() => rows.map((_, i) => ROW_HEIGHT / 2 + i * ROW_HEIGHT), [rows]);
+  const trackHeight = rows.length * ROW_HEIGHT;
 
-  const measureBlob = useCallback(() => {
-    const visual = visualRef.current;
-    const row = rowRefs.current[activeIndex];
-    if (!visual || !row) return;
-
-    const visualRect = visual.getBoundingClientRect();
-    const rowRect = row.getBoundingClientRect();
-    const centerY = rowRect.top + rowRect.height / 2 - visualRect.top;
-    const entry = rows[activeIndex];
-    const lv = entry?.level ?? (hasChapter ? 2 : 1);
-    const size = dashDotPx(lv, true);
-
-    setBlob((prev) => {
-      const top = centerY - size / 2;
-      if (prev.top === top && prev.size === size) return prev;
-      return { top, size };
-    });
-  }, [activeIndex, rows, hasChapter]);
+  const activeLv = rows[activeIndex]?.level ?? (hasChapter ? 2 : 1);
+  const activeRadius = dashDotRadius(activeLv, true);
+  const activeCy = rowCenters[activeIndex] ?? 0;
+  const prevActiveRef = useRef({ cy: activeCy, r: activeRadius });
 
   useLayoutEffect(() => {
-    measureBlob();
-  }, [measureBlob, rows.length]);
-
-  useLayoutEffect(() => {
-    const visual = visualRef.current;
-    if (!visual || typeof ResizeObserver === 'undefined') return undefined;
-
-    const ro = new ResizeObserver(() => measureBlob());
-    ro.observe(visual);
-    rowRefs.current.forEach((el) => {
-      if (el) ro.observe(el);
-    });
-    window.addEventListener('resize', measureBlob, { passive: true });
+    /* запоминаем предыдущее значение для построения keyframes */
     return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', measureBlob);
+      prevActiveRef.current = { cy: activeCy, r: activeRadius };
     };
-  }, [measureBlob, rows.length]);
-
-  const blobTransition = reduceMotion ? smartTweenReduced() : smartTween(0.42);
+  }, [activeCy, activeRadius]);
 
   return (
     <div className="case-study-rail__dashes case-study-rail__dashes--metaball">
-      <div ref={visualRef} className="case-study-rail__metaball-visual" aria-hidden>
-        {rows.map((entry, index) => {
-          const lv = entry.level ?? (hasChapter ? 2 : 1);
-          const inactive = dashDotPx(lv, false);
-          const isActive = index === activeIndex;
-          return (
-            <div key={entry.id} className="case-study-rail__metaball-slot">
-              <span
-                className={`case-study-rail__metaball-node${isActive ? ' case-study-rail__metaball-node--hidden' : ''}`}
-                style={{ width: inactive, height: inactive }}
+      <svg
+        className="case-study-rail__metaball-svg"
+        width={TRACK_WIDTH}
+        height={trackHeight}
+        viewBox={`0 0 ${TRACK_WIDTH} ${trackHeight}`}
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          {/* Gooey filter — внутри SVG: гарантированно резолвится. */}
+          <filter id={FILTER_ID} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="rl-blur" />
+            <feColorMatrix
+              in="rl-blur"
+              type="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
+              result="rl-goo"
+            />
+          </filter>
+        </defs>
+        <g filter={`url(#${FILTER_ID})`}>
+          {rows.map((entry, index) => {
+            const lv = entry.level ?? (hasChapter ? 2 : 1);
+            const r = dashDotRadius(lv, false);
+            const isActive = index === activeIndex;
+            return (
+              <circle
+                key={entry.id}
+                cx={TRACK_WIDTH / 2}
+                cy={rowCenters[index]}
+                r={r}
+                fill="#ffffff"
+                opacity={isActive ? 0 : 1}
               />
-            </div>
-          );
-        })}
-        <motion.span
-          className="case-study-rail__metaball-blob"
-          initial={false}
-          animate={{
-            top: blob.top,
-            width: blob.size,
-            height: blob.size,
-          }}
-          transition={blobTransition}
-        />
-      </div>
+            );
+          })}
+          <motion.circle
+            key={`blob-${activeIndex}`}
+            initial={{ cy: prevActiveRef.current.cy, r: prevActiveRef.current.r }}
+            cx={TRACK_WIDTH / 2}
+            fill="#ffffff"
+            animate={
+              reduceMotion
+                ? { cy: activeCy, r: activeRadius }
+                : {
+                    cy: [prevActiveRef.current.cy, (prevActiveRef.current.cy + activeCy) / 2, activeCy],
+                    r: [prevActiveRef.current.r, Math.max(prevActiveRef.current.r, activeRadius) * 1.8, activeRadius],
+                  }
+            }
+            transition={
+              reduceMotion
+                ? smartTweenReduced()
+                : { duration: 0.7, times: [0, 0.5, 1], ease: [0.22, 1, 0.36, 1] }
+            }
+          />
+        </g>
+      </svg>
 
-      <div className="case-study-rail__metaball-hits">
+      <div className="case-study-rail__metaball-hits" style={{ height: trackHeight }}>
         {rows.map((entry, index) => {
           const { id, label, keyword, caption } = entry;
           const isActive = activeId === id;
@@ -124,6 +132,7 @@ export default function CaseStudyRailMetaballDashes({
                 onNavigate(id);
               }}
               whileTap={reduceMotion ? undefined : { scale: 0.94 }}
+              style={{ height: ROW_HEIGHT }}
             />
           );
         })}
