@@ -6818,8 +6818,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     transition: opacity var(--dur-smart-slow) var(--ease-exhibition);
 }
 
-.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card::before,
-.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card::before {
+.project-case-study-mail :is(
+    .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
+    .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card,
+    .hyp-list,
+    .hyp-card
+)::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -7530,23 +7534,26 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     align-items: flex-start;
     gap: clamp(0.875rem, 3.5vw, 1.375rem);
     padding: var(--case-feature-card-padding);
-    border-radius: var(--case-feature-card-radius-sm);
-    border: 0.0625rem solid transparent;
+    border-radius: var(--case-feature-card-radius);
+    border: 0;
     background: var(--case-feature-card-bg);
     box-shadow: none;
     min-width: 0;
     align-self: stretch;
-    transition:
-        transform var(--dur-premium) var(--ease-premium-out),
-        box-shadow var(--dur-premium) var(--ease-premium-out),
-        border-color var(--dur-premium) var(--ease-premium-out);
+    position: relative;
+    overflow: hidden;
+    transition: opacity var(--dur-smart-slow) var(--ease-exhibition);
+}
+
+.project-case-study-mail .hyp-card > * {
+    position: relative;
+    z-index: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {
     .project-case-study-mail .hyp-card:hover {
-        transform: translateY(-0.125rem);
-        border-color: rgba(255, 255, 255, 0.12);
-        box-shadow: var(--shadow-case-card-hover);
+        transform: none;
+        opacity: 0.92;
     }
 }
 
@@ -7603,12 +7610,19 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding: var(--hyp-list-inset);
     background: var(--case-feature-card-bg);
     border-radius: var(--case-feature-card-radius);
-    border: 0.0625rem solid transparent;
+    border: 0;
     display: flex;
     flex-direction: column;
     gap: 0;
     width: 100%;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-case-study-mail .hyp-list > * {
+    position: relative;
+    z-index: 1;
 }
 .project-case-study-mail .section ul.hyp-list > .hyp-list__item,
 .project-case-study-mail .hyp-list__item {
@@ -7660,6 +7674,17 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     color: var(--case-feature-card-title-color);
     flex: 1 1 auto;
     min-width: 0;
+}
+
+.project-case-study-mail .hyp-list__title .text-condensed {
+    --tc-scale-x: 0.72;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: left center;
+    margin-inline-end: calc((var(--tc-scale-x) - 1) * 1em);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    color: inherit;
+    opacity: 1;
 }
 .project-case-study-mail .hyp-list__icon {
     position: relative;
@@ -7723,10 +7748,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     overflow: hidden;
 }
 .project-case-study-mail .hyp-list__text {
-    font-size: clamp(1.0625rem, 1.15vw, 1.125rem);
-    line-height: 1.72;
-    letter-spacing: var(--project-card-text-letter-spacing);
-    color: rgba(245, 245, 245, 0.88);
+    font-family: var(--font-body);
+    font-size: var(--case-feature-card-body-size);
+    font-weight: 400;
+    line-height: var(--case-feature-card-body-lh);
+    letter-spacing: var(--case-feature-card-body-tracking);
+    color: #fafafa;
     margin: 0;
     white-space: pre-line;
 }
@@ -7776,6 +7803,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .project-case-study-mail .hyp-list__title {
         font-size: var(--case-feature-card-title-size-sm);
+    }
+
+    .project-case-study-mail .hyp-list__text {
+        font-size: var(--case-feature-card-body-size-sm);
+        line-height: var(--case-feature-card-body-lh-sm);
     }
 
     .project-page-wrap.project-page-wrap--case-study.project-case-study-mail {

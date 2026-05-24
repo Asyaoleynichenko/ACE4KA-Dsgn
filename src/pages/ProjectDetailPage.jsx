@@ -592,7 +592,9 @@ export default function ProjectDetailPage() {
                         <details className="hyp-list__row" open={j === 0}>
                           <summary className="hyp-list__summary">
                             <span className="hyp-list__title">
-                              {hypothesisCardHeading(h, j, locale, t)}
+                              <span className="text-condensed text-condensed--single-line">
+                                {hypothesisCardHeading(h, j, locale, t)}
+                              </span>
                             </span>
                             <span className="hyp-list__icon" aria-hidden="true" />
                           </summary>
