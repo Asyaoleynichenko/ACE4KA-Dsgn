@@ -20,20 +20,16 @@ export function competenciesStepPx(vh) {
   return Math.max(remPx(MOTION.competencies.stepMinPx), safeVh * MOTION.competencies.stepVh);
 }
 
-/** Скролл, пока sticky держит сцену: (n−1) шагов между строками. */
+/** Скролл, пока pin держит сцену: по одному шагу на каждую строку. */
 export function competenciesScrollTravelPx(lineCount, vh) {
   const step = competenciesStepPx(vh);
-  if (lineCount <= 1) return Math.max(remPx(48), step * 0.35);
-  return (lineCount - 1) * step;
+  if (lineCount <= 1) return Math.max(remPx(48), step * 0.5);
+  return lineCount * step;
 }
 
-/** Высота нижнего spacer в runway — только ход scrub между строками (без дубля 100dvh). */
+/** @deprecated Pin-spacer ScrollTrigger задаёт высоту runway — ручной spacer не нужен */
 export function competenciesRunwayTravelPx(lineCount, vh = competenciesViewportHeightPx()) {
-  const safeVh = clampPx(vh, 320, 1600);
-  const safeLines = clampPx(lineCount, 1, 12);
-  const travel = competenciesScrollTravelPx(safeLines, safeVh);
-  const cap = Math.ceil(safeVh * 1.35);
-  return Math.min(Math.ceil(travel), cap);
+  return competenciesScrollTravelPx(lineCount, vh);
 }
 
 /** @deprecated Используйте competenciesRunwayTravelPx + spacer, не min-height runway */

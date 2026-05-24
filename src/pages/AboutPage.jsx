@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { publicUrl } from '../utils/publicUrl.js';
+import AboutJobCard from '../components/AboutJobCard.jsx';
 
 const ABOUT_FIGMA_URL =
   'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=743-16866&m=dev';
@@ -126,30 +127,12 @@ export default function AboutPage() {
           </h2>
           <ul className="about-page__job-list">
             {jobs.map((job) => (
-              <li key={job.org + job.period} className="about-page__job-card">
-                <article className="about-page__job-card-sticker">
-                  <div className="about-page__job-card-face">
-                    {job.period ? (
-                      <p className="about-page__job-period">
-                        <span className="text-condensed">{job.period}</span>
-                      </p>
-                    ) : null}
-                    <h3 className="about-page__job-org">{job.org}</h3>
-                    <p className="about-page__job-title">{job.title}</p>
-                    {job.text ? (
-                      <>
-                        <hr className="about-page__job-divider" aria-hidden="true" />
-                        <p className="about-page__job-text">{job.text}</p>
-                      </>
-                    ) : null}
-                  </div>
-                  <span className="about-page__job-card-peel" aria-hidden="true">
-                    <span className="about-page__job-card-peel__label">
-                      {t('about.experience.viewLabel')}
-                    </span>
-                  </span>
-                </article>
-              </li>
+              <AboutJobCard
+                key={job.org + job.period}
+                job={job}
+                viewLabel={t('about.experience.viewLabel')}
+                projectPath={localizedPath(`/project/${job.projectSlug}`)}
+              />
             ))}
           </ul>
         </section>

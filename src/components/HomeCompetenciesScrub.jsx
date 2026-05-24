@@ -1,13 +1,7 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScrollTriggerCompetenciesScrub } from '../hooks/useScrollTriggerCompetenciesScrub.js';
 import { COMPETENCIES_HEADING_ORDER } from '../data/competenciesHeadingOrder.js';
 import { HOME_PROJECT_SLUGS, homeProjectsCatalog } from '../data/homeProjectsCatalog.js';
-import {
-  competenciesRunwayTravelPx,
-  competenciesScrollTravelPx,
-  competenciesViewportHeightPx,
-} from '../utils/competenciesScrubMetrics.js';
-import { rem } from '../utils/cssRem.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import ProjectCard from './ProjectCard.jsx';
@@ -27,21 +21,9 @@ function chunkSlugsForLines(lineCount, homeSlugs) {
 function activeLineStretchFromScroll(n, t) {
   if (n < 1) return { idx: 0, scaleX: 1, scaleY: 1 };
   const clampedT = Math.min(1, Math.max(0, t));
-  if (n === 1) {
-    const wave = Math.sin(Math.PI * clampedT);
-    return {
-      idx: 0,
-      scaleX: 1 + 0.08 * wave,
-      scaleY: 1 - 0.06 * wave,
-    };
-  }
-  const denom = n - 1;
-  const raw = clampedT * denom;
-  const idx = Math.min(n - 1, Math.max(0, Math.floor(raw + 1e-9)));
-  const localT =
-    idx >= n - 1
-      ? Math.min(1, Math.max(0, raw - (n - 2)))
-      : Math.min(1, Math.max(0, raw - idx));
+  const segment = 1 / n;
+  const idx = Math.min(n - 1, Math.floor(clampedT * n));
+  const localT = segment > 0 ? Math.min(1, Math.max(0, (clampedT - idx * segment) / segment)) : 0;
   const wave = Math.sin(Math.PI * localT);
   const stretchX = idx % 2 === 0;
   return {
@@ -67,7 +49,6 @@ export default function HomeCompetenciesScrub({
   const stickyRef = useRef(null);
   const stageRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
-  const [travelPx, setTravelPx] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
@@ -91,36 +72,6 @@ export default function HomeCompetenciesScrub({
     return () => mq.removeEventListener('change', sync);
   }, []);
 
-  const measureTravel = useCallback(() => {
-    if (reducedMotion || n < 1) return;
-    const vh = competenciesViewportHeightPx();
-    setTravelPx((prev) => {
-      const next = competenciesRunwayTravelPx(n, vh);
-      return prev === next ? prev : next;
-    });
-  }, [n, reducedMotion]);
-
-  useLayoutEffect(() => {
-    measureTravel();
-  }, [measureTravel, n]);
-
-  useEffect(() => {
-    if (reducedMotion) return undefined;
-    const runway = runwayRef.current;
-    const sticky = stickyRef.current;
-    if (!runway || !sticky) return undefined;
-    const ro = new ResizeObserver(() => measureTravel());
-    ro.observe(runway);
-    ro.observe(sticky);
-    window.addEventListener('resize', measureTravel, { passive: true });
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', measureTravel);
-    };
-  }, [measureTravel, reducedMotion]);
-
-  const scrollTravelPx = competenciesScrollTravelPx(n, competenciesViewportHeightPx());
-
   const onScrub = useCallback(
     (progress) => {
       if (n < 1) return;
@@ -139,7 +90,6 @@ export default function HomeCompetenciesScrub({
     enabled: !reducedMotion && n > 0,
     runwayRef,
     stickyRef,
-    scrollTravelPx,
     lineCount: n,
     onScrub,
   });
@@ -165,10 +115,10 @@ export default function HomeCompetenciesScrub({
 
   const floatCards = (
     <div className="home-competencies-scrub__floats" aria-hidden={!leftProject && !rightProject}>
-      <div className="home-competencies-scrub__float home-competencies-scrub__float--tl">
+      <div key={`tl-${activeIdx}`} className="home-competencies-scrub__float home-competencies-scrub__float--tl">
         {leftProject ? projectCard(leftProject) : null}
       </div>
-      <div className="home-competencies-scrub__float home-competencies-scrub__float--br">
+      <div key={`br-${activeIdx}`} className="home-competencies-scrub__float home-competencies-scrub__float--br">
         {rightProject ? projectCard(rightProject) : null}
       </div>
     </div>
@@ -222,13 +172,6 @@ export default function HomeCompetenciesScrub({
           </div>
         </div>
       </div>
-      {travelPx > 0 ? (
-        <div
-          className="home-competencies-scrub__travel"
-          style={{ height: rem(travelPx) }}
-          aria-hidden="true"
-        />
-      ) : null}
     </div>
   );
 }

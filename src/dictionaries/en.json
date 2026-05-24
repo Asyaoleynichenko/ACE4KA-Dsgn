@@ -331,19 +331,22 @@
         "title": "Product designer",
         "org": "VK Growth & Monetization",
         "period": "2025 — present",
-        "text": "Subscription monetization across ecosystem services: Mail Space, Cloud, Mail. A/B experiments with tens of millions of ₽ incremental LTV"
+        "text": "Subscription monetization across ecosystem services: Mail Space, Cloud, Mail. A/B experiments with tens of millions of ₽ incremental LTV",
+        "projectSlug": "mail-monetization"
       },
       {
         "title": "Product designer",
         "org": "Mail Media projects",
         "period": "2024",
-        "text": "Mail Science launch as a new vertical. Media UI design system. Redesigns for Hi-Tech, Cinema, Lady, Pets. Led special projects: 23 launches in 3 months"
+        "text": "Mail Science launch as a new vertical. Media UI design system. Redesigns for Hi-Tech, Cinema, Lady, Pets. Led special projects: 23 launches in 3 months",
+        "projectSlug": "mail-nauki"
       },
       {
         "title": "Design & development of digital products",
         "org": "Freelance",
         "period": "Since 2021",
-        "text": "Designer at startups, outsource work"
+        "text": "Designer at startups, outsource work",
+        "projectSlug": null
       }
     ],
     "eduItems": [

@@ -2,22 +2,14 @@ import { useLayoutEffect } from 'react';
 import { ScrollTrigger } from '../gsap/setup.js';
 import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
-import { remPx } from '../utils/cssRem.js';
 import {
   competenciesScrollTravelPx,
   competenciesViewportHeightPx,
 } from '../utils/competenciesScrubMetrics.js';
 import { MOTION_SCRUB } from '../motion/motionSystem.js';
 
-/** Верх pin = тот же offset, что в CSS у .home-competencies-scrub__sticky { top } */
-function readStickyPinTop(sticky) {
-  if (!sticky) return remPx(80);
-  const top = parseFloat(getComputedStyle(sticky).top);
-  return Number.isFinite(top) ? top : remPx(80);
-}
-
 /**
- * Sticky-сцена компетенций: scrub по runway (без GSAP pin — липкость в CSS).
+ * Блок компетенций: GSAP pin + scrub — сцена по центру экрана, уход только после всех строк.
  */
 export function useScrollTriggerCompetenciesScrub({
   enabled,
@@ -31,29 +23,39 @@ export function useScrollTriggerCompetenciesScrub({
     if (!enabled || lineCount < 1) return undefined;
 
     const runway = runwayRef.current;
-    const sticky = stickyRef.current;
-    if (!runway || !sticky) return undefined;
+    const pinEl = stickyRef.current;
+    if (!runway || !pinEl) return undefined;
 
     const scroller = getScrollWrapper() === window ? undefined : getScrollWrapper();
-    const pinTop = readStickyPinTop(sticky);
-    const vh = competenciesViewportHeightPx();
-    const travel = Math.max(
-      1,
-      Math.round(
-        scrollTravelPx > 0
-          ? scrollTravelPx
-          : competenciesScrollTravelPx(lineCount, vh),
-      ),
-    );
+    const getTravel = () =>
+      Math.max(
+        1,
+        Math.round(
+          scrollTravelPx > 0
+            ? scrollTravelPx
+            : competenciesScrollTravelPx(lineCount, competenciesViewportHeightPx()),
+        ),
+      );
+
+    const stepSnap = lineCount > 0 ? 1 / lineCount : 1;
 
     const st = ScrollTrigger.create({
       id: 'home-competencies-scrub',
       trigger: runway,
-      start: () => `top top+=${Math.round(pinTop)}`,
-      end: () => `+=${travel}`,
+      start: 'center center',
+      end: () => `+=${getTravel()}`,
+      pin: pinEl,
+      pinSpacing: true,
       scrub: MOTION_SCRUB,
+      anticipatePin: 1,
       invalidateOnRefresh: true,
       scroller,
+      snap: {
+        snapTo: (value) => Math.min(1, Math.round(value / stepSnap) * stepSnap),
+        duration: { min: 0.12, max: 0.32 },
+        delay: 0,
+        ease: 'power1.inOut',
+      },
       onUpdate(self) {
         onScrub?.(self.progress);
       },
