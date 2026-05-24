@@ -59,6 +59,7 @@ function SectionFallback({ minHeight = '50vh' }) {
 export default function HomePage() {
   const { t, localizedPath, messages } = useI18n();
   const competencyLines = messages.hero?.competencies?.lines ?? [];
+  const competencyLineProjectSlugs = messages.hero?.competencies?.lineProjectSlugs;
 
   return (
     <div className="home-page home-page--chrome">
@@ -245,6 +246,7 @@ export default function HomePage() {
             <Suspense fallback={<SectionFallback minHeight="40vh" />}>
               <HomeCompetenciesScrub
                 lines={competencyLines}
+                lineProjectSlugs={competencyLineProjectSlugs}
                 ariaLabel={t('hero.competencies.aria')}
               >
                 <div className="home-competencies__cta">

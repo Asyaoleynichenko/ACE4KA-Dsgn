@@ -16,14 +16,14 @@
       }
     }(window.location));
   </script>
-  <script type="module" crossorigin src="/assets/index-66e6cb29.js"></script>
+  <script type="module" crossorigin src="/assets/index-111682f6.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/framer-motion-771cda1e.js">
   <link rel="modulepreload" crossorigin href="/assets/router-a3a0f9f7.js">
   <link rel="modulepreload" crossorigin href="/assets/projects-data-876fb313.js">
   <link rel="modulepreload" crossorigin href="/assets/lenis-0d08b761.js">
   <link rel="modulepreload" crossorigin href="/assets/gsap-e6c30445.js">
   <link rel="stylesheet" href="/assets/lenis-1a72e316.css">
-  <link rel="stylesheet" href="/assets/index-3c20373b.css">
+  <link rel="stylesheet" href="/assets/index-e3d7bc90.css">
   <script>
     (function (l) {
       var segments = 0;
@@ -38,6 +38,15 @@
   </script>
 </head>
 <body>
+  <!-- Глобальные SVG-фильтры: в DOM с первого парса, не зависят от React. Нужны для metaball-эффекта (.case-study-rail__metaball-visual). -->
+  <svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="ace-rail-metaball" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" />
+      </filter>
+    </defs>
+  </svg>
   <div id="root"></div>
   
 </body>

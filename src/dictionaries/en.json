@@ -260,23 +260,42 @@
     "rootBody": "Open the browser console (F12 → Console). If the URL or build base path is wrong, scripts may fail to load (blank white screen)."
   },
   "about": {
+    "profilePhoto": "/images/figma-743-16866/profile.png",
     "intro": {
       "name": "Asya Oleynichenko",
-      "lead1": "Product designer at VK: monetization for Mail Space, Cloud, and Mail; before that — Mail media (Science, Hi-Tech, special projects). Five years across research, hypotheses, A/B tests, launches, and metrics.",
-      "lead2": "DAFES AWARDS finalist & winner; HSE red diploma (GPA 8.82). Open to Senior Product Designer roles and strong product teams."
+      "lead": "Product designer with experience launching and scaling digital products, media platforms, and monetization streams across the VK ecosystem. I work at the intersection of product, design, and business — from research and hypotheses to shipping solutions that move core metrics (LTV, conversion, retention). I design interfaces, build design systems, and optimize user flows. I have experience launching products from zero, and I use metrics, experiments, and AI tools to speed up production and make solutions more effective."
     },
     "experience": {
-      "title": "Experience"
+      "title": "Experience",
+      "viewLabel": "view"
     },
     "skills": {
       "title": "Skills",
       "items": [
-        "Product: research through hypothesis testing and metric impact",
-        "Hypotheses & experiments: A/B, analytics, data-informed decisions",
-        "Research: competitors, depth interviews, scenarios, growth points",
-        "Art direction: led Mail Media special projects",
-        "AI in production: Cursor, Midjourney in the pipeline, editorial training",
-        "Engineering literacy: basic coding (HSE), layout, partnering with dev"
+        {
+          "title": "Product",
+          "description": "End-to-end product work — from research through hypothesis testing to metric impact"
+        },
+        {
+          "title": "Hypotheses & experiments",
+          "description": "A/B testing, metrics, product analytics, and a data-driven approach"
+        },
+        {
+          "title": "Research",
+          "description": "Competitive analysis, metrics, depth interviews, qualitative feedback, scenarios, and growth points"
+        },
+        {
+          "title": "Art direction & process",
+          "description": "Led Mail Media special projects, completed BBE Head of Product Design on process. Built and mentored team workflows on personal projects"
+        },
+        {
+          "title": "AI in production",
+          "description": "Vibe-coding (Cursor AI, Claude Code), Midjourney in the pipeline, AI tools in product work. Rolled AI into the team and trained editorial"
+        },
+        {
+          "title": "Engineering literacy",
+          "description": "Basic programming skills (HSE), layout fundamentals, partnering with developers — and I can vibe-code almost anything"
+        }
       ]
     },
     "education": {
@@ -297,11 +316,9 @@
     "spyNav": {
       "aria": "On this page",
       "intro": "Intro",
+      "skills": "Skills",
       "experience": "Experience",
-      "education": "Education",
-      "team": "Team",
-      "habitat": "Beyond work",
-      "memes": "Memes"
+      "education": "Education"
     },
     "strip": {
       "status": "Open to work",
@@ -312,57 +329,54 @@
     "jobs": [
       {
         "title": "Product designer",
-        "org": "VK · monetization",
+        "org": "VK Growth & Monetization",
         "period": "2025 — present",
-        "text": "Upsell & offer personalization team: Mail Space, Cloud, Mail. A/B experiments with tens of millions of ₽ incremental LTV (NDA)."
+        "text": "Subscription monetization across ecosystem services: Mail Space, Cloud, Mail. A/B experiments with tens of millions of ₽ incremental LTV"
       },
       {
         "title": "Product designer",
-        "org": "Mail · media",
-        "period": "Oct 16, 2023 — May 20, 2025",
-        "text": "Mail Science launch, Media UI, redesigns for Hi-Tech, Cinema, Lady, Pets. Led special projects: 23 launches in 3 months."
+        "org": "Mail Media projects",
+        "period": "2024",
+        "text": "Mail Science launch as a new vertical. Media UI design system. Redesigns for Hi-Tech, Cinema, Lady, Pets. Led special projects: 23 launches in 3 months"
       },
       {
-        "title": "Marketing intern",
-        "org": "SOGAZ",
-        "period": "",
-        "text": "Worked on the mobile app design system."
-      },
-      {
-        "title": "Freelance",
-        "org": "",
-        "period": "",
-        "text": "Web pages, startups, front-end development."
+        "title": "Design & development of digital products",
+        "org": "Freelance",
+        "period": "Since 2021",
+        "text": "Designer at startups, outsource work"
       }
     ],
     "eduItems": [
       {
+        "grid": "hse",
         "school": "HSE University",
         "years": "2021 — 2025",
-        "line": "Faculty of communications, media, and design",
-        "detail": "Design & programming",
-        "extra": "GPA 8.82"
+        "line": "Faculty of communication, media, and design",
+        "detail": "Design & programming"
       },
       {
+        "variant": "gpa",
+        "grid": "gpa",
+        "score": "8.82",
+        "line": "GPA Score"
+      },
+      {
+        "grid": "bbe",
         "school": "Bang Bang Education",
         "years": "2025",
-        "line": "Head of Product Design",
-        "detail": "Product approach to leadership: metrics, goals, scoping, process",
-        "extra": ""
+        "line": "Head of Product Design"
       },
       {
-        "school": "UI course",
+        "grid": "ui",
+        "school": "UI course by Vika Breusova",
         "years": "2025",
-        "line": "Vika Breusova",
-        "detail": "Lead designer, Yandex Travel",
-        "extra": ""
+        "line": "Lead designer, Yandex Travel"
       },
       {
+        "grid": "vk",
         "school": "VK Education",
         "years": "2023 — present",
-        "line": "Workshops and learning formats",
-        "detail": "Hands-on product design and teamwork",
-        "extra": ""
+        "line": "Regular workshops for work and life"
       }
     ],
     "links": {
