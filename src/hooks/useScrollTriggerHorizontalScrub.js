@@ -1,6 +1,5 @@
 import { useLayoutEffect } from 'react';
 import { gsap, ScrollTrigger } from '../gsap/setup.js';
-import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
 import {
   applyScrubExitHandoff,
@@ -38,6 +37,20 @@ function activeIndexFromOffset(x, mx, count) {
   return Math.min(count - 1, Math.round(x / step));
 }
 
+/** Отступ pin под шапку кейса (`--scrub-sticky-top`), если у элемента top: 0. */
+function readScrubStickyTopPx(pinEl) {
+  const host = pinEl?.closest('.project-case-study-mail');
+  if (!host) return 0;
+  const raw = getComputedStyle(host).getPropertyValue('--scrub-sticky-top').trim();
+  if (!raw) return 0;
+  const probe = document.createElement('div');
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;top:${raw};`;
+  host.appendChild(probe);
+  const px = parseFloat(getComputedStyle(probe).top);
+  host.removeChild(probe);
+  return Number.isFinite(px) && px > 0 ? px : 0;
+}
+
 /**
  * Горизонтальный storytelling: pin + scrub:true — camera-like scroll, museum feel.
  */
@@ -70,7 +83,8 @@ export function useScrollTriggerHorizontalScrub({
 
     const readPinTopPx = () => {
       const raw = parseFloat(getComputedStyle(pin).top);
-      return Number.isFinite(raw) && raw > 0 ? raw : 0;
+      if (Number.isFinite(raw) && raw > 0) return raw;
+      return readScrubStickyTopPx(pin);
     };
 
     let totalSpan = 0;
@@ -87,35 +101,46 @@ export function useScrollTriggerHorizontalScrub({
     };
     updateRunwaySpan();
 
+    const applyScrubFrame = (self) => {
+      const mx = readMx(viewport, inner);
+      const rawP = self.progress;
+      const { scrubP, exitP } = splitScrubProgress(rawP);
+      const x = scrubP * mx;
+
+      if (cinematic) {
+        applyScrubExitHandoff(handoffTarget, exitP);
+        applyCinematicCardTransforms(inner, viewport, x, rawP, 0, exitP);
+      } else {
+        gsap.set(inner, { x: -x, force3D: true });
+      }
+
+      onActiveIndex?.(activeIndexFromOffset(x, mx, slideCount));
+    };
+
     const st = ScrollTrigger.create({
       id: triggerId,
       trigger: runway,
       start: () => `top top+=${Math.round(readPinTopPx())}`,
       end: () => `+=${totalSpan}`,
       pin,
+      pinSpacing: true,
       scrub: true,
-      anticipatePin: 0,
+      /** С Lenis иначе pin «догоняет» скролл — визуальный отскок при входе в секцию. */
+      anticipatePin: 1,
       invalidateOnRefresh: true,
       scroller,
       onRefresh: updateRunwaySpan,
-      onUpdate(self) {
-        const mx = readMx(viewport, inner);
-        const rawP = self.progress;
-        const { scrubP, exitP } = splitScrubProgress(rawP);
-        const x = scrubP * mx;
-
-        if (cinematic) {
-          applyScrubExitHandoff(handoffTarget, exitP);
-          applyCinematicCardTransforms(inner, viewport, x, rawP, 0, exitP);
-        } else {
-          gsap.set(inner, { x: -x, force3D: true });
-        }
-
-        onActiveIndex?.(activeIndexFromOffset(x, mx, slideCount));
-      },
+      onEnter: applyScrubFrame,
+      onEnterBack: applyScrubFrame,
+      onUpdate: applyScrubFrame,
     });
 
-    requestAnimationFrame(refreshScrollTrigger);
+    applyScrubFrame(st);
+    requestAnimationFrame(() => {
+      updateRunwaySpan();
+      st.refresh();
+      applyScrubFrame(st);
+    });
 
     return () => {
       st.kill();

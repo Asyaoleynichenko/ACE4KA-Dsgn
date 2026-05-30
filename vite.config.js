@@ -22,17 +22,18 @@ function productionBase() {
   return '/';
 }
 
-/** Подсказка: закладка на :5174 не сработает, если порт занят и Vite поднял другой. */
+/** Подсказка: закладка на :5173 не сработает, если порт занят и Vite поднял другой. */
 function devListenHintPlugin() {
+  const expectedPort = 5173;
   return {
     name: 'dev-listen-hint',
     configureServer(server) {
       server.httpServer?.once('listening', () => {
         const addr = server.httpServer?.address();
         const port = addr && typeof addr === 'object' ? addr.port : null;
-        if (port && port !== 5174) {
+        if (port && port !== expectedPort) {
           console.log(
-            `\n  [vite] Порт 5174 занят — сервер на http://localhost:${port}/ (откройте этот URL, не 5174).\n`,
+            `\n  [vite] Порт ${expectedPort} занят — сервер на http://localhost:${port}/ (откройте этот URL, не ${expectedPort}).\n`,
           );
         }
       });
@@ -83,8 +84,8 @@ export default defineConfig(({ command }) => {
       },
     },
     server: {
-      /** 5174 — чтобы совпадало с типичным URL в браузере Cursor / закладками; при занятом порту Vite возьмёт следующий (strictPort: false). */
-      port: 5174,
+      /** 5173 — дефолт Vite и типичный URL в Cursor; при занятом порту Vite возьмёт следующий (strictPort: false). */
+      port: 5173,
       strictPort: false,
       /** 0.0.0.0 — если «не открывается» только localhost или нужен доступ из сети/WSL */
       host: true,

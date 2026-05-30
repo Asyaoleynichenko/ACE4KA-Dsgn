@@ -1,17 +1,28 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { publicUrl } from '../utils/publicUrl.js';
 import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
+import { withViewTransition } from '../utils/withViewTransition.js';
 
 export default function ProjectCard({ slug, title, meta, desc, image, video, isDemo }) {
   const { localizedPath } = useI18n();
+  const navigate = useNavigate();
   const href = slug ? localizedPath(`/project/${slug}`) : localizedPath('/projects');
   const imageSrc = typeof image === 'string' ? publicUrl(image) : image;
   const videoSrc = typeof video === 'string' ? publicUrl(video) : null;
 
+  /* Клик-навигация через View Transitions: hero-обложка карточки морфит в hero детальной страницы. */
+  const handleNavigate = (event) => {
+    if (event.defaultPrevented) return;
+    if (event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    withViewTransition(() => navigate(href));
+  };
+
   return (
     <article className="preview-card">
-      <Link to={href} className="preview-card__link">
+      <Link to={href} className="preview-card__link" onClick={handleNavigate}>
         <div className="preview-image">
           {videoSrc ? (
             <video

@@ -117,6 +117,7 @@
   },
   "projectsPage": {
     "title": "Все проекты",
+    "emptyFilter": "По этому фильтру пока нет проектов.",
     "groups": {
       "product": {
         "title": "Продуктовая работа",

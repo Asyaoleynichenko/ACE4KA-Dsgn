@@ -97,16 +97,24 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return () => ro.disconnect();
   }, [recalcMaxX]);
 
-  /** Пересчёт ScrollTrigger после resize контента. */
+  /** Пересчёт ScrollTrigger после resize контента (без runway — pin-spacer меняет его высоту и даёт отскок). */
   useEffect(() => {
     if (!useScrollLinked) return undefined;
-    const nodes = [runwayRef.current, stickyRef.current, innerRef.current, viewportRef.current].filter(Boolean);
+    const nodes = [innerRef.current, viewportRef.current].filter(Boolean);
     if (!nodes.length) return undefined;
-    const schedule = () => requestAnimationFrame(refreshScrollTrigger);
+    let refreshTimer = null;
+    const schedule = () => {
+      if (refreshTimer != null) clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => {
+        refreshTimer = null;
+        requestAnimationFrame(refreshScrollTrigger);
+      }, 80);
+    };
     const ro = new ResizeObserver(schedule);
     nodes.forEach((n) => ro.observe(n));
     window.addEventListener('resize', schedule);
     return () => {
+      if (refreshTimer != null) clearTimeout(refreshTimer);
       ro.disconnect();
       window.removeEventListener('resize', schedule);
     };

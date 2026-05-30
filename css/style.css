@@ -196,8 +196,9 @@
   --grid-column-gap: var(--space-8);
   --preview-grid-max-width: 80.625rem; /* Figma 1:297 — 1290px */
 
-  /* Figma 573:18422 — Header */
-  --header-figma-pad-x: 2.125rem; /* 34px */
+  /* Figma 573:18422 — Header. Боковой gutter синхронизирован с --layout-page-pad-x (14px),
+     чтобы линия краёв страницы (header / main / footer) шла одной вертикалью. */
+  --header-figma-pad-x: var(--layout-page-pad-x);
   --header-figma-pad-y: 1.3125rem; /* 21px */
   --header-figma-bar-min: 5.578125rem; /* 89.25px */
   --header-figma-nav-gap: 7.5rem; /* 120px между пунктами Nav Links */
@@ -206,7 +207,7 @@
 
   --hero-about-max: 80.625rem; /* Figma 416:13006 — 1290px */
   --hero-content-max: var(--hero-about-max);
-  --hero-card-width: 23.0625rem;
+  --hero-card-width: 27.5rem; /* ~440px — mac-window preview в hero (Figma 369×280 + ~19%) */
   --hero-row-gap: var(--space-24);
   --hero-lead-max: 47.9375rem; /* Figma 416:13013 — 767px */
   --hero-text-max-ch: 70ch; /* About lead — до ~70 символов в строке */
@@ -415,8 +416,8 @@
   --layout-89-756-item-radius: var(--radius-lg);
   --layout-89-756-item-inner-gap: var(--space-4);
 
-  /* Горизонтальный gutter: 24px на всех страницах + safe-area. */
-  --layout-page-pad-x: var(--space-24);
+  /* Горизонтальный gutter: 14px на всех страницах + safe-area. */
+  --layout-page-pad-x: var(--space-14);
   --layout-edge-left: calc(var(--layout-page-pad-x) + env(safe-area-inset-left, 0));
   --layout-edge-right: calc(var(--layout-page-pad-x) + env(safe-area-inset-right, 0));
   --layout-page-pad-y-top: var(--space-48);
@@ -438,7 +439,7 @@
     :root {
         --layout-page-pad-y-top: var(--space-32);
         --layout-page-pad-y-bottom: var(--space-48);
-        --layout-page-pad-x: var(--space-24);
+        /* --layout-page-pad-x наследуется из :root (14px) */
         --project-page-padding-y: var(--space-32);
         --project-page-padding-bottom: var(--space-48);
         --hero-section-gap: var(--space-48);
@@ -482,7 +483,7 @@
 
 @media (max-width: 30rem) {
     :root {
-        --layout-page-pad-x: 1rem;
+        /* --layout-page-pad-x наследуется из :root (14px) */
         --hero-section-gap: var(--space-48);
         --tc-scale-x: 0.72;
         --hero-fs-card-top: clamp(4.75rem, 11svh, 6rem);
@@ -1086,18 +1087,33 @@ html.snap-pages #root.snap-pages-root--home {
     }
 }
 
-/* View Transitions API — смена кадра при переходе на /projects (SeamlessProjectsLink) */
+/* View Transitions API — смена кадра при переходе на /projects (SeamlessProjectsLink)
+   и морф hero-обложки карточки → hero детальной страницы (ProjectCard click). */
 @supports (view-transition-name: none) {
     ::view-transition-old(root),
     ::view-transition-new(root) {
         animation-duration: 380ms;
         animation-timing-function: var(--ease-smart);
     }
+
+    /* Группа любой именованной пары (project-hero-*) — длительность morph положения/размера */
+    ::view-transition-group(*) {
+        animation-duration: 520ms;
+        animation-timing-function: var(--ease-smart);
+    }
+
+    /* Кроссфейд старого/нового снимков hero-обложки — мягче, синхронно с group */
+    ::view-transition-image-pair(*) {
+        animation-duration: 520ms;
+        animation-timing-function: var(--ease-smart);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     ::view-transition-old(root),
-    ::view-transition-new(root) {
+    ::view-transition-new(root),
+    ::view-transition-group(*),
+    ::view-transition-image-pair(*) {
         animation-duration: 0.001ms !important;
     }
 }
@@ -3322,15 +3338,16 @@ h3 {
     }
 }
 
-/* Hero — Figma 416:12975: First screen + About Section */
+/* Hero — Figma 416:12975: First screen + About Section.
+   Боковой gutter уже даёт .main → не дублируем здесь, иначе суммарно 28px. */
 .hero {
     position: relative;
     min-height: 100vh;
     min-height: 100dvh;
     padding-top: max(var(--layout-page-pad-y-top), env(safe-area-inset-top, 0));
     padding-bottom: clamp(4rem, 12vw, 7.5rem);
-    padding-left: var(--layout-edge-left);
-    padding-right: var(--layout-edge-right);
+    padding-left: 0;
+    padding-right: 0;
     max-width: none;
     margin-left: 0;
     margin-right: 0;
@@ -4296,7 +4313,7 @@ h3 {
     position: relative;
     margin-bottom: 2.5rem;
     width: 100%;
-    max-width: 23.0625rem;
+    max-width: var(--hero-card-width);
     aspect-ratio: 369 / 280;
     height: auto;
     min-height: 0;
@@ -4684,6 +4701,16 @@ h3 {
     max-width: 100%;
 }
 
+/* На главной превью идёт «без оправы»: ни фона, ни скруглений у карточек/обложек */
+.home-page .section.section-projects .preview-card,
+.home-page .section.section-projects .preview-image,
+.home-page .section.section-projects .preview-image img,
+.home-page .section.section-projects .preview-image video,
+.home-page .section.section-projects .preview-image__placeholder {
+    background: transparent;
+    border-radius: 0;
+}
+
 .home-page .section.section-projects .show-all-wrap {
     margin-top: 0;
 }
@@ -4710,7 +4737,7 @@ h3 {
     margin-bottom: var(--space-48);
 }
 
-/* Figma 1:399 / 89:346 — «Все проекты»: колонка до 84.875rem, боковые поля как у шапки (без второго gutter у .main) */
+/* Figma 1:399 / 89:346 — «Все проекты»: колонка до 84.875rem, padding-x даёт .main, здесь не дублируем */
 .page-projects__wrap {
     display: flex;
     flex-direction: column;
@@ -4720,8 +4747,6 @@ h3 {
     max-width: 84.875rem;
     margin-left: auto;
     margin-right: auto;
-    padding-left: var(--layout-edge-left);
-    padding-right: var(--layout-edge-right);
     box-sizing: border-box;
 }
 
@@ -4737,24 +4762,217 @@ h3 {
     width: 100%;
 }
 
-.projects-page__group-title {
-    font-weight: 600;
-    font-size: clamp(1.125rem, 1.1vw + 0.85rem, 1.5rem);
-    letter-spacing: -0.02em;
-    margin: 0 0 0.5rem;
-    color: var(--color-text-primary);
+.page-projects .projects-page__group .preview-grid {
+    margin-top: 0;
 }
 
-.projects-page__group-intro {
-    max-width: 52rem;
-    margin: 0 0 var(--space-24);
+/* Bento-сетка проектов: edge-to-edge, без max-width родителя (.page-projects__wrap ограничен 84.875rem — пробиваем) */
+.page-projects .preview-bento {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: dense;
+    grid-auto-rows: auto;
+    /* 16:9 приоритетнее, чем «низ ряда выровнен» — высоту ячеек определяет картинка */
+    align-items: start;
+    margin-top: var(--space-24);
+    /* break out of .page-projects__wrap max-width: 84.875rem */
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding-inline: var(--layout-edge-left);
+    box-sizing: border-box;
+    column-gap: var(--space-16);
+    row-gap: var(--space-16);
+    /* контейнер для метаболл-перехода */
+    position: relative;
+    isolation: isolate;
+}
+
+.page-projects .preview-bento.is-morphing {
+    /* во время реflow позволяем браузеру оптимизировать перерисовку */
+    will-change: contents;
+}
+
+.page-projects .preview-bento.is-morphing .preview-bento__cell {
+    will-change: transform, opacity, border-radius;
+}
+
+/* SVG defs для метаболл-фильтра не должен влиять на лайаут */
+.page-projects .preview-bento__goo-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Wash-слой метаболлов поверх сетки — только во время смены фильтра */
+.page-projects .preview-bento__wash {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.page-projects .preview-bento__wash-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* После окончания морфа will-change должен сниматься — обеспечивает класс .is-morphing на родителе */
+.page-projects .preview-bento:not(.is-morphing) .preview-bento__cell {
+    will-change: auto;
+}
+
+/* Bento: квадратные ячейки 1×1 + 2×2 (feature/solo/duo-primary). Источник image — 16:9,
+   в ячейке object-fit: cover. Текст накладывается поверх с градиентом — нет пустот. */
+.page-projects .preview-bento__cell {
+    display: block;
+    min-width: 0;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    position: relative;
+}
+
+.page-projects .preview-bento__cell--feature,
+.page-projects .preview-bento__cell--solo,
+.page-projects .preview-bento__cell--duo-primary {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.page-projects .preview-bento__cell > .preview-card {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.page-projects .preview-bento .preview-card__link {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border-radius: inherit;
+}
+
+/* Картинка заполняет всю ячейку, обрезаясь по cover */
+.page-projects .preview-bento .preview-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    min-height: 0;
+    flex: none;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+.page-projects .preview-bento .preview-image img,
+.page-projects .preview-bento .preview-image video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Текст скрыт по умолчанию, проявляется при hover/focus поверх изображения с градиентом */
+.page-projects .preview-bento .preview-card__body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: var(--space-16);
+    padding-top: var(--space-48);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.78) 60%, rgba(0, 0, 0, 0.92) 100%);
+    border-radius: 0;
+    color: var(--color-text);
+    opacity: 0;
+    transform: translateY(6%);
+    transition:
+        opacity var(--dur-smart-base) var(--ease-smart),
+        transform var(--dur-smart-base) var(--ease-smart);
+    pointer-events: none;
+}
+
+.page-projects .preview-bento .preview-card__link:hover .preview-card__body,
+.page-projects .preview-bento .preview-card__link:focus-visible .preview-card__body,
+.page-projects .preview-bento .preview-card__link:focus-within .preview-card__body {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (hover: none) {
+    /* На тач-устройствах оставляем текст видимым (hover недоступен) */
+    .page-projects .preview-bento .preview-card__body {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-projects .preview-bento .preview-card__body {
+        transition: none;
+        transform: none;
+    }
+}
+
+.page-projects .preview-bento .preview-card__title,
+.page-projects .preview-bento .preview-card__meta,
+.page-projects .preview-bento .preview-card__desc {
+    color: var(--color-text);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.page-projects .preview-bento .preview-card__meta {
+    opacity: 0.72;
+}
+
+.page-projects .preview-bento .preview-card__desc {
+    opacity: 0.86;
+}
+
+/* Крупные ячейки 2×2 — заголовок крупнее */
+.page-projects .preview-bento__cell--feature .preview-card__title,
+.page-projects .preview-bento__cell--solo .preview-card__title,
+.page-projects .preview-bento__cell--duo-primary .preview-card__title {
+    font-size: clamp(1.5rem, 1.6vw + 1rem, 2rem);
+    line-height: 1.15;
+}
+
+.page-projects .preview-bento__empty {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: var(--space-24) 0;
     font-size: clamp(0.9375rem, 0.9vw + 0.8125rem, 1.0625rem);
     line-height: 1.55;
     color: var(--color-text-muted);
 }
 
-.page-projects .projects-page__group .preview-grid {
-    margin-top: 0;
+@media (min-width: 48.0625rem) {
+    .page-projects .preview-bento {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-auto-rows: auto;
+    }
+}
+
+@media (min-width: 64.0625rem) {
+    .page-projects .preview-bento {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-auto-rows: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-projects .preview-bento__cell {
+        transition: none;
+    }
 }
 
 /* Заголовок страниц «Проекты» / детали — выравниваем с hero-title главной (Figma 6rem). */
@@ -4769,11 +4987,9 @@ h3 {
     letter-spacing: var(--type-section-title-tracking);
 }
 
-/* «Все проекты»: больше воздуха под шапкой; горизонтальный gutter только у .page-projects__wrap (иначе двойной отступ с .main) */
+/* «Все проекты»: больше воздуха под шапкой; padding-x штатный, как у других страниц */
 .page-projects .main {
     padding-top: clamp(var(--layout-page-pad-y-top), 4vw + 2rem, 7.5rem);
-    padding-left: 0;
-    padding-right: 0;
 }
 
 /* Figma 89:347 / 1-290 — табы фильтра: одна строка, gap 0.5rem, pill-обёртка с blur 1.7188rem */
@@ -5413,7 +5629,8 @@ h3 {
     }
 }
 
-.preview-grid > .preview-card {
+.preview-grid > .preview-card,
+.preview-bento__cell > .preview-card {
     width: 100%;
     max-width: none;
     justify-self: stretch;
@@ -6337,53 +6554,34 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     height: auto;
     aspect-ratio: var(--project-hero-aspect-w) / var(--project-hero-aspect-h);
 }
-.project-case-study-mail .hero__media--carousel {
-    /* Класс применяется поверх .hero__media (оставляем position: relative и aspect-ratio оттуда), иначе section.hero схлопывается до 0 высоты. */
+/* Несколько обложек — колонка без горизонтального скролла */
+.project-case-study-mail .hero__media--stack {
     position: relative;
     inset: auto;
     display: flex;
-    flex-flow: row nowrap;
+    flex-direction: column;
     align-items: stretch;
-    gap: 0;
+    gap: clamp(0.75rem, 2vw, 1rem);
     width: 100%;
     height: auto;
     max-height: none;
     min-height: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    overscroll-behavior-y: none;
-    touch-action: pan-x;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
+    aspect-ratio: unset;
+    overflow: hidden;
+    overflow-x: hidden;
+    touch-action: pan-y;
 }
-.project-case-study-mail .hero__media--carousel::-webkit-scrollbar {
-    height: 0.3125rem;
-}
-.project-case-study-mail .hero__media--carousel::-webkit-scrollbar:vertical {
-    display: none;
-    width: 0;
-}
-.project-case-study-mail .hero__media--carousel::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.22);
-    border-radius: var(--radius-full);
-}
-.project-case-study-mail .hero__media--carousel img {
+.project-case-study-mail .hero__media--stack img {
     position: relative;
-    flex: 0 0 100%;
-    align-self: stretch;
+    flex: 0 0 auto;
     width: 100%;
-    min-width: 100%;
     max-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    min-height: 0;
+    min-width: 0;
+    height: auto;
     aspect-ratio: var(--project-hero-aspect-w) / var(--project-hero-aspect-h);
     object-fit: cover;
     object-position: center;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    border-radius: var(--project-hero-radius);
 }
 .project-case-study-mail .hero-placeholder {
     width: 100%;
@@ -8395,12 +8593,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 }
 
-/* Figma 1-525 — Страница проекта: контейнер, отступы, сетка */
+/* Figma 1-525 — Страница проекта: padding-x теперь даёт .main (14px), здесь только вертикали */
 .project-page-wrap {
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: var(--project-page-padding-y) var(--project-page-padding-x) var(--project-page-padding-bottom);
+    padding: var(--project-page-padding-y) 0 var(--project-page-padding-bottom);
     display: flex;
     flex-direction: column;
     gap: var(--project-page-gap);
@@ -11056,9 +11254,8 @@ p + p {
     box-sizing: border-box;
 }
 
-.main,
-.hero,
-.project-page {
+/* gutter страницы — единая точка в .main, чтобы не получалось двойного offset'а */
+.main {
     padding-left: var(--layout-edge-left);
     padding-right: var(--layout-edge-right);
 }
@@ -11319,7 +11516,7 @@ p + p {
 /* Figma 420:21377 Image Preview (= компонент 1:231): окно превью в hero */
 .hero__card .preview-card-block {
     width: 100%;
-    max-width: 23.0625rem;
+    max-width: var(--hero-card-width);
     aspect-ratio: 369 / 280;
     height: auto;
     min-height: 0;
@@ -11592,14 +11789,6 @@ canvas {
         gap: clamp(2rem, 6vw, 2.75rem);
     }
 
-    .projects-page__group-title {
-        font-size: clamp(1.25rem, 4.5vw, 1.5rem);
-    }
-
-    .projects-page__group-intro {
-        font-size: clamp(1.0625rem, 3.8vw, 1.25rem);
-    }
-
     /* Кейс-секция — section title ramp */
     .project-case-study-mail .section h2,
     .project-case-study-mail .dual-outcomes__title {
@@ -11725,7 +11914,7 @@ canvas {
     }
 
     .hero__card .preview-card-block {
-        max-width: min(18.75rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 1rem));
+        max-width: min(var(--hero-card-width), calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 1rem));
     }
 
     .hero__card .preview-card-block--mac-window .preview-card-block__title {

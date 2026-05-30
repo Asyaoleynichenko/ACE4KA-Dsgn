@@ -1,8 +1,9 @@
-import ProjectCard from '../components/ProjectCard';
 import FilterPills from '../components/FilterPills';
+import ProjectsBentoGrid from '../components/ProjectsBentoGrid';
 import { useI18n } from '../i18n/I18nProvider.jsx';
-import { tWithFallback } from '../i18n/tWithFallback.js';
 import { CASE_STUDY_PAGE_GROUPS, projects } from '../data/projects';
+
+const PROJECTS_PAGE_SLUGS = CASE_STUDY_PAGE_GROUPS.flatMap((group) => group.slugs);
 
 function projectBySlug(slug) {
   return projects.find((p) => p.slug === slug);
@@ -27,34 +28,12 @@ export default function ProjectsPage() {
         <FilterPills />
       </div>
 
-      <div className="projects-page__groups">
-        {CASE_STUDY_PAGE_GROUPS.map((group) => (
-          <section key={group.id} className="projects-page__group" aria-labelledby={`projects-group-${group.id}`}>
-            <h2 id={`projects-group-${group.id}`} className="projects-page__group-title">
-              {t(`projectsPage.groups.${group.id}.title`)}
-            </h2>
-            <p className="projects-page__group-intro">{t(`projectsPage.groups.${group.id}.intro`)}</p>
-            <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">
-              {group.slugs.map((slug) => {
-                const p = projectBySlug(slug);
-                if (!p) return null;
-                return (
-                  <ProjectCard
-                    key={slug}
-                    slug={slug}
-                    title={tWithFallback(t, `projects.cards.${slug}.title`, p.title)}
-                    meta={tWithFallback(t, `projects.cards.${slug}.meta`, p.meta)}
-                    desc={tWithFallback(t, `projects.cards.${slug}.desc`, p.desc)}
-                    image={p.cardImage ?? p.image}
-                    video={p.video}
-                    isDemo={false}
-                  />
-                );
-              })}
-            </div>
-          </section>
-        ))}
-      </div>
+      <ProjectsBentoGrid
+        slugs={PROJECTS_PAGE_SLUGS}
+        resolveProject={projectBySlug}
+        data-node-id="1:297"
+        data-figma-node="1-297"
+      />
     </div>
   );
 }

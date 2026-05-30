@@ -21,8 +21,8 @@ if (missing.length > 0) {
   console.error('    npm install\n');
   console.error('  Если ошибка повторяется:\n');
   console.error('    rm -rf node_modules && npm install\n');
-  console.error('  Затем: npm run dev  →  в терминале смотрите строку «Local» (порт часто 5174,');
-  console.error('  при занятом порту Vite выберет 5175, 5176 и т.д.).\n');
+  console.error('  Затем: npm run dev  →  в терминале смотрите строку «Local» (порт часто 5173,');
+  console.error('  при занятом порту Vite выберет 5174, 5175 и т.д.).\n');
   console.error(
     '  Обход проверки (редко): npm run dev --ignore-scripts\n',
   );

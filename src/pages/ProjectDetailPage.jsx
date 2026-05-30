@@ -347,7 +347,7 @@ export default function ProjectDetailPage() {
           <section className="hero" id={`case-${project.slug}-hero`}>
             {heroImages.length ? (
               <div
-                className={`hero__media${heroImages.length > 1 ? ' hero__media--carousel' : ''}`}
+                className={`hero__media${heroImages.length > 1 ? ' hero__media--stack' : ''}`}
                 aria-label={displayTitle}
               >
                 {heroImages.map((src, index) => (
@@ -358,8 +358,8 @@ export default function ProjectDetailPage() {
                       else if (el) el.style.removeProperty('view-transition-name');
                     }}
                     src={publicUrl(src)}
-                    alt={index === heroImages.length - 1 ? displayTitle : ''}
-                    aria-hidden={index === heroImages.length - 1 ? undefined : 'true'}
+                    alt={index === 0 ? displayTitle : ''}
+                    aria-hidden={index === 0 ? undefined : 'true'}
                     decoding="async"
                     loading={index === 0 ? 'eager' : 'lazy'}
                     fetchpriority={index === 0 ? 'high' : 'auto'}

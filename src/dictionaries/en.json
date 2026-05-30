@@ -117,6 +117,7 @@
   },
   "projectsPage": {
     "title": "All projects",
+    "emptyFilter": "No projects match this filter yet.",
     "groups": {
       "product": {
         "title": "Product work",
