@@ -1,5 +1,4 @@
 import { lazy, Suspense } from 'react';
-import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import IconAssembleFromDots from '../components/IconAssembleFromDots.jsx';
@@ -88,10 +87,9 @@ export default function HomePage() {
             <nav className="section-nav section-nav--home section-nav--overlay" aria-label={t('hero.sectionNavAria')}>
               <div className="header-items header-items--figma">
                 {headerItemsFolder.map(({ nodeId, labelKey, iconKey, to, placement }, fi) => {
-                  const FolderLink = to === '/projects' ? SeamlessProjectsLink : Link;
                   const { strength, range } = folderFloatProps(fi);
                   return (
-                    <FolderLink
+                    <SeamlessProjectsLink
                       key={nodeId}
                       to={localizedPath(to)}
                       className="header-item header-item--folder"
@@ -113,14 +111,14 @@ export default function HomePage() {
                       <span className="header-item__label">
                         <span className="text-condensed">{t(labelKey)}</span>
                       </span>
-                    </FolderLink>
+                    </SeamlessProjectsLink>
                   );
                 })}
                 {headerItemsWell.map(({ nodeId, labelKey, iconKey, to, placement }, wi) => {
                   /* image-well индексируем со сдвигом, чтобы их вариации НЕ совпадали с фолдерами */
                   const { strength, range } = folderFloatProps(wi + 3);
                   return (
-                  <Link
+                  <SeamlessProjectsLink
                     key={nodeId}
                     to={localizedPath(to)}
                     className="header-item header-item--image-well"
@@ -142,7 +140,7 @@ export default function HomePage() {
                     <span className="header-item__label">
                       <span className="text-condensed">{t(labelKey)}</span>
                     </span>
-                  </Link>
+                  </SeamlessProjectsLink>
                   );
                 })}
               </div>
@@ -170,12 +168,12 @@ export default function HomePage() {
               <p className="hero-text">
                 {t('hero.text')}
               </p>
-              <Link to={localizedPath('/about')} className="hero-more hero-more--with-icon">
+              <SeamlessProjectsLink to={localizedPath('/about')} className="hero-more hero-more--with-icon">
                 <span className="hero-more__text">
                   <span className="text-condensed">{t('hero.moreAbout')}</span>
                 </span>
                 <DotIcon name="dot-chevron-right" size={24} className="hero-more__chevron-icon" />
-              </Link>
+              </SeamlessProjectsLink>
             </div>
             <div className="hero-about__meta">
               <div className="info-grid">
@@ -214,9 +212,9 @@ export default function HomePage() {
                 {heroLinks.map(({ href, label, labelKey }, index) => {
                   const linkLabel = labelKey ? t(labelKey) : label;
                   const linkEl = href.startsWith('/') ? (
-                    <Link key={href} to={localizedPath(href)}>
+                    <SeamlessProjectsLink key={href} to={localizedPath(href)}>
                       <span className="text-condensed">{linkLabel}</span>
-                    </Link>
+                    </SeamlessProjectsLink>
                   ) : (
                     <a key={href} href={href} target="_blank" rel="noopener noreferrer">
                       <span className="text-condensed">{linkLabel}</span>

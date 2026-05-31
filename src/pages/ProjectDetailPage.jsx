@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import SmartLink from '../components/SeamlessProjectsLink.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import {
   getLocalizedCaseStudyIntroParas,
@@ -395,7 +396,7 @@ export default function ProjectDetailPage() {
                     return (
                       <Fragment key={relatedSlug}>
                         {idx > 0 ? ' · ' : null}
-                        <Link to={localizedPath(`/projects/${relatedSlug}`)}>{label}</Link>
+                        <SmartLink to={localizedPath(`/projects/${relatedSlug}`)}>{label}</SmartLink>
                       </Fragment>
                     );
                   })}

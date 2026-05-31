@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
@@ -55,14 +55,14 @@ export function Navigation() {
           </SeamlessProjectsLink>
         </li>
         <li>
-          <Link to={localizedPath(`/project/${currentSlug}`)} className="nav-link active" aria-current="page">
+          <SeamlessProjectsLink to={localizedPath(`/project/${currentSlug}`)} className="nav-link active" aria-current="page">
             <span className="text-condensed--single-line">{currentTitle}</span>
-          </Link>
+          </SeamlessProjectsLink>
         </li>
         <li>
-          <Link to={localizedPath(`/project/${nextSlug}`)} className="nav-link">
+          <SeamlessProjectsLink to={localizedPath(`/project/${nextSlug}`)} className="nav-link">
             <span className="text-condensed--single-line">{nextTitle}</span>
-          </Link>
+          </SeamlessProjectsLink>
         </li>
       </ul>
     );
@@ -74,16 +74,15 @@ export function Navigation() {
         const label = t(labelKey);
         const active = itemIsActive(pathname, path);
         const to = localizedPath(path);
-        const NavItem = path === '/projects' ? SeamlessProjectsLink : Link;
         return (
           <li key={path}>
-            <NavItem
+            <SeamlessProjectsLink
               to={to}
               className={`nav-link${active ? ' active' : ''}`}
               data-node-id={path === '/projects' ? '573-20954' : path === '/' ? '573-20958' : '573-20956'}
             >
               <span className="text-condensed--single-line">{label}</span>
-            </NavItem>
+            </SeamlessProjectsLink>
           </li>
         );
       })}

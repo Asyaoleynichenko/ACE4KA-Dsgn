@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import SeamlessProjectsLink from './SeamlessProjectsLink.jsx';
 
@@ -55,24 +54,15 @@ export default function Footer({ snapScreen = false }) {
                   const linkClass = 'site-footer__link';
 
                   if (isInternal) {
-                    if (href === '/projects') {
-                      return (
-                        <li key={nodeId} className="site-footer__item">
-                          <SeamlessProjectsLink
-                            to={localizedPath(href)}
-                            className={linkClass}
-                            data-node-id={nodeId}
-                          >
-                            <span className="text-condensed">{label}</span>
-                          </SeamlessProjectsLink>
-                        </li>
-                      );
-                    }
                     return (
                       <li key={nodeId} className="site-footer__item">
-                        <Link to={localizedPath(href)} className={linkClass} data-node-id={nodeId}>
+                        <SeamlessProjectsLink
+                          to={localizedPath(href)}
+                          className={linkClass}
+                          data-node-id={nodeId}
+                        >
                           <span className="text-condensed">{label}</span>
-                        </Link>
+                        </SeamlessProjectsLink>
                       </li>
                     );
                   }

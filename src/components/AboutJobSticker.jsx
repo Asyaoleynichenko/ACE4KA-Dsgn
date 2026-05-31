@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import SmartLink from './SeamlessProjectsLink.jsx';
 import Sticker from '../vendor/sticker.js';
 
 export default function AboutJobSticker({
@@ -45,7 +45,7 @@ export default function AboutJobSticker({
       <div ref={rootRef} className={`sticker about-job__sticker ${className}`.trim()}>
         {children}
       </div>
-      <Link
+      <SmartLink
         ref={peelRef}
         className="about-job__peel-link"
         to={projectPath}

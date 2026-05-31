@@ -383,9 +383,10 @@
   --project-ext-link-color: #0a0a0a;
   --Text-Secondary: var(--color-preview-titlebar-text);
 
+  /* Заголовки страниц по шаблону 89-756: алиасы единого section-title скейла */
   --text-89-756-title-font-size: var(--type-section-title-size);
-  --text-89-756-title-line-height: 1.25;
-  --text-89-756-title-letter-spacing: -0.02em;
+  --text-89-756-title-line-height: var(--type-section-title-line);
+  --text-89-756-title-letter-spacing: var(--type-section-title-tracking);
   --text-89-756-title-color: #0a0a0a;
   --text-89-756-lead-font-size: var(--type-body-lg-size);
   --text-89-756-lead-line-height: 1.5;
@@ -4701,12 +4702,17 @@ h3 {
     max-width: 100%;
 }
 
-/* На главной превью идёт «без оправы»: ни фона, ни скруглений у карточек/обложек */
+/* Превью-карточки везде «без оправы»: ни фона, ни скруглений (главная + /projects bento) */
 .home-page .section.section-projects .preview-card,
 .home-page .section.section-projects .preview-image,
 .home-page .section.section-projects .preview-image img,
 .home-page .section.section-projects .preview-image video,
-.home-page .section.section-projects .preview-image__placeholder {
+.home-page .section.section-projects .preview-image__placeholder,
+.page-projects .preview-bento .preview-card,
+.page-projects .preview-bento .preview-image,
+.page-projects .preview-bento .preview-image img,
+.page-projects .preview-bento .preview-image video,
+.page-projects .preview-bento .preview-image__placeholder {
     background: transparent;
     border-radius: 0;
 }
@@ -4737,14 +4743,14 @@ h3 {
     margin-bottom: var(--space-48);
 }
 
-/* Figma 1:399 / 89:346 — «Все проекты»: колонка до 84.875rem, padding-x даёт .main, здесь не дублируем */
+/* «Все проекты»: тянем wrap на всю доступную ширину — bento получает full-width в пределах .main 14px gutter */
 .page-projects__wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--space-48);
     width: 100%;
-    max-width: 84.875rem;
+    max-width: none;
     margin-left: auto;
     margin-right: auto;
     box-sizing: border-box;
@@ -4766,23 +4772,19 @@ h3 {
     margin-top: 0;
 }
 
-/* Bento-сетка проектов: edge-to-edge, без max-width родителя (.page-projects__wrap ограничен 84.875rem — пробиваем) */
+/* Bento-сетка проектов: 14px gutter даёт .main, здесь только сетка.
+   Варианты ячеек 1×1 / 2×1 / 1×2 / 2×2 (Apple-style); image cover-кропом под форму. */
 .page-projects .preview-bento {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-flow: dense;
-    grid-auto-rows: auto;
-    /* 16:9 приоритетнее, чем «низ ряда выровнен» — высоту ячеек определяет картинка */
-    align-items: start;
+    grid-auto-rows: clamp(11rem, 22vw, 18rem);
+    align-items: stretch;
     margin-top: var(--space-24);
-    /* break out of .page-projects__wrap max-width: 84.875rem */
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
-    padding-inline: var(--layout-edge-left);
+    width: 100%;
     box-sizing: border-box;
     column-gap: var(--space-16);
     row-gap: var(--space-16);
-    /* контейнер для метаболл-перехода */
     position: relative;
     isolation: isolate;
 }
@@ -4825,17 +4827,19 @@ h3 {
     will-change: auto;
 }
 
-/* Bento: квадратные ячейки 1×1 + 2×2 (feature/solo/duo-primary). Источник image — 16:9,
-   в ячейке object-fit: cover. Текст накладывается поверх с градиентом — нет пустот. */
+/* Bento: ячейки могут быть 1×1, 2×1 (wide), 1×2 (tall), 2×2 (feature) — grid-auto-flow:dense
+   пакует без пустот. Внутри ячейки image заполняет cover, текст всегда снизу под картинкой. */
 .page-projects .preview-bento__cell {
-    display: block;
+    display: flex;
     min-width: 0;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-    position: relative;
 }
 
+.page-projects .preview-bento__cell > .preview-card {
+    width: 100%;
+    height: 100%;
+}
+
+/* Bento-варианты: ширина И высота. dense-packing закрывает дыры между ними. */
 .page-projects .preview-bento__cell--feature,
 .page-projects .preview-bento__cell--solo,
 .page-projects .preview-bento__cell--duo-primary {
@@ -4843,105 +4847,40 @@ h3 {
     grid-row: span 2;
 }
 
-.page-projects .preview-bento__cell > .preview-card {
-    width: 100%;
-    height: 100%;
-    display: block;
+.page-projects .preview-bento__cell--wide {
+    grid-column: span 2;
 }
 
+.page-projects .preview-bento__cell--tall {
+    grid-row: span 2;
+}
+
+/* Image fill-ит ячейку (object-fit: cover), без фиксированного 16:9 — исходник остаётся 16:9 */
 .page-projects .preview-bento .preview-card__link {
-    position: relative;
-    display: block;
-    width: 100%;
     height: 100%;
-    padding: 0;
-    border-radius: inherit;
 }
 
-/* Картинка заполняет всю ячейку, обрезаясь по cover */
 .page-projects .preview-bento .preview-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    flex: 1 1 auto;
     aspect-ratio: auto;
     min-height: 0;
-    flex: none;
-    border-radius: inherit;
-    overflow: hidden;
 }
 
 .page-projects .preview-bento .preview-image img,
 .page-projects .preview-bento .preview-image video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
     object-fit: cover;
     object-position: center;
 }
 
-/* Текст скрыт по умолчанию, проявляется при hover/focus поверх изображения с градиентом */
 .page-projects .preview-bento .preview-card__body {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-    padding: var(--space-16);
-    padding-top: var(--space-48);
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.78) 60%, rgba(0, 0, 0, 0.92) 100%);
-    border-radius: 0;
-    color: var(--color-text);
-    opacity: 0;
-    transform: translateY(6%);
-    transition:
-        opacity var(--dur-smart-base) var(--ease-smart),
-        transform var(--dur-smart-base) var(--ease-smart);
-    pointer-events: none;
+    flex: 0 0 auto;
 }
 
-.page-projects .preview-bento .preview-card__link:hover .preview-card__body,
-.page-projects .preview-bento .preview-card__link:focus-visible .preview-card__body,
-.page-projects .preview-bento .preview-card__link:focus-within .preview-card__body {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-@media (hover: none) {
-    /* На тач-устройствах оставляем текст видимым (hover недоступен) */
-    .page-projects .preview-bento .preview-card__body {
-        opacity: 1;
-        transform: none;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .page-projects .preview-bento .preview-card__body {
-        transition: none;
-        transform: none;
-    }
-}
-
-.page-projects .preview-bento .preview-card__title,
-.page-projects .preview-bento .preview-card__meta,
-.page-projects .preview-bento .preview-card__desc {
-    color: var(--color-text);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-.page-projects .preview-bento .preview-card__meta {
-    opacity: 0.72;
-}
-
-.page-projects .preview-bento .preview-card__desc {
-    opacity: 0.86;
-}
-
-/* Крупные ячейки 2×2 — заголовок крупнее */
+/* Крупные ячейки 2×2 и wide — заголовок чуть крупнее */
 .page-projects .preview-bento__cell--feature .preview-card__title,
 .page-projects .preview-bento__cell--solo .preview-card__title,
-.page-projects .preview-bento__cell--duo-primary .preview-card__title {
+.page-projects .preview-bento__cell--duo-primary .preview-card__title,
+.page-projects .preview-bento__cell--wide .preview-card__title {
     font-size: clamp(1.5rem, 1.6vw + 1rem, 2rem);
     line-height: 1.15;
 }
@@ -4958,14 +4897,12 @@ h3 {
 @media (min-width: 48.0625rem) {
     .page-projects .preview-bento {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        grid-auto-rows: auto;
     }
 }
 
 @media (min-width: 64.0625rem) {
     .page-projects .preview-bento {
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        grid-auto-rows: auto;
     }
 }
 
@@ -6096,9 +6033,9 @@ h3 {
 .projects-list-nav {
     position: fixed;
     right: 1rem;
-    bottom: 1rem;
+    bottom: var(--projects-list-nav-bottom, 1rem);
     width: min(20rem, calc(100vw - 2rem));
-    max-height: 80vh;
+    max-height: min(80vh, calc(100dvh - var(--projects-list-nav-bottom, 1rem) - 1.5rem));
     z-index: 80;
     padding: 0;
     box-sizing: border-box;
@@ -6232,9 +6169,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 @media (max-width: 40rem) {
     .projects-list-nav {
         right: 0.5rem;
-        bottom: 0.5rem;
         width: min(18rem, calc(100vw - 1rem));
-        max-height: 60vh;
+        max-height: min(60vh, calc(100dvh - var(--projects-list-nav-bottom, 0.5rem) - 1rem));
         padding: 0.5rem;
     }
 }
@@ -10459,20 +10395,20 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .project-page-wrap--layout-89 .page-header h1 {
     font-family: var(--font-display);
-    font-size: clamp(2.25rem, 4.2vw, 3.25rem);
+    font-size: var(--type-section-title-size);
     font-weight: var(--font-weight-semibold);
-    line-height: 1.04;
-    letter-spacing: -0.02em;
+    line-height: var(--type-section-title-line);
+    letter-spacing: var(--type-section-title-tracking);
     text-transform: uppercase;
     margin-bottom: var(--space-20);
     color: var(--color-text-primary);
 }
 
 .project-page-wrap--layout-89 .page-header p {
-    font-size: clamp(1.0625rem, 1.2vw, 1.125rem);
-    line-height: 1.68;
+    font-size: var(--type-body-lg-size);
+    line-height: var(--type-body-lg-line);
     letter-spacing: -0.01em;
-    color: rgba(245, 245, 245, 0.82);
+    color: var(--color-text-muted);
     max-width: var(--case-prose-max);
 }
 
@@ -11414,11 +11350,9 @@ p + p {
     border-top-color: var(--color-surface-border);
 }
 
-/* Mobile dark consistency pass */
+/* Mobile dark consistency pass — padding-x уже даёт .main, дочерним секциям не дублируем */
 @media (max-width: 56.25rem) {
-    .hero,
-    .main,
-    .project-page {
+    .main {
         padding-left: var(--layout-edge-left);
         padding-right: var(--layout-edge-right);
     }

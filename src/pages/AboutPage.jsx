@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { publicUrl } from '../utils/publicUrl.js';
 import AboutJobCard from '../components/AboutJobCard.jsx';
+import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 
 const ABOUT_FIGMA_URL =
   'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=743-16866&m=dev';
@@ -28,9 +28,9 @@ function AboutLinkRow({ localizedPath, t }) {
       {aboutLinks.map(({ href, labelKey }, index) => {
         const label = t(labelKey);
         const linkEl = href.startsWith('/') ? (
-          <Link key={href} to={localizedPath(href)}>
+          <SeamlessProjectsLink key={href} to={localizedPath(href)}>
             <span className="text-condensed">{label}</span>
-          </Link>
+          </SeamlessProjectsLink>
         ) : (
           <a key={href} href={href} target="_blank" rel="noopener noreferrer">
             <span className="text-condensed">{label}</span>

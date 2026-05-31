@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import SmartLink from './SeamlessProjectsLink.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import LanguageSwitcher from './LanguageSwitcher.jsx';
 import { Navigation } from './Navigation';
@@ -53,9 +54,14 @@ export default function Header() {
       data-figma-node="573-18422"
     >
       <nav className="nav" aria-label={t('header.navListAria')}>
-        <Link to={localizedPath('/')} className="logo" data-node-id="573-20950">
+        <SmartLink
+          to={localizedPath('/')}
+          className="logo"
+          data-node-id="573-20950"
+          style={{ viewTransitionName: 'site-logo' }}
+        >
           <span className="text-condensed--single-line">{t('common.brandName')}</span>
-        </Link>
+        </SmartLink>
         <Navigation />
         <span className="lang-switch" data-node-id="573-20952">
           <LanguageSwitcher />
