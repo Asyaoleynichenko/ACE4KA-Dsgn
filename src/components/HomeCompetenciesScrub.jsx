@@ -109,6 +109,7 @@ export default function HomeCompetenciesScrub({
           desc={tWithFallback(t, `projects.cards.${item.slug}.desc`, item.desc)}
           image={item.image}
           isDemo={false}
+          variant="overlay"
         />
       </div>
     ) : null;

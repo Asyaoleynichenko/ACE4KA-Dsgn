@@ -8,29 +8,29 @@ import { projectMatchesFilter } from '../data/projectFilterTags.js';
 import { getBentoCellClass } from '../utils/projectsBentoLayout.js';
 import { SMART_EASE } from '../motion/smartAnimate.js';
 
-const MORPH_DURATION_MS = 820;
+const MORPH_DURATION_MS = 960;
 const GOO_FILTER_ID = 'bento-goo';
 
 const cellVariants = {
-  initial: { opacity: 0, scale: 0.34, borderRadius: '50%' },
+  initial: { opacity: 0, scale: 0.2, borderRadius: '48%' },
   enter: {
     opacity: 1,
     scale: 1,
     borderRadius: '1rem',
     transition: {
-      opacity: { duration: 0.34, ease: SMART_EASE },
-      scale: { type: 'spring', stiffness: 240, damping: 20, mass: 0.95 },
-      borderRadius: { duration: 0.52, ease: SMART_EASE },
+      opacity: { duration: 0.38, ease: SMART_EASE },
+      scale: { type: 'spring', stiffness: 200, damping: 22, mass: 1 },
+      borderRadius: { duration: 0.62, ease: SMART_EASE },
     },
   },
   exit: {
     opacity: 0,
-    scale: 0.28,
+    scale: 0.15,
     borderRadius: '50%',
     transition: {
-      opacity: { duration: 0.28, ease: [0.55, 0, 0.7, 0.2], delay: 0.16 },
-      scale: { duration: 0.42, ease: [0.55, 0, 0.7, 0.2] },
-      borderRadius: { duration: 0.32, ease: SMART_EASE },
+      opacity: { duration: 0.32, ease: [0.55, 0, 0.75, 0.15] },
+      scale: { duration: 0.5, ease: [0.55, 0, 0.75, 0.15] },
+      borderRadius: { duration: 0.4, ease: SMART_EASE },
     },
   },
 };
@@ -116,6 +116,15 @@ export default function ProjectsBentoGrid({ slugs, resolveProject, className = '
         </defs>
       </svg>
 
+      <div
+        className={[
+          'preview-bento__cells',
+          isMorphing && !reduceMotion ? 'is-goo' : '',
+          visibleSlugs.length > 0 && visibleSlugs.length !== 10 ? 'is-compact' : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
       <AnimatePresence mode="popLayout" initial={false}>
         {/* Метаболл-wash поверх сетки — только во время смены фильтра. */}
         {isMorphing && !reduceMotion ? (
@@ -160,7 +169,7 @@ export default function ProjectsBentoGrid({ slugs, resolveProject, className = '
         {visibleSlugs.map((slug, index) => {
           const p = resolveProject(slug);
           if (!p) return null;
-          const cellClass = getBentoCellClass(index, visibleSlugs.length);
+          const cellClass = getBentoCellClass(index, visibleSlugs.length, slug);
           return (
             <motion.div
               key={slug}
@@ -173,7 +182,7 @@ export default function ProjectsBentoGrid({ slugs, resolveProject, className = '
               animate={reduceMotion ? undefined : 'enter'}
               exit={reduceMotion ? undefined : 'exit'}
               transition={reduceMotion ? undefined : { layout: layoutTransition }}
-              style={{ transformOrigin: 'center center' }}
+              style={{ transformOrigin: 'center center', borderRadius: '1rem' }}
             >
               <ProjectCard
                 slug={slug}
@@ -183,14 +192,16 @@ export default function ProjectsBentoGrid({ slugs, resolveProject, className = '
                 image={p.cardImage ?? p.image}
                 video={p.video}
                 isDemo={false}
+                variant="overlay"
               />
             </motion.div>
           );
         })}
       </AnimatePresence>
-      {visibleSlugs.length === 0 ? (
-        <p className="preview-bento__empty">{t('projectsPage.emptyFilter')}</p>
-      ) : null}
+        {visibleSlugs.length === 0 ? (
+          <p className="preview-bento__empty">{t('projectsPage.emptyFilter')}</p>
+        ) : null}
+      </div>
     </motion.div>
   );
 }

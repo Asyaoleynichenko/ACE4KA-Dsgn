@@ -1,0 +1,1 @@
+import{j as t}from"./framer-motion-771cda1e.js";import{P as o}from"./Page89Layout-a2f94a59.js";import"./index-2416f2c6.js";import"./router-62993baa.js";import"./projects-data-876fb313.js";import"./lenis-0d08b761.js";import"./gsap-e6c30445.js";import"./publicUrl-9723462b.js";function g(){return t.jsx(o,{figmaId:"89-909",messageKey:"page89.89_909"})}export{g as default};

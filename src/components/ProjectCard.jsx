@@ -4,7 +4,7 @@ import { publicUrl } from '../utils/publicUrl.js';
 import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
 import { withViewTransition } from '../utils/withViewTransition.js';
 
-export default function ProjectCard({ slug, title, meta, desc, image, video, isDemo }) {
+export default function ProjectCard({ slug, title, meta, desc, image, video, isDemo, variant = 'default' }) {
   const { localizedPath } = useI18n();
   const navigate = useNavigate();
   const href = slug ? localizedPath(`/project/${slug}`) : localizedPath('/projects');
@@ -20,9 +20,17 @@ export default function ProjectCard({ slug, title, meta, desc, image, video, isD
     withViewTransition(() => navigate(href));
   };
 
+  const isOverlay = variant === 'overlay';
+  const linkLabel = isOverlay ? [title, meta, desc].filter(Boolean).join('. ') : undefined;
+
   return (
-    <article className="preview-card">
-      <Link to={href} className="preview-card__link" onClick={handleNavigate}>
+    <article className={`preview-card${isOverlay ? ' preview-card--overlay' : ''}`}>
+      <Link
+        to={href}
+        className="preview-card__link"
+        onClick={handleNavigate}
+        aria-label={linkLabel}
+      >
         <div className="preview-image">
           {videoSrc ? (
             <video
