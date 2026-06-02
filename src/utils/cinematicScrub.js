@@ -35,16 +35,13 @@ export function applyCinematicCardTransforms(
   inner,
   viewport,
   smoothX,
-  progress01 = 0,
-  velocityPx = 0,
+  _progress01 = 0,
+  _velocityPx = 0,
   exitP = 0,
 ) {
   const slides = inner.querySelectorAll(':scope > *');
-  if (!slides.length) return { mx: 0, step: 0 };
+  if (!slides.length) return { mx: 0 };
 
-  const slideW = slides[0].getBoundingClientRect().width;
-  const gap = parseFloat(getComputedStyle(inner).columnGap || getComputedStyle(inner).gap) || 0;
-  const step = slideW + gap;
   const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
 
   if (mx <= 1) {
@@ -56,7 +53,7 @@ export function applyCinematicCardTransforms(
       slide.style.zIndex = '';
       slide.style.pointerEvents = '';
     });
-    return { mx: 0, step };
+    return { mx: 0 };
   }
 
   const holdAtEnd = exitP > 0.004;
@@ -70,7 +67,7 @@ export function applyCinematicCardTransforms(
     slide.style.zIndex = '';
   });
 
-  return { mx, step };
+  return { mx };
 }
 
 export function resetCinematicCardTransforms(inner) {

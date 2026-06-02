@@ -25,7 +25,10 @@ export function useHomeCameraScroll(rootRef) {
     const world = root.querySelector('.home-world');
     if (!rail || !world) return undefined;
 
-    const targets = [root, world, rail];
+    // CSS custom properties наследуются: пишем сцену-переменные только на корень
+    // (.home-page--seamless), а .home-world / [data-camera-rail] читают их через var().
+    // Так на каждом кадре скролла одна запись вместо трёх на каждую переменную.
+    const targets = [root];
     const hero = rail.querySelector('[data-scene="hero"]');
     const competencies = rail.querySelector('[data-scene="competencies"]');
     const projects = rail.querySelector('[data-scene="projects"]');
