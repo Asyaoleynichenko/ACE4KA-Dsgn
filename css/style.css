@@ -4807,9 +4807,10 @@ h3 {
     margin-top: 0;
 }
 
-/* Bento-сетка: макет портфолио (hero 2×2, stack справа, banner, плитки), текст по hover. */
+/* Projects bento grid rewritten from scratch: clear hierarchy + dense packing. */
 .page-projects .preview-bento {
-    --bento-row-unit: clamp(12.5rem, 14.5vw, 17.25rem);
+    --bento-gap: clamp(0.5rem, 0.45vw + 0.4rem, 0.9rem);
+    --bento-row-unit: clamp(10.5rem, 34vw, 14rem);
     position: relative;
     display: block;
     width: 100%;
@@ -4827,10 +4828,10 @@ h3 {
 
 .page-projects .preview-bento__cells {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-auto-flow: dense;
-    grid-auto-rows: minmax(clamp(14rem, 52vw, 22rem), auto);
-    gap: var(--space-16);
+    grid-auto-rows: var(--bento-row-unit);
+    gap: var(--bento-gap);
     align-items: stretch;
     position: relative;
     z-index: 1;
@@ -4871,7 +4872,9 @@ h3 {
 .page-projects .preview-bento__cell {
     display: flex;
     min-width: 0;
-    min-height: clamp(14rem, 52vw, 22rem);
+    min-height: 0;
+    grid-column: span 1;
+    grid-row: span 1;
     border-radius: var(--radius-lg);
     overflow: hidden;
     background: #121214;
@@ -4908,7 +4911,10 @@ h3 {
 .page-projects .preview-bento .preview-card--overlay .preview-image img,
 .page-projects .preview-bento .preview-card--overlay .preview-image video {
     border-radius: inherit;
-    transition: transform 0.55s var(--ease-exhibition, cubic-bezier(0.22, 1, 0.36, 1));
+    transition:
+        transform 0.55s var(--ease-exhibition, cubic-bezier(0.22, 1, 0.36, 1)),
+        filter 0.42s var(--ease-exhibition, cubic-bezier(0.22, 1, 0.36, 1)),
+        opacity 0.42s var(--ease-exhibition, cubic-bezier(0.22, 1, 0.36, 1));
 }
 
 .page-projects .preview-bento .preview-card--overlay .preview-card__body {
@@ -4921,12 +4927,7 @@ h3 {
     gap: 0.35rem;
     padding: clamp(0.875rem, 2vw, 1.25rem);
     margin: 0;
-    background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0) 38%,
-        rgba(0, 0, 0, 0.55) 72%,
-        rgba(0, 0, 0, 0.88) 100%
-    );
+    background: transparent;
     opacity: 0;
     transform: translateY(0.35rem);
     transition:
@@ -4939,7 +4940,9 @@ h3 {
 .page-projects .preview-bento .preview-card--overlay:hover .preview-image video,
 .page-projects .preview-bento .preview-card--overlay:focus-within .preview-image img,
 .page-projects .preview-bento .preview-card--overlay:focus-within .preview-image video {
-    transform: scale(1.04);
+    transform: scale(1.035);
+    filter: blur(9px);
+    opacity: 1;
 }
 
 .page-projects .preview-bento .preview-card--overlay:hover .preview-card__body,
@@ -4959,13 +4962,15 @@ h3 {
 .page-projects .preview-bento .preview-card--overlay .preview-card__meta {
     font-size: 0.6875rem;
     line-height: 1.45;
-    opacity: 0.85;
+    color: #fff;
+    opacity: 1;
 }
 
 .page-projects .preview-bento .preview-card--overlay .preview-card__desc {
     font-size: 0.8125rem;
     line-height: 1.4;
-    opacity: 0.75;
+    color: #fff;
+    opacity: 1;
     -webkit-line-clamp: 2;
     line-clamp: 2;
 }
@@ -4980,122 +4985,182 @@ h3 {
 }
 
 .page-projects .preview-bento__cell[class*='preview-bento__cell--'] {
-    grid-column: 1 / -1;
-    grid-row: auto;
+    grid-column: span 1;
+    grid-row: span 1;
 }
 
-@media (min-width: 48.0625rem) {
-    .page-projects .preview-bento__cells {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-auto-rows: var(--bento-row-unit);
-        gap: var(--grid-row-gap) var(--grid-column-gap);
+/* Mobile: крупные приоритетные блоки */
+.page-projects .preview-bento__cell--hero,
+.page-projects .preview-bento__cell--feature,
+.page-projects .preview-bento__cell--solo,
+.page-projects .preview-bento__cell--duo-a {
+    grid-column: span 1;
+    grid-row: span 2;
+}
+
+@media (min-width: 37.5rem) {
+    .page-projects .preview-bento {
+        --bento-row-unit: clamp(11rem, 22vw, 15rem);
     }
 
-    .page-projects .preview-bento__cell[class*='preview-bento__cell--'] {
-        grid-column: auto;
-        grid-row: auto;
-        min-height: 0;
+    .page-projects .preview-bento__cells {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--bento-gap);
     }
 
     .page-projects .preview-bento__cell--hero,
+    .page-projects .preview-bento__cell--feature,
     .page-projects .preview-bento__cell--solo,
     .page-projects .preview-bento__cell--duo-a {
         grid-column: span 2;
         grid-row: span 2;
     }
 
+    .page-projects .preview-bento__cell--stack-a,
+    .page-projects .preview-bento__cell--stack-b,
     .page-projects .preview-bento__cell--banner,
-    .page-projects .preview-bento__cell--duo-b,
-    .page-projects .preview-bento__cell--stack-b {
+    .page-projects .preview-bento__cell--duo-b {
         grid-column: span 2;
+        grid-row: span 1;
+    }
+
+    .page-projects .preview-bento__cells:not(.is-compact) {
+        grid-template-areas:
+            'bento-hero bento-hero'
+            'bento-hero bento-hero'
+            'bento-stack-a bento-stack-b'
+            'bento-feature bento-feature'
+            'bento-banner bento-banner'
+            'bento-mid-a bento-mid-b'
+            'bento-tile-1 bento-tile-2'
+            'bento-tile-3 bento-tile-3';
+    }
+
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--hero { grid-area: bento-hero; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--stack-a { grid-area: bento-stack-a; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--stack-b { grid-area: bento-stack-b; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--feature { grid-area: bento-feature; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--banner { grid-area: bento-banner; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--mid-a { grid-area: bento-mid-a; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--mid-b { grid-area: bento-mid-b; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-1 { grid-area: bento-tile-1; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-2 { grid-area: bento-tile-2; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-3 { grid-area: bento-tile-3; }
+
+    .page-projects .preview-bento__cell--mid-a,
+    .page-projects .preview-bento__cell--mid-b,
+    .page-projects .preview-bento__cell--tile-1,
+    .page-projects .preview-bento__cell--tile-2,
+    .page-projects .preview-bento__cell--tile-3,
+    .page-projects .preview-bento__cell--tile-4 {
+        grid-column: span 1;
+        grid-row: span 1;
     }
 }
 
 @media (min-width: 64.0625rem) {
     .page-projects .preview-bento {
-        --bento-row-unit: clamp(12.75rem, 13.75vw, 17.5rem);
+        --bento-row-unit: clamp(12rem, 13vw, 16rem);
     }
 
+    /* Desktop: 2 колонки — минимум 50% ширины, без узких «полос». */
     .page-projects .preview-bento__cells {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        grid-template-rows: repeat(4, var(--bento-row-unit));
-        grid-auto-rows: var(--bento-row-unit);
-        gap: var(--grid-row-gap) var(--grid-column-gap);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    /* Полный макет (10 карточек, «Всё») — как в Figma: hero | stack, mid | banner, tiles. */
+    .page-projects .preview-bento__cell[class*='preview-bento__cell--'] {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+
+    .page-projects .preview-bento__cell--hero,
+    .page-projects .preview-bento__cell--feature,
+    .page-projects .preview-bento__cell--solo,
+    .page-projects .preview-bento__cell--duo-a,
+    .page-projects .preview-bento__cell--banner,
+    .page-projects .preview-bento__cell--duo-b {
+        grid-column: span 2;
+    }
+
+    .page-projects .preview-bento__cell--hero,
+    .page-projects .preview-bento__cell--feature,
+    .page-projects .preview-bento__cell--solo,
+    .page-projects .preview-bento__cell--duo-a {
+        grid-row: span 2;
+    }
+
+    .page-projects .preview-bento__cell--stack-a,
+    .page-projects .preview-bento__cell--stack-b,
+    .page-projects .preview-bento__cell--mid-a,
+    .page-projects .preview-bento__cell--mid-b,
+    .page-projects .preview-bento__cell--tile-1,
+    .page-projects .preview-bento__cell--tile-2,
+    .page-projects .preview-bento__cell--tile-3 {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+
+    .page-projects .preview-bento__cell--tile-3 {
+        grid-column: span 2;
+    }
+
+    /* Полный набор (10): приоритетные кейсы крупно, без одноколоночных щелей. */
     .page-projects .preview-bento__cells:not(.is-compact) {
         grid-template-areas:
-            'bento-hero bento-hero bento-stack-a bento-stack-a'
-            'bento-hero bento-hero bento-stack-b bento-stack-b'
-            'bento-mid-a bento-mid-b bento-banner bento-banner'
-            'bento-tile-1 bento-tile-2 bento-tile-3 bento-tile-4';
+            'bento-hero bento-hero'
+            'bento-hero bento-hero'
+            'bento-stack-a bento-stack-b'
+            'bento-feature bento-feature'
+            'bento-feature bento-feature'
+            'bento-banner bento-banner'
+            'bento-mid-a bento-mid-b'
+            'bento-tile-1 bento-tile-2'
+            'bento-tile-3 bento-tile-3';
     }
 
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--hero {
-        grid-area: bento-hero;
-    }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--hero { grid-area: bento-hero; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--stack-a { grid-area: bento-stack-a; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--stack-b { grid-area: bento-stack-b; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--feature { grid-area: bento-feature; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--banner { grid-area: bento-banner; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--mid-a { grid-area: bento-mid-a; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--mid-b { grid-area: bento-mid-b; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-1 { grid-area: bento-tile-1; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-2 { grid-area: bento-tile-2; }
+    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-3 { grid-area: bento-tile-3; }
 
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--stack-a {
-        grid-area: bento-stack-a;
-    }
-
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--stack-b {
-        grid-area: bento-stack-b;
-    }
-
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--mid-a {
-        grid-area: bento-mid-a;
-    }
-
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--mid-b {
-        grid-area: bento-mid-b;
-    }
-
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--banner {
-        grid-area: bento-banner;
-    }
-
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-1 {
-        grid-area: bento-tile-1;
-    }
-
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-2 {
-        grid-area: bento-tile-2;
-    }
-
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-3 {
-        grid-area: bento-tile-3;
-    }
-
-    .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--tile-4 {
-        grid-area: bento-tile-4;
-    }
-
-    /* При фильтре — dense без пустых слотов макета. */
-    .page-projects .preview-bento__cells.is-compact {
-        grid-template-areas: none;
-        grid-template-rows: none;
-    }
-
+    /* Фильтры: только крупные блоки (минимум половина ширины). */
     .page-projects .preview-bento__cells.is-compact .preview-bento__cell[class*='preview-bento__cell--'] {
         grid-area: auto;
-        grid-column: auto;
-        grid-row: auto;
+        grid-column: span 1;
+        grid-row: span 1;
     }
 
     .page-projects .preview-bento__cells.is-compact .preview-bento__cell--hero,
     .page-projects .preview-bento__cells.is-compact .preview-bento__cell--solo,
-    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--duo-a {
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--duo-a,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--feature,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--banner,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--duo-b {
         grid-column: span 2;
+    }
+
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--hero,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--solo,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--duo-a,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--feature {
         grid-row: span 2;
     }
 
-    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--banner,
-    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--duo-b,
     .page-projects .preview-bento__cells.is-compact .preview-bento__cell--stack-a,
-    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--stack-b {
-        grid-column: span 2;
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--stack-b,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--mid-a,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--mid-b,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--tile-1,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--tile-2,
+    .page-projects .preview-bento__cells.is-compact .preview-bento__cell--tile-3 {
+        grid-column: span 1;
+        grid-row: span 1;
     }
 }
 

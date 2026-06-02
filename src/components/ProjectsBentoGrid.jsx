@@ -5,7 +5,7 @@ import ProjectCard from './ProjectCard.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import { projectMatchesFilter } from '../data/projectFilterTags.js';
-import { getBentoCellClass } from '../utils/projectsBentoLayout.js';
+import { getBentoLayoutClassMap } from '../utils/projectsBentoLayout.js';
 import { SMART_EASE } from '../motion/smartAnimate.js';
 
 const MORPH_DURATION_MS = 960;
@@ -66,6 +66,11 @@ export default function ProjectsBentoGrid({ slugs, resolveProject, className = '
   const visibleSlugs = useMemo(
     () => slugs.filter((slug) => projectMatchesFilter(slug, filter)),
     [slugs, filter],
+  );
+
+  const bentoClassMap = useMemo(
+    () => getBentoLayoutClassMap(visibleSlugs),
+    [visibleSlugs],
   );
 
   /* «is-morphing» висит на сетке во время перехода фильтра — включает goo-wash слой и will-change. */
@@ -166,10 +171,10 @@ export default function ProjectsBentoGrid({ slugs, resolveProject, className = '
           </motion.div>
         ) : null}
 
-        {visibleSlugs.map((slug, index) => {
+        {visibleSlugs.map((slug) => {
           const p = resolveProject(slug);
           if (!p) return null;
-          const cellClass = getBentoCellClass(index, visibleSlugs.length, slug);
+          const cellClass = bentoClassMap.get(slug) ?? 'preview-bento__cell--tile-2';
           return (
             <motion.div
               key={slug}

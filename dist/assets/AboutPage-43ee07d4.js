@@ -1,4 +1,4 @@
-import{r as w,j as a}from"./framer-motion-771cda1e.js";import{S as D,u as F}from"./index-2416f2c6.js";import{p as K}from"./publicUrl-9723462b.js";import"./router-62993baa.js";import"./projects-data-876fb313.js";import"./lenis-0d08b761.js";import"./gsap-e6c30445.js";/**
+import{r as w,j as a}from"./framer-motion-771cda1e.js";import{S as D,u as F}from"./index-05e4c845.js";import{p as K}from"./publicUrl-9723462b.js";import"./router-62993baa.js";import"./projects-data-876fb313.js";import"./lenis-0d08b761.js";import"./gsap-e6c30445.js";/**
  * Sticker.js — ES module adaptation for rectangular React cards
  * @see https://github.com/cmiscm/stickerjs
  * @license MIT
