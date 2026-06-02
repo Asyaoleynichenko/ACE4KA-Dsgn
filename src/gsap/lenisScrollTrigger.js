@@ -6,6 +6,7 @@ import { getScrollWrapper } from '../utils/scrollRoot.js';
 let connectedLenis = null;
 let tickerFn = null;
 let scrollHandler = null;
+let refreshRafId = null;
 
 /**
  * Lenis (inertia) + ScrollTrigger (scrub timelines) — один RAF через GSAP ticker.
@@ -28,10 +29,14 @@ export function connectLenisScrollTrigger(lenis) {
   gsap.ticker.add(tickerFn);
   gsap.ticker.lagSmoothing(0);
 
-  requestAnimationFrame(refreshScrollTrigger);
+  refreshRafId = requestAnimationFrame(refreshScrollTrigger);
 }
 
 export function disconnectLenisScrollTrigger() {
+  if (refreshRafId != null) {
+    cancelAnimationFrame(refreshRafId);
+    refreshRafId = null;
+  }
   if (connectedLenis && scrollHandler) {
     connectedLenis.off('scroll', scrollHandler);
   }

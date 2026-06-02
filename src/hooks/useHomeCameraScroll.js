@@ -139,9 +139,10 @@ export function useHomeCameraScroll(rootRef) {
       });
     }, root);
 
-    requestAnimationFrame(() => refreshScrollTrigger());
+    const rafId = requestAnimationFrame(() => refreshScrollTrigger());
 
     return () => {
+      cancelAnimationFrame(rafId);
       ctx.revert();
       for (const el of targets) {
         if (!el) continue;
@@ -154,5 +155,5 @@ export function useHomeCameraScroll(rootRef) {
         el.style.removeProperty('--camera-shift-y');
       });
     };
-  }, []);
+  }, [rootRef]);
 }

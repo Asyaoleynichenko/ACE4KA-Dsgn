@@ -88,9 +88,12 @@ export function useScrollTriggerHorizontalScrub({
     };
 
     let totalSpan = 0;
+    // mx (горизонтальный ход) зависит только от layout — кэшируем и обновляем на refresh,
+    // чтобы не читать scrollWidth/rect/getComputedStyle на каждом кадре скролла.
+    let mx = 0;
     const updateRunwaySpan = () => {
       const vh = readViewportHeight();
-      const mx = readMx(viewport, inner);
+      mx = readMx(viewport, inner);
       totalSpan = horizontalScrubRunwaySpanPx(slideCount, vh, { cinematic, mx });
       // Высоту прокрутки даёт pin-spacer ScrollTrigger — ручной spacer дублировал пустоту под карточками.
       if (spacer) {
@@ -102,7 +105,6 @@ export function useScrollTriggerHorizontalScrub({
     updateRunwaySpan();
 
     const applyScrubFrame = (self) => {
-      const mx = readMx(viewport, inner);
       const rawP = self.progress;
       const { scrubP, exitP } = splitScrubProgress(rawP);
       const x = scrubP * mx;
@@ -136,19 +138,31 @@ export function useScrollTriggerHorizontalScrub({
     });
 
     applyScrubFrame(st);
-    requestAnimationFrame(() => {
+    const rafId = requestAnimationFrame(() => {
       updateRunwaySpan();
       st.refresh();
       applyScrubFrame(st);
     });
 
     return () => {
+      cancelAnimationFrame(rafId);
       st.kill();
       resetCinematicCardTransforms(inner);
       clearScrubExitHandoff(handoffTarget);
       if (spacer) spacer.style.height = '';
     };
-  }, [enabled, triggerId, slideCount, cinematic, onActiveIndex]);
+  }, [
+    enabled,
+    triggerId,
+    slideCount,
+    cinematic,
+    onActiveIndex,
+    runwayRef,
+    pinRef,
+    innerRef,
+    viewportRef,
+    spacerRef,
+  ]);
 }
 
 /** Прокрутка к progress (0…1) внутри scrub-сцены. */

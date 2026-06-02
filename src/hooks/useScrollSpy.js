@@ -9,6 +9,7 @@ import { bindScrollResize } from '../utils/scrollRoot.js';
 export function useScrollSpy(sectionIds) {
   const [activeId, setActiveId] = useState(() => sectionIds[0] ?? '');
   const { lenis } = useLenisInstance();
+  const idsKey = sectionIds.join('\0');
 
   useEffect(() => {
     if (!sectionIds.length) {
@@ -45,7 +46,9 @@ export function useScrollSpy(sectionIds) {
       unbind();
       if (raf != null) cancelAnimationFrame(raf);
     };
-  }, [sectionIds.join('\0'), lenis]);
+    // sectionIds сравнивается по содержимому через idsKey (массив пересоздаётся каждый рендер).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idsKey, lenis]);
 
   return activeId;
 }

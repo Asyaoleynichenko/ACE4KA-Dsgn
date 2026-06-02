@@ -64,13 +64,14 @@ export function useScrollTriggerCompetenciesScrub({
     const sync = () => onScrub?.(st.progress);
     sync();
 
-    requestAnimationFrame(() => {
+    const rafId = requestAnimationFrame(() => {
       refreshScrollTrigger();
       sync();
     });
 
     return () => {
+      cancelAnimationFrame(rafId);
       st.kill();
     };
-  }, [enabled, scrollTravelPx, lineCount, onScrub]);
+  }, [enabled, scrollTravelPx, lineCount, onScrub, runwayRef, stickyRef]);
 }

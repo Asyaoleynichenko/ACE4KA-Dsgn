@@ -5,6 +5,7 @@ import IconAssembleFromDots from '../components/IconAssembleFromDots.jsx';
 import PreviewCardBlock from '../components/PreviewCardBlock';
 import HalftoneButton from '../components/HalftoneButton.jsx';
 import DotIcon from '../components/DotIcon.jsx';
+import { asArray } from '../utils/asArray.js';
 import {
   SECTION_HEADER_IMAGES,
   HEADER_FIRST_SCREEN,
@@ -57,7 +58,7 @@ function SectionFallback({ minHeight = '50vh' }) {
 
 export default function HomePage() {
   const { t, localizedPath, messages } = useI18n();
-  const competencyLines = messages.hero?.competencies?.lines ?? [];
+  const competencyLines = asArray(messages.hero?.competencies?.lines);
   const competencyLineProjectSlugs = messages.hero?.competencies?.lineProjectSlugs;
 
   return (

@@ -75,20 +75,20 @@ export default function ProjectsBentoGrid({ slugs, resolveProject, className = '
 
   /* «is-morphing» висит на сетке во время перехода фильтра — включает goo-wash слой и will-change. */
   const [isMorphing, setIsMorphing] = useState(false);
-  const morphSeedRef = useRef(0);
+  const [morphSeed, setMorphSeed] = useState(0);
   const prevFilterRef = useRef(filter);
 
   useEffect(() => {
     if (prevFilterRef.current === filter) return;
     prevFilterRef.current = filter;
     if (reduceMotion) return;
-    morphSeedRef.current += 1;
+    setMorphSeed((s) => s + 1);
     setIsMorphing(true);
     const id = window.setTimeout(() => setIsMorphing(false), MORPH_DURATION_MS);
     return () => window.clearTimeout(id);
   }, [filter, reduceMotion]);
 
-  const blobs = useMemo(() => makeBlobs(morphSeedRef.current || 1), [morphSeedRef.current]);
+  const blobs = useMemo(() => makeBlobs(morphSeed || 1), [morphSeed]);
 
   return (
     <motion.div
@@ -134,7 +134,7 @@ export default function ProjectsBentoGrid({ slugs, resolveProject, className = '
         {/* Метаболл-wash поверх сетки — только во время смены фильтра. */}
         {isMorphing && !reduceMotion ? (
           <motion.div
-            key={`bento-wash-${morphSeedRef.current}`}
+            key={`bento-wash-${morphSeed}`}
             className="preview-bento__wash"
             aria-hidden="true"
             initial={{ opacity: 0 }}

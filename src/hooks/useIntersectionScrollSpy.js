@@ -19,6 +19,7 @@ export function useIntersectionScrollSpy(sectionIds) {
       return undefined;
     }
 
+    const ratios = ratiosRef.current;
     const scrollRootEl = document.getElementById('root');
     const root =
       scrollRootEl && scrollRootEl.scrollHeight > scrollRootEl.clientHeight + 2 ? scrollRootEl : null;
@@ -38,7 +39,7 @@ export function useIntersectionScrollSpy(sectionIds) {
     };
 
     const pickWinner = () => {
-      const map = ratiosRef.current;
+      const map = ratios;
       let bestId = sectionIds[0];
       let bestR = -1;
       for (const sid of sectionIds) {
@@ -57,7 +58,7 @@ export function useIntersectionScrollSpy(sectionIds) {
         for (const entry of entries) {
           const sid = entry.target.id;
           if (!sectionIds.includes(sid)) continue;
-          ratiosRef.current.set(sid, entry.intersectionRatio);
+          ratios.set(sid, entry.intersectionRatio);
         }
         pickWinner();
       },
@@ -78,8 +79,10 @@ export function useIntersectionScrollSpy(sectionIds) {
 
     return () => {
       observer.disconnect();
-      ratiosRef.current.clear();
+      ratios.clear();
     };
+    // sectionIds сравнивается по содержимому через idsKey (массив пересоздаётся каждый рендер).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idsKey]);
 
   return activeId;

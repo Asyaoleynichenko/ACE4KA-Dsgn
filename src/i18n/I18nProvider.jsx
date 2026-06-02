@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -43,6 +44,11 @@ export function I18nProvider({ children }) {
   const location = useLocation();
   const [locale, setLocaleState] = useState(readLocaleFromPathOrStorage);
 
+  // Свежее location для стабильного setLocale (без пересоздания на каждой навигации).
+  const locationRef = useRef(location);
+  locationRef.current = location;
+
+  // URL — единственный источник правды: синхронизируем state с локалью из пути.
   useEffect(() => {
     const fromPath = getLocaleFromPathname(location.pathname);
     if (!fromPath) return;
@@ -56,14 +62,14 @@ export function I18nProvider({ children }) {
   const setLocale = useCallback(
     (next) => {
       const normalized = normalizeLocale(next);
-      const stripped = stripLocaleFromPathname(location.pathname);
-      const nextPath =
-        withLocalePrefix(normalized, stripped) + location.search + location.hash;
-      navigate(nextPath, { replace: true });
-      setLocaleState(normalized);
+      const { pathname, search, hash } = locationRef.current;
+      const stripped = stripLocaleFromPathname(pathname);
+      const nextPath = withLocalePrefix(normalized, stripped) + search + hash;
       writeStoredLocale(normalized);
+      setLocaleState(normalized);
+      navigate(nextPath, { replace: true });
     },
-    [navigate, location.pathname, location.search, location.hash],
+    [navigate],
   );
 
   useEffect(() => {

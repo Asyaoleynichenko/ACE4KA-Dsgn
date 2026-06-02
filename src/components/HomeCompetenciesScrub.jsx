@@ -4,6 +4,7 @@ import { COMPETENCIES_HEADING_ORDER } from '../data/competenciesHeadingOrder.js'
 import { HOME_PROJECT_SLUGS, homeProjectsCatalog } from '../data/homeProjectsCatalog.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
+import { asArray } from '../utils/asArray.js';
 import ProjectCard from './ProjectCard.jsx';
 
 function chunkSlugsForLines(lineCount, homeSlugs) {
@@ -38,13 +39,14 @@ function activeLineStretchFromScroll(n, t) {
  * плавающие карточки TL/BR; при скролле активная строка растягивается, карточки меняются.
  */
 export default function HomeCompetenciesScrub({
-  lines,
+  lines: linesProp,
   lineProjectSlugs,
   homeProjectSlugs = HOME_PROJECT_SLUGS,
   ariaLabel,
   children,
 }) {
   const { t } = useI18n();
+  const lines = asArray(linesProp);
   const runwayRef = useRef(null);
   const stickyRef = useRef(null);
   const stageRef = useRef(null);

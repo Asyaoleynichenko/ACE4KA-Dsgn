@@ -363,7 +363,7 @@ export default function ProjectDetailPage() {
                     aria-hidden={index === 0 ? undefined : 'true'}
                     decoding="async"
                     loading={index === 0 ? 'eager' : 'lazy'}
-                    fetchpriority={index === 0 ? 'high' : 'auto'}
+                    fetchPriority={index === 0 ? 'high' : 'auto'}
                   />
                 ))}
               </div>
@@ -689,7 +689,7 @@ export default function ProjectDetailPage() {
             src={publicUrl(project.image)}
             alt={displayTitle}
             decoding="async"
-            fetchpriority="high"
+            fetchPriority="high"
           />
         </div>
       )}

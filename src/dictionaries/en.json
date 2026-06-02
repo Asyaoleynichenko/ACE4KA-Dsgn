@@ -258,7 +258,10 @@
   },
   "errors": {
     "rootTitle": "Couldn’t render the app",
-    "rootBody": "Open the browser console (F12 → Console). If the URL or build base path is wrong, scripts may fail to load (blank white screen)."
+    "rootBody": "Open the browser console (F12 → Console). If the URL or build base path is wrong, scripts may fail to load (blank white screen).",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The address may be mistyped, or the page may have been removed.",
+    "notFoundHome": "Back to home"
   },
   "about": {
     "profilePhoto": "/images/figma-743-16866/profile.png",

@@ -1,5 +1,6 @@
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { publicUrl } from '../utils/publicUrl.js';
+import { asArray } from '../utils/asArray.js';
 import AboutJobCard from '../components/AboutJobCard.jsx';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 
@@ -52,9 +53,9 @@ function AboutLinkRow({ localizedPath, t }) {
 
 export default function AboutPage() {
   const { t, localizedPath, messages } = useI18n();
-  const jobs = messages.about?.jobs ?? [];
-  const skills = messages.about?.skills?.items ?? [];
-  const eduItems = messages.about?.eduItems ?? [];
+  const jobs = asArray(messages.about?.jobs);
+  const skills = asArray(messages.about?.skills?.items);
+  const eduItems = asArray(messages.about?.eduItems);
   const profilePhoto = messages.about?.profilePhoto ?? '/images/figma-743-16866/profile.png';
 
   return (

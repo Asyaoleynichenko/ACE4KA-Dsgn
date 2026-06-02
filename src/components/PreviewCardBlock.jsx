@@ -49,7 +49,7 @@ export default function PreviewCardBlock() {
         </div>
       </div>
       <div className="preview-card-block__image" data-node-id="I1:231;103:8833">
-        <img src={previewImageSrc} alt="" decoding="async" fetchpriority="high" />
+        <img src={previewImageSrc} alt="" decoding="async" fetchPriority="high" />
       </div>
     </a>
   );

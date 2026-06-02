@@ -30,5 +30,5 @@ export function useSvgDisplacementHover(
       el.removeEventListener('pointerleave', onLeave);
       setScale(scaleRest);
     };
-  }, [mapId, scaleHover, scaleRest]);
+  }, [ref, mapId, scaleHover, scaleRest]);
 }

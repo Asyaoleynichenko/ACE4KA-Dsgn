@@ -9,6 +9,7 @@
     "check:assets": "node scripts/check-project-assets.mjs",
     "dev": "vite",
     "dev:host": "vite --host",
+    "lint": "eslint . --ext .js,.jsx --report-unused-disable-directives --max-warnings 9999",
     "start": "vite",
     "build": "node scripts/check-project-assets.mjs && vite build && node scripts/post-build.mjs",
     "build:local": "vite build --base / && node scripts/post-build.mjs",
@@ -28,6 +29,10 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.5.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.26",
     "postcss": "^8.5.14",
     "tailwindcss": "^3.4.19",
     "vite": "^4.5.0"

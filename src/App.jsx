@@ -20,6 +20,7 @@ const Page89_909 = lazy(() => import('./pages/Page89_909'));
 const Page89_915 = lazy(() => import('./pages/Page89_915'));
 const Page89_920 = lazy(() => import('./pages/Page89_920'));
 const ProjectDetailPage = lazy(() => import('./pages/ProjectDetailPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const routerBasename =
   import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '') || undefined;
@@ -69,6 +70,7 @@ export default function App() {
                   <Route path="page-915" element={<Page89_915 />} />
                   <Route path="page-920" element={<Page89_920 />} />
                   <Route path="project/:slug" element={<ProjectDetailPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Route>
             </Routes>

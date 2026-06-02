@@ -240,6 +240,7 @@ export function initTypographyReveal(root, options = {}) {
   });
 
   let scrollTrigger;
+  let refreshRafId;
   if (trigger === 'scroll') {
     scrollTrigger = ScrollTrigger.create({
       trigger: root,
@@ -248,10 +249,11 @@ export function initTypographyReveal(root, options = {}) {
       scroller,
       onEnter: () => tl.play(0),
     });
-    requestAnimationFrame(() => refreshScrollTrigger());
+    refreshRafId = requestAnimationFrame(() => refreshScrollTrigger());
   }
 
   return () => {
+    if (refreshRafId != null) cancelAnimationFrame(refreshRafId);
     scrollTrigger?.kill();
     tl.kill();
     root.classList.remove('type-reveal--pending', 'type-reveal--done');
