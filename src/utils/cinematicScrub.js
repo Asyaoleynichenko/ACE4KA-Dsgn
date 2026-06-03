@@ -38,11 +38,15 @@ export function applyCinematicCardTransforms(
   _progress01 = 0,
   _velocityPx = 0,
   exitP = 0,
+  trackMx = 0,
 ) {
   const slides = inner.querySelectorAll(':scope > *');
   if (!slides.length) return { mx: 0 };
 
-  const mx = Math.max(0, inner.scrollWidth - viewport.clientWidth);
+  const mx =
+    trackMx > 1
+      ? trackMx
+      : Math.max(0, inner.scrollWidth - viewport.clientWidth);
 
   if (mx <= 1) {
     inner.style.transform = 'none';
@@ -57,9 +61,9 @@ export function applyCinematicCardTransforms(
   }
 
   const holdAtEnd = exitP > 0.004;
-  const xTrack = holdAtEnd ? mx : smoothX;
+  const xTrack = holdAtEnd ? mx : Math.min(smoothX, mx);
 
-  inner.style.transform = `translate3d(${-Math.round(xTrack)}px, 0, 0)`;
+  inner.style.transform = `translate3d(${-xTrack}px, 0, 0)`;
 
   slides.forEach((slide) => {
     slide.style.transform = '';

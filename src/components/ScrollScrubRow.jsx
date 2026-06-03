@@ -66,20 +66,21 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     enabled: useScrollLinked,
     triggerId: scrubTriggerId,
     runwayRef,
-    pinRef,
+    pinRef: stickyRef,
     innerRef,
     viewportRef,
     spacerRef,
     slideCount: count,
     cinematic: useCinematicScrub,
-    onActiveIndex: setActiveIdx,
+    onActiveIndex: (idx) => setActiveIdx((prev) => (prev === idx ? prev : idx)),
   });
 
   const recalcMaxX = useCallback(() => {
     const inner = innerRef.current;
     const viewport = viewportRef.current;
     if (!inner || !viewport) return;
-    setMaxX(readHorizontalScrubMx(viewport, inner));
+    const next = readHorizontalScrubMx(viewport, inner);
+    setMaxX((prev) => (Math.abs(prev - next) < 2 ? prev : next));
   }, []);
 
   useLayoutEffect(() => {
@@ -108,8 +109,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       if (refreshTimer != null) clearTimeout(refreshTimer);
       refreshTimer = setTimeout(() => {
         refreshTimer = null;
+        recalcMaxX();
         requestAnimationFrame(refreshScrollTrigger);
-      }, 80);
+      }, 220);
     };
     const ro = new ResizeObserver(schedule);
     nodes.forEach((n) => ro.observe(n));
@@ -119,7 +121,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
       ro.disconnect();
       window.removeEventListener('resize', schedule);
     };
-  }, [useScrollLinked, children, maxX]);
+  }, [useScrollLinked, children, recalcMaxX]);
 
   const syncDotsFromViewportScroll = useCallback(() => {
     const vp = viewportRef.current;

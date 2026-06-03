@@ -75,14 +75,12 @@ export function useScrollTriggerHorizontalScrub({
     };
 
     let totalSpan = 0;
-    // mx (горизонтальный ход) зависит только от layout — кэшируем и обновляем на refresh,
-    // чтобы не читать scrollWidth/rect/getComputedStyle на каждом кадре скролла.
+    // mx (горизонтальный ход) — кэш; обновляем на refresh, не на каждом кадре scrub.
     let mx = 0;
     const updateRunwaySpan = () => {
       const vh = readViewportHeight();
       mx = readHorizontalScrubMx(viewport, inner);
-      totalSpan = horizontalScrubRunwaySpanPx(slideCount, vh, { cinematic, mx });
-      // Высоту прокрутки даёт pin-spacer ScrollTrigger — ручной spacer дублировал пустоту под карточками.
+      totalSpan = horizontalScrubRunwaySpanPx(slideCount, vh, { cinematic });
       if (spacer) {
         spacer.style.height = '0';
         spacer.style.minHeight = '0';
@@ -91,6 +89,7 @@ export function useScrollTriggerHorizontalScrub({
     };
     updateRunwaySpan();
 
+    let lastActiveIdx = -1;
     const applyScrubFrame = (self) => {
       const rawP = self.progress;
       const { scrubP, exitP } = splitScrubProgress(rawP);
@@ -98,12 +97,16 @@ export function useScrollTriggerHorizontalScrub({
 
       if (cinematic) {
         applyScrubExitHandoff(handoffTarget, exitP);
-        applyCinematicCardTransforms(inner, viewport, x, rawP, 0, exitP);
+        applyCinematicCardTransforms(inner, viewport, x, rawP, 0, exitP, mx);
       } else {
         gsap.set(inner, { x: -x, force3D: true });
       }
 
-      onActiveIndex?.(activeIndexFromOffset(x, mx, slideCount));
+      const idx = activeIndexFromOffset(x, mx, slideCount);
+      if (idx !== lastActiveIdx) {
+        lastActiveIdx = idx;
+        onActiveIndex?.(idx);
+      }
     };
 
     const st = ScrollTrigger.create({
@@ -114,6 +117,7 @@ export function useScrollTriggerHorizontalScrub({
       pin,
       pinSpacing: true,
       scrub: true,
+      fastScrollEnd: true,
       /** С Lenis anticipatePin даёт скачок при входе/выходе из pin. */
       anticipatePin: 0,
       invalidateOnRefresh: true,
