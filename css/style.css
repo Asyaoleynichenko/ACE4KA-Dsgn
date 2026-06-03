@@ -5104,18 +5104,17 @@ h3 {
         grid-column: span 2;
     }
 
-    /* Полный набор (10): приоритетные кейсы крупно, без одноколоночных щелей. */
+    /* Полный набор (10): асимметричный 4-колоночный бенто — разнокалиберные
+       тайлы (2×2 / 1×3 / 2×1 вертикальные / 1×1), без повторяющихся пар. */
     .page-projects .preview-bento__cells:not(.is-compact) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         grid-template-areas:
-            'bento-hero bento-hero'
-            'bento-hero bento-hero'
-            'bento-stack-a bento-stack-b'
-            'bento-feature bento-feature'
-            'bento-feature bento-feature'
-            'bento-banner bento-banner'
-            'bento-mid-a bento-mid-b'
-            'bento-tile-1 bento-tile-2'
-            'bento-tile-3 bento-tile-3';
+            'bento-hero    bento-hero    bento-stack-a bento-stack-a'
+            'bento-hero    bento-hero    bento-stack-a bento-stack-a'
+            'bento-banner  bento-banner  bento-banner  bento-stack-b'
+            'bento-feature bento-feature bento-mid-a   bento-stack-b'
+            'bento-feature bento-feature bento-mid-b   bento-tile-1'
+            'bento-tile-2  bento-tile-3  bento-mid-b   bento-tile-1';
     }
 
     .page-projects .preview-bento__cells:not(.is-compact) .preview-bento__cell--hero { grid-area: bento-hero; }
@@ -9195,6 +9194,17 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     line-height: var(--text-89-756-lead-line-height);
     letter-spacing: var(--text-89-756-lead-letter-spacing);
     color: var(--text-89-756-lead-color);
+}
+
+/* Fix контраста: шаблон 89-756 рисовался под светлый фон, поэтому title/link-токены
+   были near-black (#0a0a0a). На тёмной теме это делало заголовки страниц
+   (КОНТАКТЫ/РЕЗЮМЕ/ОБРАЗОВАНИЕ) и текст карточек практически невидимыми (контраст ~1:1).
+   Переопределяем переменные на враппере страницы — каскадно чинит h1, лейблы и ссылки. */
+.page-contact,
+.page-resume,
+.page-education {
+    --text-89-756-title-color: var(--color-text);
+    --text-89-756-link-color: var(--color-text-muted);
 }
 
 /* Figma 89-756 — страница Контакты: верстка и текст как в макете */
