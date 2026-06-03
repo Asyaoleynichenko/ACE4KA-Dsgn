@@ -1,5 +1,6 @@
 import { Children, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { SCRUB_EXIT_PHASE_RATIO } from '../utils/scrubExitHandoff.js';
+import { readHorizontalScrubMx } from '../utils/horizontalScrubMetrics.js';
 import { useLenisInstance } from '../context/LenisProvider.jsx';
 import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
 import {
@@ -65,7 +66,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     enabled: useScrollLinked,
     triggerId: scrubTriggerId,
     runwayRef,
-    pinRef: stickyRef,
+    pinRef,
     innerRef,
     viewportRef,
     spacerRef,
@@ -78,7 +79,7 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     const inner = innerRef.current;
     const viewport = viewportRef.current;
     if (!inner || !viewport) return;
-    setMaxX(readMx(viewport, inner));
+    setMaxX(readHorizontalScrubMx(viewport, inner));
   }, []);
 
   useLayoutEffect(() => {

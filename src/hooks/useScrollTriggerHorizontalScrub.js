@@ -8,7 +8,7 @@ import {
   splitScrubProgress,
 } from '../utils/scrubExitHandoff.js';
 import { applyCinematicCardTransforms, resetCinematicCardTransforms } from '../utils/cinematicScrub.js';
-import { horizontalScrubRunwaySpanPx } from '../utils/horizontalScrubMetrics.js';
+import { horizontalScrubRunwaySpanPx, readHorizontalScrubMx } from '../utils/horizontalScrubMetrics.js';
 
 function readViewportHeight() {
   const appRoot = document.getElementById('root');
@@ -16,19 +16,6 @@ function readViewportHeight() {
     return appRoot.clientHeight || window.innerHeight || 1;
   }
   return window.innerHeight || 1;
-}
-
-function readMx(viewport, inner) {
-  if (!viewport || !inner) return 0;
-  const fromLayout = inner.scrollWidth - viewport.clientWidth;
-  if (fromLayout > 1) return fromLayout;
-  const slides = inner.querySelectorAll(':scope > *');
-  if (slides.length < 2) return 0;
-  const slideW = slides[0].getBoundingClientRect().width;
-  if (slideW <= 1) return 0;
-  const gap = parseFloat(getComputedStyle(inner).columnGap || getComputedStyle(inner).gap) || 0;
-  const gaps = slides.length - 1;
-  return Math.max(0, slideW * gaps + gap * gaps);
 }
 
 function activeIndexFromOffset(x, mx, count) {
@@ -93,7 +80,7 @@ export function useScrollTriggerHorizontalScrub({
     let mx = 0;
     const updateRunwaySpan = () => {
       const vh = readViewportHeight();
-      mx = readMx(viewport, inner);
+      mx = readHorizontalScrubMx(viewport, inner);
       totalSpan = horizontalScrubRunwaySpanPx(slideCount, vh, { cinematic, mx });
       // Высоту прокрутки даёт pin-spacer ScrollTrigger — ручной spacer дублировал пустоту под карточками.
       if (spacer) {
@@ -127,8 +114,8 @@ export function useScrollTriggerHorizontalScrub({
       pin,
       pinSpacing: true,
       scrub: true,
-      /** С Lenis иначе pin «догоняет» скролл — визуальный отскок при входе в секцию. */
-      anticipatePin: 1,
+      /** С Lenis anticipatePin даёт скачок при входе/выходе из pin. */
+      anticipatePin: 0,
       invalidateOnRefresh: true,
       scroller,
       onRefresh: updateRunwaySpan,
