@@ -3259,6 +3259,51 @@ h3 {
     margin: 0;
 }
 
+/* Планшет/узкие вьюпорты: scrub-строки с nowrap + 9.5vw не влезали в панель и
+   обрезались справа, а стек прижимался к шапке. Сужаем боковые поля, центрируем
+   стопку по вертикали и убираем «резервную» высоту сцены. Десктоп (>64rem) — без изменений. */
+@media (max-width: 64rem) {
+    .home-competencies-scrub__sticky .home-competencies__panel {
+        justify-content: center;
+    }
+
+    .home-competencies__inner--scrub {
+        justify-content: center;
+        flex: 1 1 auto;
+    }
+
+    .home-competencies-scrub__stage {
+        min-height: min(18rem, 46vw);
+        padding-top: clamp(0.75rem, 3vw, 1.75rem);
+    }
+
+    .home-competencies-scrub__line-wrap {
+        padding-left: clamp(0.5rem, 2.2vw, 1rem);
+        padding-right: clamp(0.5rem, 2.2vw, 1rem);
+    }
+}
+
+/* ≤64rem: уменьшаем единый кегль, чтобы самая длинная строка («RESEARCH AND UX/UI»)
+   помещалась без обрезки (на десктопе остаётся 96px). */
+@media (max-width: 64rem) {
+    .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
+        .home-competencies-scrub__line.home-competencies__line {
+        font-size: clamp(1.75rem, 7.6vw, 4.5rem);
+    }
+}
+
+/* ≤40rem: на мобильных длинные строки переносим (правило идёт ПОСЛЕ базового
+   nowrap, иначе перебивалось им). */
+@media (max-width: 40rem) {
+    .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
+        .home-competencies-scrub__line.home-competencies__line {
+        white-space: normal;
+        text-wrap: balance;
+        overflow-wrap: anywhere;
+        font-size: clamp(1.625rem, 8.5vw, 2.75rem);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .page-home .home-competencies-scrub__line-wrap {
         opacity: 1;
