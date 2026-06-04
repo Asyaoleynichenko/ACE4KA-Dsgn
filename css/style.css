@@ -68,9 +68,9 @@
   --comp-line-size-3: var(--comp-line-size-uniform);
   --comp-line-size-4: var(--comp-line-size-uniform);
   --comp-line-size-5: var(--comp-line-size-uniform);
-  --comp-stack-gap: 0.75rem;
-  --comp-stack-pad-top: clamp(3rem, 8vw, 5rem);
-  --comp-row-min-h: clamp(3rem, 9.2vw, 6rem);
+  --comp-stack-gap: var(--space-12);
+  --comp-stack-pad-top: clamp(var(--space-48), 8vw, var(--space-80));
+  --comp-row-min-h: clamp(var(--space-48), 9.2vw, var(--space-96));
 
   /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
   --ease-smart: cubic-bezier(0.32, 0.72, 0, 1);
@@ -159,7 +159,9 @@
   --preview-cta-mix-blend: plus-darker;
   --mix-blend-exclusion: normal;
 
-  /* Spacing rhythm — 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96 / 128 (px) */
+  /* Spacing rhythm — 8px modular grid (4 / 8 / 16 / 24 / 32 / 48 / 64 / 96 / 128)
+     Proximity tiers on a screen: pair (--space-16–24) < group (--space-32) < block (--space-48–64).
+     Use 2–4 distinct steps per view; avoid off-grid Figma decimals. */
   --space-4: 0.25rem;
   --space-8: 0.5rem;
   --space-12: 0.75rem;
@@ -187,7 +189,20 @@
   --rhythm-block: var(--space-64);
   --rhythm-section: var(--space-96);
   --rhythm-canvas: var(--space-128);
-  --layout-section-gap: clamp(var(--space-64), 11vh, var(--space-96));
+  /* Proximity tiers — pick 2–4 steps per screen (pair < group < block < canvas) */
+  --space-proximity-pair: var(--space-16); /* 2 modules — label + value, icon + text */
+  --space-proximity-group: var(--space-24); /* 3 modules — title + body, text + pill */
+  --space-proximity-stack: var(--space-32); /* 4 modules — rows in a list */
+  --space-proximity-block: var(--space-48); /* 6 modules — heading → block */
+  --space-proximity-canvas: var(--space-64); /* 8 modules — card/accordion inset */
+  /* Fluid spacing — clamp endpoints stay on the 8px grid */
+  --space-fluid-pair: clamp(var(--space-16), 2.5vw, var(--space-24));
+  --space-fluid-group: clamp(var(--space-24), 4vw, var(--space-32));
+  --space-fluid-stack: clamp(var(--space-32), 6vw, var(--space-48));
+  --space-fluid-block: clamp(var(--space-48), 8vw, var(--space-64));
+  --space-fluid-section: clamp(var(--space-48), 10vh, var(--space-96));
+  --space-fluid-hero: clamp(var(--space-48), 14vw, var(--space-96));
+  --layout-section-gap: var(--space-fluid-section);
   --layout-stack-gap: var(--space-32);
   --layout-heading-gap: var(--space-24);
   --card-gap: var(--space-8);
@@ -196,12 +211,12 @@
   --grid-column-gap: var(--space-8);
   --preview-grid-max-width: 80.625rem; /* Figma 1:297 — 1290px */
 
-  /* Figma 573:18422 — Header. Боковой gutter синхронизирован с --layout-page-pad-x (14px),
+  /* Figma 573:18422 — Header. Боковой gutter синхронизирован с --layout-page-pad-x (16px),
      чтобы линия краёв страницы (header / main / footer) шла одной вертикалью. */
   --header-figma-pad-x: var(--layout-page-pad-x);
-  --header-figma-pad-y: 1.3125rem; /* 21px */
+  --header-figma-pad-y: var(--space-24);
   --header-figma-bar-min: 5.578125rem; /* 89.25px */
-  --header-figma-nav-gap: 7.5rem; /* 120px между пунктами Nav Links */
+  --header-figma-nav-gap: var(--space-96);
   --header-figma-type-size: 1.25rem;
   --header-figma-type-line: 2.953125rem; /* 47.25px */
 
@@ -249,28 +264,29 @@
     rgba(154, 154, 154, 0.2) 0%,
     rgba(0, 0, 0, 0.2) 100%
   );
-  --case-feature-card-inset-shadow: 0 4px 38.9px rgba(255, 255, 255, 0.25) inset;
-  --case-feature-card-radius: 4rem; /* 64px */
-  --case-feature-card-radius-sm: 1.875rem; /* 30px */
-  --case-feature-card-padding: 4.075rem; /* 65.2px */
-  --case-feature-card-gap: 2.0375rem; /* 32.6px */
+  --case-feature-card-inset-shadow: 0 4px 40px rgba(255, 255, 255, 0.25) inset;
+  --case-feature-card-radius: var(--space-64); /* 64px — 8 modules */
+  --case-feature-card-radius-sm: var(--space-32); /* 32px — 4 modules */
+  --case-feature-card-padding: var(--space-proximity-canvas);
+  --case-feature-card-gap: var(--space-proximity-group);
   --case-feature-card-title-size: 1.7825rem; /* 28.52px */
   --case-feature-card-title-color: #949494;
   --case-feature-card-title-tracking: -0.02em;
   --case-feature-card-body-size: 2.67375rem; /* 42.78px */
   --case-feature-card-body-lh: 1.2; /* 51.34px */
   --case-feature-card-body-tracking: -0.01em;
-  --case-feature-card-padding-sm: var(--space-32);
-  --case-feature-card-gap-sm: var(--space-16);
+  --case-feature-card-padding-sm: var(--space-proximity-stack);
+  --case-feature-card-gap-sm: var(--space-proximity-pair);
   --case-feature-card-title-size-sm: 0.875rem; /* 14px */
   --case-feature-card-body-size-sm: 1.3125rem; /* 21px */
   --case-feature-card-body-lh-sm: 1.2; /* 25.2px */
   --case-workflow-pill-bg: rgba(221, 221, 221, 0.92);
   --case-workflow-pill-color: #0a0a0a;
-  /* Accordion гипотез (337:24763) */
-  --case-hyp-title-gap: var(--case-feature-card-gap);
-  --case-hyp-row-gap: var(--case-feature-card-gap);
-  --case-hyp-body-gap: var(--case-feature-card-gap);
+  /* Accordion гипотез / skills — 3 proximity tiers on 8px grid */
+  --case-hyp-title-gap: var(--space-proximity-block);
+  --case-hyp-row-gap: var(--space-proximity-stack);
+  --case-hyp-body-gap: var(--space-proximity-group);
+  --hyp-list-inset: var(--case-feature-card-padding);
   /* Editorial type ramp — desktop (hero / section / statement / body / label) */
   --type-hero-display-size: clamp(4.5rem, 6.5vw + 2rem, 7.5rem);
   --type-hero-display-line: 0.98;
@@ -320,7 +336,7 @@
   --project-hero-max-width: 77.5rem;
   --project-hero-aspect-w: 16;
   --project-hero-aspect-h: 9;
-  --project-hero-radius: 1.3125rem; /* Figma 337:24536 — 21px */
+  --project-hero-radius: var(--space-24);
   --project-hero-bg: #000000;
   --project-hero-gradient: linear-gradient(135deg, #2b2b2b 0%, #1d1d1d 100%);
   --project-hero-placeholder-bg: #c4c4c4;
@@ -350,8 +366,8 @@
   --project-meta-cta-font-size: clamp(1.0625rem, 2.8vw, 1.375rem);
   --project-meta-cta-height: clamp(3.5rem, 10vw, 4.5rem);
   --project-grid-gap: var(--space-24);
-  --project-footer-border-top: 4.0625rem;
-  --project-footer-pt: 4.0625rem;
+  --project-footer-border-top: var(--space-64);
+  --project-footer-pt: var(--space-64);
   --project-footer-border: 0.0625rem solid var(--color-elevated-mid);
   --project-footer-gap: var(--space-48);
   --project-footer-label-font-size: 0.875rem;
@@ -417,8 +433,8 @@
   --layout-89-756-item-radius: var(--radius-lg);
   --layout-89-756-item-inner-gap: var(--space-4);
 
-  /* Горизонтальный gutter: 14px на всех страницах + safe-area. */
-  --layout-page-pad-x: var(--space-14);
+  /* Horizontal gutter — 16px (2 modules) on all pages + safe-area */
+  --layout-page-pad-x: var(--space-16);
   --layout-edge-left: calc(var(--layout-page-pad-x) + env(safe-area-inset-left, 0));
   --layout-edge-right: calc(var(--layout-page-pad-x) + env(safe-area-inset-right, 0));
   --layout-page-pad-y-top: var(--space-48);
@@ -429,7 +445,7 @@
 @media (max-width: 64rem) {
     :root {
         --hero-row-gap: var(--space-24);
-        --layout-section-gap: clamp(var(--space-48), 10vh, var(--space-80));
+        --layout-section-gap: var(--space-fluid-section);
         --type-body-size: clamp(0.9375rem, 1.5vw + 0.85rem, 1.0625rem);
         --type-body-lg-size: clamp(1.125rem, 2vw + 0.9rem, 1.25rem);
         --type-label-size: clamp(0.6875rem, 1vw + 0.6rem, 0.8125rem);
@@ -440,7 +456,7 @@
     :root {
         --layout-page-pad-y-top: var(--space-32);
         --layout-page-pad-y-bottom: var(--space-48);
-        /* --layout-page-pad-x наследуется из :root (14px) */
+        /* --layout-page-pad-x наследуется из :root (16px) */
         --project-page-padding-y: var(--space-32);
         --project-page-padding-bottom: var(--space-48);
         --hero-section-gap: var(--space-48);
@@ -449,7 +465,7 @@
         --project-card-padding: var(--space-24);
         --case-section-rhythm: clamp(var(--space-48), 8vw, var(--space-64));
         --preview-card-media-body-gap: var(--space-12);
-        --layout-section-gap: clamp(var(--space-48), 9vh, var(--space-64));
+        --layout-section-gap: var(--space-fluid-block);
         --tc-scale-x: 0.68;
         --hero-fs-card-top: clamp(5rem, 12svh, 6.75rem);
         --hero-fs-card-width: min(20rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - var(--space-24)));
@@ -484,7 +500,7 @@
 
 @media (max-width: 30rem) {
     :root {
-        /* --layout-page-pad-x наследуется из :root (14px) */
+        /* --layout-page-pad-x наследуется из :root (16px) */
         --hero-section-gap: var(--space-48);
         --tc-scale-x: 0.72;
         --hero-fs-card-top: clamp(4.75rem, 11svh, 6rem);
@@ -2642,8 +2658,8 @@ h3 {
     z-index: 2;
     width: 100%;
     max-width: 100%;
-    margin-top: clamp(1.5rem, 4vw, var(--hero-section-gap));
-    margin-bottom: clamp(2rem, 5vw, var(--space-48));
+    margin-top: var(--space-fluid-group);
+    margin-bottom: var(--space-fluid-stack);
     isolation: isolate;
     overflow-x: clip;
     overflow-y: visible;
@@ -2661,7 +2677,7 @@ h3 {
     max-width: min(56rem, 100%);
     margin-left: auto;
     margin-right: auto;
-    border-radius: 1.5rem;
+    border-radius: var(--space-24);
     color: #fafafa;
     box-sizing: border-box;
     overflow: visible;
@@ -2674,13 +2690,13 @@ h3 {
 .home-competencies__inner {
     position: relative;
     min-height: 0;
-    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.5rem);
+    padding: var(--space-fluid-stack) clamp(var(--space-16), 3vw, var(--space-24));
     box-sizing: border-box;
 }
 
 /* Figma 592:38775 — Section 896×688: padding-top 80px, стопка + кнопка */
 .home-competencies__inner--stack {
-    padding: var(--comp-stack-pad-top) clamp(1rem, 3vw, 1.5rem) 0;
+    padding: var(--comp-stack-pad-top) clamp(var(--space-16), 3vw, var(--space-24)) 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -4854,7 +4870,7 @@ h3 {
 
 /* Projects bento grid rewritten from scratch: clear hierarchy + dense packing. */
 .page-projects .preview-bento {
-    --bento-gap: clamp(0.5rem, 0.45vw + 0.4rem, 0.9rem);
+    --bento-gap: var(--space-8);
     --bento-row-unit: clamp(10.5rem, 34vw, 14rem);
     position: relative;
     display: block;
@@ -5075,6 +5091,8 @@ h3 {
             'bento-hero bento-hero'
             'bento-stack-a bento-stack-b'
             'bento-feature bento-feature'
+            'bento-feature bento-feature'
+            'bento-banner bento-banner'
             'bento-banner bento-banner'
             'bento-mid-a bento-mid-b'
             'bento-tile-1 bento-tile-2'
@@ -5312,7 +5330,7 @@ h3 {
 
 /* «Все проекты»: больше воздуха под шапкой; padding-x штатный, как у других страниц */
 .page-projects .main {
-    padding-top: clamp(var(--layout-page-pad-y-top), 4vw + 2rem, 7.5rem);
+    padding-top: clamp(var(--layout-page-pad-y-top), 4vw + var(--space-32), var(--space-96));
 }
 
 /* Figma 89:347 / 1-290 — табы фильтра: одна строка, gap 0.5rem, pill-обёртка с blur 1.7188rem */
@@ -6079,7 +6097,7 @@ h3 {
 }
 
 .project-page-wrap.project-page-wrap--case-study.project-case-study-mail {
-    --scrub-sticky-top: clamp(3.5rem, 11svh, 7.5rem);
+    --scrub-sticky-top: clamp(var(--space-48), 11svh, var(--space-96));
     --scrub-card-width: calc(
         100vw
         - 2 * var(--case-study-pad-x)
@@ -7348,7 +7366,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card,
     .hyp-list,
     .hyp-card
-)::before {
+)::before,
+.page-about .about-page__skill-list.hyp-list::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -7566,9 +7585,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 @container scrub-cards (min-width: 40.25rem) and (max-width: 81.874rem) {
     .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
     .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card {
-        padding: clamp(2rem, 8.6cqi, var(--case-feature-card-padding));
-        gap: clamp(1rem, 4.3cqi, var(--case-feature-card-gap));
-        border-radius: clamp(1.875rem, 8cqi, var(--case-feature-card-radius));
+        padding: clamp(var(--space-32), 8.6cqi, var(--case-feature-card-padding));
+        gap: clamp(var(--space-16), 4.3cqi, var(--case-feature-card-gap));
+        border-radius: clamp(var(--space-32), 8cqi, var(--case-feature-card-radius));
         min-height: clamp(20rem, 85cqi, 40.875rem);
     }
 
@@ -7725,7 +7744,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .project-case-study-mail .title-info-card {
     display: flex;
-    gap: 1.3125rem; /* Figma 300:107835 — ~21px между текстом и превью */
+    gap: var(--space-proximity-group);
     align-items: flex-start;
     width: 100%;
     max-width: min(59.5625rem, 100%); /* 953px */
@@ -7981,7 +8000,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 .project-case-study-mail .scroll-scrub-row--hypothesis-static .hypothesis-stack {
     display: flex;
     flex-direction: column;
-    gap: clamp(1.75rem, 6vw, 2.5rem);
+    gap: var(--space-proximity-stack);
     width: 100%;
     box-sizing: border-box;
 }
@@ -8057,7 +8076,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: clamp(0.875rem, 3.5vw, 1.375rem);
+    gap: var(--case-hyp-body-gap);
     padding: var(--case-feature-card-padding);
     border-radius: var(--case-feature-card-radius);
     border: 0;
@@ -8112,7 +8131,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 .project-case-study-mail .hyp-card__outcome {
     margin-top: auto;
     width: 100%;
-    padding-top: clamp(1rem, 3.5vw, 1.5rem);
+    padding-top: var(--case-hyp-body-gap);
 }
 .project-case-study-mail .hyp-card__outcome span {
     display: inline-block;
@@ -8319,9 +8338,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .project-case-study-mail .section ul.hyp-list,
     .project-case-study-mail .hyp-list {
         --hyp-list-inset: var(--case-feature-card-padding-sm);
-        --case-hyp-title-gap: var(--case-feature-card-gap-sm);
-        --case-hyp-row-gap: var(--case-feature-card-gap-sm);
-        --case-hyp-body-gap: var(--case-feature-card-gap-sm);
+        --case-hyp-title-gap: var(--space-proximity-stack);
+        --case-hyp-row-gap: var(--space-proximity-group);
+        --case-hyp-body-gap: var(--space-proximity-pair);
         border-radius: var(--case-feature-card-radius-sm);
         padding: var(--hyp-list-inset);
     }
@@ -9389,18 +9408,18 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     --about-skill-card-bg: #0f0f0f;
     --about-job-card-bg: #ffb800;
     --about-edu-card-bg: #121212;
-    --about-card-radius: 1.5rem;
-    --about-card-gap: 0.75rem;
-    --about-section-heading-gap: 2rem;
-    --about-hero-photo-size: clamp(15rem, 34vw, 28.03125rem);
-    --about-hero-gap: clamp(2rem, 8vw, 8.0625rem);
-    --about-exp-panel-offset: clamp(3rem, 14vw, 9.875rem);
+    --about-card-radius: var(--space-24);
+    --about-card-gap: var(--space-12);
+    --about-section-heading-gap: var(--space-proximity-stack);
+    --about-hero-photo-size: clamp(var(--space-96), 34vw, 28rem);
+    --about-hero-gap: var(--space-fluid-block);
+    --about-exp-panel-offset: var(--space-fluid-hero);
     width: 100%;
     max-width: 100%;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: clamp(3.5rem, 8vw, 5.5rem);
+    gap: var(--space-fluid-section);
     padding-bottom: 0;
     box-sizing: border-box;
     overflow-x: clip;
@@ -9492,7 +9511,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 .about-page__duo {
     display: grid;
     grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr);
-    gap: clamp(1.5rem, 4vw, 5.9375rem);
+    gap: var(--space-fluid-stack);
     align-items: start;
     min-width: 0;
 }
@@ -9523,7 +9542,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 .about-page__job-list {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--about-card-gap) + 0.375rem);
+    gap: var(--space-proximity-pair);
 }
 
 /* Figma 743:16900 — жёлтые стикеры опыта (Sticker.js) */
@@ -9580,8 +9599,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     position: absolute;
     right: 0;
     bottom: 0;
-    width: clamp(5.5rem, 18vw, 6.75rem);
-    height: clamp(5.5rem, 18vw, 6.75rem);
+    width: clamp(var(--space-48), 18vw, var(--space-64));
+    height: clamp(var(--space-48), 18vw, var(--space-64));
     z-index: 5;
     clip-path: polygon(100% 0, 100% 100%, 0 100%);
     text-decoration: none;
@@ -9614,8 +9633,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    padding: 2rem 1.3125rem;
+    gap: var(--space-12);
+    padding: var(--space-32) var(--space-24);
     box-sizing: border-box;
 }
 
@@ -9672,20 +9691,25 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 /* Figma 337:24764 / 743:16911 — skills accordion (hyp-list) */
 .page-about .about-page__skill-list.hyp-list {
-    --hyp-list-inset: clamp(1.25rem, 2.5vw, 2rem);
-    --case-hyp-row-gap: clamp(1rem, 2.5vw, 2rem);
-    --case-hyp-body-gap: clamp(0.75rem, 2vw, 1rem);
+    --hyp-list-inset: var(--case-feature-card-padding);
     list-style: none;
     margin: 0;
     padding: var(--hyp-list-inset);
     background: var(--case-feature-card-bg);
-    border-radius: var(--case-feature-card-radius-sm);
-    border: 0.0625rem solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--case-feature-card-radius);
+    border: 0;
     display: flex;
     flex-direction: column;
     gap: 0;
     width: 100%;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-about .about-page__skill-list.hyp-list > * {
+    position: relative;
+    z-index: 1;
 }
 
 .page-about .about-page__skill-list.hyp-list > .hyp-list__item {
@@ -9861,7 +9885,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .about-page__edu-card {
     min-height: auto;
-    padding: clamp(1.25rem, 2.5vw, 2rem);
+    padding: clamp(var(--space-16), 2.5vw, var(--space-32));
     border-radius: var(--about-card-radius);
     background: var(--about-edu-card-bg);
     display: flex;
@@ -9984,14 +10008,14 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 /* lg 1025–1200px: плотнее hero и duo, меньше offset опыта */
 @media (max-width: 75rem) and (min-width: 64.0625rem) {
     .about-page {
-        --about-hero-photo-size: clamp(13rem, 28vw, 22rem);
-        --about-hero-gap: clamp(1.5rem, 5vw, 4rem);
-        --about-exp-panel-offset: clamp(2rem, 10vw, 6.5rem);
-        gap: clamp(3rem, 6vw, 4.5rem);
+        --about-hero-photo-size: clamp(var(--space-96), 28vw, 22rem);
+        --about-hero-gap: var(--space-fluid-block);
+        --about-exp-panel-offset: clamp(var(--space-32), 10vw, var(--space-96));
+        gap: var(--space-fluid-stack);
     }
 
     .about-page__duo {
-        gap: clamp(1.25rem, 3vw, 3rem);
+        gap: var(--space-fluid-group);
         grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
     }
 
@@ -10072,9 +10096,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         --about-hero-gap: var(--space-24);
         --about-exp-panel-offset: 0;
         --about-section-heading-gap: var(--space-16);
-        --about-card-gap: 0.625rem;
-        --about-card-radius: 1.25rem;
-        gap: var(--space-48);
+        --about-card-gap: var(--space-8);
+        --about-card-radius: var(--space-24);
+        gap: var(--space-proximity-block);
     }
 
     .about-page__hero {
@@ -10139,8 +10163,10 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .page-about .about-page__skill-list.hyp-list {
-        --hyp-list-inset: var(--space-16);
-        --case-hyp-row-gap: var(--space-16);
+        --hyp-list-inset: var(--case-feature-card-padding-sm);
+        --case-hyp-row-gap: var(--space-proximity-group);
+        --case-hyp-body-gap: var(--space-proximity-pair);
+        border-radius: var(--case-feature-card-radius-sm);
     }
 
     .page-about .about-page__skill-list .hyp-list__title {
@@ -10243,7 +10269,10 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .page-about .about-page__skill-list.hyp-list {
-        --hyp-list-inset: var(--space-16);
+        --hyp-list-inset: var(--case-feature-card-padding-sm);
+        --case-hyp-row-gap: var(--space-proximity-pair);
+        --case-hyp-body-gap: var(--space-proximity-pair);
+        border-radius: var(--case-feature-card-radius-sm);
     }
 
     .about-page__section-heading {
@@ -10265,16 +10294,16 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 }
 
-/* Figma 89:346 — «Все проекты»: карточки с радиусом 1.875rem */
+/* Figma 89:346 — «Все проекты»: карточки на модульной сетке */
 .page-projects .preview-card,
 .page-projects .preview-card__link {
-    border-radius: 1.875rem;
+    border-radius: var(--space-32);
 }
 
 .page-projects .preview-image,
 .page-projects .preview-image img,
 .page-projects .preview-image__placeholder {
-    border-radius: 1.875rem;
+    border-radius: var(--space-32);
 }
 
 /* Figma 89-766 — страница Резюме: та же верстка 89-756 (центр + сетка карточек) */
@@ -10641,7 +10670,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 .project-page-wrap--layout-89 .scroll-scrub-row__runway .scroll-scrub-row__sticky--cards {
     position: sticky;
-    top: clamp(3.5rem, 11svh, 7.5rem);
+    top: var(--scrub-sticky-top);
     z-index: 1;
     width: 100%;
     height: auto;
@@ -10878,7 +10907,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 .site-footer__surface {
     width: 100%;
     background: #000;
-    padding: clamp(2rem, 5vw, 3.5rem) 0;
+    padding: var(--space-fluid-stack) 0;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -10900,7 +10929,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     width: 100vw;
     max-width: none;
     margin-top: 0;
-    margin-bottom: clamp(1.25rem, 3vw, 2rem);
+    margin-bottom: var(--space-fluid-group);
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
     padding: 0 max(env(safe-area-inset-right, 0), clamp(0.5rem, 2.4vw, 1.25rem)) 0
@@ -11103,7 +11132,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .site-footer__wordmark {
-        margin-bottom: clamp(1.25rem, 4vw, 2rem);
+        margin-bottom: var(--space-fluid-group);
         padding-left: max(env(safe-area-inset-left, 0), clamp(0.5rem, 2.4vw, 1rem));
         padding-right: max(env(safe-area-inset-right, 0), clamp(0.5rem, 2.4vw, 1rem));
     }
