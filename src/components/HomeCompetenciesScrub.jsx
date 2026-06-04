@@ -147,13 +147,15 @@ export default function HomeCompetenciesScrub({
       <div className="home-competencies-scrub home-competencies-scrub--reduced-motion">
         <div className="home-competencies__panel">
           <div className="home-competencies__inner home-competencies__inner--scrub">
-            <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
-              <div className="home-competencies-scrub__stage">
-                {floatCards}
-                <div className="home-competencies-scrub__center">{linesStack(0)}</div>
+            <div className="home-competencies-scrub__content">
+              <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
+                <div className="home-competencies-scrub__stage">
+                  {floatCards}
+                  <div className="home-competencies-scrub__center">{linesStack(0)}</div>
+                </div>
               </div>
+              {children}
             </div>
-            {children}
           </div>
         </div>
       </div>
@@ -165,13 +167,15 @@ export default function HomeCompetenciesScrub({
       <div ref={stickyRef} className="home-competencies-scrub__sticky">
         <div className="home-competencies__panel">
           <div className="home-competencies__inner home-competencies__inner--scrub">
-            <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
-              <div ref={stageRef} className="home-competencies-scrub__stage">
-                {floatCards}
-                <div className="home-competencies-scrub__center">{linesStack(activeIdx)}</div>
+            <div className="home-competencies-scrub__content">
+              <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
+                <div ref={stageRef} className="home-competencies-scrub__stage">
+                  {floatCards}
+                  <div className="home-competencies-scrub__center">{linesStack(activeIdx)}</div>
+                </div>
               </div>
+              {children}
             </div>
-            {children}
           </div>
         </div>
       </div>

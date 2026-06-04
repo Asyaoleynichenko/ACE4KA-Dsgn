@@ -2663,8 +2663,8 @@ h3 {
     isolation: isolate;
     overflow-x: clip;
     overflow-y: visible;
-    padding-left: var(--layout-edge-left);
-    padding-right: var(--layout-edge-right);
+    padding-left: 0;
+    padding-right: 0;
     box-sizing: border-box;
     scroll-snap-align: center;
     scroll-snap-stop: always;
@@ -2677,6 +2677,9 @@ h3 {
     max-width: min(56rem, 100%);
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     border-radius: var(--space-24);
     color: #fafafa;
     box-sizing: border-box;
@@ -2901,12 +2904,29 @@ h3 {
     position: relative;
     flex: 1 1 auto;
     min-height: 0;
+    width: 100%;
     padding: 0 clamp(1rem, 3vw, 1.5rem) clamp(1.5rem, 4vw, 2.5rem);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Figma 592:38775 — стопка + CTA в одной центрированной колонке панели. */
+.home-competencies-scrub__content {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-inline: auto;
+    box-sizing: border-box;
+    container-type: inline-size;
+    container-name: comp-content;
 }
 
 .home-competencies__inner--scrub-static {
@@ -2926,7 +2946,7 @@ h3 {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: stretch;
+    align-items: center;
     gap: var(--space-24);
 }
 
@@ -2938,7 +2958,10 @@ h3 {
     margin-left: auto;
     margin-right: auto;
     min-height: min(33rem, 92vw);
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     padding: var(--comp-stack-pad-top) 0 0;
     box-sizing: border-box;
     overflow: visible;
@@ -3094,8 +3117,9 @@ h3 {
 }
 
 @media (max-width: 32.5rem) {
-    .home-competencies-scrub__center {
-        max-width: min(26.25rem, 88%);
+    .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
+        .home-competencies-scrub__line-wrap {
+        padding-inline: 0;
     }
 }
 
@@ -3149,14 +3173,15 @@ h3 {
 }
 
 .home-competencies-scrub__lines {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
+    display: inline-grid;
+    grid-auto-flow: row;
+    justify-items: center;
     gap: var(--comp-stack-gap);
     text-align: center;
     min-height: 0;
     width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
 }
 
 /* Figma 592:38776 — все пять строк видны одновременно; активная растягивается. */
@@ -3165,6 +3190,8 @@ h3 {
     min-height: 0;
     overflow: visible;
     width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
 }
 
 .page-home .home-competencies-scrub__line-wrap {
@@ -3240,10 +3267,18 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: max-content;
+    max-width: 100%;
     min-height: var(--comp-row-min-h);
     padding-left: clamp(1rem, 5.15vw, 2.875rem);
     padding-right: clamp(1rem, 5.15vw, 2.875rem);
     box-sizing: border-box;
+}
+
+.home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
+    .home-competencies-scrub__line-wrap {
+    width: 100%;
+    padding-inline: 0;
 }
 
 /* Reduced-motion / static: все строки в потоке */
@@ -3262,7 +3297,7 @@ h3 {
 .home-competencies-scrub__line-wrap[data-heading="4"] { --comp-line-size: var(--comp-line-size-4); }
 .home-competencies-scrub__line-wrap[data-heading="5"] { --comp-line-size: var(--comp-line-size-5); }
 
-/* Scrub: единый кегль 96px (Figma 592:38776) */
+/* Scrub: единый кегль 96px (Figma 592:38776). */
 .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
     .home-competencies-scrub__line.home-competencies__line {
     font-size: var(--comp-line-size-uniform, clamp(2rem, 9.5vw, 6rem));
@@ -3273,6 +3308,7 @@ h3 {
     opacity: 1;
     filter: none;
     margin: 0;
+    max-width: 100%;
 }
 
 /* Планшет/узкие вьюпорты: scrub-строки с nowrap + 9.5vw не влезали в панель и
@@ -3297,14 +3333,18 @@ h3 {
         padding-left: clamp(0.5rem, 2.2vw, 1rem);
         padding-right: clamp(0.5rem, 2.2vw, 1rem);
     }
+
+    .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
+        .home-competencies-scrub__line-wrap {
+        padding-inline: 0;
+    }
 }
 
-/* ≤64rem: уменьшаем единый кегль, чтобы самая длинная строка («RESEARCH AND UX/UI»)
-   помещалась без обрезки (на десктопе остаётся 96px). */
+/* ≤64rem: кегль поменьше, но всё ещё крупный display. */
 @media (max-width: 64rem) {
     .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
         .home-competencies-scrub__line.home-competencies__line {
-        font-size: clamp(1.75rem, 7.6vw, 4.5rem);
+        font-size: clamp(1.875rem, 8.2vw, 4.75rem);
     }
 }
 
@@ -3316,7 +3356,7 @@ h3 {
         white-space: normal;
         text-wrap: balance;
         overflow-wrap: anywhere;
-        font-size: clamp(1.625rem, 8.5vw, 2.75rem);
+        font-size: clamp(1.75rem, 9vw, 3rem);
     }
 }
 
@@ -3328,6 +3368,17 @@ h3 {
 
     .page-home .home-competencies-scrub__line-wrap.is-active {
         transform: none;
+    }
+}
+
+/* Только на узкой колонке — мягкий потолок, чтобы длинная строка не обрезалась. */
+@container comp-content (width < 30rem) {
+    .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
+        .home-competencies-scrub__line.home-competencies__line {
+        font-size: min(
+            var(--comp-line-size-uniform, clamp(2rem, 9.5vw, 6rem)),
+            12.5cqw
+        );
     }
 }
 
@@ -3374,14 +3425,13 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 100%;
+    align-self: stretch;
     /* Figma 592:38775 — ~80px от стопки до кнопки */
-    padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(1.75rem, 5vw, 2.5rem);
+    padding: clamp(3rem, 6vw, 5rem) 0 clamp(1.75rem, 5vw, 2.5rem);
     pointer-events: auto;
-}
-
-.home-competencies__inner--stack .home-competencies__cta {
-    flex: 0 0 auto;
-    margin-top: 0;
+    box-sizing: border-box;
 }
 
 .home-competencies__cta .btn-show-all {
@@ -3390,6 +3440,16 @@ h3 {
     height: var(--btn-show-all-height);
     min-height: var(--btn-show-all-height);
     border-radius: var(--btn-show-all-radius);
+}
+
+.home-competencies-scrub__content .home-competencies__cta .btn-show-all {
+    width: min(var(--btn-show-all-width), 100%);
+    max-width: 100%;
+}
+
+.home-competencies__inner--stack .home-competencies__cta {
+    flex: 0 0 auto;
+    margin-top: 0;
 }
 
 @media (max-width: 30rem) {
