@@ -4,7 +4,7 @@ import { flushSync } from 'react-dom';
  * Оборачивает синхронное обновление состояния (роутер-навигацию, setState и т.п.)
  * в `document.startViewTransition(...)`, чтобы браузер смог сыграть native
  * View Transitions между парами элементов с одинаковым `view-transition-name`
- * (например, обложка карточки в `.preview-bento` и hero на `ProjectDetailPage`).
+ * (например, обложка карточки в `.preview-grid` и hero на `ProjectDetailPage`).
  *
  * Если API недоступен или пользователь предпочитает reduced motion — просто
  * выполняем обновление без анимации.

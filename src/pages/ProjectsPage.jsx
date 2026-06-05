@@ -1,5 +1,5 @@
 import FilterPills from '../components/FilterPills';
-import ProjectsBentoGrid from '../components/ProjectsBentoGrid';
+import ProjectsGrid from '../components/ProjectsGrid';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { CASE_STUDY_PAGE_GROUPS, projects } from '../data/projects';
 
@@ -28,7 +28,7 @@ export default function ProjectsPage() {
         <FilterPills />
       </div>
 
-      <ProjectsBentoGrid
+      <ProjectsGrid
         slugs={PROJECTS_PAGE_SLUGS}
         resolveProject={projectBySlug}
         data-node-id="1:297"
