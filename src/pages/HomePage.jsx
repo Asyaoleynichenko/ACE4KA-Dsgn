@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import HomeCameraScroll from '../components/HomeCameraScroll.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import IconAssembleFromDots from '../components/IconAssembleFromDots.jsx';
@@ -62,15 +63,17 @@ export default function HomePage() {
   const competencyLineProjectSlugs = messages.hero?.competencies?.lineProjectSlugs;
 
   return (
-    <div className="home-page home-page--chrome">
+    <HomeCameraScroll bridgeLabel={t('hero.projectsSectionTitle')}>
       <div
         className="home-page__scroll"
+        data-camera-rail=""
         data-node-id="416-12975"
         data-figma-node="416-12975"
         data-name="Главная"
       >
         <section
-          className="hero"
+          className="hero home-scene home-scene--hero"
+          data-scene="hero"
           data-node-id="416-12975"
           data-figma-node="416-12975"
         >
@@ -156,20 +159,42 @@ export default function HomePage() {
             data-float="off"
           >
             <div className="hero-content">
-              <p className="hero-role">
+              <p
+                className="hero-role"
+                data-type-reveal="mask"
+                data-type-reveal-trigger="load"
+                data-type-reveal-split="block"
+              >
                 <span className="text-condensed">{t('hero.role')}</span>
               </p>
-              <h1 className="hero-title" data-scale="hero-name">
+              <h1
+                className="hero-title"
+                data-scale="hero-name"
+                data-type-reveal="cinematic"
+                data-type-reveal-trigger="load"
+                data-type-reveal-split="children"
+                data-type-reveal-delay="0.12"
+              >
                 {heroTitleLines(t('hero.title')).map((part) => (
                   <span key={part} className="hero-title__line">
                     {part}
                   </span>
                 ))}
               </h1>
-              <p className="hero-text">
+              <p
+                className="hero-text"
+                data-type-reveal="mask"
+                data-type-reveal-trigger="load"
+                data-type-reveal-delay="0.3"
+                data-type-reveal-stagger="0.07"
+              >
                 {t('hero.text')}
               </p>
-              <SeamlessProjectsLink to={localizedPath('/about')} className="hero-more hero-more--with-icon">
+              <SeamlessProjectsLink
+                to={localizedPath('/about')}
+                className="hero-more hero-more--with-icon"
+                data-reveal=""
+              >
                 <span className="hero-more__text">
                   <span className="text-condensed">{t('hero.moreAbout')}</span>
                 </span>
@@ -177,7 +202,7 @@ export default function HomePage() {
               </SeamlessProjectsLink>
             </div>
             <div className="hero-about__meta">
-              <div className="info-grid">
+              <div className="info-grid" data-reveal-group="">
                 <div className="info-card">
                   <span className="info-label">
                     <span className="text-condensed">{t('hero.info.location')}</span>
@@ -209,7 +234,7 @@ export default function HomePage() {
                   <span className="info-value">{t('hero.info.contactsValue')}</span>
                 </div>
               </div>
-              <div className="hero-links">
+              <div className="hero-links" data-reveal="">
                 {heroLinks.map(({ href, label, labelKey }, index) => {
                   const linkLabel = labelKey ? t(labelKey) : label;
                   const linkEl = href.startsWith('/') ? (
@@ -237,7 +262,8 @@ export default function HomePage() {
 
         {competencyLines.length ? (
           <section
-            className="home-competencies"
+            className="home-competencies home-scene home-scene--competencies"
+            data-scene="competencies"
             data-node-id="592-38775"
             data-figma-node="592-38775"
             data-name="Work Section"
@@ -248,7 +274,7 @@ export default function HomePage() {
                 lineProjectSlugs={competencyLineProjectSlugs}
                 ariaLabel={t('hero.competencies.aria')}
               >
-                <div className="home-competencies__cta">
+                <div className="home-competencies__cta" data-reveal="">
                   <HalftoneButton to={localizedPath('/projects')}>{t('hero.allProjects')}</HalftoneButton>
                 </div>
               </HomeCompetenciesScrub>
@@ -256,10 +282,14 @@ export default function HomePage() {
           </section>
         ) : null}
 
-        <Suspense fallback={<SectionFallback minHeight="40vh" />}>
-          <HomeProjectsSection />
-        </Suspense>
+        {/* Сцена-обёртка снаружи Suspense: ScrollTrigger камеры находит её сразу,
+            до того как lazy-секция домаунтится */}
+        <div className="home-scene home-scene--projects" data-scene="projects">
+          <Suspense fallback={<SectionFallback minHeight="40vh" />}>
+            <HomeProjectsSection />
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </HomeCameraScroll>
   );
 }

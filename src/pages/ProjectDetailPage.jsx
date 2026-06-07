@@ -399,7 +399,7 @@ export default function ProjectDetailPage() {
                       return (
                         <Fragment key={relatedSlug}>
                           {idx > 0 ? ' · ' : null}
-                          <SmartLink to={localizedPath(`/projects/${relatedSlug}`)}>{label}</SmartLink>
+                          <SmartLink to={localizedPath(`/project/${relatedSlug}`)}>{label}</SmartLink>
                         </Fragment>
                       );
                     })}

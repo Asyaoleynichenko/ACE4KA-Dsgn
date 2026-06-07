@@ -18,14 +18,14 @@ export default function ContactPage() {
 
       <div className="contact-grid">
         <div className="contact-item">
-          <span aria-hidden="true">✉</span>
+          <span className="contact-item__icon" aria-hidden="true">✉</span>
           <div>
             <strong><span className="text-condensed">{t('contact.labels.mail')}</span></strong>
             <a href="mailto:hello@example.com">hello@example.com</a>
           </div>
         </div>
         <div className="contact-item">
-          <span aria-hidden="true">📱</span>
+          <span className="contact-item__icon" aria-hidden="true">📱</span>
           <div>
             <strong><span className="text-condensed">{t('contact.labels.telegram')}</span></strong>
             <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">
@@ -34,7 +34,7 @@ export default function ContactPage() {
           </div>
         </div>
         <div className="contact-item">
-          <span aria-hidden="true">💼</span>
+          <span className="contact-item__icon" aria-hidden="true">💼</span>
           <div>
             <strong><span className="text-condensed">{t('contact.labels.behance')}</span></strong>
             <a href="https://behance.net/" target="_blank" rel="noopener noreferrer">
@@ -43,7 +43,7 @@ export default function ContactPage() {
           </div>
         </div>
         <div className="contact-item">
-          <span aria-hidden="true">📌</span>
+          <span className="contact-item__icon" aria-hidden="true">📌</span>
           <div>
             <strong><span className="text-condensed">{t('contact.labels.pinterest')}</span></strong>
             <a href="https://pinterest.com/" target="_blank" rel="noopener noreferrer">

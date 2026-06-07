@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 
 export default function NotFoundPage() {
@@ -11,9 +11,9 @@ export default function NotFoundPage() {
         <p>{t('errors.notFoundBody')}</p>
       </header>
       <p>
-        <Link to={localizedPath('/')} className="nav-link">
+        <SeamlessProjectsLink to={localizedPath('/')} className="nav-link">
           {t('errors.notFoundHome')}
-        </Link>
+        </SeamlessProjectsLink>
       </p>
     </div>
   );

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { I18nProvider } from './i18n/I18nProvider.jsx';
 import Layout from './components/Layout';
@@ -8,19 +8,70 @@ import { LegacyLocaleRedirect, RootLocaleRedirect } from './components/LegacyLoc
 import LenisProvider from './context/LenisProvider.jsx';
 import MotionEffects from './components/MotionEffects.jsx';
 
-const HomePage = lazy(() => import('./pages/HomePage'));
-const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
-const AboutPage = lazy(() => import('./pages/AboutPage'));
-const ContactPage = lazy(() => import('./pages/ContactPage'));
-const ResumePage = lazy(() => import('./pages/ResumePage'));
-const EducationPage = lazy(() => import('./pages/EducationPage'));
-const Page89_811 = lazy(() => import('./pages/Page89_811'));
-const Page89_772 = lazy(() => import('./pages/Page89_772'));
-const Page89_909 = lazy(() => import('./pages/Page89_909'));
-const Page89_915 = lazy(() => import('./pages/Page89_915'));
-const Page89_920 = lazy(() => import('./pages/Page89_920'));
-const ProjectDetailPage = lazy(() => import('./pages/ProjectDetailPage'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+/* Тонки импортов отдельно от lazy(): их же дёргает RoutePrefetcher в idle,
+   чтобы переход на любую страницу был мгновенным (без пустого fallback). */
+const routeImports = {
+  HomePage: () => import('./pages/HomePage'),
+  ProjectsPage: () => import('./pages/ProjectsPage'),
+  AboutPage: () => import('./pages/AboutPage'),
+  ContactPage: () => import('./pages/ContactPage'),
+  ResumePage: () => import('./pages/ResumePage'),
+  EducationPage: () => import('./pages/EducationPage'),
+  Page89_811: () => import('./pages/Page89_811'),
+  Page89_772: () => import('./pages/Page89_772'),
+  Page89_909: () => import('./pages/Page89_909'),
+  Page89_915: () => import('./pages/Page89_915'),
+  Page89_920: () => import('./pages/Page89_920'),
+  ProjectDetailPage: () => import('./pages/ProjectDetailPage'),
+  NotFoundPage: () => import('./pages/NotFoundPage'),
+};
+
+const HomePage = lazy(routeImports.HomePage);
+const ProjectsPage = lazy(routeImports.ProjectsPage);
+const AboutPage = lazy(routeImports.AboutPage);
+const ContactPage = lazy(routeImports.ContactPage);
+const ResumePage = lazy(routeImports.ResumePage);
+const EducationPage = lazy(routeImports.EducationPage);
+const Page89_811 = lazy(routeImports.Page89_811);
+const Page89_772 = lazy(routeImports.Page89_772);
+const Page89_909 = lazy(routeImports.Page89_909);
+const Page89_915 = lazy(routeImports.Page89_915);
+const Page89_920 = lazy(routeImports.Page89_920);
+const ProjectDetailPage = lazy(routeImports.ProjectDetailPage);
+const NotFoundPage = lazy(routeImports.NotFoundPage);
+
+/** Idle-prefetch чанков всех страниц: бесшовные переходы без паузы загрузки.
+    Пропускаем на save-data и медленных сетях. */
+function RoutePrefetcher() {
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const conn = navigator.connection;
+    if (conn?.saveData || /(^|-)2g/.test(conn?.effectiveType ?? '')) return undefined;
+
+    let cancelled = false;
+    const run = () => {
+      if (cancelled) return;
+      Object.values(routeImports).forEach((load) => {
+        load().catch(() => {});
+      });
+    };
+
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(run, { timeout: 4000 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback(id);
+      };
+    }
+    const id = window.setTimeout(run, 1500);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(id);
+    };
+  }, []);
+
+  return null;
+}
 
 const routerBasename =
   import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '') || undefined;
@@ -48,6 +99,7 @@ export default function App() {
       <I18nProvider>
         <LenisProvider>
           <ScrollToTop />
+          <RoutePrefetcher />
           <MotionEffects />
           <Suspense fallback={<PageFallback />}>
             <Routes>

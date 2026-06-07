@@ -63,7 +63,22 @@ export default function ScrollPolish() {
       },
       { threshold: 0.15 },
     );
-    document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+
+    /* `[data-reveal]` — одиночный блок, `[data-reveal-group] > *` — каскад детей.
+       reveal-pending ставится из JS (не из CSS-базы): без JS / с reduced-motion
+       контент просто виден статично. MutationObserver подхватывает lazy-секции. */
+    const armed = new WeakSet();
+    const arm = () => {
+      document.querySelectorAll('[data-reveal], [data-reveal-group] > *').forEach((el) => {
+        if (armed.has(el)) return;
+        armed.add(el);
+        el.classList.add('reveal-pending');
+        io.observe(el);
+      });
+    };
+    arm();
+    const mo = new MutationObserver(arm);
+    mo.observe(document.body, { childList: true, subtree: true });
 
     const unbind = bindScroll(onScroll, { lenis });
     onScroll();
@@ -71,6 +86,7 @@ export default function ScrollPolish() {
     return () => {
       unbind();
       io.disconnect();
+      mo.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [lenis]);

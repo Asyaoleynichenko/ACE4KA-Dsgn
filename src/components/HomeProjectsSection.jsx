@@ -14,12 +14,19 @@ export default function HomeProjectsSection() {
       data-figma-node="1-285"
     >
       <div className="logo-section" data-node-id="1:286">
-        <h2 className="projects-title-main" data-node-id="1:289" data-scale="section-title">
+        <h2
+          className="projects-title-main"
+          data-node-id="1:289"
+          data-scale="section-title"
+          data-type-reveal="cinematic"
+          data-type-reveal-trigger="scroll"
+          data-type-reveal-split="lines"
+        >
           {t('hero.projectsSectionTitle')}
         </h2>
         <FilterPills />
       </div>
-      <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297">
+      <div className="preview-grid" data-node-id="1:297" data-figma-node="1-297" data-reveal-group="">
         {homeProjectsCatalog.map((item) => (
           <ProjectCard
             key={item.slug}

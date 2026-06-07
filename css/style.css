@@ -733,6 +733,49 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     display: block;
 }
 
+/* === Reveal-каскад: [data-reveal] / [data-reveal-group] > * (ScrollPolish IO) ===
+   reveal-pending ставит JS → скрытие мгновенное (transition только в .is-revealed),
+   без JS и при reduced-motion контент статично виден. Ритм — MOTION_STAGGER_BEAT 90ms. */
+[data-reveal].reveal-pending,
+[data-reveal-group] > .reveal-pending {
+    opacity: 0;
+    transform: translate3d(0, var(--space-16), 0);
+}
+
+[data-reveal].is-revealed,
+[data-reveal-group] > .is-revealed {
+    opacity: 1;
+    transform: none;
+    transition:
+        opacity var(--dur-smart-reveal) var(--ease-smart),
+        transform var(--dur-smart-reveal) var(--ease-smart);
+    transition-delay: calc(var(--reveal-base, 0ms) + var(--reveal-i, 0) * 90ms);
+}
+
+/* Двухколоночные гриды: правая карточка ряда отстаёт на 1 beat */
+[data-reveal-group] > :nth-child(even).is-revealed {
+    --reveal-i: 1;
+}
+
+/* Hero (главная): хвост каскада после type-reveal роли/имени/лида */
+.page-home .hero-content > .hero-more[data-reveal] {
+    --reveal-base: 620ms;
+}
+
+.page-home .hero-about .info-grid[data-reveal-group] > :nth-child(1).is-revealed { --reveal-i: 0; }
+.page-home .hero-about .info-grid[data-reveal-group] > :nth-child(2).is-revealed { --reveal-i: 1; }
+.page-home .hero-about .info-grid[data-reveal-group] > :nth-child(3).is-revealed { --reveal-i: 2; }
+.page-home .hero-about .info-grid[data-reveal-group] > :nth-child(4).is-revealed { --reveal-i: 3; }
+.page-home .hero-about .info-grid[data-reveal-group] > :nth-child(5).is-revealed { --reveal-i: 4; }
+
+.page-home .hero-about .info-grid[data-reveal-group] > .is-revealed {
+    --reveal-base: 720ms;
+}
+
+.page-home .hero-about .hero-links[data-reveal] {
+    --reveal-base: 1180ms;
+}
+
 /* Case-study display face: маска/blur без подмены гарнитуры */
 .project-intro .title h1 .type-reveal__inner.type-reveal__vf,
 .project-intro__heading h1 .type-reveal__inner.type-reveal__vf {
@@ -1131,6 +1174,24 @@ html.snap-pages #root.snap-pages-root--home {
     ::view-transition-image-pair(*) {
         animation-duration: 520ms;
         animation-timing-function: var(--ease-smart);
+    }
+
+    /* Persona-морфы главная ↔ «О себе»: имя и фото перетекают между страницами.
+       Каждое имя существует только на своей странице — пары уникальны в снимке. */
+    .page-home .hero-title {
+        view-transition-name: persona-name;
+    }
+
+    .about-page__name {
+        view-transition-name: persona-name;
+    }
+
+    .page-home .hero__card .preview-card-block__image img {
+        view-transition-name: persona-photo;
+    }
+
+    .about-page__photo {
+        view-transition-name: persona-photo;
     }
 }
 
@@ -2566,6 +2627,18 @@ h3 {
     z-index: 2;
 }
 
+/* Сцены перекрываются (negative margin): прозрачная зона нахлёста не должна
+   съедать клики по контенту сцены ниже (hero-links, CTA) — события только на детях */
+.home-page--seamless .home-scene--competencies,
+.home-page--seamless .home-scene--projects {
+    pointer-events: none;
+}
+
+.home-page--seamless .home-scene--competencies > *,
+.home-page--seamless .home-scene--projects > * {
+    pointer-events: auto;
+}
+
 .home-page--seamless .home-scene--competencies::after {
     bottom: 0;
     height: var(--scene-fade-h);
@@ -2602,15 +2675,14 @@ h3 {
     scroll-snap-stop: normal;
 }
 
+/* Канон: фон везде сплошной чёрный — никакого стекла, бордера и hue-свечения
+   у панели компетенций (Figma 416:12975, подтверждено Асей 2026-06-07) */
 .home-page--seamless .home-competencies__panel {
-    background: rgba(0, 0, 0, 0.28);
-    backdrop-filter: blur(1.125rem) saturate(1.15);
-    -webkit-backdrop-filter: blur(1.125rem) saturate(1.15);
-    border: 0.0625rem solid rgba(255, 255, 255, 0.07);
-    box-shadow:
-        0 0 calc(3rem + var(--scene-comp, 0) * 5rem)
-            hsl(calc(var(--world-hue, 280)) 55% 50% / calc(0.08 + var(--scene-comp, 0) * 0.18)),
-        0 2.5rem 6rem rgba(0, 0, 0, 0.38);
+    background: #000000;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 0;
+    box-shadow: none;
 }
 
 .home-page--seamless .section-projects {
@@ -3656,6 +3728,57 @@ h3 {
     min-height: calc(var(--hero-card-width) * 280 / 369 + var(--space-24));
 }
 
+/* === Hero = один экран (416:12975): first screen + интро целиком в 100dvh ===
+   Desktop: пользователь видит всю сцену (иконки + окно + роль/имя/лид +
+   инфо-карточки + ссылки) без скролла. Вертикаль масштабируется dvh-aware
+   токенами, first screen — flex-резинка между шапкой и интро.
+   На мобиле (<64rem) поведение прежнее — там один экран физически не выходит. */
+@media (min-width: 64rem) {
+    .page-home {
+        /* Кап по высоте вьюпорта; по ширине страхует vw-часть clamp() в .hero-about .hero-title */
+        --type-hero-display-size: min(7.5rem, 9.5dvh);
+        /* −3.5rem компенсирует клиренс под хедер в min-height первого экрана,
+           чтобы интро не уехало за фолд на низких вьюпортах */
+        --hero-card-width: min(27.5rem, calc(40dvh - 3.5rem));
+        --type-body-lg-size: clamp(1.0625rem, 2.4dvh, 1.5rem);
+        /* Шире колонка лида → 5 строк вместо 6, интро компактнее по вертикали */
+        --hero-text-max-ch: 78ch;
+    }
+
+    .page-home .hero {
+        box-sizing: border-box;
+        /* min-height (не height): на нормальных экранах ровно 100dvh,
+           на низких узких (1024×768) контент честно отскролливается,
+           а не наезжает на секцию компетенций */
+        min-height: 100dvh;
+        padding-bottom: clamp(var(--space-8), 1.2dvh, var(--space-32));
+        gap: clamp(var(--space-16), 2.2dvh, var(--space-48));
+        /* Оптические отступы заголовка/лида сжимаются вместе с экраном */
+        --type-optical-heading-after: clamp(var(--space-12), 1.6dvh, var(--space-24));
+        --type-optical-body-after: clamp(var(--space-8), 1.2dvh, var(--space-16));
+    }
+
+    .page-home .hero-first-screen {
+        /* Резинка: basis 0 → высота = свободное место вьюпорта (а не aspect-ratio),
+           пол: не короче окна-превью + клиренс под фикс-хедер (nav ГЛАВНАЯ/ПРОЕКТЫ) */
+        flex: 1 1 0;
+        min-height: calc(
+            var(--hero-card-width) * 280 / 369 + var(--header-figma-bar-min) - var(--space-24)
+        );
+    }
+
+
+    .page-home .hero-about.hero__intro {
+        flex: 0 0 auto;
+    }
+
+    .page-home .hero-about.hero__intro,
+    .page-home .hero-about .hero-content,
+    .page-home .hero-about__meta {
+        gap: clamp(var(--space-8), 1.3dvh, var(--space-12));
+    }
+}
+
 /* Обёртка вектора + карточка поверх (первый экран, 1-202) — высота как у фрейма 70:343 */
 .page-home .hero-first-screen .hero__top {
     height: 100%;
@@ -3677,6 +3800,25 @@ h3 {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 4;
+}
+
+/* Desktop, hero = 100dvh: окно прижато к низу первого экрана — сверху чистый
+   клиренс под фикс-хедер (nav ПРОЕКТЫ/ГЛАВНАЯ/О СЕБЕ), см. min-height выше */
+@media (min-width: 64rem) {
+    /* Не height: 100% — Safari резолвит % от aspect-ratio-высоты first screen
+       (до flex-сжатия), и окно свешивалось на роль/имя. Absolute = точный бокс. */
+    .page-home .hero-first-screen .hero__top {
+        position: absolute;
+        inset: 0;
+        height: auto;
+        min-height: 0;
+    }
+
+    .page-home .hero__top .hero__card {
+        top: auto;
+        bottom: 0;
+        transform: translateX(-50%);
+    }
 }
 
 /* Hero content block — выравнивание по центру (Figma 1-202).
@@ -4140,7 +4282,8 @@ h3 {
         transform: none;
         z-index: 2;
         width: 100%;
-        max-width: min(var(--hero-card-width), 100%);
+        /* На узких экранах окно не липнет к краям вьюпорта */
+        max-width: min(var(--hero-card-width), calc(100% - 2 * var(--space-12)));
         margin: 0 auto;
         pointer-events: auto;
         margin-bottom: 0;
@@ -9563,9 +9706,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     top: auto;
     transform: rotate(-45deg);
     transform-origin: center center;
-    font-family: var(--font-sans, inherit);
+    font-family: var(--font-body);
     font-size: clamp(0.6875rem, 1.85vw, 0.8125rem);
-    font-weight: 700;
+    font-weight: var(--font-weight-semibold);
     font-style: italic;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -11004,19 +11147,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     text-transform: uppercase;
     color: #fff;
     text-decoration: none;
-    text-decoration-color: transparent;
-    text-underline-offset: 0.18em;
-    text-decoration-thickness: 0.0625rem;
     transition:
         opacity var(--transition-base),
-        color var(--transition-base),
-        text-decoration-color var(--duration-micro) var(--ease-micro-out),
-        text-underline-offset var(--duration-micro) var(--ease-micro-out);
+        color var(--transition-base);
 }
 
 .site-footer__link:hover {
-    text-decoration-color: rgba(255, 255, 255, 0.92);
-    text-underline-offset: 0.28em;
     opacity: 0.92;
 }
 
