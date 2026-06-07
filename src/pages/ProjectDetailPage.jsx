@@ -373,35 +373,39 @@ export default function ProjectDetailPage() {
           </section>
 
           <section className="project-intro" id={`case-${project.slug}-intro`}>
-            <div className="title">
-              <h1
-                data-type-reveal="cinematic"
-                data-type-reveal-trigger="scroll"
-                data-type-reveal-split="lines"
-                data-type-reveal-stagger="0.085"
-                data-type-reveal-delay="0.05"
-              >
-                {displayTitle}
-              </h1>
-              {caseStudyIntroParas.map((para, idx) => (
-                <p key={idx}>{para}</p>
-              ))}
-              {project.relatedCaseSlugs?.length ? (
-                <p className="project-intro__related">
-                  <span className="project-intro__related-label"><span className="text-condensed">{t('projectDetail.relatedCasesLabel')}</span>: </span>
-                  {project.relatedCaseSlugs.map((relatedSlug, idx) => {
-                    const rp = projects.find((p) => p.slug === relatedSlug);
-                    if (!rp) return null;
-                    const label = tWithFallback(t, `projects.cards.${relatedSlug}.navShortTitle`, rp.title);
-                    return (
-                      <Fragment key={relatedSlug}>
-                        {idx > 0 ? ' · ' : null}
-                        <SmartLink to={localizedPath(`/projects/${relatedSlug}`)}>{label}</SmartLink>
-                      </Fragment>
-                    );
-                  })}
-                </p>
-              ) : null}
+            <div className="project-intro__main">
+              <div className="project-intro__heading">
+                <h1
+                  data-type-reveal="cinematic"
+                  data-type-reveal-trigger="scroll"
+                  data-type-reveal-split="lines"
+                  data-type-reveal-stagger="0.085"
+                  data-type-reveal-delay="0.05"
+                >
+                  {displayTitle}
+                </h1>
+              </div>
+              <div className="project-intro__lead">
+                {caseStudyIntroParas.map((para, idx) => (
+                  <p key={idx}>{para}</p>
+                ))}
+                {project.relatedCaseSlugs?.length ? (
+                  <p className="project-intro__related">
+                    <span className="project-intro__related-label"><span className="text-condensed">{t('projectDetail.relatedCasesLabel')}</span>: </span>
+                    {project.relatedCaseSlugs.map((relatedSlug, idx) => {
+                      const rp = projects.find((p) => p.slug === relatedSlug);
+                      if (!rp) return null;
+                      const label = tWithFallback(t, `projects.cards.${relatedSlug}.navShortTitle`, rp.title);
+                      return (
+                        <Fragment key={relatedSlug}>
+                          {idx > 0 ? ' · ' : null}
+                          <SmartLink to={localizedPath(`/projects/${relatedSlug}`)}>{label}</SmartLink>
+                        </Fragment>
+                      );
+                    })}
+                  </p>
+                ) : null}
+              </div>
             </div>
             <div className="project-info">
               {metaItems.map((item) => (
@@ -476,25 +480,31 @@ export default function ProjectDetailPage() {
                     ))}
                   </div>
                 ) : isTitleInfoSection ? (
-                  <article className="title-info-card" data-node-id={section.nodeId ?? '300:107826'} data-name="Title info">
-                    <div className="title-info-card__content" data-node-id="300:107827">
-                      <div className="title-info-card__text-group" data-node-id="300:107828">
-                        <h2 data-node-id="300:107830">{section.title}</h2>
-                        {section.description ? <p data-node-id="300:107832">{section.description}</p> : null}
+                  <article
+                    className="title-info-article"
+                    data-node-id={section.nodeId ?? '300:107826'}
+                    data-name="Title info"
+                  >
+                    <div className="title-info-card">
+                      <div className="title-info-card__content" data-node-id="300:107827">
+                        <div className="title-info-card__text-group" data-node-id="300:107828">
+                          <h2 data-node-id="300:107830">{section.title}</h2>
+                          {section.description ? <p data-node-id="300:107832">{section.description}</p> : null}
+                        </div>
+                        {section.ctaLabel ? (
+                          <HalftoneButton
+                            href={section.ctaHref ?? publicUrl(section.galleryImage)}
+                            className="title-info-card__cta"
+                            data-node-id="300:107833"
+                          >
+                            {section.ctaLabel}
+                          </HalftoneButton>
+                        ) : null}
                       </div>
-                      {section.ctaLabel ? (
-                        <HalftoneButton
-                          href={section.ctaHref ?? publicUrl(section.galleryImage)}
-                          className="title-info-card__cta"
-                          data-node-id="300:107833"
-                        >
-                          {section.ctaLabel}
-                        </HalftoneButton>
-                      ) : null}
                     </div>
-                    <div className="title-info-card__media" data-node-id="300:107834">
+                    <figure className="title-info-card__media" data-node-id="300:107834">
                       <img src={publicUrl(section.galleryImage)} alt={section.title} loading="lazy" decoding="async" />
-                    </div>
+                    </figure>
                   </article>
                 ) : section.mvpSlides?.length > 0 ? (
                   <HorizontalMvpGallery slides={section.mvpSlides} />

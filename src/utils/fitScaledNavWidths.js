@@ -14,6 +14,8 @@
 export function fitScaledNavWidths(root = document) {
   if (typeof window === 'undefined' || !root) return () => {};
 
+  const MOBILE_DRAWER_MQ = '(max-width: 56.25rem)';
+
   const SELECTORS = [
     '.header .nav-list .nav-link',
     '.header .logo',
@@ -55,6 +57,14 @@ export function fitScaledNavWidths(root = document) {
   };
 
   const applyAll = () => {
+    if (window.matchMedia(MOBILE_DRAWER_MQ).matches) {
+      SELECTORS.forEach((sel) => {
+        root.querySelectorAll(sel).forEach((host) => {
+          host.style.width = '';
+        });
+      });
+      return;
+    }
     SELECTORS.forEach((sel) => {
       root.querySelectorAll(sel).forEach((host) => {
         if (!naturalByEl.has(host)) measureNatural(host);

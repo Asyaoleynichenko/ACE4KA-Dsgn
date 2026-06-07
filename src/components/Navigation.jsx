@@ -34,7 +34,7 @@ function projectTitleBySlug(slug, t) {
 }
 
 /** Навигация: на странице проекта — «Ко всем проектам | <текущий> | <следующий>», иначе стандартные пункты. */
-export function Navigation() {
+export function Navigation({ menuOpen = false, onNavigate }) {
   const { pathname } = useLocation();
   const { t, localizedPath } = useI18n();
 
@@ -48,20 +48,29 @@ export function Navigation() {
     const allProjectsLabel = tWithFallback(t, 'header.nav.allProjects', 'Ко всем проектам');
 
     return (
-      <ul className="nav-list nav-list--project" data-node-id="573-19068">
+      <ul
+        id="site-nav-list"
+        className={`nav-list nav-list--case-study${menuOpen ? ' open' : ''}`}
+        data-node-id="573-19068"
+      >
         <li>
-          <SeamlessProjectsLink to={localizedPath('/projects')} className="nav-link">
-            <span className="text-condensed--single-line">{allProjectsLabel}</span>
+          <SeamlessProjectsLink to={localizedPath('/projects')} className="nav-link" onClick={onNavigate}>
+            <span className="text-condensed text-condensed--single-line">{allProjectsLabel}</span>
           </SeamlessProjectsLink>
         </li>
         <li>
-          <SeamlessProjectsLink to={localizedPath(`/project/${currentSlug}`)} className="nav-link active" aria-current="page">
-            <span className="text-condensed--single-line">{currentTitle}</span>
+          <SeamlessProjectsLink
+            to={localizedPath(`/project/${currentSlug}`)}
+            className="nav-link active"
+            aria-current="page"
+            onClick={onNavigate}
+          >
+            <span className="text-condensed text-condensed--single-line">{currentTitle}</span>
           </SeamlessProjectsLink>
         </li>
         <li>
-          <SeamlessProjectsLink to={localizedPath(`/project/${nextSlug}`)} className="nav-link">
-            <span className="text-condensed--single-line">{nextTitle}</span>
+          <SeamlessProjectsLink to={localizedPath(`/project/${nextSlug}`)} className="nav-link" onClick={onNavigate}>
+            <span className="text-condensed text-condensed--single-line">{nextTitle}</span>
           </SeamlessProjectsLink>
         </li>
       </ul>
@@ -69,7 +78,11 @@ export function Navigation() {
   }
 
   return (
-    <ul className="nav-list" data-node-id="573-19068">
+    <ul
+      id="site-nav-list"
+      className={`nav-list${menuOpen ? ' open' : ''}`}
+      data-node-id="573-19068"
+    >
       {NAV_ROUTE_KEYS.map(({ path, labelKey }) => {
         const label = t(labelKey);
         const active = itemIsActive(pathname, path);
@@ -80,8 +93,9 @@ export function Navigation() {
               to={to}
               className={`nav-link${active ? ' active' : ''}`}
               data-node-id={path === '/projects' ? '573-20954' : path === '/' ? '573-20958' : '573-20956'}
+              onClick={onNavigate}
             >
-              <span className="text-condensed--single-line">{label}</span>
+              <span className="text-condensed text-condensed--single-line">{label}</span>
             </SeamlessProjectsLink>
           </li>
         );
