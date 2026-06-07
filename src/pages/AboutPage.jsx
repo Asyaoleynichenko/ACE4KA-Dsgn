@@ -70,7 +70,7 @@ export default function AboutPage() {
           <img
             className="about-page__photo"
             src={publicUrl(profilePhoto)}
-            alt=""
+            alt={t('about.intro.name')}
             width={449}
             height={449}
             loading="eager"

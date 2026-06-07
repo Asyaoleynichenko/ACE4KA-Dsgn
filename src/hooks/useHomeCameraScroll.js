@@ -32,14 +32,11 @@ export function useHomeCameraScroll(rootRef) {
     const hero = rail.querySelector('[data-scene="hero"]');
     const competencies = rail.querySelector('[data-scene="competencies"]');
     const projects = rail.querySelector('[data-scene="projects"]');
-    const bridgeType = root.querySelector('.home-type-bridge');
-
     const defaults = {
       '--camera-p': '0',
       '--hero-exit': '0',
       '--scene-comp': '0',
       '--scene-projects': '0',
-      '--type-bridge': '0',
       '--world-hue': '280',
     };
     setSceneVars(targets, defaults);
@@ -50,7 +47,6 @@ export function useHomeCameraScroll(rootRef) {
         '--hero-exit': '0',
         '--scene-comp': '1',
         '--scene-projects': '1',
-        '--type-bridge': '1',
       });
       return undefined;
     }
@@ -119,9 +115,7 @@ export function useHomeCameraScroll(rootRef) {
             const p = self.progress;
             setSceneVars(targets, {
               '--scene-projects': p.toFixed(4),
-              '--type-bridge': p.toFixed(4),
             });
-            /* opacity — только через --type-bridge в CSS, без inline blur */
           },
         });
       }
@@ -153,7 +147,6 @@ export function useHomeCameraScroll(rootRef) {
           el.style.removeProperty(key);
         }
       }
-      if (bridgeType) bridgeType.style.removeProperty('opacity');
       rail.querySelectorAll('[data-camera-depth]').forEach((el) => {
         el.style.removeProperty('--camera-shift-y');
       });

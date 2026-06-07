@@ -63,7 +63,7 @@ export default function HomePage() {
   const competencyLineProjectSlugs = messages.hero?.competencies?.lineProjectSlugs;
 
   return (
-    <HomeCameraScroll bridgeLabel={t('hero.projectsSectionTitle')}>
+    <HomeCameraScroll>
       <div
         className="home-page__scroll"
         data-camera-rail=""

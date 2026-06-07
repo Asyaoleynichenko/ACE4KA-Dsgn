@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useHomeCameraScroll } from '../hooks/useHomeCameraScroll.js';
 
 /** Scroll = camera на главной; монтируется внутри `.home-page--seamless`. */
-export default function HomeCameraScroll({ children, bridgeLabel = '' }) {
+export default function HomeCameraScroll({ children }) {
   const rootRef = useRef(null);
   useHomeCameraScroll(rootRef);
 
@@ -12,11 +12,6 @@ export default function HomeCameraScroll({ children, bridgeLabel = '' }) {
         <div className="home-world__glow home-world__glow--a" />
         <div className="home-world__glow home-world__glow--b" />
       </div>
-      {bridgeLabel ? (
-        <div className="home-type-bridge" aria-hidden="true">
-          <span className="home-type-bridge__word">{bridgeLabel}</span>
-        </div>
-      ) : null}
       {children}
     </div>
   );

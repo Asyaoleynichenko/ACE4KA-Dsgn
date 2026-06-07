@@ -2414,7 +2414,6 @@ h3 {
     --hero-exit: 0;
     --scene-comp: 0;
     --scene-projects: 0;
-    --type-bridge: 0;
     --world-hue: 280;
 }
 
@@ -2485,34 +2484,6 @@ h3 {
     z-index: 1;
 }
 
-.home-type-bridge {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: clamp(28vh, 38vh, 44vh);
-    z-index: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-    opacity: var(--type-bridge, 0);
-}
-
-.home-type-bridge__word {
-    font-family: var(--font-competencies-display);
-    font-size: clamp(3.5rem, 16vw, 10rem);
-    font-weight: 600;
-    line-height: 0.92;
-    letter-spacing: -0.04em;
-    text-transform: uppercase;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.06);
-    -webkit-text-stroke: 0.0625rem rgba(255, 255, 255, 0.12);
-    transform: scale(calc(0.92 + var(--type-bridge, 0) * 0.1));
-    filter: none;
-    font-variation-settings: "wght" calc(500 + var(--type-bridge, 0) * 200), "wdth" 100;
-}
-
 [data-camera-depth] {
     transform: translate3d(0, var(--camera-shift-y, 0), 0);
     will-change: transform;
@@ -2534,8 +2505,8 @@ h3 {
 }
 
 .home-page--seamless .home-scene--projects .projects-title-main {
-    transform: scale(calc(0.94 + var(--type-bridge, 0) * 0.06));
-    opacity: calc(0.7 + var(--type-bridge, 0) * 0.3);
+    transform: none;
+    opacity: 1;
     filter: none;
 }
 
@@ -2714,8 +2685,8 @@ h3 {
 }
 
 .home-page--seamless .filter-pills {
-    background: rgba(22, 22, 25, 0.42);
-    border: 0.0625rem solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    border: none;
 }
 
 .home-page--seamless .hero-about,
@@ -2765,8 +2736,7 @@ h3 {
     .home-page--seamless .home-scene--competencies,
     .home-page--seamless .home-scene--projects .projects-title-main,
     .home-page--seamless .home-scene--projects .preview-grid,
-    [data-camera-depth],
-    .home-type-bridge__word {
+    [data-camera-depth] {
         opacity: 1 !important;
         transform: none !important;
         filter: none !important;
@@ -5235,10 +5205,12 @@ h3 {
 
 .page-home .logo-section .filter-pills,
 .page-projects .logo-section .filter-pills {
-    padding: 0.25rem;
-    border-radius: var(--radius-full);
-    backdrop-filter: blur(1.7188rem) saturate(1.2);
-    -webkit-backdrop-filter: blur(1.7188rem) saturate(1.2);
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 /* Figma 1:290 — табы: общая высота 2.25rem, одна типографика и обводка внутри стеклянной группы */
@@ -6799,8 +6771,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     max-width: 100%;
     min-width: 0;
     height: auto;
-    aspect-ratio: var(--project-hero-aspect-w) / var(--project-hero-aspect-h);
-    object-fit: cover;
+    aspect-ratio: auto;
+    object-fit: contain;
     object-position: center;
     border-radius: var(--project-hero-radius);
 }
@@ -7726,6 +7698,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding: 0 1.25rem;
     font-size: 0.875rem;
     letter-spacing: 0.06em;
+    border-radius: 0;
 }
 
 .project-case-study-mail .title-info-card__cta .btn-show-all__label {
@@ -12606,7 +12579,7 @@ canvas {
 
     .page-home .logo-section .filter-pills,
     .page-projects .logo-section .filter-pills {
-        padding: 0.125rem;
+        padding: 0;
     }
 
     .preview-card__meta {
