@@ -305,6 +305,7 @@
     "education": {
       "title": "Education"
     },
+    "tocAria": "About page sections",
     "team": {
       "title": "Team",
       "body": "I work in cross-functional teams with PMs, analytics, engineering, and researchers — from hypothesis to experiment readout"

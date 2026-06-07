@@ -38,10 +38,6 @@ export const projects = [
     meta: 'Медиа · Mail',
     desc: 'Mail Наука и Media UI — основа редизайна медиа',
     image: '/images/figma-sync-20260205-mail-nauki-1777996685113/9404630b674c18da58918ad26aa18f10cd092161.png',
-    heroImages: [
-      '/images/figma-sync-20260205-mail-nauki-1777996685113/9404630b674c18da58918ad26aa18f10cd092161.png',
-      '/images/figma-sync-20260205-mail-nauki-1777996685113/e076ef97274807b1134b88c0ed26e7eee6fd1429.png',
-    ],
     lead:
       'Запуск Mail Наука как новой вертикали и базовая архитектура Media UI, на которых построен редизайн остальных медиапродуктов платформы.',
     layout: 'case-study',
@@ -960,11 +956,6 @@ export const projects = [
     meta: 'UX/UI · НИУ ВШЭ · 2024–2025',
     desc: '«Следы» в городе и Telegram-MVP',
     image: '/images/figma-sync-20260205-drop-1777996703808/e7ca6d9ef4722fbd73934f9beb0938c9a49e3838.png',
-    heroImages: [
-      '/images/figma-sync-20260205-drop-1777996703808/a7ed9c87197b67f34e55c6504edd5b0278fb32d1.png',
-      '/images/figma-sync-20260205-drop-1777996703808/05105f53ab912699e5c4137254415252ea76fb80.png',
-      '/images/figma-sync-20260205-drop-1777996703808/e7ca6d9ef4722fbd73934f9beb0938c9a49e3838.png',
-    ],
     lead:
       'Разработка концепции и MVP платформы для городского нетворкинга и общения (iOS + Telegram bot)',
     layout: 'case-study',
@@ -1559,10 +1550,6 @@ export const projects = [
     meta: 'Mail Hi-Tech · 2024',
     desc: 'Лендинг, который запустил линейку спецпроектов',
     image: '/images/figma-sync-20260205-neural-1777996694634/fe778ffa49a547f00c22cdd97ebaac5e2f37b05b.png',
-    heroImages: [
-      '/images/figma-sync-20260205-neural-1777996694634/fe778ffa49a547f00c22cdd97ebaac5e2f37b05b.png',
-      '/images/figma-sync-20260205-neural-1777996694634/d9bb5cd0634af13795e3e9cf5fd1c6a8ac0787ff.png',
-    ],
     lead:
       'Интерактивный лендинг, объясняющий нейросети широкой аудитории: визуальный сторителлинг, AI-иллюстрации и immersive-формат. После запуска формат масштабировали в коммерческие бренд-спецпроекты (см. кейсы «Биохакинг» и «Развитие направления спецпроектов»).',
     layout: 'case-study',
@@ -1724,10 +1711,6 @@ export const projects = [
     meta: 'UX/UI · HSE · 2023',
     desc: '0→1 за 2 месяца: MVP и монетизация',
     image: '/images/figma-sync-20260205-inkz-1777996709805/b2b5e754958f2bcda2e96b9190ec16097cb49e9f.png',
-    heroImages: [
-      '/images/figma-sync-20260205-inkz-1777996709805/fe778ffa49a547f00c22cdd97ebaac5e2f37b05b.png',
-      '/images/figma-sync-20260205-inkz-1777996709805/b2b5e754958f2bcda2e96b9190ec16097cb49e9f.png',
-    ],
     lead:
       'Inkz — это концепция платформы для поиска тату-мастеров, разработанная с нуля за два месяца. Гипотеза заключалась в том, что наличие отзывов, рейтингов и поиска по стилям упростит выбор мастера и повысит доверие пользователей. Задача состояла в создании MVP, который делает процесс поиска мастера прозрачным и удобным.',
     layout: 'case-study',
@@ -2390,10 +2373,6 @@ export const projects = [
     desc: 'Пассивная БД → инструмент для on-call за 2 дня',
     image: '/images/figma-sync-racktables-376587/71cac6c251727191894dcde67eaf7bd0bd58ee9f.png',
     video: '/videos/racktables-cover.mov',
-    heroImages: [
-      '/images/figma-sync-racktables-376587/73398965538261d1e4c0e44c514db38a5c4b49d1.svg',
-      '/images/figma-sync-racktables-376587/71cac6c251727191894dcde67eaf7bd0bd58ee9f.png',
-    ],
     lead:
       'Задача была успешно сделана за два дня в рамках Yandex Fast Track. Исходный интерфейс RackTables функционировал как пассивная база данных: информация была структурирована линейно, без учёта приоритетности. В условиях инцидентов и сбоев это приводило к критическим задержкам, так как инженеры тратили время на ручной поиск и интерпретацию состояния объектов',
     layout: 'case-study',

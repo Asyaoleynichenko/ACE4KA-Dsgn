@@ -3,6 +3,7 @@ import { publicUrl } from '../utils/publicUrl.js';
 import { asArray } from '../utils/asArray.js';
 import AboutJobCard from '../components/AboutJobCard.jsx';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
+import SideScrollspyNav from '../components/SideScrollspyNav.jsx';
 
 const ABOUT_FIGMA_URL =
   'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=743-16866&m=dev';
@@ -58,6 +59,13 @@ export default function AboutPage() {
   const eduItems = asArray(messages.about?.eduItems);
   const profilePhoto = messages.about?.profilePhoto ?? '/images/figma-743-16866/profile.png';
 
+  const scrollspyItems = [
+    { id: 'intro', label: t('about.intro.name') },
+    { id: 'skills', label: t('about.skills.title') },
+    { id: 'experience', label: t('about.experience.title') },
+    { id: 'education', label: t('about.education.title') },
+  ];
+
   return (
     <div
       className="about-page"
@@ -65,6 +73,7 @@ export default function AboutPage() {
       data-name="Background"
       data-figma-url={ABOUT_FIGMA_URL}
     >
+      <SideScrollspyNav items={scrollspyItems} ariaLabel={t('about.tocAria')} />
       <header className="about-page__hero" id="intro" data-node-id="743:17054">
         <div className="about-page__photo-wrap" data-node-id="743:16931">
           <img

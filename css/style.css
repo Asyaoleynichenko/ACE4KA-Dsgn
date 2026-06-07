@@ -251,8 +251,8 @@
   --hero-fs-stack-bp: 64rem;
 
   --case-prose-max: min(52.5rem, 100%);
-  /* Figma 337:24521 — контент 1310px + поля 24px = 1358px */
-  --case-study-pad-x: 1.5rem;
+  /* Единый gutter с --layout-page-pad-x (16px); контент до 1310px внутри полей */
+  --case-study-pad-x: var(--layout-page-pad-x);
   --case-content-max: min(81.875rem, 100%);
   --case-frame-max: calc(var(--case-content-max) + 2 * var(--case-study-pad-x));
   --case-section-rhythm: clamp(var(--space-48), 6vw, var(--space-80));
@@ -326,7 +326,7 @@
 
   --project-page-max-width: 77.5rem;
   --project-page-padding-y: var(--space-48);
-  --project-page-padding-x: var(--space-24);
+  --project-page-padding-x: var(--layout-page-pad-x);
   --project-page-padding-bottom: var(--space-64);
   --project-page-gap: var(--space-48);
   --project-detail-pt: var(--space-32);
@@ -348,7 +348,7 @@
   --project-lead-font-size: var(--type-body-lg-size);
   --project-lead-line-height: 1.5;
   --project-lead-letter-spacing: 0;
-  --project-lead-color: #737373;
+  --project-lead-color: #a3a3a3;
   --project-meta-card-gap: var(--space-16);
   --project-meta-card-bg: var(--case-feature-card-bg);
   --project-meta-card-radius: var(--case-feature-card-radius-sm);
@@ -446,7 +446,7 @@
     :root {
         --hero-row-gap: var(--space-24);
         --layout-section-gap: var(--space-fluid-section);
-        --type-body-size: clamp(0.9375rem, 1.5vw + 0.85rem, 1.0625rem);
+        --type-body-size: clamp(1rem, 1.5vw + 0.85rem, 1.0625rem);
         --type-body-lg-size: clamp(1.125rem, 2vw + 0.9rem, 1.25rem);
         --type-label-size: clamp(0.6875rem, 1vw + 0.6rem, 0.8125rem);
     }
@@ -482,7 +482,7 @@
         --type-statement-line: 1.15;
         --type-body-lg-size: clamp(1.125rem, 4vw, 1.25rem);
         --type-body-lg-line: 1.5;
-        --type-body-size: clamp(0.9375rem, 3.6vw, 1.0625rem);
+        --type-body-size: clamp(1rem, 3.6vw, 1.0625rem);
         --type-body-line: 1.55;
         --type-label-size: clamp(0.6875rem, 2.8vw, 0.8125rem);
         --type-case-study-title: var(--type-section-title-size);
@@ -1606,6 +1606,15 @@ body.nav-drawer-open {
         justify-self: center;
     }
 
+    .header .nav > .header-bar-actions {
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+    }
+
     .header .nav > .lang-switch {
         justify-self: end;
     }
@@ -1628,7 +1637,7 @@ body.nav-drawer-open {
     }
 
     .header .nav:has(.nav-list--case-study) > .logo,
-    .header .nav:has(.nav-list--case-study) > .lang-switch {
+    .header .nav:has(.nav-list--case-study) > .header-bar-actions {
         position: relative;
         z-index: 1;
     }
@@ -1638,7 +1647,7 @@ body.nav-drawer-open {
         grid-row: 1;
     }
 
-    .header .nav:has(.nav-list--case-study) > .lang-switch {
+    .header .nav:has(.nav-list--case-study) > .header-bar-actions {
         grid-column: 3;
         grid-row: 1;
     }
@@ -1658,6 +1667,100 @@ body.nav-drawer-open {
     .page-project .header .lang-switch .lang-switch__toggle-row {
         color: #ffffff !important;
         text-shadow: 0 0.0625rem 0.625rem rgba(0, 0, 0, 0.55);
+    }
+
+    .header .nav-list .nav-link:hover:not(.active) {
+        opacity: 1;
+    }
+
+    .header .nav-link,
+    .header .logo {
+        cursor: pointer;
+    }
+}
+
+@media (min-width: 64rem) {
+    :root {
+        --layout-page-pad-x: var(--space-24);
+        --layout-89-756-grid-max-width: min(56rem, 100%);
+    }
+
+    .page-about .header,
+    .page-projects .header,
+    .page-contact .header,
+    .page-resume .header,
+    .page-education .header,
+    .page-home .header {
+        mix-blend-mode: normal;
+    }
+
+    .page-about .header .logo > span,
+    .page-about .header .nav-list .nav-link > span,
+    .page-about .header .nav-list .nav-link.active > span,
+    .page-about .header .lang-switch .lang-switch__toggle-row,
+    .page-projects .header .logo > span,
+    .page-projects .header .nav-list .nav-link > span,
+    .page-projects .header .nav-list .nav-link.active > span,
+    .page-projects .header .lang-switch .lang-switch__toggle-row,
+    .page-contact .header .logo > span,
+    .page-contact .header .nav-list .nav-link > span,
+    .page-contact .header .nav-list .nav-link.active > span,
+    .page-contact .header .lang-switch .lang-switch__toggle-row,
+    .page-resume .header .logo > span,
+    .page-resume .header .nav-list .nav-link > span,
+    .page-resume .header .nav-list .nav-link.active > span,
+    .page-resume .header .lang-switch .lang-switch__toggle-row,
+    .page-education .header .logo > span,
+    .page-education .header .nav-list .nav-link > span,
+    .page-education .header .nav-list .nav-link.active > span,
+    .page-education .header .lang-switch .lang-switch__toggle-row,
+    .page-home .header .logo > span,
+    .page-home .header .nav-list .nav-link > span,
+    .page-home .header .nav-list .nav-link.active > span,
+    .page-home .header .lang-switch .lang-switch__toggle-row {
+        color: #ffffff !important;
+        text-shadow: 0 0.0625rem 0.625rem rgba(0, 0, 0, 0.55);
+    }
+
+    .filter-pills {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        justify-content: center;
+        padding-bottom: 0;
+    }
+
+    .site-footer__list {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 48rem) {
+    .about-page__duo {
+        grid-template-columns: 1fr;
+        gap: var(--space-40);
+        min-width: 0;
+    }
+
+    .about-page__panel--skills {
+        order: 2;
+    }
+
+    .about-page__panel--experience {
+        order: 1;
+        margin-top: 0;
+    }
+}
+
+@media (hover: hover) and (min-width: 64rem) {
+    .about-job__peel-link:hover {
+        filter: brightness(1.06);
+    }
+
+    .about-job:hover .sticker-front {
+        transform: translateY(-0.125rem);
+        transition: transform var(--transition-fast);
     }
 }
 
@@ -4415,7 +4518,7 @@ h3 {
     letter-spacing: 0.0375rem;
     text-transform: uppercase;
     color: var(--project-title-color);
-    opacity: 0.4;
+    opacity: 0.55;
 }
 
 /* Meta в карточке — многострочный текст: без scaleX (иначе строки визуально наезжают) */
@@ -5439,7 +5542,7 @@ h3 {
     letter-spacing: 0.0375rem;
     text-transform: uppercase;
     color: var(--color-text);
-    opacity: 0.4;
+    opacity: 0.55;
     margin: 0;
     width: 100%;
     max-width: 100%;
@@ -5814,6 +5917,12 @@ h3 {
     box-sizing: border-box;
     justify-items: stretch;
     align-items: start;
+}
+
+@media (min-width: 64rem) {
+    .preview-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 }
 
 @media (min-width: 48.0625rem) {
@@ -7116,12 +7225,19 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: 0 0 var(--space-8);
+    padding: 0;
     box-sizing: border-box;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     container-type: inline-size;
     container-name: scrub-cards;
+    scrollbar-width: none;
+}
+
+.project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__viewport--native-x::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
 }
 /* Та же лента, но горизонтальное смещение через transform от вертикального скролла страницы */
 .project-case-study-mail .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__viewport--linked {
@@ -7848,22 +7964,21 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 .project-case-study-mail .section ul.section__pills li {
     list-style: none;
     margin: 0;
-    padding: 0.625rem 1.125rem;
+    padding: 0.75rem 1.25rem;
     border-radius: var(--radius-full);
     background: var(--case-workflow-pill-bg);
     border: 0.0625rem solid rgba(0, 0, 0, 0.06);
     font-family: var(--font-body);
     font-size: clamp(0.875rem, 1.1vw, 1.25rem);
-    line-height: 1.2;
+    line-height: 1.45;
     font-weight: 400;
     letter-spacing: -0.03em;
     text-transform: uppercase;
     color: var(--case-workflow-pill-color);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+    display: block;
     width: fit-content;
     max-width: 100%;
+    box-sizing: border-box;
 }
 .project-case-study-mail .section__pills ~ .scroll-scrub-row--hypothesis,
 .project-case-study-mail .gallery--before-hypotheses ~ .scroll-scrub-row--hypothesis {
@@ -8219,6 +8334,17 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 @media (max-width: 40rem) {
     .project-case-study-mail .section ul.section__pills {
         max-width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.625rem;
+    }
+
+    .project-case-study-mail .section ul.section__pills li {
+        width: 100%;
+        max-width: 100%;
+        padding: 0.875rem 1.125rem;
+        line-height: 1.5;
+        font-size: clamp(0.8125rem, 3.4vw, 0.9375rem);
     }
 
     .project-case-study-mail .section ul.hyp-list,
@@ -8559,12 +8685,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         --mvp-slider-max: min(100%, calc(100vw - 2rem));
     }
 
-    .project-case-study-mail .mvp-slider__chev {
-        width: 2.375rem;
-        height: 2.375rem;
-        font-size: 1.25rem;
-    }
-
     .project-case-study-mail .mvp-slider__text {
         font-size: clamp(1rem, 3.6vw, 1.125rem);
         line-height: 1.55;
@@ -8723,8 +8843,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .project-case-study-mail .title-info-card__media {
         width: 100%;
         max-width: none;
-        aspect-ratio: 4 / 3;
-        border-radius: var(--case-article-media-radius, 1.25rem);
+        aspect-ratio: auto;
+        border-radius: 0;
     }
 
     /* Тело статьи — без карточных подложек */
@@ -8767,19 +8887,48 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin-top: clamp(1rem, 4vw, 1.25rem);
     }
 
-    .project-case-study-mail .section .gallery img,
-    .project-case-study-mail .gallery--before-hypotheses img {
+    /* Hero — edge-to-edge на мобилке; галереи остаются в gutter со скруглением */
+    .project-case-study-mail .hero__media,
+    .project-case-study-mail .title-info-card__media {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        border-radius: 0;
+    }
+
+    .project-case-study-mail .hero__media,
+    .project-case-study-mail .hero__media--stack {
+        aspect-ratio: auto;
+        overflow: visible;
+        background: transparent;
+    }
+
+    .project-case-study-mail .hero__media img,
+    .project-case-study-mail .hero__media--stack img,
+    .project-case-study-mail .title-info-card__media img {
+        position: static;
+        inset: auto;
+        width: 100%;
+        object-fit: contain;
         aspect-ratio: auto;
         height: auto;
         max-height: none;
-        border-radius: var(--case-article-media-radius, 1.25rem);
+        border-radius: 0;
         padding: 0;
         background: transparent;
     }
 
-    .project-case-study-mail .hero__media,
-    .project-case-study-mail .hero__media--stack img {
-        border-radius: var(--case-article-media-radius, 1.25rem);
+    .project-case-study-mail .section .gallery img,
+    .project-case-study-mail .gallery--before-hypotheses img {
+        border-radius: var(--case-article-media-radius, var(--radius-card-premium));
+        object-fit: cover;
+        aspect-ratio: 16 / 9;
+    }
+
+    .project-case-study-mail .gallery--before-hypotheses img {
+        padding: 0.5rem;
+        background: #c4c4c4;
     }
 
     .project-case-study-mail .images {
@@ -9352,7 +9501,13 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
    Переопределяем переменные на враппере страницы — каскадно чинит h1, лейблы и ссылки. */
 .page-contact,
 .page-resume,
-.page-education {
+.page-education,
+.page-811,
+.page-772,
+.page-909,
+.page-915,
+.page-920,
+.page-not-found {
     --text-89-756-title-color: var(--color-text);
     --text-89-756-link-color: var(--color-text-muted);
 }
@@ -10200,23 +10355,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin-top: var(--space-12);
     }
 
-    .about-page__duo {
-        grid-template-columns: 1fr;
-        gap: var(--space-40);
-        min-width: 0;
-    }
-
-    .about-page__panel--skills {
-        order: 2;
-    }
-
     .about-page__panel {
         min-width: 0;
-    }
-
-    .about-page__panel--experience {
-        order: 1;
-        margin-top: 0;
     }
 
     .about-page__section-heading {
@@ -10477,11 +10617,13 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     color: var(--color-text-primary);
 }
 
-/* Figma 89-811, 89-909, 89-915, 89-920 — страницы по макетам (верстка 89-756) */
+/* Figma 89-811, 89-772, 89-909, 89-915, 89-920 — страницы по макетам (верстка 89-756) */
 .page-811 .main,
+.page-772 .main,
 .page-909 .main,
 .page-915 .main,
-.page-920 .main {
+.page-920 .main,
+.page-not-found .main {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10489,12 +10631,16 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 .page-811 .page-89-811__wrap,
 .page-811 .layout-89-811,
+.page-772 .page-89-772__wrap,
+.page-772 .layout-89-772,
 .page-909 .page-89-909__wrap,
 .page-909 .layout-89-909,
 .page-915 .page-89-915__wrap,
 .page-915 .layout-89-915,
 .page-920 .page-89-920__wrap,
-.page-920 .layout-89-920 {
+.page-920 .layout-89-920,
+.page-not-found .page-89-788__wrap,
+.page-not-found .layout-89-788 {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -10502,20 +10648,25 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     text-align: center;
 }
 .page-811 .page-header,
+.page-772 .page-header,
 .page-909 .page-header,
 .page-915 .page-header,
-.page-920 .page-header {
+.page-920 .page-header,
+.page-not-found .page-header {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 .page-811 .page-header p,
+.page-772 .page-header p,
 .page-909 .page-header p,
 .page-915 .page-header p,
-.page-920 .page-header p {
+.page-920 .page-header p,
+.page-not-found .page-header p {
     max-width: var(--text-89-756-lead-max-width);
 }
 .page-811 .contact-grid,
+.page-772 .contact-grid,
 .page-909 .contact-grid,
 .page-915 .contact-grid,
 .page-920 .contact-grid {
@@ -10523,6 +10674,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     margin-right: auto;
 }
 .page-811 .contact-item,
+.page-772 .contact-item,
 .page-909 .contact-item,
 .page-915 .contact-item,
 .page-920 .contact-item {
@@ -10530,6 +10682,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     text-align: center;
 }
 .page-811 .contact-item > div,
+.page-772 .contact-item > div,
 .page-909 .contact-item > div,
 .page-915 .contact-item > div,
 .page-920 .contact-item > div {
@@ -10537,6 +10690,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 .page-811 .contact-item--text > div > p,
 .page-811 .contact-item > div > p,
+.page-772 .contact-item--text > div > p,
+.page-772 .contact-item > div > p,
 .page-909 .contact-item--text > div > p,
 .page-909 .contact-item > div > p,
 .page-915 .contact-item--text > div > p,
@@ -10552,6 +10707,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     text-align: left;
 }
 .page-811 .contact-item > div > p a,
+.page-772 .contact-item > div > p a,
 .page-909 .contact-item > div > p a,
 .page-915 .contact-item > div > p a,
 .page-920 .contact-item > div > p a {
@@ -10561,6 +10717,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     text-underline-offset: 0.1875rem;
 }
 .page-811 .contact-item > div > p a:hover,
+.page-772 .contact-item > div > p a:hover,
 .page-909 .contact-item > div > p a:hover,
 .page-915 .contact-item > div > p a:hover,
 .page-920 .contact-item > div > p a:hover {
@@ -10667,15 +10824,25 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
-/* По макету 89-756: карточка — иконка слева, текст справа (в ряд) */
+/* 89-756 family — единая колонка по центру (как Resume / Education) */
 .page-contact .contact-item {
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
+    flex-direction: column;
+    text-align: center;
 }
 
 .page-contact .contact-item > div {
-    align-items: flex-start;
+    align-items: center;
+}
+
+.page-contact .contact-item--text > div > p,
+.page-contact .contact-item > div > p {
+    font-size: var(--text-89-756-body-font-size);
+    line-height: var(--text-89-756-body-line-height);
+    letter-spacing: var(--text-89-756-body-letter-spacing);
+    color: var(--text-89-756-title-color);
+    opacity: var(--text-89-756-body-opacity);
+    margin: 0;
+    text-align: left;
 }
 
 .contact-item:hover {
@@ -11230,12 +11397,74 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .site-footer__list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.25rem 0.5rem;
+        justify-items: center;
         justify-content: center;
-        flex-wrap: nowrap;
+        overflow-x: visible;
+        flex-wrap: wrap;
+    }
+
+    .site-footer__link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 3rem;
+        padding: 0.5rem 0.75rem;
+        font-size: clamp(0.875rem, 3vw, 1rem);
     }
 
     .site-footer__note {
         text-align: center;
+    }
+
+    /* Touch targets ≥ 48px, читаемость body ≥ 16px */
+    .lang-switch__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 3rem;
+        min-height: 3rem;
+        padding: 0 0.5rem;
+    }
+
+    .filter-pill {
+        min-height: 3rem;
+        padding: var(--space-12) var(--space-16);
+        font-size: clamp(1rem, 3.2vw, 1.0625rem);
+    }
+
+    .project-case-study-mail .hyp-list__summary,
+    .page-about .about-page__skill-list .hyp-list__summary {
+        min-height: 3rem;
+        padding-block: 0.75rem;
+    }
+
+    .project-spy__link {
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+        padding: 0.5rem 0.75rem;
+        font-size: clamp(0.75rem, 2.8vw, 0.8125rem);
+    }
+
+    .project-page-wrap--case-study {
+        padding-bottom: max(5.5rem, calc(env(safe-area-inset-bottom, 0) + 4.5rem));
+    }
+
+    .project-case-study-mail .mvp-slider__chev {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .contact-item a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 3rem;
+    }
+
+    .preview-card__desc {
+        font-size: clamp(1rem, 3.2vw, 1.0625rem);
     }
 }
 
@@ -11294,17 +11523,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin-bottom: 0.75rem;
     }
 
-    .header--menu-open .nav > .lang-switch {
-        grid-column: 1;
+    .header--menu-open .nav > .header-bar-actions {
+        grid-column: 1 / -1;
         grid-row: 2;
-        justify-self: start;
-    }
-
-    .header--menu-open .nav > .nav-toggle {
-        grid-column: 2;
-        grid-row: 2;
-        justify-self: end;
-        margin-left: 0;
+        justify-self: stretch;
+        justify-content: space-between;
     }
 
     .header--menu-open .nav > .header-mobile-menu {
@@ -11312,7 +11535,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header {
-        mix-blend-mode: difference;
+        mix-blend-mode: normal;
         background: transparent;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
@@ -11354,10 +11577,10 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         position: relative;
         z-index: 1;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-columns: minmax(0, 1fr) auto;
         grid-template-rows: auto auto;
         align-items: center;
-        column-gap: 1.25rem;
+        column-gap: 0.75rem;
         row-gap: 0;
         min-height: 0;
         padding:
@@ -11374,7 +11597,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         max-width: 100%;
         justify-self: start;
         align-self: center;
-        font-size: clamp(1.25rem, 5.2vw, 1.5rem);
+        overflow: hidden;
+        font-size: clamp(0.9375rem, 4.2vw, 1.25rem);
         line-height: 1.15;
         margin-bottom: 0;
     }
@@ -11386,24 +11610,43 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .header .nav > .logo > span {
         display: block;
-        max-width: none;
-        overflow: visible;
-        text-overflow: clip;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
+        transform: none;
+        --tc-scale-x: 1;
+        width: auto;
+    }
+
+    .header .nav > .header-bar-actions {
+        grid-column: 2;
+        grid-row: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.125rem;
+        flex-shrink: 0;
     }
 
     .header .nav > .lang-switch {
-        grid-column: 2;
-        grid-row: 1;
-        justify-self: end;
-        font-size: clamp(1.125rem, 4.8vw, 1.375rem);
+        font-size: clamp(0.9375rem, 3.8vw, 1.125rem);
         line-height: 1.15;
+        flex-shrink: 0;
+    }
+
+    .header .lang-switch .lang-switch__toggle-row {
+        transform: none;
+        --tc-scale-x: 1;
+    }
+
+    .header .lang-switch__btn {
+        min-width: 2.5rem;
+        min-height: 2.75rem;
+        padding: 0.25rem 0.375rem;
     }
 
     .header .nav > .nav-toggle {
-        grid-column: 3;
-        grid-row: 1;
-        justify-self: end;
         flex-shrink: 0;
         position: relative;
         z-index: 2;
@@ -11411,7 +11654,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         min-height: 3rem;
         padding: 0.625rem 0.375rem;
         gap: 0.4375rem;
-        margin-left: 0.375rem;
+        margin-left: 0;
     }
 
     .header .nav > .header-mobile-menu {
@@ -11701,10 +11944,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .filter-pill {
         flex-shrink: 0;
+        min-height: 3rem;
+        padding: var(--space-12) var(--space-16);
     }
 
     .filter-pill__text {
-        font-size: clamp(0.875rem, 2.8vw, 1rem);
+        font-size: clamp(1rem, 2.8vw, 1.0625rem);
     }
 
     .preview-card__title {
@@ -11724,8 +11969,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .preview-card__desc {
-        font-size: clamp(0.9375rem, 3.2vw, 1.0625rem);
+        font-size: clamp(1rem, 3.2vw, 1.0625rem);
         line-height: 1.45;
+    }
+
+    .home-competencies-scrub__card-wrap .preview-card__meta {
+        font-size: clamp(0.8125rem, 2.8vw, 0.9375rem);
     }
 }
 
@@ -12178,6 +12427,7 @@ p + p {
 }
 
 .main--project {
+    padding-top: 0;
     padding-left: 0;
     padding-right: 0;
 }

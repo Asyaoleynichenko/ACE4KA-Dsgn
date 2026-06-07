@@ -43,8 +43,20 @@ export default function Layout() {
     '/page-915': 'page-915',
     '/page-920': 'page-920',
   };
-  const pageClass =
-    basePath === '/'
+  const knownPaths = new Set([
+    '/',
+    '/projects',
+    '/about',
+    '/contact',
+    '/resume',
+    '/education',
+    ...Object.keys(figmaPages),
+  ]);
+  const isNotFound =
+    !knownPaths.has(basePath) && !basePath.startsWith('/project/');
+  const pageClass = isNotFound
+    ? 'page-not-found'
+    : basePath === '/'
       ? 'page-home'
       : basePath === '/projects'
         ? 'page-projects'

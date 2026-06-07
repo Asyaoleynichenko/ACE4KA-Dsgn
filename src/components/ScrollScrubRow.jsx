@@ -46,6 +46,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   const [reducedMotion, setReducedMotion] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 48rem)').matches,
+  );
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -55,8 +58,16 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
     return () => mq.removeEventListener('change', sync);
   }, []);
 
-  /** Native horizontal scroll — только при reduced-motion. */
-  const useNativeX = reducedMotion;
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 48rem)');
+    const sync = () => setIsMobileViewport(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  /** Native horizontal scroll — reduced-motion и мобилка (свайп вместо scroll-jail). */
+  const useNativeX = reducedMotion || isMobileViewport;
   /** GSAP ScrollTrigger scrub — горизонтальная лента привязана к скроллу. */
   const useScrollLinked = !useNativeX && (variant === 'cards' || variant === 'contact');
   /** Кинематичный handoff + layered motion — лента карточек кейса. */
@@ -256,7 +267,9 @@ export default function ScrollScrubRow({ children, variant = 'cards', ariaLabel,
   if (variant === 'cards' || variant === 'contact') {
     if (useNativeX) {
       return (
-        <div className={`${rootClass} scroll-scrub-row--native-x scroll-scrub-row--reduced-motion`.trim()}>
+        <div
+          className={`${rootClass} scroll-scrub-row--native-x${reducedMotion ? ' scroll-scrub-row--reduced-motion' : ' scroll-scrub-row--touch-x'}`.trim()}
+        >
           <div className="scroll-scrub-row__shell">
             <div
               ref={viewportRef}

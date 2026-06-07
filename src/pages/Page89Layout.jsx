@@ -1,11 +1,22 @@
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { resolveMessage } from '../i18n/resolveMessage.js';
-import { publicUrl } from '../utils/publicUrl.js';
+
+const LAYOUT_BY_FIGMA = {
+  '89-811': { wrap: 'page-89-811__wrap', layout: 'layout-89-811' },
+  '89-772': { wrap: 'page-89-772__wrap', layout: 'layout-89-772' },
+  '89-909': { wrap: 'page-89-909__wrap', layout: 'layout-89-909' },
+  '89-915': { wrap: 'page-89-915__wrap', layout: 'layout-89-915' },
+  '89-920': { wrap: 'page-89-920__wrap', layout: 'layout-89-920' },
+};
 
 export default function Page89Layout({ figmaId, messageKey }) {
   const { t, messages } = useI18n();
   const page = resolveMessage(messages, messageKey);
   const headingId = `${messageKey.replaceAll('.', '-')}-title`;
+  const shell = LAYOUT_BY_FIGMA[figmaId] ?? {
+    wrap: `page-${figmaId}__wrap`,
+    layout: `layout-${figmaId}`,
+  };
 
   const title =
     typeof page?.title === 'string'
@@ -18,21 +29,18 @@ export default function Page89Layout({ figmaId, messageKey }) {
   const cards = Array.isArray(page?.cards) ? page.cards : [];
 
   return (
-    <section
-      className="page89-wrap snap-screen"
+    <div
+      className={`${shell.wrap} ${shell.layout} snap-screen`.trim()}
       data-node-id={figmaId}
       aria-labelledby={headingId}
     >
-      <header className="page-header page89-header">
+      <header className="page-header">
         <h1 id={headingId}>{title}</h1>
         <p>{subtitle}</p>
       </header>
-      <ul className="page89-grid" role="list">
+
+      <div className="contact-grid">
         {cards.map((card, i) => {
-          const mediaPath = card.image || card.icon;
-          const mediaSrc =
-            typeof mediaPath === 'string' ? publicUrl(mediaPath) : mediaPath;
-          const isIconSlot = Boolean(card.icon && !card.image);
           const cardTitle =
             typeof card.title === 'string'
               ? card.title
@@ -43,28 +51,17 @@ export default function Page89Layout({ figmaId, messageKey }) {
               : t('draftPage.blockText');
 
           return (
-            <li key={`${messageKey}-${i}`} className="page89-grid__item">
-              {mediaSrc ? (
-                <div
-                  className={
-                    isIconSlot ? 'page89-grid__media page89-grid__media--icon' : 'page89-grid__media'
-                  }
-                >
-                  <img
-                    className="page89-grid__img"
-                    src={mediaSrc}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              ) : null}
-              <strong className="page89-grid__title">{cardTitle}</strong>
-              <p className="page89-grid__text">{cardText}</p>
-            </li>
+            <div key={`${messageKey}-${i}`} className="contact-item contact-item--text">
+              <div>
+                <strong>
+                  <span className="text-condensed">{cardTitle}</span>
+                </strong>
+                <p>{cardText}</p>
+              </div>
+            </div>
           );
         })}
-      </ul>
-    </section>
+      </div>
+    </div>
   );
 }

@@ -61,6 +61,12 @@ export default function Header() {
   useLenisScroll(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (menuOpen) return;
+    /* Десктоп: шапка всегда видна — быстрый переход между разделами. */
+    if (!window.matchMedia('(max-width: 56.25rem)').matches) {
+      setHidden(false);
+      lastYRef.current = getScrollY();
+      return;
+    }
     const y = getScrollY();
     const dy = y - lastYRef.current;
     if (y < 80) {
@@ -106,21 +112,23 @@ export default function Header() {
         >
           <Navigation menuOpen={menuOpen} onNavigate={() => setMenuOpen(false)} />
         </div>
-        <span className="lang-switch" data-node-id="573-20952">
-          <LanguageSwitcher />
-        </span>
-        <button
-          type="button"
-          className={`nav-toggle${menuOpen ? ' active' : ''}`}
-          aria-label={menuOpen ? t('header.closeMenu') : t('header.menuAria')}
-          aria-expanded={menuOpen}
-          aria-controls="site-nav-list"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </button>
+        <div className="header-bar-actions">
+          <span className="lang-switch" data-node-id="573-20952">
+            <LanguageSwitcher />
+          </span>
+          <button
+            type="button"
+            className={`nav-toggle${menuOpen ? ' active' : ''}`}
+            aria-label={menuOpen ? t('header.closeMenu') : t('header.menuAria')}
+            aria-expanded={menuOpen}
+            aria-controls="site-nav-list"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </button>
+        </div>
       </nav>
     </header>
   );

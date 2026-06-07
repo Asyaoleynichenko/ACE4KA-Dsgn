@@ -336,7 +336,7 @@ export default function ProjectDetailPage() {
       ]).filter((item) => item.value);
   if (isCaseStudy) {
     const caseImages = project.caseStudyImages || {};
-    const heroImages = project.heroImages?.length ? project.heroImages : project.image ? [project.image] : [];
+    const heroImage = project.image ?? null;
     return (
       <div
         className="project-page-wrap project-page-wrap--case-study project-case-study-mail"
@@ -346,26 +346,16 @@ export default function ProjectDetailPage() {
         <div className="container container--case-study">
           <ProjectCaseStudySpyNav sections={spySections} activeId={activeSpyId} />
           <section className="hero" id={`case-${project.slug}-hero`}>
-            {heroImages.length ? (
-              <div
-                className={`hero__media${heroImages.length > 1 ? ' hero__media--stack' : ''}`}
-                aria-label={displayTitle}
-              >
-                {heroImages.map((src, index) => (
-                  <img
-                    key={src}
-                    ref={(el) => {
-                      if (index === 0) setProjectHeroVtName(el, project.slug);
-                      else if (el) el.style.removeProperty('view-transition-name');
-                    }}
-                    src={publicUrl(src)}
-                    alt={index === 0 ? displayTitle : ''}
-                    aria-hidden={index === 0 ? undefined : 'true'}
-                    decoding="async"
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                    fetchPriority={index === 0 ? 'high' : 'auto'}
-                  />
-                ))}
+            {heroImage ? (
+              <div className="hero__media" aria-label={displayTitle}>
+                <img
+                  ref={(el) => setProjectHeroVtName(el, project.slug)}
+                  src={publicUrl(heroImage)}
+                  alt={displayTitle}
+                  decoding="async"
+                  loading="eager"
+                  fetchPriority="high"
+                />
               </div>
             ) : (
               <div className="hero-placeholder">{t('projectDetail.heroPlaceholder')}</div>

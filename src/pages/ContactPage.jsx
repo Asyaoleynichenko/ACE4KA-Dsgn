@@ -17,38 +17,42 @@ export default function ContactPage() {
       </header>
 
       <div className="contact-grid">
-        <div className="contact-item">
-          <span className="contact-item__icon" aria-hidden="true">✉</span>
+        <div className="contact-item contact-item--text">
           <div>
             <strong><span className="text-condensed">{t('contact.labels.mail')}</span></strong>
-            <a href="mailto:hello@example.com">hello@example.com</a>
+            <p>
+              <a href="mailto:hello@example.com">hello@example.com</a>
+            </p>
           </div>
         </div>
-        <div className="contact-item">
-          <span className="contact-item__icon" aria-hidden="true">📱</span>
+        <div className="contact-item contact-item--text">
           <div>
             <strong><span className="text-condensed">{t('contact.labels.telegram')}</span></strong>
-            <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">
-              @pnkprty
-            </a>
+            <p>
+              <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">
+                @pnkprty
+              </a>
+            </p>
           </div>
         </div>
-        <div className="contact-item">
-          <span className="contact-item__icon" aria-hidden="true">💼</span>
+        <div className="contact-item contact-item--text">
           <div>
             <strong><span className="text-condensed">{t('contact.labels.behance')}</span></strong>
-            <a href="https://behance.net/" target="_blank" rel="noopener noreferrer">
-              behance.net
-            </a>
+            <p>
+              <a href="https://behance.net/" target="_blank" rel="noopener noreferrer">
+                behance.net
+              </a>
+            </p>
           </div>
         </div>
-        <div className="contact-item">
-          <span className="contact-item__icon" aria-hidden="true">📌</span>
+        <div className="contact-item contact-item--text">
           <div>
             <strong><span className="text-condensed">{t('contact.labels.pinterest')}</span></strong>
-            <a href="https://pinterest.com/" target="_blank" rel="noopener noreferrer">
-              pinterest.com
-            </a>
+            <p>
+              <a href="https://pinterest.com/" target="_blank" rel="noopener noreferrer">
+                pinterest.com
+              </a>
+            </p>
           </div>
         </div>
       </div>
