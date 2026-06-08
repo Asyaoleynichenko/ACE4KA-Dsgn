@@ -2680,8 +2680,13 @@ h3 {
 }
 
 .page-home .hero[data-hero-scroll='active'] .hero-about__meta {
-    gap: var(--space-4);
+    gap: var(--space-8);
     padding-top: 0;
+}
+
+/* Скролл: info-сетка плотнее — меньше «воздуха» в поднявшемся футере */
+.page-home .hero[data-hero-scroll='active'] .hero-about__meta .info-grid {
+    row-gap: var(--space-8);
 }
 
 .page-home .hero[data-hero-scroll='active'] .hero-about__meta .info-card {

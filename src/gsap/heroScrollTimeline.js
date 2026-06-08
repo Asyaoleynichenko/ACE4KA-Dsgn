@@ -1,19 +1,32 @@
 import { gsap, ScrollTrigger } from './setup.js';
+import { FOLDER_HERO_RING_PX } from '../data/sectionHeaderItems.js';
 import { MOTION, isMobileViewport, motionBeat } from '../motion/motionSystem.js';
 
 const beat = motionBeat;
 
-/** Глубина перспективы (px). z-твины ДОЛЖНЫ быть < PERSP, иначе элемент уходит
-   за камеру и рендерится зеркально. Рост даёт scale × магнификация persp/(persp−z). */
-const PERSP = 1100;
-
-/** Длина pin-прохода hero (px скролла) — полёт сквозь сцену. */
+/** Длина pin-прохода hero (px скролла). */
 export function heroExitScrollTravelPx() {
-  if (typeof window === 'undefined') return 1000;
-  return Math.round(window.innerHeight * 1.1);
+  if (typeof window === 'undefined') return 820;
+  return Math.round(window.innerHeight * 0.92);
 }
 
-/** Снять mouse-float inline-переменные, чтобы они не дрались с z-твином. */
+/** Центр видимой области (с учётом фикс-шапки) — единая точка сборки. */
+function getViewportCenter() {
+  const header = document.querySelector('.header');
+  const headerH = header?.getBoundingClientRect().height ?? 0;
+  return {
+    x: window.innerWidth / 2,
+    y: headerH + (window.innerHeight - headerH) / 2,
+  };
+}
+
+/** Смещение (px), чтобы центр элемента попал в точку (tx, ty). */
+function deltaToPoint(el, tx, ty) {
+  const r = el.getBoundingClientRect();
+  return { x: tx - (r.left + r.width / 2), y: ty - (r.top + r.height / 2) };
+}
+
+/** Снять mouse-float inline-переменные (внешний элемент + внутренний __float). */
 function clearFloatVars(elements) {
   for (const el of elements) {
     if (!el) continue;
@@ -27,113 +40,182 @@ function clearFloatVars(elements) {
 }
 
 /**
- * Hero scroll = полёт камеры СКВОЗЬ сцену (z-dolly):
- * всё надвигается прямо на зрителя, растёт и пролетает мимо.
- * Послойная глубина: текст уходит первым → фото → папки (фокус, крупнее всех,
- * улетают последними). За ними из глубины выплывает следующий экран.
+ * Hero scroll — сборка к ЦЕНТРУ:
+ * 1) текст (роль, имя, описание) уходит первым;
+ * 2) фото съезжает строго в центр вьюпорта и укрупняется;
+ * 3) папки сходятся симметричным кольцом вокруг фото (остаются — это навигация);
+ * 4) блок «Больше обо мне» + контакты + ссылки ОСТАЁТСЯ (не анимируется).
  */
 export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
   if (!hero || typeof window === 'undefined') return null;
-  /* Мобилка — без pin/3D: нативный вертикальный скролл (Lenis off на ≤48rem). */
+  /* Мобилка — нативный вертикальный скролл, без pin/сборки. */
   if (isMobileViewport()) return null;
 
   const introCopy = hero.querySelectorAll('.hero-role, .hero-title, .hero-text');
-  const footer = hero.querySelector('.hero-about__footer');
   const card = hero.querySelector('.hero__card');
   const folders = gsap.utils.toArray(hero.querySelectorAll('.header-item--folder'));
   const wells = gsap.utils.toArray(hero.querySelectorAll('.header-item--image-well'));
   const floatables = [...folders, ...wells, ...(card ? [card] : [])];
+  const isDesktop = window.matchMedia('(min-width: 64rem)').matches;
 
-  const tl = gsap.timeline({ defaults: { ease: MOTION.easeGsap, transformPerspective: PERSP } });
+  /* GSAP берёт горизонтальное центрирование на себя (CSS — translate(-50%,0)). */
+  for (const el of folders) gsap.set(el, { xPercent: -50, yPercent: 0, transformOrigin: '50% 50%' });
+  for (const el of wells) gsap.set(el, { xPercent: -50, yPercent: 0, transformOrigin: '50% 50%' });
+  if (card) gsap.set(card, { xPercent: -50, yPercent: isDesktop ? 0 : -50, transformOrigin: '50% 50%' });
 
-  /* 1) Текст уходит первым — рвётся на зрителя и растворяется. */
+  const easeOut = MOTION.easeGsapPunch;
+  const easeIn = MOTION.easeGsapIn;
+  const tl = gsap.timeline({ defaults: { ease: MOTION.easeGsap } });
+
+  const CARD_SCALE = 1.4;
+  const FOLDER_SCALE = 1.12;
+  const CARD_FOOTER_GAP = 28;
+
+  /* Размеры папок в покое (для зазора от фото; подписи разной длины). */
+  const folderRest = folders.map((el) => {
+    const r = el.getBoundingClientRect();
+    return { w: r.width, h: r.height };
+  });
+
+  /** Нетрансформированная высота карточки (для расчёта финального низа). */
+  const cardRestSize = () => {
+    if (!card) return { w: 320, h: 300 };
+    const sx = Number(gsap.getProperty(card, 'scaleX')) || 1;
+    const sy = Number(gsap.getProperty(card, 'scaleY')) || 1;
+    const r = card.getBoundingClientRect();
+    return { w: r.width / sx, h: r.height / sy };
+  };
+
+  /** Высота футера без текущего GSAP-сдвига (для центровки кластера). */
+  const footerEl = hero.querySelector('.hero-about__footer');
+  const footerHeight = () => (footerEl ? footerEl.getBoundingClientRect().height : 150);
+
+  /**
+   * Центр КЛАСТЕРА (фото + футер под ним), а не только фото: фото поднимается
+   * выше центра экрана на половину (футер+зазор), чтобы группа «фото + контакты»
+   * стояла строго по центру по вертикали — иначе футер перевешивает вниз.
+   */
+  const heroCenter = () => {
+    const c = getViewportCenter();
+    const lift = (footerHeight() + CARD_FOOTER_GAP) / 2;
+    return { x: c.x, y: c.y - lift };
+  };
+
+  /* 1) Текст уходит первым — роль, имя, описание. */
   if (introCopy.length) {
     tl.to(
       introCopy,
-      { z: 440, scale: 1.5, autoAlpha: 0, duration: beat(2.6), ease: MOTION.easeGsapIn, stagger: beat(0.28) },
+      { autoAlpha: 0, y: -28, duration: beat(2.4), ease: easeIn, stagger: beat(0.3) },
       0,
     );
   }
 
-  /* 2) Контакты/ссылки («Больше обо мне» блок) — следом за текстом. */
-  if (footer) {
-    tl.to(
-      footer,
-      { z: 480, scale: 1.5, autoAlpha: 0, duration: beat(3), ease: MOTION.easeGsapIn },
-      beat(0.7),
-    );
-  }
-
-  /* 3) Фото надвигается и пролетает мимо (магнификация persp/(persp−z) ≈ 2.5×). */
+  /* 2) Фото — строго в центр вьюпорта + укрупнение (остаётся). */
   if (card) {
     tl.to(
       card,
       {
-        z: 640,
-        scale: 2.4,
-        autoAlpha: 0,
-        duration: beat(4.6),
-        ease: MOTION.easeGsapPunch,
+        x: () => deltaToPoint(card, heroCenter().x, heroCenter().y).x,
+        y: () => deltaToPoint(card, heroCenter().x, heroCenter().y).y,
+        scale: CARD_SCALE,
+        duration: beat(5),
+        ease: easeOut,
         onStart: () => clearFloatVars([card]),
       },
-      beat(1),
+      beat(0.8),
     );
   }
 
-  /* 4) Image-wells — мелкая навигация, уходит вместе с фото. */
+  /* 3) Папки — симметрично вокруг фото: 2 сверху, 2 по бокам (низ — футеру).
+        Прямоугольная раскладка с гарантированным зазором от краёв фото. */
+  folders.forEach((el, i) => {
+    const ring = FOLDER_HERO_RING_PX[el.dataset?.nodeId] ?? { x: 0, y: 0 };
+    const isTop = ring.y < -40; /* верхние папки — те, что в макете выше центра */
+    const sx = Math.sign(ring.x) || (i % 2 === 0 ? -1 : 1);
+    const fHalfW = (folderRest[i].w * FOLDER_SCALE) / 2;
+    const fHalfH = (folderRest[i].h * FOLDER_SCALE) / 2;
+    const target = () => {
+      const c = heroCenter();
+      const s = cardRestSize();
+      const halfW = (s.w * CARD_SCALE) / 2;
+      const halfH = (s.h * CARD_SCALE) / 2;
+      return {
+        x: c.x + sx * (halfW + fHalfW + 36),
+        y: isTop ? c.y - (halfH + fHalfH + 28) : c.y,
+      };
+    };
+    tl.to(
+      el,
+      {
+        x: () => { const t = target(); return deltaToPoint(el, t.x, t.y).x; },
+        y: () => { const t = target(); return deltaToPoint(el, t.x, t.y).y; },
+        scale: 1.12,
+        duration: beat(5.2),
+        ease: easeOut,
+        onStart: () => clearFloatVars([el]),
+      },
+      beat(1) + i * beat(0.18),
+    );
+  });
+
+  /* 4) Image-wells — мелкая навигация: к центру и мягко гаснет (declutter). */
   wells.forEach((el, i) => {
     tl.to(
       el,
       {
-        z: 560,
-        scale: 2.0,
+        x: () => deltaToPoint(el, heroCenter().x, heroCenter().y).x,
+        y: () => deltaToPoint(el, heroCenter().x, heroCenter().y).y,
+        scale: 0.8,
         autoAlpha: 0,
-        duration: beat(3.8),
-        ease: MOTION.easeGsapIn,
+        duration: beat(3.4),
+        ease: easeIn,
         onStart: () => clearFloatVars([el]),
       },
-      beat(1.2) + i * beat(0.18),
+      beat(1) + i * beat(0.14),
     );
   });
 
-  /* 5) Папки — ФОКУС: крупнее всех, глубже всех (быстрее мимо), улетают последними.
-       z 780 < PERSP 1100 → магнификация ≈ 3.4×, итоговый визуальный размер ≈ 11× базы. */
-  folders.forEach((el, i) => {
+  /* 5) Футер (Больше обо мне + контакты + ссылки) — ПОДНИМАЕТСЯ под фото и
+        ОСТАЁТСЯ (не гаснет). Закрывает пустоту снизу, центрируя весь кластер. */
+  if (footerEl && card) {
     tl.to(
-      el,
+      footerEl,
       {
-        z: 780,
-        scale: 3.2,
-        duration: beat(6.4),
-        ease: MOTION.easeGsapPunch,
-        onStart: () => clearFloatVars([el]),
+        y: () => {
+          const cardFinalBottom = heroCenter().y + (cardRestSize().h * CARD_SCALE) / 2;
+          const fy = Number(gsap.getProperty(footerEl, 'y')) || 0;
+          const footerTopNoY = footerEl.getBoundingClientRect().top - fy;
+          return cardFinalBottom + CARD_FOOTER_GAP - footerTopNoY;
+        },
+        duration: beat(4.6),
+        ease: easeOut,
       },
-      beat(1.4) + i * beat(0.2),
+      beat(1.1),
     );
-    /* Гаснут только в самом конце прохода. */
-    tl.to(
-      el,
-      { autoAlpha: 0, duration: beat(2), ease: MOTION.easeGsapIn },
-      beat(6.6) + i * beat(0.12),
-    );
-  });
+  }
 
-  /* 6) Следующий экран выплывает ИЗ глубины — отдельным триггером при входе
-        во вьюпорт (НЕ в пиновом таймлайне: иначе пин тянется пустым после того
-        как папки улетели → чёрный хвост). Папки гаснут ровно в конце пина. */
+  /* 6) Папки исчезают в САМОМ КОНЦЕ прохода (после сборки кольцом). */
+  if (folders.length) {
+    tl.to(
+      folders,
+      { autoAlpha: 0, scale: 1.7, duration: beat(2), ease: easeIn },
+      beat(6.2),
+    );
+  }
+
+  /* 7) Следующий экран — мягкое выплывание при входе во вьюпорт (subtle). */
   if (competencies) {
     gsap.fromTo(
       competencies,
-      { autoAlpha: 0.2, scale: 0.9, z: -260, transformPerspective: PERSP },
+      { autoAlpha: 0.3, y: 40 },
       {
         autoAlpha: 1,
-        scale: 1,
-        z: 0,
+        y: 0,
         ease: MOTION.easeGsap,
         scrollTrigger: {
           trigger: competencies,
-          start: 'top 90%',
-          end: 'top 42%',
+          start: 'top 88%',
+          end: 'top 45%',
           scrub: MOTION.scrub,
           scroller,
           invalidateOnRefresh: true,
@@ -148,10 +230,7 @@ export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
     start: 'top top',
     end: () => `+=${heroExitScrollTravelPx()}`,
     pin: true,
-    /* pinSpacing:false — без зарезервированной высоты hero после пина (иначе она
-       прокручивается пустой = чёрный провал). Следующий экран поднимается ЗА
-       прозрачным hero во время пина и выплывает, когда папки улетели. */
-    pinSpacing: false,
+    pinSpacing: true,
     anticipatePin: 1,
     scrub: MOTION.scrubHero,
     scroller,
