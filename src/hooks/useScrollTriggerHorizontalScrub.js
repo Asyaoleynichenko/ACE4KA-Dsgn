@@ -9,6 +9,7 @@ import {
 } from '../utils/scrubExitHandoff.js';
 import { applyCinematicCardTransforms, resetCinematicCardTransforms } from '../utils/cinematicScrub.js';
 import { horizontalScrubRunwaySpanPx, readHorizontalScrubMx } from '../utils/horizontalScrubMetrics.js';
+import { MOTION } from '../motion/motionSystem.js';
 
 function readViewportHeight() {
   const appRoot = document.getElementById('root');
@@ -116,7 +117,7 @@ export function useScrollTriggerHorizontalScrub({
       end: () => `+=${totalSpan}`,
       pin,
       pinSpacing: true,
-      scrub: true,
+      scrub: MOTION.scrub,
       fastScrollEnd: true,
       /** С Lenis anticipatePin даёт скачок при входе/выходе из pin. */
       anticipatePin: 0,

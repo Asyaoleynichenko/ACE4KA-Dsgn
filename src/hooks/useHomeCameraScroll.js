@@ -1,5 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { gsap, ScrollTrigger } from '../gsap/setup.js';
+import { setupHeroScrollTimeline } from '../gsap/heroScrollTimeline.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
 import { refreshScrollTrigger } from '../gsap/scrollTriggerScroller.js';
 import { MOTION, prefersReducedMotion } from '../motion/motionSystem.js';
@@ -25,16 +26,12 @@ export function useHomeCameraScroll(rootRef) {
     const world = root.querySelector('.home-world');
     if (!rail || !world) return undefined;
 
-    // CSS custom properties наследуются: пишем сцену-переменные только на корень
-    // (.home-page--seamless), а .home-world / [data-camera-rail] читают их через var().
-    // Так на каждом кадре скролла одна запись вместо трёх на каждую переменную.
     const targets = [root];
     const hero = rail.querySelector('[data-scene="hero"]');
     const competencies = rail.querySelector('[data-scene="competencies"]');
     const projects = rail.querySelector('[data-scene="projects"]');
     const defaults = {
       '--camera-p': '0',
-      '--hero-exit': '0',
       '--scene-comp': '0',
       '--scene-projects': '0',
       '--world-hue': '280',
@@ -44,7 +41,6 @@ export function useHomeCameraScroll(rootRef) {
     if (prefersReducedMotion()) {
       setSceneVars(targets, {
         '--camera-p': '1',
-        '--hero-exit': '0',
         '--scene-comp': '1',
         '--scene-projects': '1',
       });
@@ -71,20 +67,7 @@ export function useHomeCameraScroll(rootRef) {
       });
 
       if (hero) {
-        ScrollTrigger.create({
-          id: 'home-camera-hero-exit',
-          trigger: hero,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: MOTION.scrub,
-          scroller,
-          onUpdate(self) {
-            const exit = self.progress;
-            setSceneVars(targets, {
-              '--hero-exit': exit.toFixed(4),
-            });
-          },
-        });
+        setupHeroScrollTimeline(hero, competencies, { scroller });
       }
 
       if (competencies) {

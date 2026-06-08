@@ -18,19 +18,22 @@ export default function Layout() {
 
   useLayoutEffect(() => {
     const appRoot = document.getElementById('root');
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mqReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mqMobile = window.matchMedia('(max-width: 48rem)');
     /** На flex-body snap по html часто не работает — скролл и snap переносим на #root */
     const sync = () => {
-      const enabled = snapScreens && !mq.matches;
+      const enabled = snapScreens && !mqReduced.matches && !mqMobile.matches;
       document.documentElement.classList.toggle('snap-pages', enabled);
       appRoot?.classList.toggle('snap-pages-root', enabled);
       /** На главной между hero и projects блок компетенций — при y mandatory браузер часто «перескакивал» его. */
       appRoot?.classList.toggle('snap-pages-root--home', enabled && isHome);
     };
     sync();
-    mq.addEventListener('change', sync);
+    mqReduced.addEventListener('change', sync);
+    mqMobile.addEventListener('change', sync);
     return () => {
-      mq.removeEventListener('change', sync);
+      mqReduced.removeEventListener('change', sync);
+      mqMobile.removeEventListener('change', sync);
       document.documentElement.classList.remove('snap-pages');
       appRoot?.classList.remove('snap-pages-root');
       appRoot?.classList.remove('snap-pages-root--home');

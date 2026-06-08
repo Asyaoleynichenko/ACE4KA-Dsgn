@@ -61,7 +61,7 @@ export default function ScrollPolish() {
           }
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
     );
 
     /* `[data-reveal]` — одиночный блок, `[data-reveal-group] > *` — каскад детей.

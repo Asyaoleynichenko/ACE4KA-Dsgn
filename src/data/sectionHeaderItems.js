@@ -27,6 +27,15 @@ export const headerItemsFolder = [
   { nodeId: '1-227', labelKey: 'sectionNav.educationFolder', iconKey: 'folder', to: '/about#education', placement: { x: 938.73, y: 129.03 } },
 ];
 
+/** Смещение папки от центра viewport при полном скролле hero (px). */
+/** Кольцо вокруг фото — боковые позиции, не под футером (контакты / «Больше обо мне»). */
+export const FOLDER_HERO_RING_PX = {
+  '1-224': { x: -92, y: -88 },
+  '1-206': { x: 92, y: -88 },
+  '1-227': { x: 108, y: 8 },
+  '1-209': { x: -108, y: 8 },
+};
+
 export const headerItemsWell = [
   { nodeId: '1-212', labelKey: 'sectionNav.contact', iconKey: 'contact', to: '/contact', placement: { x: 290.76, y: 181.01 } },
   { nodeId: '1-215', labelKey: 'sectionNav.contact', iconKey: 'contact', to: '/contact', placement: { x: 96.41, y: 30.13 } },

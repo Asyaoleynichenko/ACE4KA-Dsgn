@@ -74,20 +74,21 @@
 
   /* Motion: Telegram (быстрый отклик) + Airbnb (спокойные крупные переходы) — одна кривая как у системного UI. */
   --ease-smart: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-smart-punch: cubic-bezier(0.22, 1.08, 0.36, 1);
   --ease-page: var(--ease-smart);
-  --ease-micro-out: var(--ease-smart);
-  --dur-smart-xs: 100ms;
-  --dur-smart-fast: 140ms;
-  --dur-smart-nav: 180ms;
-  --dur-smart-base: 260ms;
-  --dur-smart-slow: 400ms;
-  --dur-smart-page-home: 500ms;
-  --dur-smart-reveal: 640ms;
+  --ease-micro-out: var(--ease-smart-punch);
+  --dur-smart-xs: 90ms;
+  --dur-smart-fast: 120ms;
+  --dur-smart-nav: 160ms;
+  --dur-smart-base: 220ms;
+  --dur-smart-slow: 360ms;
+  --dur-smart-page-home: 440ms;
+  --dur-smart-reveal: 520ms;
   /* Motion system — один lerp / rhythm / pacing (см. src/motion/motionSystem.js) */
-  --motion-lerp: 0.08;
-  --motion-stagger-beat: 0.09s;
-  --motion-duration-reveal: 0.63s;
-  --dur-smart-image: 720ms;
+  --motion-lerp: 0.1;
+  --motion-stagger-beat: 0.07s;
+  --motion-duration-reveal: 0.49s;
+  --dur-smart-image: 580ms;
   --transition: var(--dur-smart-base) var(--ease-smart);
   --transition-fast: var(--dur-smart-fast) var(--ease-smart);
   --transition-base: var(--dur-smart-base) var(--ease-smart);
@@ -101,7 +102,7 @@
   /* Exhibition — scroll as camera, physical inertia, editorial air */
   --ease-exhibition: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-exhibition-heavy: cubic-bezier(0.16, 0.84, 0.24, 1);
-  --exhibition-lerp: 0.08;
+  --exhibition-lerp: 0.1;
   --exhibition-section-gap: var(--layout-section-gap);
   --exhibition-depth-shadow:
     0 1.5rem 4rem rgba(0, 0, 0, 0.42),
@@ -583,6 +584,13 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     perspective-origin: 50% 48%;
 }
 
+/* Горизонтальные ленты — вертикальный жест уходит на страницу, не «залипает» в jail */
+.scroll-scrub-row__viewport--native-x,
+.gallery--horizontal {
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+}
+
 /* ScrollTrigger pin-spacer уже задаёт вертикальный ход — не дублировать пустым блоком */
 .scroll-scrub-row__runway:has(.scroll-scrub-row--scroll-linked) .scroll-scrub-row__runway-spacer {
     height: 0;
@@ -739,7 +747,7 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
 [data-reveal].reveal-pending,
 [data-reveal-group] > .reveal-pending {
     opacity: 0;
-    transform: translate3d(0, var(--space-16), 0);
+    transform: translate3d(0, var(--space-12), 0) scale(0.985);
 }
 
 [data-reveal].is-revealed,
@@ -747,9 +755,9 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     opacity: 1;
     transform: none;
     transition:
-        opacity var(--dur-smart-reveal) var(--ease-smart),
-        transform var(--dur-smart-reveal) var(--ease-smart);
-    transition-delay: calc(var(--reveal-base, 0ms) + var(--reveal-i, 0) * 90ms);
+        opacity var(--dur-smart-reveal) var(--ease-smart-punch),
+        transform var(--dur-smart-reveal) var(--ease-smart-punch);
+    transition-delay: calc(var(--reveal-base, 0ms) + var(--reveal-i, 0) * 70ms);
 }
 
 /* Двухколоночные гриды: правая карточка ряда отстаёт на 1 beat */
@@ -758,7 +766,7 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
 }
 
 /* Hero (главная): хвост каскада после type-reveal роли/имени/лида */
-.page-home .hero-content > .hero-more[data-reveal] {
+.page-home .hero-about__footer > .hero-more[data-reveal] {
     --reveal-base: 620ms;
 }
 
@@ -851,6 +859,27 @@ html.snap-pages #root.snap-pages-root {
 /* Главная: между hero, компетенциями и проектами — mandatory перескакивал средний блок */
 html.snap-pages #root.snap-pages-root.snap-pages-root--home {
     scroll-snap-type: y proximity;
+}
+
+/* Мобилка: нативный скролл window вместо snap-jail на #root */
+@media (max-width: 48rem) {
+    html.snap-pages {
+        height: auto;
+    }
+
+    html.snap-pages body {
+        height: auto;
+        overflow: visible;
+    }
+
+    html.snap-pages #root.snap-pages-root {
+        flex: none;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        overscroll-behavior-y: auto;
+        scroll-snap-type: none;
+    }
 }
 
 /* Токен главной (`главная.json` → #000000): фон главной страницы — чистый чёрный. */
@@ -1476,6 +1505,7 @@ button:focus-visible,
     background: transparent;
     border-color: transparent;
     opacity: 1;
+    transform: translateY(-0.0625rem);
 }
 
 .nav-link:active:not(.active) {
@@ -2514,7 +2544,6 @@ h3 {
     position: relative;
     isolation: isolate;
     --camera-p: 0;
-    --hero-exit: 0;
     --scene-comp: 0;
     --scene-projects: 0;
     --world-hue: 280;
@@ -2570,7 +2599,7 @@ h3 {
     height: min(50vh, 32rem);
     transform: translate(
         calc(-50% - (var(--camera-p, 0) - 0.5) * 10vw),
-        calc(-50% + var(--hero-exit, 0) * 12vh)
+        calc(-50% + var(--camera-p, 0) * 12vh)
     );
     background: radial-gradient(
         circle at 50% 50%,
@@ -2592,19 +2621,101 @@ h3 {
     will-change: transform;
 }
 
-.home-page--seamless .home-scene--hero .hero-about {
-    opacity: calc(1 - var(--hero-exit, 0) * 0.25);
-    transform: translate3d(0, calc(var(--hero-exit, 0) * -2vh), 0);
-    filter: none;
-    transition: none;
+/* Hero scroll — анимация через GSAP timeline (heroScrollTimeline.js) */
+.home-page--seamless .home-scene--hero {
+    display: flex;
+    flex-direction: column;
+    overflow: clip;
 }
 
 .home-page--seamless .home-scene--hero .hero-first-screen {
-    opacity: calc(1 - var(--hero-exit, 0) * 0.15);
+    position: relative;
+    flex: 1 1 auto;
 }
 
-.home-page--seamless .home-scene--competencies {
-    opacity: 1;
+.home-page--seamless .hero-first-screen .section-nav--overlay {
+    z-index: 8;
+}
+
+.home-page--seamless .hero-first-screen .hero__top {
+    z-index: 5;
+}
+
+.home-page--seamless .home-scene--hero .hero-about {
+    flex: 0 0 auto;
+}
+
+.home-page--seamless .hero-about__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-12);
+    width: 100%;
+}
+
+.home-page--seamless .hero-about .hero-about__footer {
+    position: relative;
+    z-index: 12;
+}
+
+.home-page--seamless .hero-about .hero-more,
+.home-page--seamless .hero-about .hero-about__meta {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hero scroll: подписи папок скрываем — иначе в центре каша из «Любимые мемы…» и т.п. */
+.page-home .hero[data-hero-scroll='active'] .header-item__label {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.page-home .hero-about__meta .hero-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--space-8);
+}
+
+/* Скролл hero: футер по центру, без сдвига chevron */
+.page-home .hero[data-hero-scroll='active'] .hero-about__footer {
+    width: 100%;
+    max-width: 100%;
+    gap: var(--space-4);
+    pointer-events: auto;
+}
+
+.page-home .hero[data-hero-scroll='active'] .hero-about__meta {
+    gap: var(--space-4);
+    padding-top: 0;
+}
+
+.page-home .hero[data-hero-scroll='active'] .hero-about__meta .info-card {
+    gap: var(--space-4);
+}
+
+.page-home .hero[data-hero-scroll='active'] .hero-about__meta .hero-links {
+    margin-top: 0;
+}
+
+.page-home .hero[data-hero-scroll='active'] .hero-more {
+    justify-content: center;
+    width: 100%;
+    margin-block: 0;
+}
+
+.page-home .hero[data-hero-scroll='active'] .hero-more__chevron-icon {
+    margin-inline-start: 0.5rem;
+}
+
+.page-home .hero[data-hero-scroll='active'] .hero-first-screen .hero__top {
+    z-index: 6;
+}
+
+/* До скролла — mouse-float через CSS; во время scrub GSAP пишет inline transform */
+.home-page--seamless .hero-first-screen .header-items--figma .header-item--folder,
+.home-page--seamless .hero-first-screen .header-items--figma .header-item--image-well {
+    will-change: transform, opacity;
 }
 
 .home-page--seamless .home-scene--projects .projects-title-main {
@@ -2694,9 +2805,7 @@ h3 {
 }
 
 .home-page--seamless .home-scene--competencies {
-    margin-top: calc(
-        var(--scene-overlap) * -1 + clamp(0rem, 3vw, 1.5rem) * (1 - var(--hero-exit, 0) * 0.65)
-    );
+    margin-top: calc(var(--scene-overlap) * -1.35);
     padding-top: calc(var(--layout-section-gap) * 0.35);
     z-index: 2;
 }
@@ -2809,15 +2918,6 @@ h3 {
     transform: translateZ(0);
 }
 
-@media (min-width: 64.0625rem) {
-    .home-page--seamless .preview-grid .preview-card:nth-child(3n + 2) {
-        margin-top: var(--space-16);
-    }
-
-    .home-page--seamless .preview-grid .preview-card:nth-child(3n) {
-        margin-top: calc(var(--space-32) * -1);
-    }
-}
 
 @media (prefers-reduced-motion: reduce) {
     .home-page--seamless .home-scene--hero::after,
@@ -3892,6 +3992,7 @@ h3 {
         bottom: 0;
         transform: translateX(-50%);
     }
+
 }
 
 /* Hero content block — выравнивание по центру (Figma 1-202).
@@ -3906,12 +4007,26 @@ h3 {
 }
 
 .hero-content > .hero-role,
-.hero-content > .hero-title,
-.hero-content > .hero-more {
+.hero-content > .hero-title {
     width: auto;
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+}
+
+.page-home .hero-about__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-12);
+    width: 100%;
+}
+
+.page-home .hero-about__footer > .hero-more {
+    width: auto;
+    max-width: 100%;
+    margin-inline: auto;
     text-align: center;
 }
 
@@ -4223,8 +4338,8 @@ h3 {
     position: absolute;
     left: var(--hi-left, 0);
     top: var(--hi-top, 0);
-    /* center via -50% + mouse-follow offset из MouseInertia (--float-x/y). */
-    transform: translate(calc(-50% + var(--float-x, 0px)), var(--float-y, 0px));
+    /* Центр по X — снаружи; mouse-follow — на .header-item__float внутри */
+    transform: translate(-50%, 0);
     box-sizing: border-box;
     z-index: 3;
     pointer-events: auto;
@@ -4246,7 +4361,7 @@ h3 {
 .page-home .hero-first-screen .header-items--figma .header-item--folder:active,
 .page-home .hero-first-screen .header-items--figma .header-item--image-well:hover,
 .page-home .hero-first-screen .header-items--figma .header-item--image-well:active {
-    transform: translate(calc(-50% + var(--float-x, 0px)), var(--float-y, 0px));
+    transform: translate(-50%, 0);
 }
 
 /* ≤1024px: первый экран — фото + имя + описание в viewport, папки разбросаны (Figma %) */
@@ -4303,7 +4418,7 @@ h3 {
         position: absolute;
         left: var(--hi-left, 0);
         top: var(--hi-top, 0);
-        transform: translate(calc(-50% + var(--float-x, 0px)), var(--float-y, 0px));
+        transform: translate(-50%, 0);
         z-index: 3;
         pointer-events: auto;
     }
@@ -4322,7 +4437,7 @@ h3 {
     .page-home .hero-first-screen .header-items--figma .header-item--folder:active,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well:hover,
     .page-home .hero-first-screen .header-items--figma .header-item--image-well:active {
-        transform: translate(calc(-50% + var(--float-x, 0px)), var(--float-y, 0px));
+        transform: translate(-50%, 0);
     }
 
     .page-home .hero-first-screen .header-items--figma .header-item__label {
@@ -4581,6 +4696,16 @@ h3 {
         transform var(--dur-smart-reveal) var(--ease-smart);
 }
 
+/* Mouse-follow на внутреннем слое — GSAP скролл пишет transform на .header-item снаружи */
+.header-item__float {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    transform: translate3d(var(--float-x, 0px), var(--float-y, 0px), 0);
+    will-change: transform;
+}
+
 .header-item:hover {
     opacity: 1;
     transform: translateY(0);
@@ -4588,8 +4713,8 @@ h3 {
 
 .header-item:hover .header-item__icon-wrap img,
 .header-item:hover .header-item__well .icon-assemble-dots__media img {
-    transform: scale(1.028);
-    filter: brightness(1.08);
+    transform: scale(1.06);
+    filter: brightness(1.1);
 }
 
 .header-item:active {
@@ -4617,9 +4742,9 @@ h3 {
     object-fit: contain;
     filter: brightness(1.06);
     transition:
-        transform var(--dur-smart-image) var(--ease-smart),
-        filter var(--dur-smart-image) var(--ease-smart),
-        opacity var(--dur-smart-image) var(--ease-smart);
+        transform var(--dur-smart-fast) var(--ease-smart-punch),
+        filter var(--dur-smart-fast) var(--ease-smart),
+        opacity var(--dur-smart-fast) var(--ease-smart);
 }
 
 /* Вариант «Image Well» — 44×2.75rem, рамка и внутренняя тень (Figma 1:212, 1:215, 1:218, 1:221) */
@@ -4648,9 +4773,9 @@ h3 {
     display: block;
     filter: brightness(1.06);
     transition:
-        transform var(--dur-smart-image) var(--ease-smart),
-        filter var(--dur-smart-image) var(--ease-smart),
-        opacity var(--dur-smart-image) var(--ease-smart);
+        transform var(--dur-smart-fast) var(--ease-smart-punch),
+        filter var(--dur-smart-fast) var(--ease-smart),
+        opacity var(--dur-smart-fast) var(--ease-smart);
 }
 
 /* Подпись: 0.8263rem, по центру, тень (Figma 1:208, 1:211 и др.) */
@@ -5414,9 +5539,19 @@ h3 {
 .preview-card:hover {
     transform: none;
     box-shadow: none;
-    opacity: 0.88;
+    opacity: 1;
     outline: none;
     border: 0;
+}
+
+.preview-card .preview-image img,
+.preview-card .preview-image video {
+    transition: transform var(--dur-smart-image) var(--ease-smart-punch);
+}
+
+.preview-card:hover .preview-image img,
+.preview-card:hover .preview-image video {
+    transform: scale(1.045);
 }
 
 .preview-card:hover .preview-card__link,
@@ -5919,6 +6054,12 @@ h3 {
     align-items: start;
 }
 
+@media (min-width: 48.0625rem) {
+    :root {
+        --grid-column-gap: var(--space-24);
+    }
+}
+
 @media (min-width: 64rem) {
     .preview-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -5977,6 +6118,8 @@ h3 {
     -webkit-line-clamp: 2;
     line-clamp: 2;
     overflow: hidden;
+    /* Две строки — одинаковая базовая линия meta в ряду */
+    min-height: calc(2 * 2rem);
 }
 
 .preview-grid .preview-card__meta {
@@ -12343,7 +12486,7 @@ p + p {
     color: var(--color-text);
 }
 
-.page-home .hero-about .hero-content > .hero-text + .hero-more {
+.page-home .hero-about .hero-content + .hero-about__footer {
     margin-top: 0;
 }
 

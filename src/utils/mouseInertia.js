@@ -38,7 +38,7 @@ function defaultFloatRange(el) {
   if (el.matches?.('.preview-card-block, .hero__card .preview-card-block')) return 24;
   if (el.matches?.('.hero-vector__inner, .hero-vector__inner img')) return 22;
   if (el.matches?.('.card, .scroll-scrub-row__inner > .card')) return 20;
-  if (el.matches?.('.header-item')) return 12;
+  if (el.matches?.('.header-item, .header-item__float')) return 12;
   return 18;
 }
 

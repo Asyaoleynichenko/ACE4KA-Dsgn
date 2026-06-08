@@ -5,6 +5,7 @@ import { HOME_PROJECT_SLUGS, homeProjectsCatalog } from '../data/homeProjectsCat
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import { asArray } from '../utils/asArray.js';
+import { isMobileViewport, prefersReducedMotion } from '../motion/motionSystem.js';
 import ProjectCard from './ProjectCard.jsx';
 
 function chunkSlugsForLines(lineCount, homeSlugs) {
@@ -51,9 +52,8 @@ export default function HomeCompetenciesScrub({
   const stickyRef = useRef(null);
   const stageRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  );
+  const [reducedMotion, setReducedMotion] = useState(() => prefersReducedMotion());
+  const [isMobile, setIsMobile] = useState(() => isMobileViewport());
 
   const n = lines.length;
   const slugRows =
@@ -67,12 +67,22 @@ export default function HomeCompetenciesScrub({
   );
 
   useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setReducedMotion(mq.matches);
+    const mqReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mqMobile = window.matchMedia('(max-width: 48rem)');
+    const sync = () => {
+      setReducedMotion(mqReduced.matches);
+      setIsMobile(mqMobile.matches);
+    };
     sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
+    mqReduced.addEventListener('change', sync);
+    mqMobile.addEventListener('change', sync);
+    return () => {
+      mqReduced.removeEventListener('change', sync);
+      mqMobile.removeEventListener('change', sync);
+    };
   }, []);
+
+  const useNativeScroll = reducedMotion || isMobile;
 
   const onScrub = useCallback(
     (progress) => {
@@ -89,7 +99,7 @@ export default function HomeCompetenciesScrub({
   );
 
   useScrollTriggerCompetenciesScrub({
-    enabled: !reducedMotion && n > 0,
+    enabled: !useNativeScroll && n > 0,
     runwayRef,
     stickyRef,
     lineCount: n,
@@ -142,9 +152,11 @@ export default function HomeCompetenciesScrub({
     </div>
   );
 
-  if (reducedMotion) {
+  if (useNativeScroll) {
     return (
-      <div className="home-competencies-scrub home-competencies-scrub--reduced-motion">
+      <div
+        className={`home-competencies-scrub${reducedMotion ? ' home-competencies-scrub--reduced-motion' : ' home-competencies-scrub--touch-scroll'}`.trim()}
+      >
         <div className="home-competencies__panel">
           <div className="home-competencies__inner home-competencies__inner--scrub">
             <div className="home-competencies-scrub__content">

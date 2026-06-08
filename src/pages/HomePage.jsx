@@ -98,23 +98,27 @@ export default function HomePage() {
                       to={localizedPath(to)}
                       className="header-item header-item--folder"
                       data-node-id={nodeId}
-                      data-float={strength}
-                      data-float-range={range}
                       style={headerItemPlacementStyle(placement)}
                     >
-                      <div className="header-item__icon-wrap">
-                        <IconAssembleFromDots
-                          className="icon-assemble-dots--folder"
-                          ringRadiusPx={44}
-                          dotCount={20}
-                          dotPx={3}
-                        >
-                          <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} loading="lazy" />
-                        </IconAssembleFromDots>
+                      <div
+                        className="header-item__float"
+                        data-float={strength}
+                        data-float-range={range}
+                      >
+                        <div className="header-item__icon-wrap">
+                          <IconAssembleFromDots
+                            className="icon-assemble-dots--folder"
+                            ringRadiusPx={44}
+                            dotCount={20}
+                            dotPx={3}
+                          >
+                            <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} loading="lazy" />
+                          </IconAssembleFromDots>
+                        </div>
+                        <span className="header-item__label">
+                          <span className="text-condensed">{t(labelKey)}</span>
+                        </span>
                       </div>
-                      <span className="header-item__label">
-                        <span className="text-condensed">{t(labelKey)}</span>
-                      </span>
                     </SeamlessProjectsLink>
                   );
                 })}
@@ -127,23 +131,27 @@ export default function HomePage() {
                     to={localizedPath(to)}
                     className="header-item header-item--image-well"
                     data-node-id={nodeId}
-                    data-float={strength}
-                    data-float-range={range}
                     style={headerItemPlacementStyle(placement)}
                   >
-                    <div className="header-item__well">
-                      <IconAssembleFromDots
-                        className="icon-assemble-dots--well"
-                        ringRadiusPx={16}
-                        dotCount={14}
-                        dotPx={2.5}
-                      >
-                        <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" loading="lazy" />
-                      </IconAssembleFromDots>
+                    <div
+                      className="header-item__float"
+                      data-float={strength}
+                      data-float-range={range}
+                    >
+                      <div className="header-item__well">
+                        <IconAssembleFromDots
+                          className="icon-assemble-dots--well"
+                          ringRadiusPx={16}
+                          dotCount={14}
+                          dotPx={2.5}
+                        >
+                          <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" loading="lazy" />
+                        </IconAssembleFromDots>
+                      </div>
+                      <span className="header-item__label">
+                        <span className="text-condensed">{t(labelKey)}</span>
+                      </span>
                     </div>
-                    <span className="header-item__label">
-                      <span className="text-condensed">{t(labelKey)}</span>
-                    </span>
                   </SeamlessProjectsLink>
                   );
                 })}
@@ -190,6 +198,8 @@ export default function HomePage() {
               >
                 {t('hero.text')}
               </p>
+            </div>
+            <div className="hero-about__footer">
               <SeamlessProjectsLink
                 to={localizedPath('/about')}
                 className="hero-more hero-more--with-icon"
@@ -200,9 +210,8 @@ export default function HomePage() {
                 </span>
                 <DotIcon name="dot-chevron-right" size={24} className="hero-more__chevron-icon" />
               </SeamlessProjectsLink>
-            </div>
-            <div className="hero-about__meta">
-              <div className="info-grid" data-reveal-group="">
+              <div className="hero-about__meta">
+                <div className="info-grid" data-reveal-group="">
                 <div className="info-card">
                   <span className="info-label">
                     <span className="text-condensed">{t('hero.info.location')}</span>
@@ -233,8 +242,8 @@ export default function HomePage() {
                   </span>
                   <span className="info-value">{t('hero.info.contactsValue')}</span>
                 </div>
-              </div>
-              <div className="hero-links" data-reveal="">
+                </div>
+                <div className="hero-links" data-reveal="">
                 {heroLinks.map(({ href, label, labelKey }, index) => {
                   const linkLabel = labelKey ? t(labelKey) : label;
                   const linkEl = href.startsWith('/') ? (
@@ -255,6 +264,7 @@ export default function HomePage() {
                     </span>
                   );
                 })}
+                </div>
               </div>
             </div>
           </div>

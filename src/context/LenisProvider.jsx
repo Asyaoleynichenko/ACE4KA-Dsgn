@@ -6,7 +6,7 @@ import {
   onScrollTriggerScrollerChange,
 } from '../gsap/lenisScrollTrigger.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
-import { MOTION_LERP } from '../motion/motionSystem.js';
+import { MOTION_LERP, prefersNativeScroll } from '../motion/motionSystem.js';
 
 const LenisContext = createContext({ lenis: null, enabled: false });
 
@@ -59,6 +59,7 @@ export default function LenisProvider({ children }) {
 
     const destroy = () => {
       disconnectLenisScrollTrigger();
+      onScrollTriggerScrollerChange();
       instance?.destroy();
       instance = null;
       lenisRef.current = null;
@@ -68,7 +69,7 @@ export default function LenisProvider({ children }) {
 
     const mount = () => {
       destroy();
-      if (reduced.matches) return;
+      if (prefersNativeScroll()) return;
       instance = createLenisInstance();
       lenisRef.current = instance;
       connectLenisScrollTrigger(instance);
@@ -97,14 +98,17 @@ export default function LenisProvider({ children }) {
       observer.observe(root, { attributes: true, attributeFilter: ['class'] });
     }
 
-    const onReducedChange = () => {
-      if (reduced.matches) destroy();
+    const mobileMq = window.matchMedia('(max-width: 48rem)');
+    const onMotionPreferenceChange = () => {
+      if (prefersNativeScroll()) destroy();
       else mount();
     };
-    reduced.addEventListener('change', onReducedChange);
+    reduced.addEventListener('change', onMotionPreferenceChange);
+    mobileMq.addEventListener('change', onMotionPreferenceChange);
 
     return () => {
-      reduced.removeEventListener('change', onReducedChange);
+      reduced.removeEventListener('change', onMotionPreferenceChange);
+      mobileMq.removeEventListener('change', onMotionPreferenceChange);
       observer?.disconnect();
       destroy();
     };
