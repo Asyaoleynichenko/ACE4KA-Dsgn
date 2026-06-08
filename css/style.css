@@ -115,9 +115,10 @@
   --radius-xs: 0.5rem;
   --radius: 0.5rem;
   --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-2xl: 1.375rem;
-  --radius-card-premium: 1.375rem;
+  /* Единый радиус карточек — 24px (premium card system) */
+  --radius-lg: 1.5rem;
+  --radius-2xl: 1.5rem;
+  --radius-card-premium: 1.5rem;
   --radius-full: 624.9375rem;
   --color-surface-border: #2a2a31;
   --color-elevated-mid: #262626;
@@ -163,24 +164,25 @@
   /* Spacing rhythm — 8px modular grid (4 / 8 / 16 / 24 / 32 / 48 / 64 / 96 / 128)
      Proximity tiers on a screen: pair (--space-16–24) < group (--space-32) < block (--space-48–64).
      Use 2–4 distinct steps per view; avoid off-grid Figma decimals. */
+  /* 8pt grid — единственная разрешённая шкала: 4 8 12 16 20 24 32 40 48 64 80 96 */
   --space-4: 0.25rem;
   --space-8: 0.5rem;
   --space-12: 0.75rem;
-  --space-14: 0.875rem;
   --space-16: 1rem;
+  --space-20: 1.25rem;
   --space-24: 1.5rem;
   --space-32: 2rem;
+  --space-40: 2.5rem;
   --space-48: 3rem;
   --space-64: 4rem;
+  --space-80: 5rem;
   --space-96: 6rem;
-  --space-128: 8rem;
-  /* Legacy aliases — keep existing rules on-scale */
+  /* Legacy aliases → ближайшее значение НА сетке (8pt), без внесеточных px */
   --space-2: var(--space-4);
-  --space-20: var(--space-24);
-  --space-40: var(--space-48);
+  --space-14: var(--space-16);
   --space-56: var(--space-48);
   --space-72: var(--space-64);
-  --space-80: var(--space-96);
+  --space-128: var(--space-96);
   /* Compositional rhythm (vertical flow, section breathing room) */
   --rhythm-micro: var(--space-8);
   --rhythm-tight: var(--space-16);
@@ -439,7 +441,8 @@
   --layout-edge-left: calc(var(--layout-page-pad-x) + env(safe-area-inset-left, 0));
   --layout-edge-right: calc(var(--layout-page-pad-x) + env(safe-area-inset-right, 0));
   --layout-page-pad-y-top: var(--space-48);
-  --layout-page-pad-y-bottom: var(--space-64);
+  /* Premium «правило пустоты»: отступ до футера крупнее внутренних расстояний */
+  --layout-page-pad-y-bottom: var(--space-96);
 }
 
 /* Адаптив: вертикальные поля плотнее на планшетах/телефонах; горизонтальный gutter — строго 1.5rem + safe-area (--layout-edge-*). */
@@ -456,7 +459,7 @@
 @media (max-width: 40rem) {
     :root {
         --layout-page-pad-y-top: var(--space-32);
-        --layout-page-pad-y-bottom: var(--space-48);
+        --layout-page-pad-y-bottom: var(--space-64);
         /* --layout-page-pad-x наследуется из :root (16px) */
         --project-page-padding-y: var(--space-32);
         --project-page-padding-bottom: var(--space-48);
@@ -1300,6 +1303,11 @@ a {
 /* UX: Фокус для клавиатурной навигации (не переопределять для мыши) */
 a:focus-visible,
 button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible,
 [href]:focus-visible {
     outline: 0.125rem solid var(--color-focus-ring);
     outline-offset: 0.125rem;
@@ -2626,6 +2634,9 @@ h3 {
     display: flex;
     flex-direction: column;
     overflow: clip;
+    /* Во время pin (pinSpacing:false) hero фиксируется ПОВЕРХ компетенций (z 2):
+       контент летит на зрителе, а следующий экран поднимается за прозрачным hero. */
+    z-index: 6;
 }
 
 .home-page--seamless .home-scene--hero .hero-first-screen {
@@ -2664,12 +2675,8 @@ h3 {
     z-index: 1;
 }
 
-/* Hero scroll: подписи папок скрываем — иначе в центре каша из «Любимые мемы…» и т.п. */
-.page-home .hero[data-hero-scroll='active'] .header-item__label {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
+/* Hero scroll = полёт сквозь: папки — фокус-навигация, подписи остаются видимыми,
+   пока папки летят на зрителя (раньше скрывались из-за схода в центр). */
 
 .page-home .hero-about__meta .hero-links {
     flex-wrap: wrap;
@@ -2782,15 +2789,12 @@ h3 {
     padding-bottom: calc(var(--layout-section-gap) - var(--scene-overlap));
 }
 
+/* Градиентные маски-нахлёсты отключены: переход теперь — полёт hero вглубь
+   + выплывание следующего экрана (heroScrollTimeline.js). Фон ровно чёрный. */
 .home-page--seamless .home-scene--hero::after,
 .home-page--seamless .home-scene--competencies::after,
 .home-page--seamless .home-scene--projects::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    pointer-events: none;
-    z-index: 0;
+    display: none;
 }
 
 .home-page--seamless .home-scene--hero::after {
@@ -2805,8 +2809,8 @@ h3 {
 }
 
 .home-page--seamless .home-scene--competencies {
-    margin-top: calc(var(--scene-overlap) * -1.35);
-    padding-top: calc(var(--layout-section-gap) * 0.35);
+    margin-top: 0;
+    padding-top: var(--layout-section-gap);
     z-index: 2;
 }
 
@@ -2834,7 +2838,7 @@ h3 {
 }
 
 .home-page--seamless .home-scene--projects {
-    margin-top: calc(var(--scene-overlap) * -1.15);
+    margin-top: 0;
     padding-top: calc(var(--layout-section-gap) * 0.5);
     padding-bottom: var(--layout-section-gap);
     z-index: 3;
@@ -6233,7 +6237,8 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(2.75rem, 5vw, 4.5rem);
+    /* Ритм между секциями кейса на 8pt (medium→large): 48 → 80px */
+    gap: clamp(var(--space-48), 5vw, var(--space-80));
 }
 
 /* Крупные блоки кейса: разделители + дополнительный «воздух» (сканирование без смены контента) */
@@ -9756,7 +9761,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     max-width: min(84.875rem, 100%);
     margin-left: auto;
     margin-right: auto;
-    padding-bottom: 0;
+    /* Единый ритм перед футером (8pt), как на остальных страницах — не 0 */
+    padding-bottom: var(--layout-page-pad-y-bottom);
     min-width: 0;
     overflow-x: clip;
 }
@@ -12215,7 +12221,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
    ========================= */
 /* Editorial layout + type wiring (colors/effects unchanged) */
 :root {
-    --content-max-readable: 45rem;
+    /* Ширина чтения 70–75 знаков в строке (ch — буквально по символам) */
+    --content-max-readable: min(72ch, 100%);
     --type-optical-heading-after: var(--space-24);
     --type-optical-body-after: var(--space-16);
 }
