@@ -1208,23 +1208,10 @@ html.snap-pages #root.snap-pages-root--home {
         animation-timing-function: var(--ease-smart);
     }
 
-    /* Persona-морфы главная ↔ «О себе»: имя и фото перетекают между страницами.
-       Каждое имя существует только на своей странице — пары уникальны в снимке. */
-    .page-home .hero-title {
-        view-transition-name: persona-name;
-    }
-
-    .about-page__name {
-        view-transition-name: persona-name;
-    }
-
-    .page-home .hero__card .preview-card-block__image img {
-        view-transition-name: persona-photo;
-    }
-
-    .about-page__photo {
-        view-transition-name: persona-photo;
-    }
+    /* Persona-морфы (главная ↔ «О себе») убраны: фото «О себе» (449px) и крошечная
+       картинка в mac-окне + огромный заголовок морфят между слишком разными
+       размерами → огромное полупрозрачное фото поверх контента. Кросс-фейд root
+       (выше) даёт чистый переход без артефактов. */
 }
 
 @media (prefers-reduced-motion: reduce) {
