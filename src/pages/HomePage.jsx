@@ -14,7 +14,6 @@ import {
   headerItemsWell,
 } from '../data/sectionHeaderItems';
 const HomeCompetenciesScrub = lazy(() => import('../components/HomeCompetenciesScrub.jsx'));
-const HomeProjectsSection = lazy(() => import('../components/HomeProjectsSection.jsx'));
 
 function headerItemPlacementStyle(placement) {
   if (!placement) return undefined;
@@ -292,13 +291,6 @@ export default function HomePage() {
           </section>
         ) : null}
 
-        {/* Сцена-обёртка снаружи Suspense: ScrollTrigger камеры находит её сразу,
-            до того как lazy-секция домаунтится */}
-        <div className="home-scene home-scene--projects" data-scene="projects">
-          <Suspense fallback={<SectionFallback minHeight="40vh" />}>
-            <HomeProjectsSection />
-          </Suspense>
-        </div>
       </div>
     </HomeCameraScroll>
   );

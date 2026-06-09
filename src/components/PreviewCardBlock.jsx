@@ -19,7 +19,7 @@ function MacTrafficLights({ t }) {
 /** Image Preview по макету Figma (420:21377 / совпадает с 1:231): светофоры, заголовок, CTA, превью */
 export default function PreviewCardBlock() {
   const { t } = useI18n();
-  const previewImageSrc = publicUrl('/images/figma-impl-89-347/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.png');
+  const previewImageSrc = publicUrl('/images/figma-impl-89-347/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.webp');
 
   return (
     <a

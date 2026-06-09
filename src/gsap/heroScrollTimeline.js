@@ -126,22 +126,22 @@ export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
     );
   }
 
-  /* 3) Папки — симметрично вокруг фото: 2 сверху, 2 по бокам (низ — футеру).
-        Прямоугольная раскладка с гарантированным зазором от краёв фото. */
+  /* 3) Папки — чистый симметричный фрейм: 2 колонки (слева/справа от фото),
+        в каждой по 2 папки (сверху/снизу). Единый x-офсет колонки (по самой
+        широкой подписи) → ровные колонки, не вразнобой. Низ-центр — футеру. */
+  const maxFolderHalfW = (Math.max(...folderRest.map((f) => f.w)) * FOLDER_SCALE) / 2;
   folders.forEach((el, i) => {
     const ring = FOLDER_HERO_RING_PX[el.dataset?.nodeId] ?? { x: 0, y: 0 };
-    const isTop = ring.y < -40; /* верхние папки — те, что в макете выше центра */
-    const sx = Math.sign(ring.x) || (i % 2 === 0 ? -1 : 1);
-    const fHalfW = (folderRest[i].w * FOLDER_SCALE) / 2;
-    const fHalfH = (folderRest[i].h * FOLDER_SCALE) / 2;
+    const sx = Math.sign(ring.x) || (i % 2 === 0 ? -1 : 1); /* лево/право */
+    const sy = ring.y < 0 ? -1 : 1; /* верх/низ в колонке */
     const target = () => {
       const c = heroCenter();
       const s = cardRestSize();
       const halfW = (s.w * CARD_SCALE) / 2;
       const halfH = (s.h * CARD_SCALE) / 2;
       return {
-        x: c.x + sx * (halfW + fHalfW + 36),
-        y: isTop ? c.y - (halfH + fHalfH + 28) : c.y,
+        x: c.x + sx * (halfW + maxFolderHalfW + 40),
+        y: c.y + sy * (halfH * 0.58),
       };
     };
     tl.to(

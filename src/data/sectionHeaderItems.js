@@ -14,8 +14,8 @@ export const HEADER_FIRST_SCREEN = { w: 1275.452, h: 312.784 };
 export const SECTION_HEADER_IMAGES = {
   folder: folderIconFromFigma,
   /** В макете 1:224 — тот же instance Folder, что у 1-206 / 1-209 / 1-227 (не сетка projects.svg). */
-  contact: publicUrl(`${FIGMA_HOME_IMPL}/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.png`),
-  team: publicUrl(`${FIGMA_HOME_IMPL}/2d66314f5e7df877310ce98caf65e489dbc6b245.png`),
+  contact: publicUrl(`${FIGMA_HOME_IMPL}/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.webp`),
+  team: publicUrl(`${FIGMA_HOME_IMPL}/2d66314f5e7df877310ce98caf65e489dbc6b245.webp`),
   /** Пока без отдельного лёгкого экспорта из Figma — `habitat.svg`; замените на PNG при экспорте ноды 1:222. */
   habitat: publicUrl('/images/icons/habitat.svg'),
 };

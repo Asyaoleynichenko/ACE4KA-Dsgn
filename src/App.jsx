@@ -7,6 +7,7 @@ import LocaleGate from './components/LocaleGate.jsx';
 import { LegacyLocaleRedirect, RootLocaleRedirect } from './components/LegacyLocaleRedirect.jsx';
 import LenisProvider from './context/LenisProvider.jsx';
 import MotionEffects from './components/MotionEffects.jsx';
+import SiteLoader from './components/SiteLoader.jsx';
 
 /* Тонки импортов отдельно от lazy(): их же дёргает RoutePrefetcher в idle,
    чтобы переход на любую страницу был мгновенным (без пустого fallback). */
@@ -90,7 +91,7 @@ const LEGACY_TOP_PATHS = [
 ];
 
 function PageFallback() {
-  return <div className="page-route-fallback" aria-hidden="true" />;
+  return <SiteLoader />;
 }
 
 export default function App() {

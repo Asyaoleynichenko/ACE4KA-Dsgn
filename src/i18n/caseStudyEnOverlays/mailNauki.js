@@ -76,7 +76,7 @@ export const mailNaukiEn = {
         'Ad and partner blocks natively embedded in the content structure',
         'Responsive layouts for breakpoints',
       ],
-      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/dbcf3dac5b54ac3b4f5867a8f59020fd2f6f5131.png',
+      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/dbcf3dac5b54ac3b4f5867a8f59020fd2f6f5131.webp',
     },
     {
       title: '2. Media UI design system',
@@ -84,7 +84,7 @@ export const mailNaukiEn = {
         'I added components and design tokens tailored to Mail Science, then made them reusable so patterns could scale to other products without redesigning from scratch—that was the systemic payoff.',
       taskLayout: 'pills',
       tasks: ['Components and tokens for Mail Science', 'Reusable patterns for other verticals'],
-      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/cf98e803597a562a1364e57730730ebaa8cf9c55.png',
+      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/cf98e803597a562a1364e57730730ebaa8cf9c55.webp',
     },
     {
       title: '3. Scaling the approach',
@@ -97,12 +97,12 @@ export const mailNaukiEn = {
         'Partnered with engineering through rollout',
       ],
       galleryImages: [
-        '/images/figma-sync-20260205-mail-nauki-1777996685113/9404630b674c18da58918ad26aa18f10cd092161.png',
-        '/images/figma-sync-20260205-mail-nauki-1777996685113/e076ef97274807b1134b88c0ed26e7eee6fd1429.png',
-        '/images/figma-sync-20260205-mail-nauki-1777996685113/ef40cddf2ee53f9fb672ad5d27022a08b0589c21.png',
-        '/images/figma-sync-20260205-mail-nauki-1777996685113/b60e28466089ffcf3b2c07f497b0e1828d4cc526.png',
-        '/images/figma-sync-20260205-mail-nauki-1777996685113/1f955d3fa6908535d0cebf61abc365f22b278f3c.png',
-        '/images/figma-sync-20260205-mail-nauki-1777996685113/efa2a6648cb549303029341d74e937a16ef784b6.png',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/9404630b674c18da58918ad26aa18f10cd092161.webp',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/e076ef97274807b1134b88c0ed26e7eee6fd1429.webp',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/ef40cddf2ee53f9fb672ad5d27022a08b0589c21.webp',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/b60e28466089ffcf3b2c07f497b0e1828d4cc526.webp',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/1f955d3fa6908535d0cebf61abc365f22b278f3c.webp',
+        '/images/figma-sync-20260205-mail-nauki-1777996685113/efa2a6648cb549303029341d74e937a16ef784b6.webp',
       ],
     },
     {
@@ -115,7 +115,7 @@ export const mailNaukiEn = {
         'Cast section and user reviews',
         'Updated video section',
       ],
-      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/72850e55a24457d5e847395b353284c4e766082b.png',
+      galleryImage: '/images/figma-sync-20260205-mail-nauki-1777996685113/72850e55a24457d5e847395b353284c4e766082b.webp',
     },
     {
       title: 'Trade-offs',

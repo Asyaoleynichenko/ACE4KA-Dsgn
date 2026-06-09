@@ -9,6 +9,7 @@ const MouseInertia = lazy(() => import('./MouseInertia.jsx'));
 const ScrollPolish = lazy(() => import('./ScrollPolish.jsx'));
 const TypographyRevealHost = lazy(() => import('./TypographyRevealHost.jsx'));
 const InteractiveTextCondensedHost = lazy(() => import('./InteractiveTextCondensedHost.jsx'));
+const CustomCursor = lazy(() => import('./CustomCursor.jsx'));
 
 /** Motion/GSAP — после первого кадра, не блокирует initial bundle. */
 export default function MotionEffects() {
@@ -52,6 +53,7 @@ export default function MotionEffects() {
           <ParallaxDepth />
           <MouseInertia />
           <ScrollPolish />
+          <CustomCursor />
           {isHome ? <TypographyRevealHost /> : null}
         </Suspense>
       )}

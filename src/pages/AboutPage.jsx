@@ -57,7 +57,7 @@ export default function AboutPage() {
   const jobs = asArray(messages.about?.jobs);
   const skills = asArray(messages.about?.skills?.items);
   const eduItems = asArray(messages.about?.eduItems);
-  const profilePhoto = messages.about?.profilePhoto ?? '/images/figma-743-16866/profile.png';
+  const profilePhoto = messages.about?.profilePhoto ?? '/images/figma-743-16866/profile.webp';
 
   const scrollspyItems = [
     { id: 'intro', label: t('about.intro.name') },
