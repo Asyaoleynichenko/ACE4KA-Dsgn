@@ -2466,6 +2466,12 @@ h3 {
     box-sizing: border-box;
 }
 
+/* Контент-страницы: верхний заголовок не должен уезжать под фикс-хедер (~97px).
+   Главную (hero сам управляет отступом) и кейс-стади (полноэкранная обложка) не трогаем. */
+.page:not(.page-home):not(.page-project) .main {
+    padding-top: max(var(--layout-page-pad-y-top), calc(var(--header-figma-bar-min) + var(--space-32)));
+}
+
 /* Параллакс фона — все страницы (слои под контентом, без перехвата кликов) */
 .page {
     position: relative;
