@@ -485,6 +485,7 @@
         --text-89-756-label-font-size: var(--type-label-size);
         --case-feature-card-title-size-sm: var(--type-label-size);
         --case-feature-card-body-size-sm: var(--type-statement-size);
+        --comp-line-size: clamp(2rem, 5.8vw, 4.25rem);
     }
 }
 
@@ -558,6 +559,11 @@
         --hero-fs-label-size: clamp(0.625rem, 2.9vw, 0.75rem);
         --hero-fs-nav-pad-top: max(4.75rem, calc(env(safe-area-inset-top, 0) + 4rem));
         --hero-fs-nav-pad-bottom: max(5.5rem, calc(env(safe-area-inset-bottom, 0) + 4rem));
+        --header-mobile-menu-size: clamp(1.875rem, 11vw, 3.25rem);
+        --header-mobile-menu-size-active: clamp(1.875rem, 11vw, 3.25rem);
+        --header-mobile-menu-lang-size: clamp(1.75rem, 10vw, 3rem);
+        --type-section-title-size: clamp(2rem, 10vw, 2.875rem);
+        --type-body-lg-size: clamp(1.0625rem, 4vw, 1.1875rem);
     }
 }
 
@@ -574,6 +580,18 @@
         --type-section-title-size: clamp(2.75rem, 7vw, 4rem);
         --type-body-lg-size: clamp(1.25rem, 2.4vw + 0.95rem, 1.4375rem);
         --type-body-size: clamp(1.125rem, 1.8vw + 0.9rem, 1.25rem);
+        --comp-line-size: clamp(2.125rem, 4.8vw, 3.75rem);
+    }
+
+    .home-competencies-scrub--static .home-competencies__line-wrap {
+        padding-inline: clamp(0.75rem, 2.5vw, 1.25rem);
+    }
+
+    .home-competencies-scrub--static .home-competencies__line {
+        white-space: normal;
+        text-wrap: balance;
+        overflow-wrap: normal;
+        word-break: normal;
     }
 }
 
@@ -1817,7 +1835,7 @@ body.nav-drawer-open {
     .site-footer__list {
         flex-wrap: wrap;
         overflow-x: visible;
-        justify-content: center;
+        justify-content: flex-end;
     }
 }
 
@@ -1884,7 +1902,8 @@ body.nav-drawer-open {
 .header .lang-switch .lang-switch__toggle-row {
     display: inline-block;
     width: fit-content;
-    max-width: 100%;
+    max-width: none;
+    overflow: visible;
     vertical-align: middle;
     font-size: inherit;
     text-transform: uppercase;
@@ -1924,7 +1943,6 @@ body.nav-drawer-open {
     .info-card,
     .info-label,
     .header-item__label,
-    .site-footer,
     .btn-show-all,
     .filter-pill,
     .page-header,
@@ -1939,7 +1957,6 @@ body.nav-drawer-open {
     .info-card,
     .info-label,
     .header-item__label,
-    .site-footer,
     .btn-show-all,
     .filter-pill,
     .page-header,
@@ -2803,10 +2820,11 @@ h3 {
     justify-content: center;
     width: 100%;
     margin-block: 0;
+    gap: 0.375rem;
 }
 
 .page-home .hero[data-hero-scroll='active'] .hero-more__chevron-icon {
-    margin-inline-start: 0.5rem;
+    margin-inline-start: 0;
 }
 
 .page-home .hero[data-hero-scroll='active'] .hero-first-screen .hero__top {
@@ -3229,7 +3247,8 @@ h3 {
     .home-competencies-scrub.home-competencies-scrub--static .home-competencies__line {
         white-space: normal;
         text-wrap: balance;
-        overflow-wrap: anywhere;
+        overflow-wrap: normal;
+        word-break: normal;
         hyphens: none;
         max-width: 100%;
     }
@@ -4210,16 +4229,18 @@ h3 {
 .hero-more {
     font-size: 1.25rem;
     font-weight: 500;
-    line-height: 1.2;
+    line-height: 1;
     letter-spacing: 0.0313rem;
     text-transform: uppercase;
     color: var(--color-text);
     margin: 0;
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: center;
+    gap: 0.375rem;
     white-space: nowrap;
     text-decoration: none;
+    vertical-align: middle;
 }
 
 .hero-more:hover {
@@ -4230,32 +4251,34 @@ h3 {
 .hero-more--with-icon {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: 0.375rem;
     text-decoration: none;
 }
 
-/* hero-more: scaleX-анимация из .text-condensed (0.5 → 0.88) + транс-ориджин left + negative margin на chevron, чтобы:
-   – видимый текст начинался слева от своего layout-бокса,
-   – chevron подтягивался к концу видимого текста,
-   – вся пара text+chevron центрировалась относительно flex-контейнера. */
+/* hero-more: только scaleX — без scaleY, чтобы caps и chevron стояли на одной линии */
 .hero-more .text-condensed,
 .hero-more__text .text-condensed {
-    transform-origin: left center;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: center center;
+    margin-inline-end: 0;
+    vertical-align: middle;
+    line-height: 1;
 }
 
 .hero-more__chevron-icon {
-    /* Calibration для русского «БОЛЬШЕ ОБО МНЕ» (~10em). При scaleX 0.5 фантомное пространство = 5em → -5em. */
-    margin-inline-start: -5em;
+    display: block;
+    align-self: center;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-inline-start: 0;
     transition:
-        margin-inline-start var(--transition-micro-expand),
         transform var(--transition-micro-expand);
 }
 
 .hero-more:hover .hero-more__chevron-icon,
 .hero-more:focus-visible .hero-more__chevron-icon {
-    /* При scaleX 0.88 фантом ≈ 1.2em. */
-    margin-inline-start: -1.2em;
-    transform: translateX(0.25rem);
+    transform: translateX(0.125rem);
 }
 
 .hero-more--with-icon:hover {
@@ -4266,18 +4289,14 @@ h3 {
     text-decoration: none;
 }
 
-/* Стрелка — <DotIcon name="dot-chevron-right" />, центрируем по cap-height bold-текста через line-height: 1 и flex align center. */
-.hero-more__chevron-icon {
-    display: block;
-    align-self: center;
-    flex-shrink: 0;
-    line-height: 1;
-}
-
-/* hero-more__text — также сжимаем line-height до cap-height, чтобы flex-align по box совпадал с visual-center caps */
 .hero-more__text {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     line-height: 1;
-    display: inline-block;
+    width: auto;
+    max-width: 100%;
+    vertical-align: middle;
 }
 
 /* Info grid — Figma 416:13019: cols 165 161 182 257 179, column-gap 0 */
@@ -9115,6 +9134,17 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin-top: 0.25rem;
     }
 
+    /* xs: intro — одна колонка */
+    @media (max-width: 30rem) {
+        .project-case-study-mail .project-intro {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                'heading'
+                'meta'
+                'copy';
+        }
+    }
+
     /* Title info — без подложки у текста */
     .project-case-study-mail .title-info-article {
         gap: clamp(0.75rem, 3vw, 1rem);
@@ -9954,23 +9984,19 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     min-width: 0;
 }
 
-@media (min-width: 64.0625rem) {
-    .about-page__hero {
-        grid-template-columns: minmax(0, min(var(--about-hero-photo-size), 42%)) minmax(0, 1fr);
-    }
-
-    .about-page__photo-wrap {
-        width: 100%;
-        max-width: var(--about-hero-photo-size);
-    }
-}
-
 .about-page__photo-wrap {
-    width: var(--about-hero-photo-size);
+    width: 100%;
+    max-width: var(--about-hero-photo-size);
     aspect-ratio: 1;
     border-radius: 50%;
     overflow: hidden;
     background: linear-gradient(145deg, #262626 0%, #121212 100%);
+}
+
+@media (min-width: 64.0625rem) {
+    .about-page__hero {
+        grid-template-columns: minmax(0, min(var(--about-hero-photo-size), 42%)) minmax(0, 1fr);
+    }
 }
 
 .about-page__photo {
@@ -11338,6 +11364,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding-right: var(--layout-edge-right);
 }
 
+/* ACE4KA — только на главной (Figma 16-170 / 573:23146). */
+:not(.page-home) .site-footer__wordmark {
+    display: none;
+}
+
 .site-footer__wordmark {
     container-name: foot-wm;
     container-type: inline-size;
@@ -11482,6 +11513,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .site-footer__link .text-condensed {
+    display: inline-block;
+    transform-origin: left center;
     max-width: none;
     white-space: nowrap;
     margin-inline: calc((1 - var(--tc-scale-x)) / 2 * -100%);
@@ -11558,50 +11591,55 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .site-footer__main {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1.5rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: clamp(1rem, 3vw, 1.5rem);
     }
 
     .site-footer__left {
-        /* В column-flex `flex: 1 1 16.25rem` превращался в вертикальный basis 16.25rem → пустота под текстом. */
-        flex: 0 0 auto;
-        max-width: none;
-        align-self: stretch;
-        align-items: center;
-        text-align: center;
+        flex: 1 1 min(100%, 16rem);
+        max-width: min(100%, 20rem);
+        align-self: flex-start;
+        align-items: flex-start;
+        text-align: left;
     }
 
     .site-footer__status {
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .site-footer__nav {
-        margin-left: 0;
-        width: 100%;
+        flex: 1 1 auto;
+        min-width: min(100%, 12rem);
+        margin-left: auto;
+        align-self: flex-end;
+        width: auto;
     }
 
     .site-footer__list {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.25rem 0.5rem;
-        justify-items: center;
-        justify-content: center;
-        overflow-x: visible;
+        display: flex;
+        flex-direction: row;
         flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: clamp(0.375rem, 1vw, 0.875rem);
+        overflow-x: auto;
+        max-width: 100%;
     }
 
     .site-footer__link {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 3rem;
-        padding: 0.5rem 0.75rem;
-        font-size: clamp(0.875rem, 3vw, 1rem);
+        min-height: auto;
+        padding: 0;
+        font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
     }
 
     .site-footer__note {
-        text-align: center;
+        text-align: left;
     }
 
     /* Touch targets ≥ 48px, читаемость body ≥ 16px */
@@ -11669,10 +11707,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
             + 2.75rem
             + max(var(--header-figma-pad-y), env(safe-area-inset-bottom, 0))
         );
-        --header-mobile-menu-size: clamp(2.5rem, 14vw, 4.25rem);
-        --header-mobile-menu-size-active: clamp(2.5rem, 14vw, 4.25rem);
-        --header-mobile-menu-lang-size: clamp(2.25rem, 13vw, 4rem);
-        --header-mobile-menu-line: 1.02;
+        --header-mobile-menu-size: clamp(2rem, 12.5vw, 4rem);
+        --header-mobile-menu-size-active: clamp(2rem, 12.5vw, 4rem);
+        --header-mobile-menu-lang-size: clamp(1.875rem, 11.5vw, 3.75rem);
+        --header-mobile-menu-line: 1.04;
+        --header-mobile-menu-gap: 0.125rem;
     }
 
     .header:not(.header--menu-open) {
@@ -11700,7 +11739,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header-mobile-menu__lang .lang-switch__toggle-row {
-        transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+        transform: none;
+        --tc-scale-x: 1;
         color: #ffffff !important;
         font-size: inherit;
         line-height: inherit;
@@ -11860,12 +11900,22 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
     }
 
-    /* Открытое меню — логотип condensed, ellipsis при переполнении */
+    /* Открытое меню — полное имя, без ellipsis (scaleX уже сжимает текст) */
+    .header--menu-open .nav > .logo {
+        display: flex;
+        align-items: center;
+        width: auto !important;
+        min-width: min-content;
+        max-width: calc(100% - 3.5rem);
+        overflow: visible;
+    }
+
     .header--menu-open .nav > .logo > span {
         display: inline-block;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        width: fit-content;
+        max-width: none;
+        overflow: visible;
+        text-overflow: clip;
         white-space: nowrap;
         font-size: inherit;
         line-height: inherit;
@@ -12017,7 +12067,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         min-height: 0;
         margin: 0;
         padding: 0.35rem 0 0.35rem;
-        gap: 0.125rem;
+        gap: var(--header-mobile-menu-gap);
         flex-direction: column;
         overflow: visible;
         transform: none;
@@ -12033,14 +12083,14 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         isolation: auto;
     }
 
-    /* В drawer — condensed + капс */
+    /* В drawer — крупный кегль без scaleX condensed (один источник размера) */
     .header .header-mobile-menu .nav-link .text-condensed {
-        transform: scale(var(--tc-scale-x), var(--tc-scale-y)) !important;
-        transform-origin: left center;
-        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em) !important;
-        font-size: var(--tc-size-em);
-        line-height: var(--tc-line-height);
-        letter-spacing: var(--tc-letter-spacing);
+        --tc-scale-x: 1;
+        transform: none !important;
+        margin-inline-end: 0 !important;
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: -0.02em;
         text-transform: uppercase;
         white-space: nowrap;
         overflow-wrap: normal;
@@ -12057,11 +12107,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header .header-mobile-menu__lang .lang-switch__toggle-row {
-        transform: scale(var(--tc-scale-x), var(--tc-scale-y)) !important;
+        --tc-scale-x: 1;
+        transform: none !important;
         margin-inline-end: 0 !important;
-        font-size: var(--tc-size-em);
-        line-height: var(--tc-line-height);
-        letter-spacing: var(--tc-letter-spacing);
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: -0.02em;
         text-transform: uppercase;
         color: #ffffff !important;
     }
@@ -12094,14 +12145,15 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         text-shadow: none;
         opacity: 0;
         visibility: hidden;
-        font-size: var(--tc-size-em);
-        line-height: var(--tc-line-height);
-        letter-spacing: var(--tc-letter-spacing);
+        --tc-scale-x: 1;
+        font-size: var(--header-mobile-menu-size);
+        line-height: var(--header-mobile-menu-line);
+        letter-spacing: -0.02em;
         text-transform: uppercase;
         translate: 0 -0.625rem;
-        transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+        transform: none;
         transform-origin: left center;
-        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+        margin-inline-end: 0;
         white-space: nowrap;
         overflow-wrap: normal;
         word-break: normal;
@@ -12142,14 +12194,15 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .header .nav-list .nav-link.active > span {
         color: #ffffff !important;
         font-weight: 600;
-        font-size: var(--tc-size-em);
-        --tc-scale-x: var(--tc-nav-active-scale-x);
+        font-size: var(--header-mobile-menu-size-active);
+        --tc-scale-x: 1;
     }
 
     .header .nav-list .nav-link:not(.active) > span {
         color: rgba(255, 255, 255, 0.78) !important;
         font-weight: 400;
-        font-size: var(--tc-size-em);
+        font-size: var(--header-mobile-menu-size);
+        --tc-scale-x: 1;
     }
 
     .header .header-mobile-menu .nav-list .nav-link.active {
@@ -12163,7 +12216,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         flex-direction: column;
         align-items: stretch;
         justify-content: flex-start;
-        gap: 0.125rem;
+        gap: var(--header-mobile-menu-gap);
         width: 100%;
         max-width: none;
         padding: 0.35rem 0 0.35rem;
@@ -12201,16 +12254,19 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-next > span,
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-title > span,
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-title.active > span {
-        transform: scale(var(--tc-scale-x), var(--tc-scale-y)) !important;
+        transform: none !important;
         transform-origin: left center;
-        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
-        font-size: var(--tc-size-em);
-        line-height: var(--tc-line-height);
-        letter-spacing: var(--tc-letter-spacing);
+        margin-inline-end: 0;
+        font-size: var(--header-mobile-menu-size);
+        line-height: var(--header-mobile-menu-line);
+        letter-spacing: -0.02em;
+        --tc-scale-x: 1;
         text-transform: uppercase;
         font-weight: 400;
         color: rgba(255, 255, 255, 0.78) !important;
         white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
         overflow-wrap: normal;
         word-break: normal;
         max-width: 100%;
@@ -12218,6 +12274,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-all > span {
         white-space: normal;
+        text-wrap: balance;
+        overflow: visible;
+        text-overflow: clip;
     }
 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-title.active > span {
@@ -12362,10 +12421,20 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 /* Планшеты и «средние» ширины: вводный текст и герой не ломают вёрстку */
 @media (max-width: 64rem) {
-    .hero-text,
-    .hero-more {
+    .hero-text {
         font-size: var(--type-body-lg-size);
         line-height: var(--type-body-lg-line);
+    }
+
+    .hero-more {
+        font-size: var(--type-body-lg-size);
+        line-height: 1;
+    }
+
+    .hero-more__text,
+    .hero-more .text-condensed,
+    .hero-more__text .text-condensed {
+        line-height: 1;
     }
 
     .logo {
@@ -12736,7 +12805,8 @@ p + p {
 }
 
 .page-home .hero-about .hero-content + .hero-about__footer {
-    margin-top: 0;
+    margin-top: clamp(var(--space-12), 1.6dvh, var(--space-24));
+    gap: clamp(var(--space-16), 2dvh, var(--space-24));
 }
 
 .page-home .hero-about .hero-content {
@@ -12783,6 +12853,21 @@ p + p {
         font-size: var(--type-section-title-size);
         line-height: var(--type-section-title-line);
         letter-spacing: var(--type-section-title-tracking);
+    }
+
+    .project-page-wrap--case-study {
+        padding-top: calc(var(--header-mobile-closed-height) + 0.25rem);
+    }
+
+    .project-case-study-mail .container.container--case-study {
+        padding-inline: 0;
+    }
+
+    .page-about .about-page,
+    .page-contact .page-header,
+    .page-resume .page-header,
+    .page-education .page-header {
+        padding-inline: 0;
     }
 
     /* Drawer — без pill-подложки у активного пункта (фон задаётся выше в секции header) */
@@ -13097,7 +13182,8 @@ canvas {
     }
 
     .page-home .hero-about__meta .info-value {
-        overflow-wrap: anywhere;
+        overflow-wrap: normal;
+        word-break: normal;
     }
 
     .page-home .hero-about .hero-links {
@@ -13189,15 +13275,20 @@ canvas {
         gap: var(--space-12);
     }
 
-    /* Wordmark на узких сохраняем огромным per Figma. */
-    .site-footer__wordmark__track {
-        font-size: clamp(2.5rem, 24vw, 7rem);
-        letter-spacing: 0;
+    /* Футер на xs: колонка, но выравнивание слева как в Figma 573:23146 */
+    .site-footer__main {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .site-footer__contain {
-        /* На узких устройствах не дать главному вордмарку отрезаться */
-        overflow-x: hidden;
+    .site-footer__nav {
+        margin-left: 0;
+        width: 100%;
+        align-self: stretch;
+    }
+
+    .site-footer__list {
+        justify-content: flex-start;
     }
 
     /* About: компактные карточки на узких экранах (skill-card — в блоке .about-page) */

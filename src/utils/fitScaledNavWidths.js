@@ -57,7 +57,10 @@ export function fitScaledNavWidths(root = document) {
   };
 
   const applyAll = () => {
-    if (window.matchMedia(MOBILE_DRAWER_MQ).matches) {
+    const mobileMenu = window.matchMedia(MOBILE_DRAWER_MQ).matches;
+    const menuOpen = root.querySelector?.('.header--menu-open') != null;
+
+    if (mobileMenu || menuOpen) {
       SELECTORS.forEach((sel) => {
         root.querySelectorAll(sel).forEach((host) => {
           host.style.width = '';
@@ -95,6 +98,17 @@ export function fitScaledNavWidths(root = document) {
   };
   window.addEventListener('resize', onResize, { passive: true });
 
+  /* Открытие/закрытие мобильного меню — сброс inline-width у лого. */
+  const headerEl = root.querySelector?.('.header') ?? document.querySelector('.header');
+  const menuObserver =
+    headerEl &&
+    new MutationObserver(() => {
+      applyAll();
+    });
+  if (menuObserver && headerEl) {
+    menuObserver.observe(headerEl, { attributes: true, attributeFilter: ['class'] });
+  }
+
   /* На hover/focus у элементов меняется --tc-scale-x — перечитать и применить. */
   const allHosts = () =>
     SELECTORS.flatMap((sel) => Array.from(root.querySelectorAll(sel)));
@@ -128,6 +142,7 @@ export function fitScaledNavWidths(root = document) {
     document.removeEventListener('focusin', interactionHandler);
     document.removeEventListener('focusout', interactionHandler);
     mo.disconnect();
+    menuObserver?.disconnect();
     allHosts().forEach((h) => {
       h.style.width = '';
     });
