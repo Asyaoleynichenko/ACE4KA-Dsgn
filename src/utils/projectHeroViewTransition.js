@@ -6,12 +6,8 @@ export function projectHeroViewTransitionName(slug) {
   return `${PROJECT_HERO_VT_PREFIX}-${slug}`;
 }
 
+/** Не задаём view-transition-name: морф карточка → hero даёт огромное полупрозрачное фото поверх контента (как persona-морфы). */
 export function setProjectHeroVtName(el, slug) {
   if (!el) return;
-  const name = projectHeroViewTransitionName(slug);
-  if (name) {
-    el.style.setProperty('view-transition-name', name);
-  } else {
-    el.style.removeProperty('view-transition-name');
-  }
+  el.style.removeProperty('view-transition-name');
 }

@@ -704,18 +704,7 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
 }
 
 .scroll-bound-track__viewport::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 22;
-    pointer-events: none;
-    border-radius: inherit;
-    background: radial-gradient(
-        ellipse 58% 72% at 50% 50%,
-        transparent 42%,
-        rgba(0, 0, 0, 0.06) 72%,
-        rgba(0, 0, 0, 0.14) 100%
-    );
+    display: none;
 }
 
 /* Depth blur — центр sharp, края soft (задаётся из JS: filter + --depth-blur) */
@@ -1002,38 +991,14 @@ html.snap-pages #root.snap-pages-root--home {
     }
 }
 
-.page-transition {
-    animation: page-transition-in var(--page-transition-duration) var(--ease-exhibition) both;
-}
-
-/* Главная: лёгкое проявление страницы (без сдвига — движение оставляем иконкам) */
-@keyframes page-transition-in-home {
-    from {
-        opacity: 0.42;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.page-home .page-transition {
-    animation: page-transition-in-home var(--dur-smart-page-home) var(--ease-smart) both;
-}
-
-/* Страница проекта: только opacity — transform на .page-transition ломает position:sticky у ленты */
-@keyframes page-transition-project-fade-in {
-    from {
-        opacity: 0.55;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
+/* Без fade-in opacity — полупрозрачная «серая пелена» при навигации мешала читать контент */
+.page-transition,
+.page-home .page-transition,
 .page-project .page-transition {
-    animation: page-transition-project-fade-in var(--page-project-sheet-duration) var(--ease-exhibition-heavy) both;
+    animation: none;
+    opacity: 1;
     transform: none;
-    background: #0a0a0a;
+    background: transparent;
 }
 
 /* Кейс-стади: без transform/animation на обёртке — иначе position:sticky у ленты не работает */
@@ -1271,10 +1236,9 @@ html.snap-pages #root.snap-pages-root--home {
         animation-timing-function: var(--ease-smart);
     }
 
-    /* Persona-морфы (главная ↔ «О себе») убраны: фото «О себе» (449px) и крошечная
-       картинка в mac-окне + огромный заголовок морфят между слишком разными
-       размерами → огромное полупрозрачное фото поверх контента. Кросс-фейд root
-       (выше) даёт чистый переход без артефактов. */
+    /* Persona-морфы (главная ↔ «О себе») и project-hero-морфы (карточка ↔ hero кейса)
+       убраны: слишком разные размеры → огромное полупрозрачное фото поверх контента.
+       Кросс-фейд root (выше) даёт чистый переход без артефактов. */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1832,7 +1796,7 @@ body.nav-drawer-open {
         padding-bottom: 0;
     }
 
-    .site-footer__list {
+    .site-footer__links.hero-links {
         flex-wrap: wrap;
         overflow-x: visible;
         justify-content: flex-end;
@@ -2011,7 +1975,7 @@ body.nav-drawer-open {
 .hero-more .text-condensed,
 .filter-pill__text,
 .btn-show-all__label,
-.site-footer__link .text-condensed {
+.site-footer__links .text-condensed {
     max-width: none;
     white-space: nowrap;
 }
@@ -2061,7 +2025,6 @@ h3 {
     .contact-item a,
     .hero-links a,
     .hero-more,
-    .site-footer__item a,
     .site-footer__link,
     .preview-card__link,
     .page-header a,
@@ -2079,7 +2042,6 @@ h3 {
     .contact-item a,
     .hero-links a,
     .hero-more,
-    .site-footer__item a,
     .site-footer__link,
     .preview-card__link,
     .page-header a,
@@ -2818,7 +2780,8 @@ h3 {
 
 .page-home .hero[data-hero-scroll='active'] .hero-more {
     justify-content: center;
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     margin-block: 0;
     gap: 0.375rem;
 }
@@ -4256,16 +4219,6 @@ h3 {
     text-decoration: none;
 }
 
-/* hero-more: только scaleX — без scaleY, чтобы caps и chevron стояли на одной линии */
-.hero-more .text-condensed,
-.hero-more__text .text-condensed {
-    transform: scaleX(var(--tc-scale-x));
-    transform-origin: center center;
-    margin-inline-end: 0;
-    vertical-align: middle;
-    line-height: 1;
-}
-
 .hero-more__chevron-icon {
     display: block;
     align-self: center;
@@ -4292,11 +4245,12 @@ h3 {
 .hero-more__text {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     line-height: 1;
-    width: auto;
+    width: fit-content;
     max-width: 100%;
     vertical-align: middle;
+    letter-spacing: 0.0313rem;
+    font-weight: 500;
 }
 
 /* Info grid — Figma 416:13019: cols 165 161 182 257 179, column-gap 0 */
@@ -4315,7 +4269,8 @@ h3 {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 0.5rem;
+    gap: var(--space-8);
+    min-width: 0;
 }
 
 .info-card--wide {
@@ -4340,6 +4295,11 @@ h3 {
     opacity: 1;
 }
 
+.info-card .info-label .text-condensed {
+    transform-origin: center center;
+    margin-inline: 0;
+}
+
 /* Figma 1:249–250 — body regular values */
 .info-value {
     font-size: var(--type-body-size);
@@ -4353,6 +4313,59 @@ h3 {
     .info-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--space-24) var(--space-16);
+    }
+
+    /* Hero meta: 2×2 + контакты по центру в третьей строке (Figma 416:13019 mobile) */
+    .page-home .hero-about__meta .info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: auto auto auto;
+        column-gap: clamp(var(--space-20), 6vw, var(--space-32));
+        row-gap: var(--space-24);
+        width: 100%;
+        max-width: 22rem;
+        margin-inline: auto;
+        justify-items: center;
+        align-items: start;
+    }
+
+    .page-home .hero-about__meta .info-card:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .page-home .hero-about__meta .info-card:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .page-home .hero-about__meta .info-card:nth-child(3) {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .page-home .hero-about__meta .info-card:nth-child(4) {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .page-home .hero-about__meta .info-card:nth-child(5) {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        max-width: 100%;
+    }
+
+    .page-home .hero-about__meta .info-card {
+        width: 100%;
+        max-width: 9.75rem;
+    }
+
+    .page-home .hero-about__meta .info-card--wide .info-value {
+        text-wrap: balance;
+        line-height: 1.35;
+    }
+
+    .page-home .hero-about__meta {
+        gap: var(--space-24);
     }
 
     .hero__row {
@@ -6300,7 +6313,7 @@ h3 {
     max-width: none;
     padding-left: 0;
     padding-right: 0;
-    background: #0a0a0a;
+    background: transparent;
 }
 
 /* Figma 89-756: страница проекта как Контакты — центрирование main */
@@ -6368,7 +6381,8 @@ h3 {
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: 0 calc(var(--case-study-pad-x) + env(safe-area-inset-right, 0px)) var(--space-64)
+    padding: calc(var(--header-figma-bar-min) + 0.75rem)
+        calc(var(--case-study-pad-x) + env(safe-area-inset-right, 0px)) var(--space-64)
         calc(var(--case-study-pad-x) + env(safe-area-inset-left, 0px));
     flex-direction: column;
     align-items: stretch;
@@ -7355,7 +7369,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 /* Карточки кейса — лента на всю ширину экрана (full-bleed), остальной текст в колонке */
 .project-case-study-mail .cards-section {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     width: 100%;
     max-width: 100%;
     margin: 0;
@@ -9040,11 +9054,61 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 @media (max-width: 48rem) {
+    .main:has(.project-page-wrap--layout-89) {
+        display: block;
+        text-align: left;
+    }
+
+    .project-page-wrap.project-page-wrap--layout-89 {
+        max-width: none;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: calc(var(--case-study-pad-x) + env(safe-area-inset-left, 0px));
+        padding-right: calc(var(--case-study-pad-x) + env(safe-area-inset-right, 0px));
+        box-sizing: border-box;
+    }
+
+    .project-page-wrap--layout-89 .page-contact__wrap--project,
+    .project-page-wrap--layout-89 .page-header {
+        max-width: none;
+        width: 100%;
+        text-align: left;
+    }
+
+    .project-page-wrap--layout-89 .page-header h1,
+    .project-page-wrap--layout-89 .page-header p {
+        max-width: none;
+    }
+
     .project-case-study-mail .container.container--case-study {
         gap: var(--case-article-stack-gap, 0.75rem);
     }
 
+    /* Обложка — edge-to-edge, скругление, без внутренних полей */
+    .project-case-study-mail section.hero {
+        display: block;
+        width: 100vw;
+        max-width: 100vw;
+        margin-inline: calc(50% - 50vw);
+        margin-bottom: clamp(0.75rem, 3vw, 1.25rem);
+        padding: 0;
+    }
+
+    .project-case-study-mail .hero__media {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        border-radius: var(--project-hero-radius);
+        overflow: hidden;
+        background: transparent;
+        aspect-ratio: var(--project-hero-aspect-w) / var(--project-hero-aspect-h);
+    }
+
     .project-case-study-mail .container--case-study > section.case-study-narrative,
+    .project-case-study-mail .container--case-study > section.project-intro,
     .project-case-study-mail .container--case-study > section.section[id*='body'],
     .project-case-study-mail .container--case-study > section.images {
         padding-top: 0;
@@ -9052,15 +9116,18 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         border-top: none;
     }
 
-    /* Intro — editorial: заголовок + 2 колонки (meta | lead) */
+    /* Intro — одна колонка на всю ширину (заголовок → meta → lead) */
     .project-case-study-mail .project-intro {
         display: grid;
-        grid-template-columns: minmax(0, 0.38fr) minmax(0, 0.62fr);
+        grid-template-columns: 1fr;
         grid-template-areas:
-            'heading heading'
-            'meta copy';
-        column-gap: var(--case-article-col-gap, 1rem);
-        row-gap: clamp(0.875rem, 3.5vw, 1.125rem);
+            'heading'
+            'meta'
+            'copy';
+        column-gap: 0;
+        row-gap: clamp(0.875rem, 3.5vw, 1.25rem);
+        width: 100%;
+        max-width: none;
         padding: 0;
         background: transparent;
         border: none;
@@ -9107,6 +9174,14 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         background: transparent;
         border: none;
         box-shadow: none;
+        position: static;
+        overflow: visible;
+        isolation: auto;
+    }
+
+    .project-case-study-mail .project-intro .project-info::before,
+    .project-case-study-mail .project-intro .project-info::after {
+        display: none;
     }
 
     .project-case-study-mail .project-intro .project-info__row {
@@ -9132,17 +9207,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         min-width: min(8.75rem, 100%);
         max-width: 100%;
         margin-top: 0.25rem;
-    }
-
-    /* xs: intro — одна колонка */
-    @media (max-width: 30rem) {
-        .project-case-study-mail .project-intro {
-            grid-template-columns: 1fr;
-            grid-template-areas:
-                'heading'
-                'meta'
-                'copy';
-        }
     }
 
     /* Title info — без подложки у текста */
@@ -9218,36 +9282,59 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin-top: clamp(1rem, 4vw, 1.25rem);
     }
 
-    /* Hero — edge-to-edge на мобилке; галереи остаются в gutter со скруглением */
-    .project-case-study-mail .hero__media,
-    .project-case-study-mail .title-info-card__media {
-        width: 100vw;
-        max-width: 100vw;
-        margin-left: calc(50% - 50vw);
-        margin-right: calc(50% - 50vw);
-        border-radius: 0;
-    }
-
-    .project-case-study-mail .hero__media,
     .project-case-study-mail .hero__media--stack {
         aspect-ratio: auto;
-        overflow: visible;
+        overflow: hidden;
+        border-radius: var(--project-hero-radius);
         background: transparent;
     }
 
     .project-case-study-mail .hero__media img,
-    .project-case-study-mail .hero__media--stack img,
-    .project-case-study-mail .title-info-card__media img {
-        position: static;
+    .project-case-study-mail .hero__media img:only-child {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 0;
+        aspect-ratio: unset;
+        max-height: none;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        display: block;
+    }
+
+    .project-case-study-mail .hero__media--stack img {
+        position: relative;
         inset: auto;
         width: 100%;
-        object-fit: contain;
-        aspect-ratio: auto;
         height: auto;
-        max-height: none;
+        object-fit: cover;
+        aspect-ratio: auto;
+        border-radius: var(--project-hero-radius);
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        display: block;
+    }
+
+    .project-case-study-mail .title-info-card__media {
+        width: 100vw;
+        max-width: 100vw;
+        margin-inline: calc(50% - 50vw);
+        border-radius: 0;
+    }
+
+    .project-case-study-mail .title-info-card__media img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
         border-radius: 0;
         padding: 0;
-        background: transparent;
+        margin: 0;
+        display: block;
     }
 
     .project-case-study-mail .section .gallery img,
@@ -11364,11 +11451,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding-right: var(--layout-edge-right);
 }
 
-/* ACE4KA — только на главной (Figma 16-170 / 573:23146). */
-:not(.page-home) .site-footer__wordmark {
-    display: none;
-}
-
+/* ACE4KA — вордмарк футера (Figma 16-171 / 863:18915), на всех страницах */
 .site-footer__wordmark {
     container-name: foot-wm;
     container-type: inline-size;
@@ -11470,35 +11553,25 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     margin-left: auto;
 }
 
-.site-footer__list {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
+/* Figma 863:18915 — ряд ссылок как hero-links: sep + label в одной inline-flex группе */
+.site-footer__links.hero-links {
     justify-content: flex-end;
-    gap: clamp(0.375rem, 1vw, 0.875rem);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    max-width: 100%;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    row-gap: var(--space-8);
 }
 
-.site-footer__list::-webkit-scrollbar {
-    display: none;
-}
-
-.site-footer__item {
-    margin: 0;
-    padding: 0;
+.site-footer__links.hero-links > a,
+.site-footer__links.hero-links > span,
+.site-footer__links.hero-links > .hero-links__item {
+    display: inline-flex;
+    align-items: center;
 }
 
 .site-footer__link {
-    display: inline;
+    display: inline-flex;
+    align-items: center;
     font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #fff;
@@ -11512,12 +11585,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     opacity: 0.92;
 }
 
-.site-footer__link .text-condensed {
+.site-footer__links .text-condensed {
     display: inline-block;
-    transform-origin: left center;
+    transform-origin: center center;
     max-width: none;
     white-space: nowrap;
-    margin-inline: calc((1 - var(--tc-scale-x)) / 2 * -100%);
+    margin-inline: 0;
 }
 
 /* Примечание — уже статуса, узкая колонка как в макете (~половина блока) */
@@ -11539,7 +11612,74 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .site-footer__note a:hover {
-    text-decoration: none;
+    text-decoration: underline;
+}
+
+/* Figma 863:18915 — мобильный футер: колонка по центру */
+@media (max-width: 56.25rem) {
+    .site-footer__surface {
+        padding-top: var(--space-32);
+        padding-bottom: var(--space-40);
+    }
+
+    .site-footer__wordmark {
+        margin-bottom: var(--space-32);
+    }
+
+    .site-footer__main {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: var(--space-32);
+    }
+
+    .site-footer__left {
+        flex: none;
+        align-self: center;
+        align-items: center;
+        max-width: min(100%, 20rem);
+        text-align: center;
+        gap: var(--space-16);
+    }
+
+    .site-footer__status {
+        justify-content: center;
+        font-size: clamp(1.125rem, 4.6vw, 1.375rem);
+    }
+
+    .site-footer__note {
+        text-align: center;
+        max-width: 17.5rem;
+        font-size: clamp(0.9375rem, 3.8vw, 1.0625rem);
+        line-height: 1.45;
+        color: rgba(255, 255, 255, 0.92);
+    }
+
+    .site-footer__note a {
+        text-decoration: underline;
+        text-underline-offset: 0.12em;
+    }
+
+    .site-footer__nav {
+        margin-left: 0;
+        width: 100%;
+        align-self: stretch;
+    }
+
+    .site-footer__links.hero-links {
+        justify-content: center;
+    }
+
+    .site-footer__item--extended {
+        display: none;
+    }
+
+    .site-footer__link {
+        font-size: clamp(1rem, 4.2vw, 1.25rem);
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: 0.04em;
+    }
 }
 
 @media (max-width: 48rem) {
@@ -11588,58 +11728,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         .site-footer__wordmark__track {
             font-size: clamp(2.5rem, calc(100cqw / 3.72), 14rem);
         }
-    }
-
-    .site-footer__main {
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: clamp(1rem, 3vw, 1.5rem);
-    }
-
-    .site-footer__left {
-        flex: 1 1 min(100%, 16rem);
-        max-width: min(100%, 20rem);
-        align-self: flex-start;
-        align-items: flex-start;
-        text-align: left;
-    }
-
-    .site-footer__status {
-        justify-content: flex-start;
-    }
-
-    .site-footer__nav {
-        flex: 1 1 auto;
-        min-width: min(100%, 12rem);
-        margin-left: auto;
-        align-self: flex-end;
-        width: auto;
-    }
-
-    .site-footer__list {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
-        gap: clamp(0.375rem, 1vw, 0.875rem);
-        overflow-x: auto;
-        max-width: 100%;
-    }
-
-    .site-footer__link {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: auto;
-        padding: 0;
-        font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
-    }
-
-    .site-footer__note {
-        text-align: left;
     }
 
     /* Touch targets ≥ 48px, читаемость body ≥ 16px */
@@ -11728,6 +11816,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     /* Язык — только внутри раскрытой панели меню */
     .header-mobile-menu__lang {
         display: none;
+        width: 100%;
         padding: 0.35rem 0 0;
         margin-top: 0.35rem;
         border: 0;
@@ -11736,6 +11825,14 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         font-size: var(--header-mobile-menu-lang-size);
         line-height: var(--header-mobile-menu-line);
         text-transform: uppercase;
+        text-align: center;
+    }
+
+    .header-mobile-menu__lang .lang-switch {
+        display: inline-flex;
+        justify-content: center;
+        width: auto;
+        max-width: 100%;
     }
 
     .header-mobile-menu__lang .lang-switch__toggle-row {
@@ -11754,7 +11851,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header-mobile-menu--open .header-mobile-menu__lang {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     /* На страницах проектов — без difference, белый текст с лёгкой тенью */
@@ -12032,6 +12131,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .header .nav > .header-mobile-menu--open {
         grid-template-rows: 1fr;
         margin-top: 0.875rem;
+        justify-items: center;
     }
 
     .header .nav > .header-mobile-menu:not(.header-mobile-menu--open) > .nav-list {
@@ -12069,6 +12169,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         padding: 0.35rem 0 0.35rem;
         gap: var(--header-mobile-menu-gap);
         flex-direction: column;
+        align-items: center;
         overflow: visible;
         transform: none;
         visibility: visible;
@@ -12098,12 +12199,18 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         max-width: 100%;
     }
 
-    /* Длинные подписи из нескольких слов — перенос только между словами */
+    /* Длинные подписи кейса — без переноса, одна строка */
     .header .header-mobile-menu .nav-link--case-all .text-condensed,
     .header .header-mobile-menu .nav-link--case-all > span {
-        white-space: normal;
+        white-space: nowrap;
         overflow-wrap: normal;
         word-break: normal;
+        text-wrap: nowrap;
+    }
+
+    .header .header-mobile-menu .nav-list > li {
+        justify-content: center;
+        width: 100%;
     }
 
     .header .header-mobile-menu__lang .lang-switch__toggle-row {
@@ -12115,12 +12222,16 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         letter-spacing: -0.02em;
         text-transform: uppercase;
         color: #ffffff !important;
+        white-space: nowrap;
+        text-wrap: nowrap;
     }
 
     .header .nav-list .nav-link {
         mix-blend-mode: normal;
-        justify-content: flex-start;
-        width: 100%;
+        justify-content: center;
+        text-align: center;
+        width: auto;
+        max-width: 100%;
         min-height: auto;
         padding-block: 0.2rem;
         font-size: var(--header-mobile-menu-size);
@@ -12152,12 +12263,10 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         text-transform: uppercase;
         translate: 0 -0.625rem;
         transform: none;
-        transform-origin: left center;
+        transform-origin: center center;
         margin-inline-end: 0;
         white-space: nowrap;
-        overflow-wrap: normal;
-        word-break: normal;
-        max-width: 100%;
+        text-wrap: nowrap;
         transition:
             opacity var(--dur-smart-base) var(--ease-smart),
             visibility var(--dur-smart-base) var(--ease-smart),
@@ -12214,7 +12323,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .header .header-mobile-menu .nav-list--case-study {
         display: flex !important;
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
         justify-content: flex-start;
         gap: var(--header-mobile-menu-gap);
         width: 100%;
@@ -12224,20 +12333,21 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header .header-mobile-menu .nav-list--case-study > li {
-        display: block;
+        display: flex;
         width: 100%;
         min-width: 0;
-        justify-content: flex-start !important;
-        align-items: stretch;
+        justify-content: center !important;
+        align-items: center;
         order: unset;
         padding: 0;
         border: 0;
     }
 
     .header .header-mobile-menu .nav-list--case-study .nav-link {
-        justify-content: flex-start;
-        text-align: left;
-        width: 100%;
+        justify-content: center;
+        text-align: center;
+        width: auto;
+        max-width: 100%;
         min-height: auto;
         padding-block: 0.2rem;
         font-size: var(--header-mobile-menu-size);
@@ -12255,7 +12365,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-title > span,
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-title.active > span {
         transform: none !important;
-        transform-origin: left center;
+        transform-origin: center center;
         margin-inline-end: 0;
         font-size: var(--header-mobile-menu-size);
         line-height: var(--header-mobile-menu-line);
@@ -12265,16 +12375,17 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         font-weight: 400;
         color: rgba(255, 255, 255, 0.78) !important;
         white-space: nowrap;
+        text-wrap: nowrap;
         overflow: visible;
         text-overflow: clip;
         overflow-wrap: normal;
         word-break: normal;
-        max-width: 100%;
+        max-width: none;
     }
 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-all > span {
-        white-space: normal;
-        text-wrap: balance;
+        white-space: nowrap;
+        text-wrap: nowrap;
         overflow: visible;
         text-overflow: clip;
     }
@@ -12286,39 +12397,46 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-title.nav-link.active {
-        width: 100%;
-        max-width: none;
+        width: auto;
+        max-width: 100%;
         white-space: nowrap;
+        text-wrap: nowrap;
         overflow-wrap: normal;
         word-break: normal;
         overflow: visible;
         text-overflow: clip;
-        text-align: left;
+        text-align: center;
+        justify-content: center;
         pointer-events: auto;
         cursor: pointer;
     }
 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-with-chevron {
-        width: 100%;
-        justify-content: flex-start;
+        width: auto;
+        max-width: 100%;
+        justify-content: center;
         box-sizing: border-box;
         border-radius: 0;
         white-space: nowrap;
-        text-align: left;
+        text-wrap: nowrap;
+        text-align: center;
         min-height: auto;
         padding-block: 0.35rem;
     }
 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-next {
-        justify-content: flex-start;
+        justify-content: center;
     }
 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-title {
         display: flex;
-        width: 100%;
-        text-align: left;
+        width: auto;
+        max-width: 100%;
+        justify-content: center;
+        text-align: center;
         box-sizing: border-box;
         white-space: nowrap;
+        text-wrap: nowrap;
         overflow-wrap: normal;
         word-break: normal;
         line-height: var(--header-mobile-menu-line);
@@ -12431,9 +12549,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         line-height: 1;
     }
 
-    .hero-more__text,
-    .hero-more .text-condensed,
-    .hero-more__text .text-condensed {
+    .hero-more__text {
         line-height: 1;
     }
 
@@ -13177,10 +13293,6 @@ canvas {
         max-width: 100%;
     }
 
-    .page-home .hero-about__meta .info-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .page-home .hero-about__meta .info-value {
         overflow-wrap: normal;
         word-break: normal;
@@ -13205,6 +13317,20 @@ canvas {
         width: 100%;
         max-width: 100%;
         text-wrap: pretty;
+    }
+
+    /* Info-grid: одна колонка, ровный стек */
+    .page-home .hero-about__meta .info-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        max-width: 14rem;
+        row-gap: var(--space-20);
+    }
+
+    .page-home .hero-about__meta .info-card:nth-child(n) {
+        grid-column: 1;
+        grid-row: auto;
+        max-width: 100%;
     }
 
     .projects-page__groups {
@@ -13273,22 +13399,6 @@ canvas {
 
     .hero-links {
         gap: var(--space-12);
-    }
-
-    /* Футер на xs: колонка, но выравнивание слева как в Figma 573:23146 */
-    .site-footer__main {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .site-footer__nav {
-        margin-left: 0;
-        width: 100%;
-        align-self: stretch;
-    }
-
-    .site-footer__list {
-        justify-content: flex-start;
     }
 
     /* About: компактные карточки на узких экранах (skill-card — в блоке .about-page) */

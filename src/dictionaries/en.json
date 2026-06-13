@@ -93,8 +93,10 @@
   "footer": {
     "navAria": "Footer links",
     "openForWork": "Open to work",
-    "devNote": "If something on the site doesn’t work —",
-    "emailLink": "email me",
+    "devNoteIntro": "This site was vibe-coded in Cursor AI",
+    "devNoteMid": "and is still in development,",
+    "devNoteOutroPrefix": "if something doesn’t load ",
+    "devNoteLink": "let me know",
     "links": {
       "resume": "Résumé",
       "projects": "Projects",

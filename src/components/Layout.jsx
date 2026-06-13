@@ -83,7 +83,7 @@ export default function Layout() {
   return (
     <AmbientLightProvider>
       <div className={`page site-exhibition ${pageClass} ${pageSnapClass}`.trim()}>
-        <ParallaxBackdrop />
+        {isHome ? <ParallaxBackdrop /> : null}
         <Header />
         <main className={mainWithHomeShell}>
           {isProjectDetail ? (

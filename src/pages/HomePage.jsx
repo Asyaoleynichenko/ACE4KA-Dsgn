@@ -204,9 +204,7 @@ export default function HomePage() {
                 className="hero-more hero-more--with-icon"
                 data-reveal=""
               >
-                <span className="hero-more__text">
-                  <span className="text-condensed">{t('hero.moreAbout')}</span>
-                </span>
+                <span className="hero-more__text">{t('hero.moreAbout')}</span>
                 <DotIcon name="dot-chevron-right" size={24} className="hero-more__chevron-icon" />
               </SeamlessProjectsLink>
               <div className="hero-about__meta">

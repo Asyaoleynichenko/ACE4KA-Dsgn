@@ -93,8 +93,10 @@
   "footer": {
     "navAria": "Ссылки в подвале",
     "openForWork": "Открыта для работы",
-    "devNote": "Если что‑то на сайте не работает —",
-    "emailLink": "написать на почту",
+    "devNoteIntro": "Сайт собран вайбкодингом в cursor ai",
+    "devNoteMid": "и находится в стадии разработки,",
+    "devNoteOutroPrefix": "если что-то не запускается ",
+    "devNoteLink": "расскажите мне об этом",
     "links": {
       "resume": "Резюме",
       "projects": "Проекты",
