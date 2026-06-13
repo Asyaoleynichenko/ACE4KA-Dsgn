@@ -5,6 +5,7 @@ import Header from './Header';
 import Footer from './Footer';
 import ParallaxBackdrop from './ParallaxBackdrop';
 import PageTransition from './PageTransition';
+import AmbientLightProvider from '../context/AmbientLightProvider.jsx';
 
 export default function Layout() {
   const { pathname } = useLocation();
@@ -80,19 +81,21 @@ export default function Layout() {
   const mainWithHomeShell = isHome ? `${mainClass} page-home__main` : mainClass;
 
   return (
-    <div className={`page site-exhibition ${pageClass} ${pageSnapClass}`.trim()}>
-      <ParallaxBackdrop />
-      <Header />
-      <main className={mainWithHomeShell}>
-        {isProjectDetail ? (
-          <div key={pathname} className="page-transition page-transition--case-study">
-            <Outlet />
-          </div>
-        ) : (
-          <PageTransition />
-        )}
-      </main>
-      <Footer snapScreen={snapScreens} />
-    </div>
+    <AmbientLightProvider>
+      <div className={`page site-exhibition ${pageClass} ${pageSnapClass}`.trim()}>
+        <ParallaxBackdrop />
+        <Header />
+        <main className={mainWithHomeShell}>
+          {isProjectDetail ? (
+            <div key={pathname} className="page-transition page-transition--case-study">
+              <Outlet />
+            </div>
+          ) : (
+            <PageTransition />
+          )}
+        </main>
+        <Footer snapScreen={snapScreens} />
+      </div>
+    </AmbientLightProvider>
   );
 }

@@ -99,6 +99,25 @@
   --page-project-sheet-duration: 680ms;
   --duration-micro: 220ms;
 
+  /* Condensed typography — крупнее, капс, сжатие по X + вытягивание по Y */
+  --tc-scale-x: 0.38;
+  --tc-scale-y: 1.16;
+  --tc-size-em: 1.38em;
+  --tc-display-size-em: 1.58em;
+  --tc-letter-spacing: 0.06em;
+  --tc-line-height: 1.1;
+  --tc-hover-scale-x: 0.46;
+  --tc-active-scale-x: 0.5;
+  --tc-nav-active-scale-x: 0.4;
+  --tc-logo-hover-scale-x: 0.62;
+  --tc-logo-hover-scale-y: 1.08;
+  --tc-logo-hover-letter-spacing: 0.12em;
+
+  /* Ambient lighting — inset card glow only */
+  --ambient-hover-duration: var(--dur-smart-slow);
+  --ambient-proximity-duration: 360ms;
+  --ambient-glow-rgb: 255, 255, 255;
+
   /* Exhibition — scroll as camera, physical inertia, editorial air */
   --ease-exhibition: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-exhibition-heavy: cubic-bezier(0.16, 0.84, 0.24, 1);
@@ -483,7 +502,9 @@
         --case-section-rhythm: clamp(var(--space-48), 8vw, var(--space-64));
         --preview-card-media-body-gap: var(--space-12);
         --layout-section-gap: var(--space-fluid-block);
-        --tc-scale-x: 0.68;
+        --tc-scale-x: 0.4;
+        --tc-scale-y: 1.14;
+        --tc-size-em: 1.32em;
         --hero-fs-card-top: clamp(5rem, 12svh, 6.75rem);
         --hero-fs-card-width: min(20rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - var(--space-24)));
         --hero-fs-intro-min: clamp(16rem, 48svh, 21rem);
@@ -525,7 +546,9 @@
     :root {
         /* --layout-page-pad-x наследуется из :root (16px) */
         --hero-section-gap: var(--space-48);
-        --tc-scale-x: 0.72;
+        --tc-scale-x: 0.42;
+        --tc-scale-y: 1.12;
+        --tc-size-em: 1.28em;
         --hero-fs-card-top: clamp(4.75rem, 11svh, 6rem);
         --hero-fs-card-width: min(18.75rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - var(--space-16)));
         --hero-fs-intro-min: clamp(14.5rem, 45svh, 18.5rem);
@@ -759,6 +782,11 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
 .project-intro .title h1.type-reveal,
 .project-intro__heading h1.type-reveal {
     display: block;
+}
+
+.project-intro__heading h1.type-reveal .type-reveal__line,
+.project-intro__heading h1.type-reveal .type-reveal__mask {
+    overflow: hidden;
 }
 
 /* === Reveal-каскад: [data-reveal] / [data-reveal-group] > * (ScrollPolish IO) ===
@@ -1362,6 +1390,21 @@ select:focus-visible,
     mix-blend-mode: normal;
 }
 
+/* Весь текст шапки — uppercase (лого, nav, lang, мобильное меню). */
+.header .logo > span,
+.header .nav-list .nav-link,
+.header .nav-list .nav-link > span,
+.header .lang-switch,
+.header .lang-switch .lang-switch__toggle-row,
+.header .lang-switch__btn,
+.header .header-mobile-menu__lang,
+.header .header-mobile-menu__lang .lang-switch__toggle-row,
+.header .header-mobile-menu__lang .lang-switch__btn,
+.header .header-mobile-menu .nav-link,
+.header .header-mobile-menu .nav-link .text-condensed {
+    text-transform: uppercase;
+}
+
 /* Гарантируем fixed на страницах проектов. */
 .page-project .header,
 .project-page-wrap .header {
@@ -1397,13 +1440,13 @@ select:focus-visible,
     flex-shrink: 0;
     text-decoration: none;
     transition:
-        opacity var(--transition-base),
-        transform var(--transition-micro-expand);
+        opacity var(--dur-smart-slow) var(--ease-exhibition),
+        transform var(--dur-smart-slow) var(--ease-exhibition);
 }
 
 .logo:hover {
-    opacity: 0.88;
-    transform: translateY(-0.0625rem);
+    opacity: 1;
+    transform: translateY(-0.125rem);
 }
 
 .logo:active {
@@ -1779,19 +1822,10 @@ body.nav-drawer-open {
 }
 
 @media (max-width: 48rem) {
-    .about-page__duo {
+    .about-page__intro-exp {
         grid-template-columns: 1fr;
         gap: var(--space-40);
         min-width: 0;
-    }
-
-    .about-page__panel--skills {
-        order: 2;
-    }
-
-    .about-page__panel--experience {
-        order: 1;
-        margin-top: 0;
     }
 }
 
@@ -1823,57 +1857,65 @@ body.nav-drawer-open {
     mix-blend-mode: normal;
 }
 
-/* Имитация condensed-варианта: scaleX на текстовых нодах. Глобальная утилита — `.text-condensed`.
+/* Имитация condensed-варианта: scaleX + scaleY на текстовых нодах. Глобальная утилита — `.text-condensed`.
    В JSX: оборачивай текстовый узел в <span className="text-condensed">.
-   В подписях/метках font-size наследуется от родителя (без акцента).
-   --tc-scale-x — кастомное свойство, чтобы переопределять степень сжатия (hover/active → ближе к 1).
-   transform-origin: left → весь «пустой» зазор смещается вправо, его компенсируем negative margin-inline-end.
-   width: fit-content + max-width: 100%. Только scaleX — scaleY ломает межстрочный интервал при переносах. */
+   Токены в :root — кегль, сжатие, капс; hover/active слегка «раскрывают» по X, но остаются condensed.
+   transform-origin: left → negative margin-inline-end компенсирует пустой зазор справа в inline-цепочках. */
 .text-condensed,
 .btn-show-all__label {
     display: inline-block;
     width: fit-content;
     max-width: 100%;
     vertical-align: middle;
-    /* Suisse Intl шире Inter; Aся хочет более жёсткое визуальное сжатие чем стоковые 0.62 (Inter-калибровка). */
-    --tc-scale-x: 0.5;
-    /* Кегль крупнее (компенсирует визуальную «мелкость» от scaleX 0.5) */
-    font-size: 1.1em;
-    transform: scaleX(var(--tc-scale-x));
+    font-size: var(--tc-size-em);
+    text-transform: uppercase;
+    letter-spacing: var(--tc-letter-spacing);
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: left center;
-    margin-inline-end: calc((var(--tc-scale-x, 0.5) - 1) * 1em);
-    line-height: 1.3;
+    margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+    line-height: var(--tc-line-height);
     transition:
         transform var(--transition-micro-expand),
         margin-inline-end var(--transition-micro-expand);
 }
 
-/* Логотип и lang-switcher — единая scaleX-анимация со всеми condensed-элементами проекта (default 0.5 → hover 0.88). */
+/* Логотип и lang-switcher — condensed только по X, без вытягивания по Y (читаемость шапки). */
 .header .logo > span,
 .header .lang-switch .lang-switch__toggle-row {
     display: inline-block;
     width: fit-content;
     max-width: 100%;
     vertical-align: middle;
-    --tc-scale-x: 0.5;
+    font-size: inherit;
+    text-transform: uppercase;
+    letter-spacing: var(--tc-letter-spacing);
     transform: scaleX(var(--tc-scale-x));
+    transform-origin: left center;
+    margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+    line-height: inherit;
+    transition:
+        transform var(--dur-smart-slow) var(--ease-exhibition),
+        letter-spacing var(--dur-smart-slow) var(--ease-exhibition);
+}
+
+.header .lang-switch .lang-switch__toggle-row {
     transform-origin: center center;
     margin-inline-end: 0;
-    letter-spacing: 0;
-    line-height: inherit;
-    transition: transform var(--transition-micro-expand);
 }
 
 .header .logo:hover > span,
-.header .logo:focus-visible > span,
-.header .lang-switch:hover .lang-switch__toggle-row,
-.header .lang-switch:focus-within .lang-switch__toggle-row {
-    --tc-scale-x: 0.88;
+.header .logo:focus-visible > span {
+    --tc-scale-x: var(--tc-logo-hover-scale-x);
+    --tc-scale-y: var(--tc-logo-hover-scale-y);
+    letter-spacing: var(--tc-logo-hover-letter-spacing);
 }
 
-/* Центрированные контексты: scaleX(0.62) с origin left прижимает визуал к ЛЕВОМУ
-   краю bounding-box → текст уезжает влево от центра. Для них используем origin center
-   и убираем negative margin-inline-end (нужный только для inline-цепочек хедера). */
+.header .lang-switch:hover .lang-switch__toggle-row,
+.header .lang-switch:focus-within .lang-switch__toggle-row {
+    --tc-scale-x: var(--tc-hover-scale-x);
+}
+
+/* Центрированные контексты: origin center + block/auto — компенсируем «фантомную» ширину до scale(). */
 :where(
     .hero-role,
     .hero-content,
@@ -1904,8 +1946,46 @@ body.nav-drawer-open {
     [style*="text-align:center"],
     [style*="text-align: center"]
 ) .text-condensed {
+    display: block;
+    width: fit-content;
+    max-width: none;
+    margin-inline: 0;
     transform-origin: center center;
     margin-inline-end: 0;
+}
+
+/* Type-reveal в центрированных блоках: inner не left-aligned inline-block на полную ширину текста. */
+:where(
+    .hero-role,
+    .hero-content,
+    .info-card,
+    .info-label,
+    .header-item__label,
+    .filter-pill,
+    .btn-show-all,
+    .page-header
+) .type-reveal__mask {
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+    width: 100%;
+    max-width: 100%;
+}
+
+:where(
+    .hero-role,
+    .hero-content,
+    .info-card,
+    .info-label,
+    .header-item__label,
+    .filter-pill,
+    .btn-show-all,
+    .page-header
+) .type-reveal__inner {
+    display: block;
+    width: fit-content;
+    max-width: none;
+    margin-inline: 0;
 }
 
 /* Однострочные condensed-лейблы — без переноса в узком flex-контейнере. */
@@ -1946,14 +2026,14 @@ h3 {
     letter-spacing: -0.02em;
 }
 
-/* Display-condensed: больший кегль (CTA; шапка — фикс. кегль Figma 573:18422). */
+/* Display-condensed: ещё крупнее (CTA; шапка — фикс. кегль Figma 573:18422). */
 .btn-show-all__label {
-    font-size: 1.45em;
+    font-size: var(--tc-display-size-em);
 }
 
-/* ===== Раскрытие condensed-текста при hover/active ===== */
+/* ===== Раскрытие condensed-текста при hover/active (остаётся сжатым) ===== */
 
-/* Интерактивные элементы: раскрытие .text-condensed при наведении / фокусе */
+/* Интерактивные элементы: мягкое раскрытие .text-condensed при наведении / фокусе */
 :is(
     a[href]:not([data-no-text-condensed]),
     button:not([disabled]):not([data-no-text-condensed]),
@@ -1972,7 +2052,7 @@ h3 {
     .project-intro a,
     .case-study-rail__link
 ):is(:hover, :focus-visible) .text-condensed {
-    --tc-scale-x: 0.88;
+    --tc-scale-x: var(--tc-hover-scale-x);
 }
 
 :is(
@@ -1988,45 +2068,41 @@ h3 {
     .page-header a,
     .case-study-rail__link
 ):active .text-condensed {
-    --tc-scale-x: 0.95;
+    --tc-scale-x: var(--tc-active-scale-x);
 }
 
-/* Хедер nav: scaleX-анимация condensed-текста (как у папочных лейблов на главной): default 0.5 → hover 0.88 → active 1. */
+/* Хедер nav: condensed scale — hover/active чуть шире, но всегда сжато */
 .header .nav-list .nav-link > span {
     display: inline-block;
-    --tc-scale-x: 0.5;
+    text-transform: uppercase;
+    letter-spacing: var(--tc-letter-spacing);
     transform: scaleX(var(--tc-scale-x));
     transform-origin: center center;
     margin-inline-end: 0 !important;
-    letter-spacing: 0;
     transition: transform var(--transition-micro-expand);
 }
 
 .header .nav-list .nav-link.active > span {
-    --tc-scale-x: 1;
+    --tc-scale-x: var(--tc-nav-active-scale-x);
 }
 
 /* Хедер: hover по неактивной вкладке — мягкое раскрытие */
 .header .nav-list .nav-link:hover:not(.active) > span {
-    --tc-scale-x: 0.88;
-}
-
-.header .logo:hover > span {
-    letter-spacing: 0.02em;
+    --tc-scale-x: var(--tc-hover-scale-x);
 }
 
 /* Кнопка «ВСЕ ПРОЕКТЫ»: hover раскрывает лейбл */
 .btn-show-all:hover .btn-show-all__label {
-    --tc-scale-x: 0.95;
+    --tc-scale-x: var(--tc-active-scale-x);
 }
 
-/* Filter pills: активный + hover */
+/* Filter pills: активный + hover — остаются condensed */
 .filter-pill.filter-pill--active .filter-pill__text {
-    --tc-scale-x: 1;
+    --tc-scale-x: var(--tc-nav-active-scale-x);
 }
 
 .filter-pill:hover .filter-pill__text {
-    --tc-scale-x: 0.88;
+    --tc-scale-x: var(--tc-hover-scale-x);
 }
 
 .preview-card__link:hover .preview-card__meta .text-condensed {
@@ -2039,7 +2115,8 @@ h3 {
     .header .logo > span,
     .header .lang-switch .lang-switch__toggle-row,
     .btn-show-all__label,
-    .header .nav-list .nav-link > span {
+    .header .nav-list .nav-link > span,
+    .filter-pill__text {
         transition: none;
     }
 }
@@ -2378,9 +2455,9 @@ h3 {
     white-space: nowrap;
 }
 
-/* Полоска кейса: без uppercase — читаемые RU/EN названия; трекинг как у обычного интерфейса, не «кричащий» капс */
+/* Полоска кейса — uppercase как у остальной шапки */
 .header .nav-list--case-study .nav-link {
-    text-transform: none;
+    text-transform: uppercase;
     letter-spacing: -0.02em;
 }
 
@@ -4631,7 +4708,7 @@ h3 {
     overflow: hidden;
     border: 0;
     border-radius: var(--radius-lg);
-    background: rgba(38, 38, 38, 0.4);
+    background: transparent;
 }
 
 .preview-image img,
@@ -4668,7 +4745,7 @@ h3 {
     opacity: 0.55;
 }
 
-/* Meta в карточке — многострочный текст: без scaleX (иначе строки визуально наезжают) */
+/* Meta в карточке — многострочный текст: без scale (иначе строки визуально наезжают) */
 .preview-card__meta .text-condensed {
     display: block;
     width: 100%;
@@ -4837,13 +4914,13 @@ h3 {
     margin-inline: auto;
     text-align: center;
     text-wrap: balance;
-    transform: scaleX(var(--tc-scale-x));
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: center top;
-    line-height: 1.4;
+    line-height: var(--tc-line-height);
     box-sizing: border-box;
 }
 
-/* Figma Image Preview (420:21377 / компонент 1:231): карточка окна 369×280, titlebar 2.375rem, внутреннее превью r6 + inset 0.5rem */
+/* Figma Image Preview (861:16906 / 420:21377 / 1:231): карточка окна 369×280 */
 .preview-card-block.preview-card-block--mac-window {
     border-radius: var(--preview-image-block-radius);
 }
@@ -5035,6 +5112,7 @@ h3 {
     justify-content: flex-start;
     gap: 0.625rem;
     position: relative;
+    z-index: 2;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(0, 0, 0, 0.04) 100%),
         linear-gradient(180deg, #ececec 0%, #d8d8d8 100%);
@@ -5072,6 +5150,9 @@ h3 {
 .preview-card-block--mac-window .preview-card-block__trailing {
     flex-shrink: 0;
     margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
 }
 
 .preview-card-block__spacer--12 {
@@ -5150,11 +5231,35 @@ h3 {
     top: var(--preview-image-titlebar-height);
     left: var(--preview-image-inset-x);
     right: var(--preview-image-inset-x);
-    bottom: 0;
+    bottom: var(--space-8);
+    z-index: 1;
     border: none;
     border-radius: var(--preview-image-inner-radius);
     overflow: hidden;
     background: transparent;
+}
+
+.preview-card-block__avatar {
+    position: relative;
+    flex-shrink: 0;
+    width: clamp(1.375rem, 3.6vw, 1.75rem);
+    height: clamp(1.375rem, 3.6vw, 1.75rem);
+    margin-top: -0.125rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.0938rem solid rgba(255, 255, 255, 0.88);
+    box-shadow:
+        0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.28),
+        0 0.125rem 0.375rem rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+}
+
+.preview-card-block__avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .preview-card-block__image img {
@@ -5185,7 +5290,7 @@ h3 {
     .preview-card-block__cta {
         font-size: 0.6875rem;
         padding: var(--space-4) var(--space-8);
-        max-width: 8.75rem;
+        max-width: 11.5rem;
         overflow: hidden;
         text-overflow: ellipsis;
     }
@@ -5375,7 +5480,9 @@ h3 {
 .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__link {
     position: relative;
     display: block;
-    height: 100%;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
     gap: 0;
     overflow: hidden;
     border-radius: inherit;
@@ -5518,7 +5625,7 @@ h3 {
     color: var(--color-text-primary);
 }
 
-/* Filter pills: отдельный класс — те же правила scale, без max-width: 100% у .text-condensed. */
+/* Filter pills: те же condensed-токены, origin center + margin-inline компенсация */
 .filter-pill__text {
     display: inline-block;
     width: max-content;
@@ -5526,11 +5633,13 @@ h3 {
     white-space: nowrap;
     text-align: center;
     vertical-align: middle;
-    --tc-scale-x: 0.62;
-    transform: scaleX(var(--tc-scale-x));
+    font-size: var(--tc-size-em);
+    text-transform: uppercase;
+    letter-spacing: var(--tc-letter-spacing);
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: center center;
     margin-inline: calc((1 - var(--tc-scale-x)) / 2 * -100%);
-    line-height: 1.3;
+    line-height: var(--tc-line-height);
     transition: transform var(--transition-micro-expand);
 }
 
@@ -5810,8 +5919,6 @@ h3 {
     flex-shrink: 0;
     color: #ffffff;
     text-shadow: 0 0 0.625rem rgba(255, 255, 255, 0.3);
-    /* Сильнее сжатый condensed — узкие, плотные буквы. */
-    --tc-scale-x: 0.55;
     transform-origin: center center;
     margin-inline-end: 0;
 }
@@ -7159,9 +7266,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     align-items: flex-start;
     gap: var(--project-meta-card-gap);
     border-radius: var(--project-meta-card-radius);
-    background: var(--project-meta-card-bg);
-    border: 0.0625rem solid rgba(255, 255, 255, 0.06);
-    box-shadow: var(--shadow-case-card);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
     box-sizing: border-box;
 }
 .project-case-study-mail .project-info__row {
@@ -7177,6 +7284,15 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     text-transform: uppercase;
     color: var(--project-title-color);
     opacity: var(--project-meta-label-opacity);
+}
+
+.project-case-study-mail .project-info__label .text-condensed {
+    display: inline;
+    font-size: inherit;
+    letter-spacing: inherit;
+    transform: none;
+    margin-inline-end: 0;
+    line-height: inherit;
 }
 .project-case-study-mail .project-info__value {
     font-size: var(--project-meta-value-font-size);
@@ -7200,9 +7316,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .project-case-study-mail .project-info .btn-show-all .btn-show-all__label {
-    font-size: 1.45em;
-    line-height: 1.1;
-    --tc-scale-x: 0.65;
+    font-size: var(--tc-display-size-em);
+    line-height: var(--tc-line-height);
 }
 .project-case-study-mail .case-study-narrative {
     max-width: var(--case-prose-max);
@@ -7526,11 +7641,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .project-case-study-mail :is(
     .scroll-scrub-row--cards.scroll-scrub-row--native-x .scroll-scrub-row__inner > .card,
-    .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card,
-    .hyp-list,
-    .hyp-card
-)::before,
-.page-about .about-page__skill-list.hyp-list::before {
+    .scroll-scrub-row--cards.scroll-scrub-row--scroll-linked .scroll-scrub-row__inner > .card
+)::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -7604,12 +7716,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 /* Figma — подпись карточки (ПРОБЛЕМА, КОНТЕКСТ…) condensed */
 .project-case-study-mail .scroll-scrub-row--cards .card h3 .text-condensed {
-    --tc-scale-x: 0.72;
-    transform: scaleX(var(--tc-scale-x));
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: left center;
-    margin-inline-end: calc((var(--tc-scale-x) - 1) * 1em);
-    letter-spacing: 0.02em;
-    line-height: 1.1;
+    margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+    letter-spacing: var(--tc-letter-spacing);
+    line-height: var(--tc-line-height);
     color: inherit;
     opacity: 1;
 }
@@ -7884,10 +7995,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     letter-spacing: -0.025em;
     color: var(--color-text);
     text-transform: uppercase;
-    /* Condensed (area-preserving) — общее правило для подзаголовков case-study */
+    /* Condensed — глобальные токены */
     display: inline-block;
-    --tc-scale-x: 0.78;
-    --tc-scale-y: calc(1 / var(--tc-scale-x));
     transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: left center;
 }
@@ -7923,22 +8032,17 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     min-width: 0;
     padding: var(--space-24);
     border-radius: var(--case-feature-card-radius-sm);
-    background: var(--case-feature-card-bg);
-    border: 0.0625rem solid transparent;
+    background: transparent;
+    border: 0;
     box-shadow: none;
     min-height: 0;
     box-sizing: border-box;
-    transition:
-        transform var(--dur-premium) var(--ease-premium-out),
-        box-shadow var(--dur-premium) var(--ease-premium-out),
-        border-color var(--dur-premium) var(--ease-premium-out);
+    transition: transform var(--dur-premium) var(--ease-premium-out);
 }
 
 @media (hover: hover) and (pointer: fine) {
     .project-case-study-mail .title-info-article:hover .title-info-card {
         transform: translateY(-0.125rem);
-        box-shadow: var(--shadow-case-card-hover);
-        border-color: rgba(255, 255, 255, 0.11);
     }
 }
 
@@ -8074,10 +8178,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     font-weight: 500;
     opacity: 0.85;
     white-space: pre-line;
-    /* Condensed (area-preserving) — общее правило для подзаголовков */
+    /* Condensed — глобальные токены */
     display: inline-block;
-    --tc-scale-x: 0.78;
-    --tc-scale-y: calc(1 / var(--tc-scale-x));
     transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: left center;
 }
@@ -8329,7 +8431,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     list-style: none;
     margin: 0;
     padding: var(--hyp-list-inset);
-    background: var(--case-feature-card-bg);
+    background: transparent;
     border-radius: var(--case-feature-card-radius);
     border: 0;
     display: flex;
@@ -8398,12 +8500,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .project-case-study-mail .hyp-list__title .text-condensed {
-    --tc-scale-x: 0.72;
-    transform: scaleX(var(--tc-scale-x));
+    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
     transform-origin: left center;
-    margin-inline-end: calc((var(--tc-scale-x) - 1) * 1em);
-    letter-spacing: 0.02em;
-    line-height: 1.1;
+    margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+    letter-spacing: var(--tc-letter-spacing);
+    line-height: var(--tc-line-height);
     color: inherit;
     opacity: 1;
 }
@@ -8959,7 +9060,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .project-case-study-mail .project-intro__heading h1 {
         margin-bottom: 0;
         font-size: var(--type-case-study-title);
-        line-height: 1.02;
+        line-height: 1.08;
         letter-spacing: -0.03em;
     }
 
@@ -9805,7 +9906,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     color: var(--color-text-primary);
 }
 
-/* Figma 743:16866 — «О себе»: колонка контента; max-width как шапка/футер (1358) */
+/* Figma 883:19521 — «О себе»: колонка контента; max-width как шапка/футер (1358) */
 .page-about .main:has(.about-page) {
     display: block;
     align-items: stretch;
@@ -9832,7 +9933,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     --about-section-heading-gap: var(--space-proximity-stack);
     --about-hero-photo-size: clamp(var(--space-96), 34vw, 28rem);
     --about-hero-gap: var(--space-fluid-block);
-    --about-exp-panel-offset: var(--space-fluid-hero);
     width: 100%;
     max-width: 100%;
     min-width: 0;
@@ -9927,9 +10027,10 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     letter-spacing: 0.06em;
 }
 
-.about-page__duo {
+/* Figma 883:17053 — intro слева, опыт справа */
+.about-page__intro-exp {
     display: grid;
-    grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
     gap: var(--space-fluid-stack);
     align-items: start;
     min-width: 0;
@@ -9945,11 +10046,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     margin: 0 0 var(--about-section-heading-gap);
 }
 
-.about-page__panel--experience {
-    margin-top: 0;
+.about-page__section-heading--center {
+    text-align: center;
 }
 
-.about-page__skill-list,
+.about-page__skill-grid,
 .about-page__job-list,
 .about-page__edu-bento {
     list-style: none;
@@ -9957,11 +10058,71 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding: 0;
 }
 
-.about-page__skill-list,
 .about-page__job-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-proximity-pair);
+}
+
+.about-page__skill-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--about-card-gap);
+    min-width: 0;
+}
+
+.about-page__skill-card.ambient-light-card {
+    min-height: clamp(9.5rem, 22vw, 12.5rem);
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+}
+
+.about-page__edu-card.ambient-light-card .ambient-light-card__content {
+    justify-content: center;
+    min-height: inherit;
+}
+
+.about-page__skill-card .about-page__skill-title,
+.about-page__skill-card .about-page__skill-text {
+    position: relative;
+    z-index: 1;
+}
+
+.about-page__skill-title {
+    margin: 0;
+    font-family: var(--font-competencies-display);
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+}
+
+.about-page__skill-text {
+    margin: 0;
+    font-size: clamp(0.9375rem, 1.4vw, 1.0625rem);
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: rgba(250, 250, 250, 0.62);
+}
+
+@container about-page (min-width: 36rem) {
+    .about-page__skill-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@container about-page (min-width: 52rem) {
+    .about-page__skill-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .about-page__skill-card.ambient-light-card {
+        min-height: 12.5rem;
+    }
 }
 
 /* Figma 743:16900 — жёлтые стикеры опыта (Sticker.js) */
@@ -10108,184 +10269,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     overflow-wrap: break-word;
 }
 
-/* Figma 337:24764 / 743:16911 — skills accordion (hyp-list) */
-.page-about .about-page__skill-list.hyp-list {
-    --hyp-list-inset: var(--case-feature-card-padding);
-    list-style: none;
-    margin: 0;
-    padding: var(--hyp-list-inset);
-    background: var(--case-feature-card-bg);
-    border-radius: var(--case-feature-card-radius);
-    border: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-}
-
-.page-about .about-page__skill-list.hyp-list > * {
-    position: relative;
-    z-index: 1;
-}
-
-.page-about .about-page__skill-list.hyp-list > .hyp-list__item {
-    list-style: none;
-    margin: 0;
-    padding-inline: 0;
-    padding-block: var(--case-hyp-row-gap);
-}
-
-.page-about .about-page__skill-list.hyp-list > .hyp-list__item:first-child {
-    padding-top: 0;
-}
-
-.page-about .about-page__skill-list.hyp-list > .hyp-list__item:last-child {
-    padding-bottom: 0;
-}
-
-.page-about .about-page__skill-list.hyp-list > .hyp-list__item + .hyp-list__item {
-    border-top: 0.0625rem solid var(--case-divider);
-}
-
-.page-about .about-page__skill-list .hyp-list__row {
-    width: 100%;
-    margin: 0;
-}
-
-.page-about .about-page__skill-list .hyp-list__summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-16);
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    list-style: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.page-about .about-page__skill-list .hyp-list__summary::-webkit-details-marker {
-    display: none;
-}
-
-.page-about .about-page__skill-list .hyp-list__summary::marker {
-    display: none;
-}
-
-.page-about .about-page__skill-list .hyp-list__summary:focus-visible {
-    outline: 0.125rem solid var(--color-focus-ring);
-    outline-offset: 0.25rem;
-    border-radius: 0.25rem;
-}
-
-.page-about .about-page__skill-list .hyp-list__title {
-    font-family: var(--font-competencies-display);
-    font-size: clamp(1.375rem, 2.2vw, 1.75rem);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
-    color: var(--color-text-primary);
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.page-about .about-page__skill-list .hyp-list__icon {
-    position: relative;
-    flex: 0 0 auto;
-    width: clamp(1.5rem, 2.5vw, 1.75rem);
-    height: clamp(1.5rem, 2.5vw, 1.75rem);
-    color: var(--color-text);
-}
-
-.page-about .about-page__skill-list .hyp-list__icon::before,
-.page-about .about-page__skill-list .hyp-list__icon::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    transition:
-        transform var(--transition-micro-expand),
-        opacity var(--transition-micro-expand);
-}
-
-.page-about .about-page__skill-list .hyp-list__icon::before {
-    background:
-        linear-gradient(currentColor, currentColor) center / 100% 0.125rem no-repeat,
-        linear-gradient(currentColor, currentColor) center / 0.125rem 100% no-repeat;
-    transform: rotate(0deg);
-}
-
-.page-about .about-page__skill-list .hyp-list__icon::after {
-    background:
-        linear-gradient(currentColor, currentColor) center / 100% 0.125rem no-repeat,
-        linear-gradient(currentColor, currentColor) center / 0.125rem 100% no-repeat;
-    transform: rotate(45deg);
-    opacity: 0.55;
-}
-
-.page-about .about-page__skill-list .hyp-list__row[open] .hyp-list__icon::before {
-    transform: rotate(45deg);
-    opacity: 1;
-}
-
-.page-about .about-page__skill-list .hyp-list__row[open] .hyp-list__icon::after {
-    transform: rotate(-45deg);
-    opacity: 1;
-}
-
-.page-about .about-page__skill-list .hyp-list__body {
-    display: grid;
-    grid-template-rows: 0fr;
-    padding: 0;
-    margin: 0;
-    max-width: 100%;
-    transition: grid-template-rows var(--transition-micro-expand);
-}
-
-.page-about .about-page__skill-list .hyp-list__row[open] .hyp-list__body {
-    grid-template-rows: 1fr;
-    margin-top: var(--case-hyp-row-gap);
-}
-
-.page-about .about-page__skill-list .hyp-list__body-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--case-hyp-body-gap);
-    min-height: 0;
-    overflow: hidden;
-}
-
-.page-about .about-page__skill-list .hyp-list__text {
-    margin: 0;
-    font-size: clamp(1rem, 1.4vw, 1.125rem);
-    line-height: 1.55;
-    letter-spacing: -0.01em;
-    color: rgba(250, 250, 250, 0.88);
-    overflow-wrap: break-word;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .page-about .about-page__skill-list .hyp-list__icon::before,
-    .page-about .about-page__skill-list .hyp-list__icon::after,
-    .page-about .about-page__skill-list .hyp-list__body {
-        transition: none;
-    }
-
-    .page-about .about-page__skill-list .hyp-list__row:not([open]) .hyp-list__body {
-        display: none;
-    }
-
-    .page-about .about-page__skill-list .hyp-list__row[open] .hyp-list__body {
-        display: block;
-        margin-top: var(--case-hyp-row-gap);
-    }
-}
-
 .about-page__section {
     display: flex;
     flex-direction: column;
@@ -10304,9 +10287,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .about-page__edu-card {
     min-height: auto;
-    padding: clamp(var(--space-16), 2.5vw, var(--space-32));
+    padding: 0;
     border-radius: var(--about-card-radius);
-    background: var(--about-edu-card-bg);
+    background: transparent;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -10417,25 +10400,17 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     color: rgba(250, 250, 250, 0.55);
 }
 
-/* ≥1025px: смещение «Опыт» под заголовком «Навыки» (fluid) */
-@media (min-width: 64.0625rem) {
-    .about-page__panel--experience {
-        margin-top: var(--about-exp-panel-offset);
-    }
-}
-
-/* lg 1025–1200px: плотнее hero и duo, меньше offset опыта */
+/* lg 1025–1200px: плотнее hero и intro-exp */
 @media (max-width: 75rem) and (min-width: 64.0625rem) {
     .about-page {
         --about-hero-photo-size: clamp(var(--space-96), 28vw, 22rem);
         --about-hero-gap: var(--space-fluid-block);
-        --about-exp-panel-offset: clamp(var(--space-32), 10vw, var(--space-96));
         gap: var(--space-fluid-stack);
     }
 
-    .about-page__duo {
+    .about-page__intro-exp {
         gap: var(--space-fluid-group);
-        grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
     }
 
     .about-page__name {
@@ -10452,7 +10427,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .about-page {
         --about-hero-photo-size: min(10rem, 36vh);
         --about-hero-gap: var(--space-20);
-        --about-exp-panel-offset: 0;
         gap: var(--space-32);
     }
 
@@ -10483,18 +10457,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         line-height: 1.4;
     }
 
-    .about-page__duo {
+    .about-page__intro-exp {
         grid-template-columns: 1fr;
         gap: var(--space-24);
-    }
-
-    .about-page__panel--skills {
-        order: 2;
-    }
-
-    .about-page__panel--experience {
-        order: 1;
-        margin-top: 0;
     }
 
     .about-page__section-heading {
@@ -10508,15 +10473,19 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 }
 
-/* ≤1024px: hero и duo в колонку; tablet — частичная edu-сетка */
+/* ≤1024px: hero и intro-exp в колонку; tablet — частичная edu-сетка */
 @media (max-width: 64rem) {
     .about-page {
         --about-hero-photo-size: min(14rem, 62vw);
         --about-hero-gap: var(--space-24);
-        --about-exp-panel-offset: 0;
         --about-section-heading-gap: var(--space-16);
         --about-card-gap: var(--space-8);
         --about-card-radius: var(--space-24);
+        gap: var(--space-proximity-block);
+    }
+
+    .about-page__intro-exp {
+        grid-template-columns: 1fr;
         gap: var(--space-proximity-block);
     }
 
@@ -10566,14 +10535,16 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         line-height: 1.05;
     }
 
-    .page-about .about-page__skill-list.hyp-list {
-        --hyp-list-inset: var(--case-feature-card-padding-sm);
-        --case-hyp-row-gap: var(--space-proximity-group);
-        --case-hyp-body-gap: var(--space-proximity-pair);
-        border-radius: var(--case-feature-card-radius-sm);
+    .about-page__skill-card.ambient-light-card {
+        min-height: auto;
     }
 
-    .page-about .about-page__skill-list .hyp-list__title {
+    .about-page__skill-card .ambient-light-card__content,
+    .about-page__edu-card .ambient-light-card__content {
+        padding: var(--space-16);
+    }
+
+    .about-page__skill-title {
         font-size: clamp(1.125rem, 4.2vw, 1.375rem);
         line-height: 1.2;
     }
@@ -10606,6 +10577,10 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 /* Fallback без container queries — по ширине viewport */
 @supports not (container-type: inline-size) {
     @media (min-width: 36rem) {
+        .about-page__skill-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
         .about-page__edu-bento {
             grid-template-columns: repeat(12, minmax(0, 1fr));
         }
@@ -10630,6 +10605,14 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     @media (min-width: 52rem) {
+        .about-page__skill-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .about-page__skill-card.ambient-light-card {
+            min-height: 12.5rem;
+        }
+
         .about-page__edu-card {
             min-height: 15.25rem;
         }
@@ -10672,11 +10655,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         padding: var(--space-16);
     }
 
-    .page-about .about-page__skill-list.hyp-list {
-        --hyp-list-inset: var(--case-feature-card-padding-sm);
-        --case-hyp-row-gap: var(--space-proximity-pair);
-        --case-hyp-body-gap: var(--space-proximity-pair);
-        border-radius: var(--case-feature-card-radius-sm);
+    .about-page__skill-card .ambient-light-card__content,
+    .about-page__edu-card .ambient-light-card__content {
+        padding: var(--space-16);
     }
 
     .about-page__section-heading {
@@ -10684,7 +10665,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         letter-spacing: -0.02em;
     }
 
-    .about-page__duo {
+    .about-page__intro-exp {
         gap: var(--space-32);
     }
 
@@ -11020,9 +11001,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     gap: var(--layout-89-756-item-gap);
     padding: var(--layout-89-756-item-padding-y) var(--layout-89-756-item-padding-x);
     border-radius: var(--layout-89-756-item-radius);
-    background: var(--color-surface);
-    border: 0.0625rem solid var(--color-surface-border);
-    transition: background var(--transition-fast), border-color var(--transition-fast);
+    background: transparent;
+    border: 0;
+    transition: transform var(--dur-smart-slow) var(--ease-exhibition);
+    position: relative;
+    overflow: hidden;
 }
 
 /* 89-756 family — единая колонка по центру (как Resume / Education) */
@@ -11047,14 +11030,15 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .contact-item:hover {
-    background: rgba(38, 38, 38, 0.5);
-    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-0.125rem);
 }
 
 .contact-item > div {
     display: flex;
     flex-direction: column;
     gap: var(--layout-89-756-item-inner-gap);
+    position: relative;
+    z-index: 2;
 }
 
 .contact-item strong {
@@ -11636,8 +11620,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         font-size: clamp(1rem, 3.2vw, 1.0625rem);
     }
 
-    .project-case-study-mail .hyp-list__summary,
-    .page-about .about-page__skill-list .hyp-list__summary {
+    .project-case-study-mail .hyp-list__summary {
         min-height: 3rem;
         padding-block: 0.75rem;
     }
@@ -11675,21 +11658,63 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 /* Навигация — expanding panel до ширины планшета (smart animate) */
 @media (max-width: 56.25rem) {
     :root {
-        --header-figma-bar-min: 5.75rem;
-        --header-figma-pad-y: 1.25rem;
-        --header-figma-type-size: 1.375rem;
-        --header-figma-type-line: 1.2;
+        --header-figma-bar-min: 3.75rem;
+        --header-figma-pad-y: 1rem;
+        --header-figma-type-size: clamp(1.125rem, 4.8vw, 1.375rem);
+        --header-figma-type-line: 1.15;
         --header-mobile-panel-radius: 1.75rem;
         --header-mobile-panel-bg: rgba(14, 14, 16, 0.9);
         --header-mobile-closed-height: calc(
             max(var(--header-figma-pad-y), env(safe-area-inset-top, 0))
-            + 3.25rem
+            + 2.75rem
             + max(var(--header-figma-pad-y), env(safe-area-inset-bottom, 0))
         );
+        --header-mobile-menu-size: clamp(2.5rem, 14vw, 4.25rem);
+        --header-mobile-menu-size-active: clamp(2.5rem, 14vw, 4.25rem);
+        --header-mobile-menu-lang-size: clamp(2.25rem, 13vw, 4rem);
+        --header-mobile-menu-line: 1.02;
     }
 
     .header:not(.header--menu-open) {
         min-height: 0;
+        background: transparent;
+        mix-blend-mode: difference;
+    }
+
+    /* Закрытая полоса — только имя слева и бургер справа */
+    .header:not(.header--menu-open) .header-bar-actions .lang-switch {
+        display: none;
+    }
+
+    /* Язык — только внутри раскрытой панели меню */
+    .header-mobile-menu__lang {
+        display: none;
+        padding: 0.35rem 0 0;
+        margin-top: 0.35rem;
+        border: 0;
+        border-top: none;
+        box-shadow: none;
+        font-size: var(--header-mobile-menu-lang-size);
+        line-height: var(--header-mobile-menu-line);
+        text-transform: uppercase;
+    }
+
+    .header-mobile-menu__lang .lang-switch__toggle-row {
+        transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+        color: #ffffff !important;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    .header-mobile-menu__lang .lang-switch__btn {
+        min-width: 3.25rem;
+        min-height: 3.25rem;
+        padding: 0 0.5rem;
+        font-size: inherit;
+    }
+
+    .header-mobile-menu--open .header-mobile-menu__lang {
+        display: block;
     }
 
     /* На страницах проектов — без difference, белый текст с лёгкой тенью */
@@ -11712,27 +11737,31 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         padding-top: calc(var(--header-mobile-closed-height) + 0.5rem);
     }
 
+    /* Открытое меню — одна строка шапки (лого | lang + ✕), ниже список */
     .header--menu-open .nav {
-        grid-template-columns: 1fr auto;
-        grid-template-rows: auto auto auto;
-        min-height: var(--header-figma-bar-min);
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        min-height: 0;
+        row-gap: 0;
     }
 
     .header--menu-open .nav > .logo {
-        grid-column: 1 / -1;
+        grid-column: 1;
         grid-row: 1;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0;
     }
 
     .header--menu-open .nav > .header-bar-actions {
-        grid-column: 1 / -1;
-        grid-row: 2;
-        justify-self: stretch;
-        justify-content: space-between;
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+        justify-content: flex-end;
+        gap: 0.75rem;
     }
 
     .header--menu-open .nav > .header-mobile-menu {
-        grid-row: 3;
+        grid-column: 1 / -1;
+        grid-row: 2;
     }
 
     .header {
@@ -11795,12 +11824,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         grid-column: 1;
         grid-row: 1;
         min-width: 0;
-        max-width: 100%;
+        max-width: none;
         justify-self: start;
         align-self: center;
-        overflow: hidden;
-        font-size: clamp(0.9375rem, 4.2vw, 1.25rem);
-        line-height: 1.15;
+        overflow: visible;
+        font-size: var(--header-figma-type-size);
+        line-height: var(--header-figma-type-line);
         margin-bottom: 0;
     }
 
@@ -11809,15 +11838,41 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         color: #ffffff !important;
     }
 
-    .header .nav > .logo > span {
-        display: block;
+    /* Закрытая полоса — condensed-логотип, кегль шапки, без scaleY */
+    .header:not(.header--menu-open) .nav > .logo {
+        display: flex;
+        align-items: center;
+        min-height: 2.75rem;
+    }
+
+    .header:not(.header--menu-open) .nav > .logo > span {
+        display: inline-block;
+        width: fit-content;
+        max-width: none;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+        font-size: inherit;
+        line-height: inherit;
+        text-transform: uppercase;
+        transform: scaleX(var(--tc-scale-x));
+        transform-origin: left center;
+        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+    }
+
+    /* Открытое меню — логотип condensed, ellipsis при переполнении */
+    .header--menu-open .nav > .logo > span {
+        display: inline-block;
         max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        transform: none;
-        --tc-scale-x: 1;
-        width: auto;
+        font-size: inherit;
+        line-height: inherit;
+        text-transform: uppercase;
+        transform: scaleX(var(--tc-scale-x));
+        transform-origin: left center;
+        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
     }
 
     .header .nav > .header-bar-actions {
@@ -11826,7 +11881,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         display: inline-flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 0.125rem;
+        gap: 0.375rem;
         flex-shrink: 0;
     }
 
@@ -11837,8 +11892,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header .lang-switch .lang-switch__toggle-row {
-        transform: none;
-        --tc-scale-x: 1;
+        transform: scaleX(var(--tc-scale-x));
     }
 
     .header .lang-switch__btn {
@@ -11851,11 +11905,63 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         flex-shrink: 0;
         position: relative;
         z-index: 2;
-        min-width: 3rem;
-        min-height: 3rem;
-        padding: 0.625rem 0.375rem;
-        gap: 0.4375rem;
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+        padding: 0;
+        gap: 0;
         margin-left: 0;
+    }
+
+    .nav-toggle {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-toggle span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1.625rem;
+        height: 0.125rem;
+        margin: 0;
+        background: #ffffff;
+        border-radius: 0.0625rem;
+        transform-origin: center center;
+        transition:
+            transform var(--dur-smart-base) var(--ease-smart),
+            opacity var(--dur-smart-fast) var(--ease-smart);
+    }
+
+    /* h=0.125rem, gap=0.375rem → центры крайних линий ±0.5rem от середины */
+    .nav-toggle span:nth-child(1) {
+        transform: translate(-50%, calc(-50% - 0.5rem));
+    }
+
+    .nav-toggle span:nth-child(2) {
+        transform: translate(-50%, -50%);
+    }
+
+    .nav-toggle span:nth-child(3) {
+        transform: translate(-50%, calc(-50% + 0.5rem));
+    }
+
+    .header--menu-open .nav-toggle span {
+        background: #ffffff;
+    }
+
+    .nav-toggle.active span:nth-child(1) {
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .nav-toggle.active span:nth-child(2) {
+        opacity: 0;
+        transform: translate(-50%, -50%);
+    }
+
+    .nav-toggle.active span:nth-child(3) {
+        transform: translate(-50%, -50%) rotate(-45deg);
     }
 
     .header .nav > .header-mobile-menu {
@@ -11892,7 +11998,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header .nav > .header-mobile-menu > .nav-list {
-        overflow: hidden;
+        overflow: visible;
         min-height: 0;
     }
 
@@ -11910,7 +12016,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         max-height: none;
         min-height: 0;
         margin: 0;
-        padding: 0.25rem 0 0.75rem;
+        padding: 0.35rem 0 0.35rem;
         gap: 0.125rem;
         flex-direction: column;
         overflow: visible;
@@ -11927,15 +12033,59 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         isolation: auto;
     }
 
+    /* В drawer — condensed + капс */
+    .header .header-mobile-menu .nav-link .text-condensed {
+        transform: scale(var(--tc-scale-x), var(--tc-scale-y)) !important;
+        transform-origin: left center;
+        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em) !important;
+        font-size: var(--tc-size-em);
+        line-height: var(--tc-line-height);
+        letter-spacing: var(--tc-letter-spacing);
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: normal;
+        max-width: 100%;
+    }
+
+    /* Длинные подписи из нескольких слов — перенос только между словами */
+    .header .header-mobile-menu .nav-link--case-all .text-condensed,
+    .header .header-mobile-menu .nav-link--case-all > span {
+        white-space: normal;
+        overflow-wrap: normal;
+        word-break: normal;
+    }
+
+    .header .header-mobile-menu__lang .lang-switch__toggle-row {
+        transform: scale(var(--tc-scale-x), var(--tc-scale-y)) !important;
+        margin-inline-end: 0 !important;
+        font-size: var(--tc-size-em);
+        line-height: var(--tc-line-height);
+        letter-spacing: var(--tc-letter-spacing);
+        text-transform: uppercase;
+        color: #ffffff !important;
+    }
+
     .header .nav-list .nav-link {
         mix-blend-mode: normal;
         justify-content: flex-start;
         width: 100%;
-        min-height: 3.25rem;
-        font-size: clamp(1.375rem, 6vw, 1.875rem);
-        line-height: 1.15;
+        min-height: auto;
+        padding-block: 0.2rem;
+        font-size: var(--header-mobile-menu-size);
+        line-height: var(--header-mobile-menu-line);
         opacity: 1;
         padding-inline: 0;
+        box-shadow: none !important;
+        border: none !important;
+        outline: none !important;
+    }
+
+    .header .nav-list .nav-link.active,
+    .header .nav-list--case-study .nav-link.active {
+        box-shadow: none !important;
+        border: none !important;
+        outline: none !important;
     }
 
     .header .nav-list .nav-link > span {
@@ -11944,15 +12094,22 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         text-shadow: none;
         opacity: 0;
         visibility: hidden;
-        --tc-scale-x: 0.5;
+        font-size: var(--tc-size-em);
+        line-height: var(--tc-line-height);
+        letter-spacing: var(--tc-letter-spacing);
+        text-transform: uppercase;
         translate: 0 -0.625rem;
-        transform: scaleX(var(--tc-scale-x));
-        transform-origin: center center;
+        transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+        transform-origin: left center;
+        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: normal;
+        max-width: 100%;
         transition:
             opacity var(--dur-smart-base) var(--ease-smart),
             visibility var(--dur-smart-base) var(--ease-smart),
             translate var(--dur-smart-base) var(--ease-smart),
-            transform var(--transition-micro-expand),
             color var(--dur-smart-nav) var(--ease-smart);
     }
 
@@ -11960,7 +12117,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         opacity: 1;
         visibility: visible;
         translate: 0 0;
-        transform: scaleX(var(--tc-scale-x));
     }
 
     .header-mobile-menu--open .nav-list li:nth-child(1) .nav-link > span {
@@ -11986,103 +12142,128 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .header .nav-list .nav-link.active > span {
         color: #ffffff !important;
         font-weight: 600;
-        --tc-scale-x: 1;
+        font-size: var(--tc-size-em);
+        --tc-scale-x: var(--tc-nav-active-scale-x);
     }
 
-    .nav-toggle {
-        display: flex;
+    .header .nav-list .nav-link:not(.active) > span {
+        color: rgba(255, 255, 255, 0.78) !important;
+        font-weight: 400;
+        font-size: var(--tc-size-em);
     }
 
-    .nav-toggle span {
-        width: 1.75rem;
-        height: 0.15625rem;
-        background: #ffffff;
-        transition:
-            transform var(--dur-smart-base) var(--ease-smart),
-            opacity var(--dur-smart-fast) var(--ease-smart);
+    .header .header-mobile-menu .nav-list .nav-link.active {
+        box-shadow: none !important;
+        border: none !important;
     }
 
-    .header--menu-open .nav-toggle span {
-        background: #ffffff;
-    }
-
-    .nav-toggle.active span:nth-child(1) {
-        transform: translateY(0.6875rem) rotate(45deg);
-    }
-
-    .nav-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .nav-toggle.active span:nth-child(3) {
-        transform: translateY(-0.6875rem) rotate(-45deg);
-    }
-
-    /* Кейс-стади — тот же expanding panel, сброс desktop grid */
-    .header .nav-list--case-study {
-        flex: none;
-        display: flex;
+    /* Кейс-стади в drawer — вертикальный список (не desktop grid 1fr|auto|1fr) */
+    .header .header-mobile-menu .nav-list--case-study {
+        display: flex !important;
         flex-direction: column;
-        grid-template-columns: unset;
-        grid-template-rows: unset;
-        justify-items: stretch;
         align-items: stretch;
-    }
-
-    .header .nav-list--case-study > li {
+        justify-content: flex-start;
+        gap: 0.125rem;
         width: 100%;
-        display: flex;
-        justify-content: flex-start;
+        max-width: none;
+        padding: 0.35rem 0 0.35rem;
+        box-sizing: border-box;
     }
 
-    .header .nav-list--case-study > li:first-child,
-    .header .nav-list--case-study > li:last-child,
-    .header .nav-list--case-study > li:nth-child(2) {
-        justify-content: flex-start;
+    .header .header-mobile-menu .nav-list--case-study > li {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        justify-content: flex-start !important;
+        align-items: stretch;
         order: unset;
         padding: 0;
         border: 0;
     }
 
-    .header .nav-list--case-study .nav-link {
+    .header .header-mobile-menu .nav-list--case-study .nav-link {
         justify-content: flex-start;
         text-align: left;
+        width: 100%;
+        min-height: auto;
+        padding-block: 0.2rem;
+        font-size: var(--header-mobile-menu-size);
+        line-height: var(--header-mobile-menu-line);
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        box-shadow: none !important;
+        border: none !important;
+        outline: none !important;
     }
 
-    .header .nav-list--case-study .nav-link--case-title.nav-link.active {
+    .header .header-mobile-menu .nav-list--case-study .nav-link > span,
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-all > span,
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-next > span,
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-title > span,
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-title.active > span {
+        transform: scale(var(--tc-scale-x), var(--tc-scale-y)) !important;
+        transform-origin: left center;
+        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+        font-size: var(--tc-size-em);
+        line-height: var(--tc-line-height);
+        letter-spacing: var(--tc-letter-spacing);
+        text-transform: uppercase;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.78) !important;
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: normal;
+        max-width: 100%;
+    }
+
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-all > span {
         white-space: normal;
-        overflow-wrap: anywhere;
+    }
+
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-title.active > span {
+        font-weight: 600;
+        color: #ffffff !important;
+        --tc-scale-x: var(--tc-nav-active-scale-x);
+    }
+
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-title.nav-link.active {
+        width: 100%;
+        max-width: none;
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: normal;
         overflow: visible;
         text-overflow: clip;
         text-align: left;
+        pointer-events: auto;
+        cursor: pointer;
     }
 
-    .header .nav-list--case-study .nav-link--case-with-chevron {
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-with-chevron {
         width: 100%;
         justify-content: flex-start;
         box-sizing: border-box;
         border-radius: 0;
-        white-space: normal;
+        white-space: nowrap;
         text-align: left;
-        min-height: 3.25rem;
-        padding-top: 0;
-        padding-bottom: 0;
+        min-height: auto;
+        padding-block: 0.35rem;
     }
 
-    .header .nav-list--case-study .nav-link--case-next {
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-next {
         justify-content: flex-start;
     }
 
-    .header .nav-list--case-study .nav-link--case-title {
-        display: block;
+    .header .header-mobile-menu .nav-list--case-study .nav-link--case-title {
+        display: flex;
         width: 100%;
         text-align: left;
         box-sizing: border-box;
-        white-space: normal;
-        overflow-wrap: anywhere;
-        line-height: 1.15;
-        padding-top: 0;
-        padding-bottom: 0;
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: normal;
+        line-height: var(--header-mobile-menu-line);
+        padding-block: 0.35rem;
     }
 }
 
@@ -12095,7 +12276,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         opacity: 1;
         visibility: visible;
         translate: 0 0;
-        transform: scaleX(var(--tc-scale-x, 0.5));
+        transform: scale(var(--tc-scale-x), var(--tc-scale-y));
         transition: none;
     }
 
@@ -12656,8 +12837,8 @@ p + p {
     }
 }
 
-/* ---- 8.3 Hero Preview consistency override pack (Figma 420:21377 / 1:231) ---- */
-/* Figma 420:21377 Image Preview (= компонент 1:231): окно превью в hero */
+/* ---- 8.3 Hero Preview consistency override pack (Figma 861:16906 / 420:21377 / 1:231) ---- */
+/* Figma 861:16906 Image Preview: окно превью в hero */
 .hero__card .preview-card-block {
     width: 100%;
     max-width: var(--hero-card-width);
@@ -12672,6 +12853,16 @@ p + p {
         0 0 0 0.0313rem rgba(255, 255, 255, 0.06),
         0 0.0625rem 0.125rem rgba(0, 0, 0, 0.12),
         0 1.75rem 3rem rgba(0, 0, 0, 0.28);
+    transition:
+        transform var(--dur-smart-slow) var(--ease-exhibition),
+        box-shadow var(--dur-smart-slow) var(--ease-exhibition);
+}
+
+.hero__card .preview-card-block:hover {
+    box-shadow:
+        0 0 0 0.0313rem rgba(255, 255, 255, 0.1),
+        0 0.125rem 0.375rem rgba(0, 0, 0, 0.16),
+        0 2rem 3.5rem rgba(0, 0, 0, 0.34);
 }
 
 .hero__card .preview-card-block__overlay--base,
@@ -12705,7 +12896,7 @@ p + p {
 }
 
 .hero__card .preview-card-block__title {
-    /* macOS-окошко в hero — намеренная имитация чрома macOS, SF Pro по дизайну Figma 420:21377. Единое правило «всё Suisse Intl» сюда не применяется. */
+    /* macOS-окошко в hero — SF Pro по Figma 861:16906 */
     font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 0.8125rem;
     font-weight: 700;
@@ -12716,15 +12907,16 @@ p + p {
 .hero__card .preview-card-block__trailing {
     height: 100%;
     justify-content: flex-end;
+    align-items: center;
     padding-right: 0;
-    gap: 0;
+    gap: 0.3125rem;
 }
 
 .hero__card .preview-card-block__cta {
     border: var(--preview-cta-border);
     border-radius: var(--preview-cta-radius);
     padding: 0.1875rem 0.4375rem;
-    /* macOS CTA в hero — SF Pro по Figma 420:21377 (имитация чрома macOS). */
+    /* macOS CTA в hero — SF Pro по Figma 861:16906 */
     font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 0.8125rem;
     font-weight: 400;
@@ -12745,7 +12937,7 @@ p + p {
     top: var(--preview-image-titlebar-height);
     left: var(--preview-image-inset-x);
     right: var(--preview-image-inset-x);
-    bottom: 0;
+    bottom: var(--space-8);
     border-radius: var(--preview-image-inner-radius);
     overflow: hidden;
     border: none;
@@ -13213,5 +13405,302 @@ html:not(.snap-pages) body {
     .filter-pill:hover,
     .contact-item:hover {
         transform: translateY(-2px);
+    }
+}
+
+/* =============================================================================
+   Luminous cards — inset white glow (site-wide, except scroll-scrub & yellow job cards)
+   ============================================================================= */
+
+:is(
+    .project-case-study-mail .project-info,
+    .project-case-study-mail .title-info-card,
+    .project-case-study-mail .section .hyp-list,
+    .contact-item
+) {
+    --ambient-glow-rgb: 255, 255, 255;
+}
+
+:is(
+    .project-case-study-mail .project-info,
+    .project-case-study-mail .title-info-card,
+    .project-case-study-mail .section .hyp-list,
+    .contact-item
+)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(
+            ellipse 85% 70% at 18% 8%,
+            rgba(var(--ambient-glow-rgb), calc(0.08 + var(--ambient-emission) * 0.07)) 0%,
+            transparent 52%
+        ),
+        radial-gradient(
+            ellipse 95% 55% at 50% 108%,
+            rgba(var(--ambient-glow-rgb), calc(0.16 + var(--ambient-emission) * 0.12)) 0%,
+            transparent 58%
+        ),
+        linear-gradient(155deg, rgba(28, 28, 32, 0.94) 0%, rgba(10, 10, 12, 0.98) 52%, rgba(6, 6, 8, 1) 100%);
+    backdrop-filter: blur(0.875rem) saturate(120%);
+    -webkit-backdrop-filter: blur(0.875rem) saturate(120%);
+    box-shadow:
+        inset 0 -2.75rem 3.25rem -1.75rem rgba(var(--ambient-glow-rgb), calc(0.16 + var(--ambient-emission) * 0.14)),
+        inset 0 0.0625rem 0 rgba(var(--ambient-glow-rgb), calc(0.28 + var(--ambient-emission) * 0.16)),
+        inset 0.0625rem 0 0 rgba(var(--ambient-glow-rgb), calc(0.18 + var(--ambient-emission) * 0.1));
+}
+
+:is(
+    .project-case-study-mail .project-info,
+    .project-case-study-mail .title-info-card,
+    .project-case-study-mail .section .hyp-list,
+    .contact-item
+)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    opacity: calc(0.7 + var(--ambient-emission) * 0.3);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(var(--ambient-glow-rgb), 0.45) 0%,
+            rgba(var(--ambient-glow-rgb), 0.12) 14%,
+            transparent 32%
+        ),
+        linear-gradient(180deg, rgba(var(--ambient-glow-rgb), 0.18) 0%, transparent 18%),
+        linear-gradient(
+            0deg,
+            rgba(var(--ambient-glow-rgb), calc(0.22 + var(--ambient-emission) * 0.16)) 0%,
+            transparent 22%
+        );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    padding: 0.0625rem;
+}
+
+.project-case-study-mail .project-info > *,
+.project-case-study-mail .title-info-card > *,
+.project-case-study-mail .hyp-list > *,
+.contact-item > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Competencies auto-scroll — keep original preview look */
+.home-competencies-scrub .preview-image::before,
+.home-competencies-scrub .preview-image::after,
+.home-competencies-scrub .preview-card-block::before,
+.home-competencies-scrub .preview-card-block::after {
+    display: none;
+}
+
+.home-competencies-scrub .preview-image {
+    background: rgba(38, 38, 38, 0.4);
+}
+
+.home-competencies-scrub .preview-card-block {
+    background: var(--color-elevated-mid);
+    box-shadow: var(--shadow-preview-card);
+}
+
+/* =============================================================================
+   Ambient lighting — inset glow inside cards only (no background bloom)
+   ============================================================================= */
+
+@property --ambient-hover {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --ambient-proximity {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --ambient-emission {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+/* Shared ambient transition + emission mix (proximity from JS, hover from CSS). */
+:is(
+    .ambient-light-card,
+    .project-case-study-mail .project-info,
+    .project-case-study-mail .title-info-card,
+    .project-case-study-mail .section .hyp-list,
+    .contact-item
+) {
+    --ambient-hover: 0;
+    --ambient-proximity: 0;
+    --ambient-emission: min(1, calc(var(--ambient-proximity) * 0.55 + var(--ambient-hover) * 0.95));
+    transition:
+        transform var(--dur-smart-slow) var(--ease-exhibition),
+        --ambient-hover var(--ambient-hover-duration) var(--ease-exhibition),
+        --ambient-proximity var(--ambient-proximity-duration) var(--ease-exhibition);
+}
+
+:is(
+    .ambient-light-card,
+    .project-case-study-mail .project-info,
+    .project-case-study-mail .title-info-card,
+    .project-case-study-mail .section .hyp-list,
+    .contact-item
+):is(:hover, :focus-within) {
+    --ambient-hover: 1;
+}
+
+.ambient-light-card__surface,
+:is(
+    .project-case-study-mail .project-info,
+    .project-case-study-mail .title-info-card,
+    .project-case-study-mail .section .hyp-list,
+    .contact-item
+)::before {
+    transition:
+        box-shadow var(--ambient-hover-duration) var(--ease-exhibition),
+        background var(--ambient-hover-duration) var(--ease-exhibition);
+}
+
+.ambient-light-card__rim,
+:is(
+    .project-case-study-mail .project-info,
+    .project-case-study-mail .title-info-card,
+    .project-case-study-mail .section .hyp-list,
+    .contact-item
+)::after {
+    transition: opacity var(--ambient-hover-duration) var(--ease-exhibition);
+}
+
+.ambient-light-card {
+    --ambient-glow-rgb: 255, 255, 255;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: var(--about-card-radius, var(--radius-lg));
+}
+
+.ambient-light-card__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-12);
+    padding: clamp(var(--space-16), 2.5vw, var(--space-32));
+    box-sizing: border-box;
+    min-height: inherit;
+}
+
+.ambient-light-card__clip {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.ambient-light-card__surface {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        radial-gradient(
+            ellipse 85% 70% at 18% 8%,
+            rgba(var(--ambient-glow-rgb), calc(0.08 + var(--ambient-emission) * 0.07)) 0%,
+            transparent 52%
+        ),
+        radial-gradient(
+            ellipse 95% 55% at 50% 108%,
+            rgba(var(--ambient-glow-rgb), calc(0.16 + var(--ambient-emission) * 0.12)) 0%,
+            transparent 58%
+        ),
+        linear-gradient(155deg, rgba(28, 28, 32, 0.94) 0%, rgba(10, 10, 12, 0.98) 52%, rgba(6, 6, 8, 1) 100%);
+    backdrop-filter: blur(0.875rem) saturate(120%);
+    -webkit-backdrop-filter: blur(0.875rem) saturate(120%);
+    box-shadow:
+        inset 0 -2.75rem 3.25rem -1.75rem rgba(var(--ambient-glow-rgb), calc(0.16 + var(--ambient-emission) * 0.14)),
+        inset 0 0.0625rem 0 rgba(var(--ambient-glow-rgb), calc(0.28 + var(--ambient-emission) * 0.16)),
+        inset 0.0625rem 0 0 rgba(var(--ambient-glow-rgb), calc(0.18 + var(--ambient-emission) * 0.1));
+}
+
+.ambient-light-card__rim {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: calc(0.7 + var(--ambient-emission) * 0.3);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(var(--ambient-glow-rgb), 0.45) 0%,
+            rgba(var(--ambient-glow-rgb), 0.12) 14%,
+            transparent 32%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(var(--ambient-glow-rgb), 0.18) 0%,
+            transparent 18%
+        ),
+        linear-gradient(
+            0deg,
+            rgba(var(--ambient-glow-rgb), calc(0.22 + var(--ambient-emission) * 0.16)) 0%,
+            transparent 22%
+        );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    padding: 0.0625rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :is(
+        .ambient-light-card,
+        .project-case-study-mail .project-info,
+        .project-case-study-mail .title-info-card,
+        .project-case-study-mail .section .hyp-list,
+        .contact-item
+    ) {
+        transition: none;
+    }
+
+    .ambient-light-card__surface,
+    :is(
+        .project-case-study-mail .project-info,
+        .project-case-study-mail .title-info-card,
+        .project-case-study-mail .section .hyp-list,
+        .contact-item
+    )::before,
+    .ambient-light-card__rim,
+    :is(
+        .project-case-study-mail .project-info,
+        .project-case-study-mail .title-info-card,
+        .project-case-study-mail .section .hyp-list,
+        .contact-item
+    )::after {
+        transition: none;
     }
 }

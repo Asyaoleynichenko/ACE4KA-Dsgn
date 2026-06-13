@@ -54,14 +54,14 @@ export function Navigation({ menuOpen = false, onNavigate }) {
         data-node-id="573-19068"
       >
         <li>
-          <SeamlessProjectsLink to={localizedPath('/projects')} className="nav-link" onClick={onNavigate}>
+          <SeamlessProjectsLink to={localizedPath('/projects')} className="nav-link nav-link--case-all" onClick={onNavigate}>
             <span className="text-condensed text-condensed--single-line">{allProjectsLabel}</span>
           </SeamlessProjectsLink>
         </li>
         <li>
           <SeamlessProjectsLink
             to={localizedPath(`/project/${currentSlug}`)}
-            className="nav-link active"
+            className="nav-link nav-link--case-title active"
             aria-current="page"
             onClick={onNavigate}
           >
@@ -69,7 +69,7 @@ export function Navigation({ menuOpen = false, onNavigate }) {
           </SeamlessProjectsLink>
         </li>
         <li>
-          <SeamlessProjectsLink to={localizedPath(`/project/${nextSlug}`)} className="nav-link" onClick={onNavigate}>
+          <SeamlessProjectsLink to={localizedPath(`/project/${nextSlug}`)} className="nav-link nav-link--case-next" onClick={onNavigate}>
             <span className="text-condensed text-condensed--single-line">{nextTitle}</span>
           </SeamlessProjectsLink>
         </li>

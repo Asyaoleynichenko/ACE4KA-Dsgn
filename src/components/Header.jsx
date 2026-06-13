@@ -111,11 +111,18 @@ export default function Header() {
           inert={!menuOpen && mobileNav ? '' : undefined}
         >
           <Navigation menuOpen={menuOpen} onNavigate={() => setMenuOpen(false)} />
+          {mobileNav && menuOpen ? (
+            <div className="header-mobile-menu__lang">
+              <LanguageSwitcher />
+            </div>
+          ) : null}
         </div>
         <div className="header-bar-actions">
-          <span className="lang-switch" data-node-id="573-20952">
-            <LanguageSwitcher />
-          </span>
+          {!mobileNav ? (
+            <span className="lang-switch" data-node-id="573-20952">
+              <LanguageSwitcher />
+            </span>
+          ) : null}
           <button
             type="button"
             className={`nav-toggle${menuOpen ? ' active' : ''}`}

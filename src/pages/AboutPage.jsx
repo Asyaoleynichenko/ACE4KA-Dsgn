@@ -2,11 +2,12 @@ import { useI18n } from '../i18n/I18nProvider.jsx';
 import { publicUrl } from '../utils/publicUrl.js';
 import { asArray } from '../utils/asArray.js';
 import AboutJobCard from '../components/AboutJobCard.jsx';
+import AmbientLightCard from '../components/ambient/AmbientLightCard.jsx';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
 import SideScrollspyNav from '../components/SideScrollspyNav.jsx';
 
 const ABOUT_FIGMA_URL =
-  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=743-16866&m=dev';
+  'https://www.figma.com/design/3p1Mnu6yIL6Y8CwebsdP1F/%D0%92-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83?node-id=883-19521&m=dev';
 
 const aboutLinks = [
   { href: 'https://t.me/pnkprty', labelKey: 'about.links.telegram' },
@@ -26,7 +27,7 @@ const eduGridClass = {
 
 function AboutLinkRow({ localizedPath, t }) {
   return (
-    <div className="about-page__links hero-links" data-node-id="743:17042">
+    <div className="about-page__links hero-links" data-node-id="883:17042">
       {aboutLinks.map(({ href, labelKey }, index) => {
         const label = t(labelKey);
         const linkEl = href.startsWith('/') ? (
@@ -69,70 +70,43 @@ export default function AboutPage() {
   return (
     <div
       className="about-page"
-      data-node-id="743:16866"
+      data-node-id="883:19521"
       data-name="Background"
       data-figma-url={ABOUT_FIGMA_URL}
     >
       <SideScrollspyNav items={scrollspyItems} ariaLabel={t('about.tocAria')} />
-      <header className="about-page__hero" id="intro" data-node-id="743:17054">
-        <div className="about-page__photo-wrap" data-node-id="743:16931">
-          <img
-            className="about-page__photo"
-            src={publicUrl(profilePhoto)}
-            alt={t('about.intro.name')}
-            width={449}
-            height={449}
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-        <div className="about-page__hero-copy" data-node-id="743:16917">
-          <h1 className="about-page__name" data-node-id="743:16919">
-            {t('about.intro.name')}
-          </h1>
-          <p className="about-page__lead" data-node-id="743:16921">
-            {t('about.intro.lead')}
-          </p>
-          <AboutLinkRow localizedPath={localizedPath} t={t} />
-        </div>
-      </header>
 
-      <div className="about-page__duo" data-node-id="743:17053">
-        <section
-          className="about-page__panel about-page__panel--skills"
-          id="skills"
-          aria-labelledby="about-skills-heading"
-          data-node-id="743:16907"
-        >
-          <h2 className="about-page__section-heading" id="about-skills-heading" data-node-id="743:16909">
-            {t('about.skills.title')}
-          </h2>
-          <ul className="about-page__skill-list hyp-list" data-node-id="337:24764">
-            {skills.map((skill, index) => (
-              <li key={skill.title} className="hyp-list__item">
-                <details className="hyp-list__row" data-node-id="743:16911" open={index === 0}>
-                  <summary className="hyp-list__summary">
-                    <span className="hyp-list__title">{skill.title}</span>
-                    <span className="hyp-list__icon" aria-hidden="true" />
-                  </summary>
-                  <div className="hyp-list__body">
-                    <div className="hyp-list__body-inner">
-                      <p className="hyp-list__text">{skill.description}</p>
-                    </div>
-                  </div>
-                </details>
-              </li>
-            ))}
-          </ul>
-        </section>
+      <div className="about-page__intro-exp" data-node-id="883:17053">
+        <header className="about-page__hero" id="intro" data-node-id="883:17054">
+          <div className="about-page__photo-wrap" data-node-id="883:16931">
+            <img
+              className="about-page__photo"
+              src={publicUrl(profilePhoto)}
+              alt={t('about.intro.name')}
+              width={449}
+              height={449}
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+          <div className="about-page__hero-copy" data-node-id="883:16917">
+            <h1 className="about-page__name" data-node-id="883:16919">
+              {t('about.intro.name')}
+            </h1>
+            <p className="about-page__lead" data-node-id="883:16921">
+              {t('about.intro.lead')}
+            </p>
+            <AboutLinkRow localizedPath={localizedPath} t={t} />
+          </div>
+        </header>
 
         <section
           className="about-page__panel about-page__panel--experience"
           id="experience"
           aria-labelledby="about-exp-heading"
-          data-node-id="743:16900"
+          data-node-id="883:16900"
         >
-          <h2 className="about-page__section-heading" id="about-exp-heading" data-node-id="743:16902">
+          <h2 className="about-page__section-heading" id="about-exp-heading" data-node-id="883:16902">
             {t('about.experience.title')}
           </h2>
           <ul className="about-page__job-list">
@@ -149,19 +123,46 @@ export default function AboutPage() {
       </div>
 
       <section
+        className="about-page__section about-page__panel about-page__panel--skills"
+        id="skills"
+        aria-labelledby="about-skills-heading"
+        data-node-id="883:16907"
+      >
+        <h2
+          className="about-page__section-heading about-page__section-heading--center"
+          id="about-skills-heading"
+          data-node-id="883:16909"
+        >
+          {t('about.skills.title')}
+        </h2>
+        <ul className="about-page__skill-grid" data-node-id="883:16911">
+          {skills.map((skill) => (
+            <AmbientLightCard key={skill.title} className="about-page__skill-card">
+              <h3 className="about-page__skill-title">{skill.title}</h3>
+              <p className="about-page__skill-text">{skill.description}</p>
+            </AmbientLightCard>
+          ))}
+        </ul>
+      </section>
+
+      <section
         className="about-page__section about-page__section--education"
         id="education"
         aria-labelledby="about-edu-heading"
-        data-node-id="743:16867"
+        data-node-id="883:16867"
       >
-        <h2 className="about-page__section-heading" id="about-edu-heading" data-node-id="743:16869">
+        <h2
+          className="about-page__section-heading about-page__section-heading--center"
+          id="about-edu-heading"
+          data-node-id="883:16869"
+        >
           {t('about.education.title')}
         </h2>
         <ul className="about-page__edu-bento">
           {eduItems.map((item) => {
             if (item.variant === 'gpa') {
               return (
-                <li
+                <AmbientLightCard
                   key="gpa"
                   className={`about-page__edu-card about-page__edu-card--gpa ${eduGridClass[item.grid] ?? ''}`.trim()}
                 >
@@ -169,12 +170,12 @@ export default function AboutPage() {
                   <p className="about-page__edu-score-label">
                     <span className="text-condensed">{item.line}</span>
                   </p>
-                </li>
+                </AmbientLightCard>
               );
             }
 
             return (
-              <li
+              <AmbientLightCard
                 key={item.school + item.years}
                 className={`about-page__edu-card ${eduGridClass[item.grid] ?? ''}`.trim()}
               >
@@ -188,7 +189,7 @@ export default function AboutPage() {
                   </p>
                 ) : null}
                 {item.detail ? <p className="about-page__edu-detail">{item.detail}</p> : null}
-              </li>
+              </AmbientLightCard>
             );
           })}
         </ul>

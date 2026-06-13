@@ -1,6 +1,6 @@
 {
   "common": {
-    "brandName": "Ася\u00a0Олейниченко",
+    "brandName": "АСЯ ОЛЕЙНИЧЕНКО",
     "caseStudy": {
       "task": "Задача",
       "solution": "Решение",
@@ -113,7 +113,7 @@
     "trafficZoom": "Развернуть",
     "aria": "Написать мне в Telegram, @pnkprty",
     "title": "Привет!",
-    "cta": "Написать мне"
+    "cta": "Написать мне @pnkprty"
   },
   "projectsPage": {
     "title": "Все проекты",
@@ -424,7 +424,7 @@
       "biohacking": { "navShortTitle": "Биохакинг" },
       "mail-spetsproekty": { "navShortTitle": "Спецпроекты" },
       "neural": { "navShortTitle": "Нейросети" },
-      "loochok": { "navShortTitle": "Loochok" },
+      "loochok": { "navShortTitle": "LÒÒCHOK" },
       "drop": { "navShortTitle": "DROP" },
       "retrash": { "navShortTitle": "RE*TRASH" },
       "mail-monetization": { "navShortTitle": "Монетизация Mail" },

@@ -1,6 +1,6 @@
 {
   "common": {
-    "brandName": "Asya\u00a0Oleynichenko",
+    "brandName": "ASYA OLEYNICHENKO",
     "caseStudy": {
       "task": "Challenge",
       "solution": "Solution",
@@ -113,7 +113,7 @@
     "trafficZoom": "Zoom",
     "aria": "Message me on Telegram, @pnkprty",
     "title": "Hi there!",
-    "cta": "Message me"
+    "cta": "Message me @pnkprty"
   },
   "projectsPage": {
     "title": "All projects",
@@ -513,7 +513,7 @@
         ]
       },
       "loochok": {
-        "navShortTitle": "Loochok",
+        "navShortTitle": "LÒÒCHOK",
         "title": "LÒÒCHOK — media platform for customization and DIY community",
         "meta": "UX/UI · HSE · 2023–2024",
         "desc": "DIY platform: web, iOS, community",
