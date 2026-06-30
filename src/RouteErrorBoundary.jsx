@@ -13,8 +13,8 @@ function isChunkLoadError(error) {
   return /Failed to fetch dynamically imported module|Importing a module script failed|Loading chunk/i.test(msg);
 }
 
-/** Показывает текст ошибки вместо пустого экрана, если React упал при первом рендере */
-export default class RootErrorBoundary extends React.Component {
+/** Локальный boundary вокруг Outlet: сбрасывается при смене маршрута (key=pathname). */
+export default class RouteErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { error: null };
@@ -36,6 +36,7 @@ export default class RootErrorBoundary extends React.Component {
       const chunk = isChunkLoadError(error);
       return (
         <div
+          className="route-error-boundary"
           style={{
             padding: rem(24),
             fontFamily: 'system-ui, sans-serif',
@@ -44,9 +45,9 @@ export default class RootErrorBoundary extends React.Component {
             background: '#fff',
           }}
         >
-          <h1 style={{ fontSize: rem(18), margin: '0 0 0.75rem' }}>{err.rootTitle}</h1>
+          <h1 style={{ fontSize: rem(18), margin: '0 0 0.75rem' }}>{err.routeTitle ?? err.rootTitle}</h1>
           <p style={{ margin: '0 0 0.75rem', fontSize: rem(14), lineHeight: 1.5 }}>
-            {chunk ? (err.rootChunkBody ?? err.rootBody) : err.rootBody}
+            {chunk ? (err.routeChunkBody ?? err.rootBody) : (err.routeBody ?? err.rootBody)}
           </p>
           <pre
             style={{

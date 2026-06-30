@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import {
   connectLenisScrollTrigger,
@@ -6,6 +7,7 @@ import {
   onScrollTriggerScrollerChange,
 } from '../gsap/lenisScrollTrigger.js';
 import { getScrollWrapper } from '../utils/scrollRoot.js';
+import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import { MOTION_LERP, prefersNativeScroll } from '../motion/motionSystem.js';
 
 const LenisContext = createContext({ lenis: null, enabled: false });
@@ -46,6 +48,11 @@ function createLenisInstance() {
 }
 
 export default function LenisProvider({ children }) {
+  const { pathname } = useLocation();
+  const basePath = stripLocaleFromPathname(pathname);
+  /** GSAP pin/scrub (hero, компетенции, ленты кейсов) — только нативный скролл window. */
+  const skipLenis =
+    basePath === '/' || basePath === '/projects' || basePath.startsWith('/project/');
   const lenisRef = useRef(null);
   const [lenis, setLenis] = useState(null);
   const [enabled, setEnabled] = useState(false);
@@ -54,6 +61,7 @@ export default function LenisProvider({ children }) {
     if (typeof window === 'undefined') return undefined;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mqMobile = window.matchMedia('(max-width: 48rem)');
     let instance = null;
     let observer = null;
 
@@ -69,7 +77,7 @@ export default function LenisProvider({ children }) {
 
     const mount = () => {
       destroy();
-      if (prefersNativeScroll()) return;
+      if (prefersNativeScroll() || skipLenis) return;
       instance = createLenisInstance();
       lenisRef.current = instance;
       connectLenisScrollTrigger(instance);
@@ -98,21 +106,17 @@ export default function LenisProvider({ children }) {
       observer.observe(root, { attributes: true, attributeFilter: ['class'] });
     }
 
-    const mobileMq = window.matchMedia('(max-width: 48rem)');
-    const onMotionPreferenceChange = () => {
-      if (prefersNativeScroll()) destroy();
-      else mount();
-    };
+    const onMotionPreferenceChange = () => mount();
     reduced.addEventListener('change', onMotionPreferenceChange);
-    mobileMq.addEventListener('change', onMotionPreferenceChange);
+    mqMobile.addEventListener('change', onMotionPreferenceChange);
 
     return () => {
       reduced.removeEventListener('change', onMotionPreferenceChange);
-      mobileMq.removeEventListener('change', onMotionPreferenceChange);
+      mqMobile.removeEventListener('change', onMotionPreferenceChange);
       observer?.disconnect();
       destroy();
     };
-  }, []);
+  }, [skipLenis]);
 
   return <LenisContext.Provider value={{ lenis, enabled }}>{children}</LenisContext.Provider>;
 }

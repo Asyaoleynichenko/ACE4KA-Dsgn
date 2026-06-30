@@ -261,6 +261,11 @@
   "errors": {
     "rootTitle": "Couldn’t render the app",
     "rootBody": "Open the browser console (F12 → Console). If the URL or build base path is wrong, scripts may fail to load (blank white screen).",
+    "rootChunkBody": "Part of the app failed to load (often after restarting the dev server or running a build). Make sure npm run dev is running and open the Local URL (usually http://localhost:5173/), then click Retry.",
+    "routeTitle": "Couldn’t open this page",
+    "routeBody": "Something went wrong on this page. Try refreshing or go back home.",
+    "routeChunkBody": "This page didn’t load — the dev server may have restarted. Check npm run dev in the terminal and click Retry.",
+    "retry": "Retry",
     "notFoundTitle": "Page not found",
     "notFoundBody": "The address may be mistyped, or the page may have been removed.",
     "notFoundHome": "Back to home"

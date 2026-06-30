@@ -1,15 +1,16 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { stripLocaleFromPathname } from '../i18n/localePath.js';
+import { lazyWithRetry } from '../utils/lazyWithRetry.js';
 /* SVG-фильтр-defs — eager: нужен сразу для metaball-эффекта в side-nav, иначе filter url() не резолвится. */
 import SvgDisplacementDefs from './SvgDisplacementDefs.jsx';
 
-const ParallaxDepth = lazy(() => import('./ParallaxDepth.jsx'));
-const MouseInertia = lazy(() => import('./MouseInertia.jsx'));
-const ScrollPolish = lazy(() => import('./ScrollPolish.jsx'));
-const TypographyRevealHost = lazy(() => import('./TypographyRevealHost.jsx'));
-const InteractiveTextCondensedHost = lazy(() => import('./InteractiveTextCondensedHost.jsx'));
-const CustomCursor = lazy(() => import('./CustomCursor.jsx'));
+const ParallaxDepth = lazyWithRetry(() => import('./ParallaxDepth.jsx'));
+const MouseInertia = lazyWithRetry(() => import('./MouseInertia.jsx'));
+const ScrollPolish = lazyWithRetry(() => import('./ScrollPolish.jsx'));
+const TypographyRevealHost = lazyWithRetry(() => import('./TypographyRevealHost.jsx'));
+const InteractiveTextCondensedHost = lazyWithRetry(() => import('./InteractiveTextCondensedHost.jsx'));
+const CustomCursor = lazyWithRetry(() => import('./CustomCursor.jsx'));
 
 /** Motion/GSAP — после первого кадра, не блокирует initial bundle. */
 export default function MotionEffects() {

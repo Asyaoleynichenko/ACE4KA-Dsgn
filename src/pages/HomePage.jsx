@@ -1,4 +1,5 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
+import { lazyWithRetry } from '../utils/lazyWithRetry.js';
 import HomeCameraScroll from '../components/HomeCameraScroll.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import SeamlessProjectsLink from '../components/SeamlessProjectsLink.jsx';
@@ -13,7 +14,7 @@ import {
   headerItemsFolder,
   headerItemsWell,
 } from '../data/sectionHeaderItems';
-const HomeCompetenciesScrub = lazy(() => import('../components/HomeCompetenciesScrub.jsx'));
+const HomeCompetenciesScrub = lazyWithRetry(() => import('../components/HomeCompetenciesScrub.jsx'));
 
 function headerItemPlacementStyle(placement) {
   if (!placement) return undefined;

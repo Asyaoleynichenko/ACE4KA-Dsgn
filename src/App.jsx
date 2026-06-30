@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import { lazyWithRetry } from './utils/lazyWithRetry.js';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { I18nProvider } from './i18n/I18nProvider.jsx';
 import Layout from './components/Layout';
@@ -27,19 +28,19 @@ const routeImports = {
   NotFoundPage: () => import('./pages/NotFoundPage'),
 };
 
-const HomePage = lazy(routeImports.HomePage);
-const ProjectsPage = lazy(routeImports.ProjectsPage);
-const AboutPage = lazy(routeImports.AboutPage);
-const ContactPage = lazy(routeImports.ContactPage);
-const ResumePage = lazy(routeImports.ResumePage);
-const EducationPage = lazy(routeImports.EducationPage);
-const Page89_811 = lazy(routeImports.Page89_811);
-const Page89_772 = lazy(routeImports.Page89_772);
-const Page89_909 = lazy(routeImports.Page89_909);
-const Page89_915 = lazy(routeImports.Page89_915);
-const Page89_920 = lazy(routeImports.Page89_920);
-const ProjectDetailPage = lazy(routeImports.ProjectDetailPage);
-const NotFoundPage = lazy(routeImports.NotFoundPage);
+const HomePage = lazyWithRetry(routeImports.HomePage);
+const ProjectsPage = lazyWithRetry(routeImports.ProjectsPage);
+const AboutPage = lazyWithRetry(routeImports.AboutPage);
+const ContactPage = lazyWithRetry(routeImports.ContactPage);
+const ResumePage = lazyWithRetry(routeImports.ResumePage);
+const EducationPage = lazyWithRetry(routeImports.EducationPage);
+const Page89_811 = lazyWithRetry(routeImports.Page89_811);
+const Page89_772 = lazyWithRetry(routeImports.Page89_772);
+const Page89_909 = lazyWithRetry(routeImports.Page89_909);
+const Page89_915 = lazyWithRetry(routeImports.Page89_915);
+const Page89_920 = lazyWithRetry(routeImports.Page89_920);
+const ProjectDetailPage = lazyWithRetry(routeImports.ProjectDetailPage);
+const NotFoundPage = lazyWithRetry(routeImports.NotFoundPage);
 
 /** Idle-prefetch чанков всех страниц: бесшовные переходы без паузы загрузки.
     Пропускаем на save-data и медленных сетях. */

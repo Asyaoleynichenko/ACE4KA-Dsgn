@@ -59,6 +59,12 @@ export function useScrollTriggerCompetenciesScrub({
       onUpdate(self) {
         onScrub?.(self.progress);
       },
+      onLeave: () => {
+        runway.classList.add('is-scrub-complete');
+      },
+      onEnterBack: () => {
+        runway.classList.remove('is-scrub-complete');
+      },
     });
 
     const sync = () => onScrub?.(st.progress);
@@ -71,6 +77,7 @@ export function useScrollTriggerCompetenciesScrub({
 
     return () => {
       cancelAnimationFrame(rafId);
+      runway.classList.remove('is-scrub-complete');
       st.kill();
     };
   }, [enabled, scrollTravelPx, lineCount, onScrub, runwayRef, stickyRef]);

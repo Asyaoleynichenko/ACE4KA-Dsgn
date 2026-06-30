@@ -5,6 +5,7 @@ import Header from './Header';
 import Footer from './Footer';
 import ParallaxBackdrop from './ParallaxBackdrop';
 import PageTransition from './PageTransition';
+import RouteErrorBoundary from '../RouteErrorBoundary.jsx';
 import AmbientLightProvider from '../context/AmbientLightProvider.jsx';
 
 export default function Layout() {
@@ -88,7 +89,9 @@ export default function Layout() {
         <main className={mainWithHomeShell}>
           {isProjectDetail ? (
             <div key={pathname} className="page-transition page-transition--case-study">
-              <Outlet />
+              <RouteErrorBoundary key={pathname}>
+                <Outlet />
+              </RouteErrorBoundary>
             </div>
           ) : (
             <PageTransition />

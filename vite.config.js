@@ -89,6 +89,10 @@ export default defineConfig(({ command }) => {
       strictPort: false,
       /** 0.0.0.0 — если «не открывается» только localhost или нужен доступ из сети/WSL */
       host: true,
+      /** Сборка dist/ при запущенном dev не должна перезагружать вкладку и ломать lazy-чанки. */
+      watch: {
+        ignored: ['**/dist/**'],
+      },
     },
   };
 });

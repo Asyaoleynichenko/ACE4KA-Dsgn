@@ -52,8 +52,8 @@ export const MOTION = {
   scrubHero: MOTION_SCRUB_HERO,
   competencies: {
     /** ~пол-экрана на строку — блок удерживает, пока не пролистаны все строки */
-    stepVh: 0.52,
-    stepMinPx: 120,
+    stepVh: 0.36,
+    stepMinPx: 96,
   },
   /** Горизонтальная лента карточек кейса — вертикальный scrub (не от mx 100cqi) */
   horizontalStrip: {
