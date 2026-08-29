@@ -55,17 +55,17 @@ export default function SideScrollspyNav({ items, ariaLabel, className = '' }) {
         animate={{
           paddingInline: expanded ? rem(20) : rem(12),
           paddingBlock: expanded ? rem(24) : rem(18),
-          backgroundColor: expanded ? 'rgba(0,0,0,0.42)' : 'rgba(0,0,0,0)',
+          backgroundColor: expanded ? '#000000' : 'rgba(0,0,0,0)',
           borderColor: expanded ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0)',
         }}
         transition={tween}
         style={{
-          borderRadius: rem(24),
+          borderRadius: 0,
           borderWidth: rem(1),
           borderStyle: 'solid',
-          backdropFilter: expanded ? 'blur(1.25rem)' : 'none',
-          WebkitBackdropFilter: expanded ? 'blur(1.25rem)' : 'none',
-          boxShadow: expanded ? '0 0.75rem 2.25rem rgba(0,0,0,0.28)' : 'none',
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none',
+          boxShadow: 'none',
         }}
       >
         <ul className="flex flex-col gap-3.5">

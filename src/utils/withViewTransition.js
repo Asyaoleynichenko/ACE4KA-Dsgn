@@ -25,9 +25,21 @@ export function withViewTransition(updateFn) {
     return null;
   }
 
-  return document.startViewTransition(() => {
-    flushSync(() => {
-      updateFn();
+  let ran = false;
+  const run = () => {
+    if (ran) return;
+    ran = true;
+    updateFn();
+  };
+
+  try {
+    const transition = document.startViewTransition(() => {
+      flushSync(run);
     });
-  });
+    if (!ran) run();
+    return transition;
+  } catch {
+    run();
+    return null;
+  }
 }

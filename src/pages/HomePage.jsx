@@ -24,7 +24,7 @@ function headerItemPlacementStyle(placement) {
   };
 }
 
-/** Индивидуальный «вес» mouse-follow для каждой папки — чтобы они двигались по-разному (parallax-depth). */
+/** Индивидуальный «вес» mouse-follow для каждой папки. */
 const FOLDER_FLOAT_VARIATIONS = [
   { strength: 1.6, range: 24 },
   { strength: 0.8, range: 16 },
@@ -118,7 +118,6 @@ export default function HomePage() {
                   );
                 })}
                 {headerItemsWell.map(({ nodeId, labelKey, iconKey, to, placement }, wi) => {
-                  /* image-well индексируем со сдвигом, чтобы их вариации НЕ совпадали с фолдерами */
                   const { strength, range } = folderFloatProps(wi + 3);
                   return (
                   <SeamlessProjectsLink

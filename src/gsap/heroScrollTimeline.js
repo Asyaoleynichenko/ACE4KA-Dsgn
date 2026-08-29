@@ -228,7 +228,7 @@ export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
     id: 'home-camera-hero-exit',
     trigger: hero,
     start: 'top top',
-    end: () => `+=${heroExitScrollTravelPx()}`,
+    end: `+=${heroExitScrollTravelPx()}`,
     pin: true,
     pinSpacing: true,
     anticipatePin: 1,

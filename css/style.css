@@ -38,7 +38,7 @@
 
 /* Design tokens (раньше были в css/design-tokens.css) */
 :root {
-  --color-bg: #0b0b0c;
+  --color-bg: #000000;
   --color-bg-elevated: #111113;
   --color-surface: #161619;
   --color-surface-solid: #1c1c20;
@@ -169,11 +169,11 @@
   --preview-image-inset-x: 0.5rem;
   --effect-btn-show-all-border: #3a3a44;
   /* Figma 573:19026 — фиксированная геометрия CTA на всех брейкпоинтах */
-  --btn-show-all-radius: 1.75rem;
-  --btn-show-all-height: 5.375rem;
-  --btn-show-all-width: 28.9375rem;
-  --btn-show-all-padding-x: 4rem;
-  --btn-show-all-font-size: 1.5rem;
+  --btn-show-all-radius: var(--space-28);
+  --btn-show-all-height: clamp(3.25rem, 7.5vw, 5.5rem);
+  --btn-show-all-width: min(22.5rem, 100%);
+  --btn-show-all-padding-x: clamp(1.5rem, 5vw, 4rem);
+  --btn-show-all-font-size: clamp(1rem, 2.4vw, 1.5rem);
   --preview-cta-border: 0.0625rem solid #f5f5f5;
   --preview-cta-radius: 0.375rem;
   --preview-cta-color: rgba(0, 0, 0, 0.5);
@@ -183,25 +183,28 @@
   /* Spacing rhythm — 8px modular grid (4 / 8 / 16 / 24 / 32 / 48 / 64 / 96 / 128)
      Proximity tiers on a screen: pair (--space-16–24) < group (--space-32) < block (--space-48–64).
      Use 2–4 distinct steps per view; avoid off-grid Figma decimals. */
-  /* 8pt grid — единственная разрешённая шкала: 4 8 12 16 20 24 32 40 48 64 80 96 */
+  /* Spacing scale — только значения, кратные 4px */
   --space-4: 0.25rem;
   --space-8: 0.5rem;
   --space-12: 0.75rem;
   --space-16: 1rem;
   --space-20: 1.25rem;
   --space-24: 1.5rem;
+  --space-28: 1.75rem;
   --space-32: 2rem;
+  --space-36: 2.25rem;
   --space-40: 2.5rem;
   --space-48: 3rem;
+  --space-56: 3.5rem;
   --space-64: 4rem;
+  --space-72: 4.5rem;
   --space-80: 5rem;
   --space-96: 6rem;
-  /* Legacy aliases → ближайшее значение НА сетке (8pt), без внесеточных px */
+  --space-112: 7rem;
+  --space-128: 8rem;
+  /* Legacy aliases */
   --space-2: var(--space-4);
   --space-14: var(--space-16);
-  --space-56: var(--space-48);
-  --space-72: var(--space-64);
-  --space-128: var(--space-96);
   /* Compositional rhythm (vertical flow, section breathing room) */
   --rhythm-micro: var(--space-8);
   --rhythm-tight: var(--space-16);
@@ -237,10 +240,10 @@
      чтобы линия краёв страницы (header / main / footer) шла одной вертикалью. */
   --header-figma-pad-x: var(--layout-page-pad-x);
   --header-figma-pad-y: var(--space-24);
-  --header-figma-bar-min: 5.578125rem; /* 89.25px */
+  --header-figma-bar-min: var(--space-96); /* 96px: pad 24+24 + line 48 */
   --header-figma-nav-gap: var(--space-96);
   --header-figma-type-size: 1.25rem;
-  --header-figma-type-line: 2.953125rem; /* 47.25px */
+  --header-figma-type-line: var(--space-48);
 
   --hero-about-max: 80.625rem; /* Figma 416:13006 — 1290px */
   --hero-content-max: var(--hero-about-max);
@@ -279,7 +282,7 @@
   --case-frame-max: calc(var(--case-content-max) + 2 * var(--case-study-pad-x));
   --case-section-rhythm: clamp(var(--space-48), 6vw, var(--space-80));
   --case-divider: rgba(255, 255, 255, 0.075);
-  --case-feature-card-bg: #161616;
+  --case-feature-card-bg: var(--color-surface);
   /* Figma Problem/Solution block — desktop 1310×654, mobile 643×321 */
   --case-feature-card-surface: linear-gradient(
     180deg,
@@ -291,10 +294,10 @@
   --case-feature-card-radius-sm: var(--space-32); /* 32px — 4 modules */
   --case-feature-card-padding: var(--space-proximity-canvas);
   --case-feature-card-gap: var(--space-proximity-group);
-  --case-feature-card-title-size: 1.7825rem; /* 28.52px */
-  --case-feature-card-title-color: #949494;
+  --case-feature-card-title-size: 1.75rem; /* 28px */
+  --case-feature-card-title-color: var(--color-text-label);
   --case-feature-card-title-tracking: -0.02em;
-  --case-feature-card-body-size: 2.67375rem; /* 42.78px */
+  --case-feature-card-body-size: 2.75rem; /* 44px */
   --case-feature-card-body-lh: 1.2; /* 51.34px */
   --case-feature-card-body-tracking: -0.01em;
   --case-feature-card-padding-sm: var(--space-proximity-stack);
@@ -354,7 +357,7 @@
   --project-detail-pt: var(--space-32);
   --project-detail-gap: var(--space-48);
   --project-detail-top-gap: var(--space-24);
-  --project-title-color: #fafafa;
+  --project-title-color: var(--color-text);
   --project-hero-max-width: 77.5rem;
   --project-hero-aspect-w: 16;
   --project-hero-aspect-h: 9;
@@ -365,12 +368,12 @@
   --project-heading-gap: var(--space-12);
   --project-heading-max-width: min(52rem, 100%);
   --project-title-font-size: var(--type-section-title-size);
-  --project-title-line-height: 1.2;
+  --project-title-line-height: var(--type-section-title-line);
   --project-title-letter-spacing: -0.02em;
   --project-lead-font-size: var(--type-body-lg-size);
   --project-lead-line-height: 1.5;
   --project-lead-letter-spacing: 0;
-  --project-lead-color: #a3a3a3;
+  --project-lead-color: var(--color-text-label);
   --project-meta-card-gap: var(--space-16);
   --project-meta-card-bg: var(--case-feature-card-bg);
   --project-meta-card-radius: var(--case-feature-card-radius-sm);
@@ -425,11 +428,11 @@
   --text-89-756-title-font-size: var(--type-section-title-size);
   --text-89-756-title-line-height: var(--type-section-title-line);
   --text-89-756-title-letter-spacing: var(--type-section-title-tracking);
-  --text-89-756-title-color: #0a0a0a;
+  --text-89-756-title-color: var(--color-text);
   --text-89-756-lead-font-size: var(--type-body-lg-size);
-  --text-89-756-lead-line-height: 1.5;
+  --text-89-756-lead-line-height: var(--type-body-lg-line);
   --text-89-756-lead-letter-spacing: 0;
-  --text-89-756-lead-color: #9a9aa0;
+  --text-89-756-lead-color: var(--color-text-label);
   --text-89-756-lead-max-width: min(52.5rem, 100%);
   --text-89-756-label-font-size: var(--type-label-size);
   --text-89-756-label-line-height: 1.4;
@@ -442,7 +445,7 @@
   --text-89-756-link-font-size: 1rem;
   --text-89-756-link-line-height: 1.5;
   --text-89-756-link-letter-spacing: 0;
-  --text-89-756-link-color: #0a0a0a;
+  --text-89-756-link-color: var(--color-text-muted);
 
   --layout-89-756-wrap-width: 100%;
   --layout-89-756-header-margin-bottom: var(--space-64);
@@ -1365,8 +1368,8 @@ select:focus-visible,
     left: 0;
     right: 0;
     z-index: 100;
-    background: transparent;
-    mix-blend-mode: difference;
+    background: var(--color-bg);
+    mix-blend-mode: normal;
     min-height: var(--header-figma-bar-min);
     transition: transform var(--transition-micro-expand);
 }
@@ -1376,7 +1379,7 @@ select:focus-visible,
 .header .nav-list .nav-link > span,
 .header .nav-list .nav-link.active > span,
 .header .lang-switch .lang-switch__toggle-row {
-    color: #ffffff !important;
+    color: var(--color-text) !important;
     mix-blend-mode: normal;
 }
 
@@ -1419,9 +1422,9 @@ select:focus-visible,
 
 /* Figma 573:18422 — Logo: тот же кегль что nav-link, uppercase, без mix-blend. */
 .logo {
-    font-size: var(--header-figma-type-size, 1.25rem);
+    font-size: var(--header-figma-type-size);
     font-weight: 400;
-    line-height: var(--header-figma-type-line, 2.953125rem);
+    line-height: var(--header-figma-type-line);
     letter-spacing: 0;
     text-transform: uppercase;
     display: inline-block;
@@ -1480,7 +1483,7 @@ select:focus-visible,
 .nav-list {
     display: inline-flex;
     list-style: none;
-    gap: clamp(2.5rem, 5vw, 5.75rem);
+    gap: clamp(var(--space-40), 5vw, var(--space-96));
     margin: 0;
     padding: 0;
     width: auto;
@@ -1505,9 +1508,9 @@ select:focus-visible,
 
 /* Figma 573:18422 — nav-link плоский текст, активный — bold; никаких pill / backgrounds. */
 .nav-link {
-    font-size: clamp(0.875rem, 1.4vw, 1.125rem);
+    font-size: var(--header-figma-type-size);
     font-weight: 400;
-    line-height: 1.5rem;
+    line-height: var(--header-figma-type-line);
     letter-spacing: 0;
     text-transform: uppercase;
     color: var(--color-text);
@@ -1568,9 +1571,9 @@ select:focus-visible,
 
 /* Figma 573:20952 — Lang [ENG / RUS], тот же размер что nav-item. */
 .lang-switch {
-    font-size: var(--header-figma-type-size, 1.25rem);
+    font-size: var(--header-figma-type-size);
     font-weight: 400;
-    line-height: var(--header-figma-type-line, 2.953125rem);
+    line-height: var(--header-figma-type-line);
     letter-spacing: 0;
     text-transform: uppercase;
     display: inline-block;
@@ -1590,7 +1593,7 @@ select:focus-visible,
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0.5rem 0.375rem;
+    padding: var(--space-8);
     box-sizing: border-box;
     overflow: visible;
     min-width: 2.75rem;
@@ -1614,9 +1617,9 @@ select:focus-visible,
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
-    background: rgba(0, 0, 0, 0.52);
-    backdrop-filter: blur(0.25rem);
-    -webkit-backdrop-filter: blur(0.25rem);
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--dur-smart-base) var(--ease-smart);
@@ -1648,7 +1651,7 @@ body.nav-drawer-open {
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
-    gap: 1rem;
+    gap: var(--space-16);
     background: transparent;
 }
 
@@ -1740,7 +1743,7 @@ body.nav-drawer-open {
     .page-project .header .nav-list .nav-link > span,
     .page-project .header .nav-list .nav-link.active > span,
     .page-project .header .lang-switch .lang-switch__toggle-row {
-        color: #ffffff !important;
+        color: var(--color-text) !important;
         text-shadow: 0 0.0625rem 0.625rem rgba(0, 0, 0, 0.55);
     }
 
@@ -1756,7 +1759,7 @@ body.nav-drawer-open {
 
 @media (min-width: 64rem) {
     :root {
-        --layout-page-pad-x: var(--space-24);
+        --layout-page-pad-x: var(--space-16);
         --layout-89-756-grid-max-width: min(56rem, 100%);
     }
 
@@ -1765,6 +1768,7 @@ body.nav-drawer-open {
     .page-contact .header,
     .page-resume .header,
     .page-education .header,
+    .page-not-found .header,
     .page-home .header {
         mix-blend-mode: normal;
     }
@@ -1789,11 +1793,15 @@ body.nav-drawer-open {
     .page-education .header .nav-list .nav-link > span,
     .page-education .header .nav-list .nav-link.active > span,
     .page-education .header .lang-switch .lang-switch__toggle-row,
+    .page-not-found .header .logo > span,
+    .page-not-found .header .nav-list .nav-link > span,
+    .page-not-found .header .nav-list .nav-link.active > span,
+    .page-not-found .header .lang-switch .lang-switch__toggle-row,
     .page-home .header .logo > span,
     .page-home .header .nav-list .nav-link > span,
     .page-home .header .nav-list .nav-link.active > span,
     .page-home .header .lang-switch .lang-switch__toggle-row {
-        color: #ffffff !important;
+        color: var(--color-text) !important;
         text-shadow: 0 0.0625rem 0.625rem rgba(0, 0, 0, 0.55);
     }
 
@@ -2125,9 +2133,14 @@ h3 {
     --tc-scale-x: var(--tc-hover-scale-x);
 }
 
-/* Кнопка «ВСЕ ПРОЕКТЫ»: hover раскрывает лейбл */
-.btn-show-all:hover .btn-show-all__label {
-    --tc-scale-x: var(--tc-active-scale-x);
+/* Кнопка «ВСЕ ПРОЕКТЫ»: мягкий scaleX, не нитки; hover чуть раскрывает */
+.btn-show-all {
+    --tc-scale-x: 0.88;
+}
+
+.btn-show-all:hover .btn-show-all__label,
+.btn-show-all:focus-visible .btn-show-all__label {
+    --tc-scale-x: 0.96;
 }
 
 /* Filter pills: активный + hover — остаются condensed */
@@ -2748,18 +2761,15 @@ h3 {
 }
 
 [data-camera-depth] {
-    transform: translate3d(0, var(--camera-shift-y, 0), 0);
-    will-change: transform;
+    transform: none;
 }
 
-/* Hero scroll — анимация через GSAP timeline (heroScrollTimeline.js) */
 .home-page--seamless .home-scene--hero {
     display: flex;
     flex-direction: column;
-    overflow: visible;
-    /* Во время pin (pinSpacing:false) hero фиксируется ПОВЕРХ компетенций (z 2):
-       контент летит на зрителе, а следующий экран поднимается за прозрачным hero. */
-    z-index: 6;
+    overflow: hidden;
+    isolation: isolate;
+    z-index: 1;
 }
 
 .home-page--seamless .home-scene--hero .hero-first-screen {
@@ -2916,7 +2926,7 @@ h3 {
 }
 
 .home-page--seamless .hero.snap-screen {
-    padding-bottom: var(--space-24);
+    padding-bottom: var(--space-16);
 }
 
 /* Градиентные маски-нахлёсты отключены: переход теперь — полёт hero вглубь
@@ -2940,7 +2950,7 @@ h3 {
 
 .home-page--seamless .home-scene--competencies {
     margin-top: 0;
-    padding-top: var(--space-32);
+    padding-top: var(--space-16);
     z-index: 2;
 }
 
@@ -3113,12 +3123,12 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: var(--space-24);
+    border-radius: 0;
     color: #fafafa;
     box-sizing: border-box;
-    overflow: visible;
+    overflow: hidden;
     background: #000000;
-    box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.45);
+    box-shadow: none;
 }
 
 /* Вне seamless-режима панель остаётся плотной; seamless переопределяет выше */
@@ -3303,6 +3313,130 @@ h3 {
 .page-home .home-competencies-scrub__runway {
     display: block;
     background: #000000;
+}
+
+/* Figma 592:38775 — стопка строк + две карточки поверх (TL / BR) */
+.home-competencies-scrub--static-block {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.home-competencies-scrub--static-block .home-competencies__inner--scrub {
+    padding: 0;
+    min-height: 0;
+    justify-content: center;
+}
+
+.home-competencies-scrub--static-block .home-competencies-scrub__content {
+    gap: var(--space-32);
+    padding: 0;
+    align-items: center;
+}
+
+.home-competencies-scrub--static-block .home-competencies-scrub__stack,
+.home-competencies-scrub--static-block .home-competencies-scrub__stage {
+    width: 100%;
+    max-width: 100%;
+    min-height: min(36rem, 88vw);
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+}
+
+.home-competencies-scrub--static-block .home-competencies-scrub__floats {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    margin: 0;
+}
+
+.home-competencies-scrub--static-block .home-competencies-scrub__float {
+    position: absolute;
+    width: min(28rem, 42vw);
+    max-width: 28rem;
+    pointer-events: auto;
+    animation: none;
+}
+
+.home-competencies-scrub--static-block .home-competencies-scrub__lines {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    text-align: center;
+}
+
+.home-competencies-scrub--static-block .home-competencies-scrub__line-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    padding: 0;
+}
+
+.home-competencies-scrub--static-block .home-competencies-scrub__line,
+.home-competencies-scrub--static-block .home-competencies__line {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+    font-size: clamp(2.25rem, 7.2vw, 5.5rem);
+    line-height: 1.05;
+}
+
+.page-home .home-competencies {
+    position: relative;
+    z-index: 2;
+    isolation: isolate;
+    background: var(--color-bg);
+    overflow: visible;
+    padding: var(--space-32) 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.page-home .home-competencies-scrub--static-block .home-competencies__cta {
+    padding: var(--space-16) 0 0;
+    width: 100%;
+    justify-content: center;
+}
+
+@media (max-width: 48rem) {
+    .home-competencies-scrub--static-block .home-competencies-scrub__stage {
+        min-height: 0;
+    }
+
+    .home-competencies-scrub--static-block .home-competencies-scrub__floats {
+        position: relative;
+        inset: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-16);
+        margin: 0 0 var(--space-16);
+    }
+
+    .home-competencies-scrub--static-block .home-competencies-scrub__float,
+    .home-competencies-scrub--static-block .home-competencies-scrub__float--tl,
+    .home-competencies-scrub--static-block .home-competencies-scrub__float--br {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        transform: none;
+        width: min(20rem, calc(50% - var(--space-8)));
+    }
+
+    .home-competencies-scrub--static-block .home-competencies-scrub__line,
+    .home-competencies-scrub--static-block .home-competencies__line {
+        white-space: normal;
+        font-size: clamp(1.75rem, 8vw, 3rem);
+    }
 }
 
 /* После pin контент остаётся в потоке — не прячем, иначе во viewport остаётся чёрная дыра. */
@@ -3777,10 +3911,36 @@ h3 {
     }
 }
 
-/* Планшет: без плавающих карточек поверх типографики — только стопка строк */
+/* Планшет / узкая колонка: карточки проектов в потоке над стопкой, не прячем */
 @media (max-width: 64rem) {
-    .page-home .home-competencies-scrub:not(.home-competencies-scrub--static) .home-competencies-scrub__floats {
-        display: none;
+    .page-home .home-competencies-scrub:not(.home-competencies-scrub--static) .home-competencies-scrub__floats,
+    .page-home .home-competencies-scrub--touch-scroll .home-competencies-scrub__floats,
+    .page-home .home-competencies-scrub--reduced-motion .home-competencies-scrub__floats {
+        display: flex;
+        position: relative;
+        inset: auto;
+        z-index: 2;
+        width: 100%;
+        max-width: 36rem;
+        margin: 0 auto clamp(1rem, 3vw, 1.5rem);
+        padding: 0;
+        justify-content: center;
+        align-items: stretch;
+        gap: clamp(0.75rem, 3vw, 1.25rem);
+        pointer-events: none;
+    }
+
+    .page-home .home-competencies-scrub:not(.home-competencies-scrub--static) .home-competencies-scrub__float,
+    .page-home .home-competencies-scrub--touch-scroll .home-competencies-scrub__float,
+    .page-home .home-competencies-scrub--reduced-motion .home-competencies-scrub__float {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        transform: none;
+        width: min(16.5rem, calc(50% - 0.5rem));
+        max-width: 16.5rem;
+        pointer-events: auto;
     }
 
     .page-home .home-competencies-scrub__line-wrap.is-active {
@@ -3789,6 +3949,10 @@ h3 {
 
     .page-home .home-competencies {
         overflow-x: visible;
+    }
+
+    .page-home .home-competencies-scrub__stage {
+        min-height: 0;
     }
 }
 
@@ -3858,11 +4022,6 @@ h3 {
         overflow-x: visible;
         margin-top: var(--space-16);
         margin-bottom: var(--space-16);
-    }
-
-    .page-home .home-competencies-scrub--touch-scroll .home-competencies-scrub__floats,
-    .page-home .home-competencies-scrub--reduced-motion .home-competencies-scrub__floats {
-        display: none;
     }
 
     .page-home .home-competencies-scrub--touch-scroll .home-competencies-scrub__center,
@@ -3947,11 +4106,13 @@ h3 {
         padding-inline: 0;
         padding-top: clamp(1.25rem, 4vw, 2rem);
         padding-bottom: clamp(1rem, 3vw, 1.5rem);
+        justify-content: center;
     }
 
     .page-home .home-competencies-scrub--touch-scroll .home-competencies__cta .btn-show-all {
-        width: 100%;
-        max-width: 100%;
+        width: min(20rem, 100%);
+        max-width: min(20rem, 100%);
+        margin-inline: auto;
     }
 
     .page-home .home-competencies-scrub--touch-scroll .home-competencies__inner--scrub {
@@ -4020,7 +4181,7 @@ h3 {
 
 .home-competencies__cta {
     position: relative;
-    z-index: 3;
+    z-index: 5;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -4035,15 +4196,19 @@ h3 {
 
 .home-competencies__cta .btn-show-all {
     flex-shrink: 0;
-    width: min(var(--btn-show-all-width), 100%);
+    width: var(--btn-show-all-width);
+    max-width: 100%;
     height: var(--btn-show-all-height);
     min-height: var(--btn-show-all-height);
+    margin-inline: auto;
     border-radius: var(--btn-show-all-radius);
+    pointer-events: auto;
 }
 
 .home-competencies-scrub__content .home-competencies__cta .btn-show-all {
-    width: min(var(--btn-show-all-width), 100%);
+    width: var(--btn-show-all-width);
     max-width: 100%;
+    margin-inline: auto;
 }
 
 .home-competencies__inner--stack .home-competencies__cta {
@@ -4077,12 +4242,14 @@ h3 {
 
 .page-home .hero {
     min-height: 0;
-    padding-top: 0;
-    padding-bottom: var(--space-24);
+    padding-top: calc(var(--header-figma-bar-min) + var(--space-16));
+    padding-bottom: var(--space-16);
     display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-16);
+    overflow: hidden;
+    isolation: isolate;
 }
 
 .page-home .home-first-screen-section {
@@ -4222,10 +4389,10 @@ h3 {
     position: relative;
     width: 100%;
     max-width: none;
-    margin: var(--space-24) 0 0;
+    margin: 0;
     aspect-ratio: 1275.452 / 312.784;
-    /* Не короче окна превью — иначе карточка наезжает на блок «О себе» ниже */
-    min-height: calc(var(--hero-card-width) * 280 / 369 + var(--space-24));
+    min-height: 0;
+    overflow: visible;
 }
 
 /* === Hero (416:12975): коллаж = кадр 416:12977 (1275×313), интро сразу под ним.
@@ -4233,7 +4400,7 @@ h3 {
 @media (min-width: 64rem) {
     .page-home {
         --type-hero-display-size: min(7.5rem, 9.5dvh);
-        --hero-card-width: min(27.5rem, calc(40dvh - 3.5rem));
+        --hero-card-width: min(23rem, 32vw);
         --type-body-lg-size: clamp(1.0625rem, 2.4dvh, 1.5rem);
         --hero-text-max-ch: 78ch;
     }
@@ -4251,8 +4418,9 @@ h3 {
         flex: 0 0 auto;
         width: 100%;
         aspect-ratio: 1275.452 / 312.784;
-        min-height: calc(var(--hero-card-width) * 280 / 369);
+        min-height: 0;
         margin-top: 0;
+        overflow: visible;
     }
 
     .page-home .hero-about.hero__intro {
@@ -4635,7 +4803,7 @@ h3 {
     display: inline-block;
     width: 0.25rem;
     height: 0.25rem;
-    margin: 0 1rem;
+    margin: 0 var(--space-16);
     border-radius: 50%;
     background: currentColor;
     flex-shrink: 0;
@@ -4658,7 +4826,7 @@ h3 {
 
 /* Figma 1-206, 1-224 — Header Items на главной */
 .section-nav {
-    margin-bottom: 2.5rem;
+    margin-bottom: var(--space-40);
 }
 /* Папки поверх первого экрана (Figma 89:347 — координаты от верха фрейма 70:343) */
 .page-home .hero-first-screen .section-nav--overlay {
@@ -4742,13 +4910,11 @@ h3 {
 
     .page-home .hero-first-screen {
         position: relative;
-        aspect-ratio: 1275.452 / 312.784;
+        aspect-ratio: auto;
         width: 100%;
         margin-top: var(--space-16);
-        min-height: max(
-            calc(100vw * 312.784 / 1275.452),
-            calc(var(--hero-card-width) * 280 / 369)
-        );
+        min-height: calc(var(--hero-fs-card-width) * 280 / 369 + var(--space-64));
+        height: auto;
         display: block;
         overflow: visible;
     }
@@ -4813,17 +4979,17 @@ h3 {
     }
 
     .page-home .hero-first-screen .hero__top {
-        position: absolute;
-        inset: 0;
+        position: relative;
+        inset: auto;
         width: 100%;
-        height: 100%;
-        min-height: 0;
+        height: auto;
+        min-height: calc(var(--hero-fs-card-width) * 280 / 369);
         z-index: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: var(--space-8) 0;
+        padding: var(--space-32) 0;
         margin: 0;
         pointer-events: none;
         box-sizing: border-box;
@@ -4867,22 +5033,14 @@ h3 {
         width: 100%;
         max-width: none;
         margin: 0 auto;
-        padding-inline: max(var(--layout-edge-left), env(safe-area-inset-left, 0))
-            max(var(--layout-edge-right), env(safe-area-inset-right, 0));
+        padding-inline: 0;
         box-sizing: border-box;
     }
 
     .page-home .hero-about .hero-content {
         gap: var(--space-12);
-        width: min(
-            100%,
-            var(--hero-text-max-ch),
-            calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem)
-        );
-        max-width: min(
-            var(--hero-text-max-ch),
-            calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - 2rem)
-        );
+        width: 100%;
+        max-width: 100%;
         margin: 0 auto;
     }
 
@@ -5103,8 +5261,8 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 6.1875rem;
-    height: 5.625rem;
+    width: 99px;
+    height: 70px;
     flex-shrink: 0;
     overflow: visible;
 }
@@ -5117,14 +5275,15 @@ h3 {
 
 .header-item__icon-wrap .icon-assemble-dots--folder,
 .header-item__icon-wrap .icon-assemble-dots__media {
-    width: 100%;
-    height: 100%;
+    width: 99px;
+    height: 70px;
 }
 
 .header-item__icon-wrap img {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 99px;
+    height: 70px;
+    max-width: none;
     object-fit: contain;
     object-position: center;
     filter: brightness(1.06);
@@ -5267,9 +5426,9 @@ h3 {
     position: absolute;
     inset: 0;
     border-radius: var(--radius-lg);
-    background: var(--effect-preview-overlay);
-    backdrop-filter: blur(var(--blur-preview-card));
-    -webkit-backdrop-filter: blur(var(--blur-preview-card));
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     pointer-events: none;
     z-index: 0;
 }
@@ -5754,8 +5913,10 @@ h3 {
 .page-projects .preview-grid {
     align-self: stretch;
     width: 100%;
-    max-width: min(var(--preview-grid-max-width), 100%);
+    max-width: none;
     margin-top: 0;
+    margin-inline: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .preview-grid__empty {
@@ -5838,10 +5999,7 @@ h3 {
     letter-spacing: var(--type-section-title-tracking);
 }
 
-/* «Все проекты»: больше воздуха под шапкой; padding-x штатный, как у других страниц */
-.page-projects .main {
-    padding-top: clamp(var(--layout-page-pad-y-top), 4vw + var(--space-32), var(--space-96));
-}
+/* «Все проекты»: тот же gutter и верхний ритм, что у остальных контентных страниц */
 
 /* Figma 89:347 / 1-290 — табы фильтра: одна строка, gap 0.5rem, pill-обёртка с blur 1.7188rem */
 .filter-pills {
@@ -6161,11 +6319,12 @@ h3 {
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    width: min(var(--btn-show-all-width), 100%);
+    width: var(--btn-show-all-width);
     height: var(--btn-show-all-height);
     min-height: var(--btn-show-all-height);
     padding: 0 var(--btn-show-all-padding-x);
     max-width: 100%;
+    margin-inline: auto;
     border: 0;
     border-radius: var(--btn-show-all-radius);
     box-sizing: border-box;
@@ -6227,8 +6386,11 @@ h3 {
     flex-shrink: 0;
     color: #ffffff;
     text-shadow: 0 0 0.625rem rgba(255, 255, 255, 0.3);
+    display: block;
+    width: fit-content;
+    margin-inline: auto;
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: center center;
-    margin-inline-end: 0;
 }
 
 /* Halftone: dot-сетка статична; radial map пульсирует строго от center кнопки (50% 50%). */
@@ -6511,6 +6673,10 @@ h3 {
     .preview-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+
+    .page-projects .preview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (min-width: 48.0625rem) {
@@ -6619,12 +6785,12 @@ h3 {
 /* Figma 300:104226 / 1-522 — Mail media redesign (case study): навигация, hero 1310×721 r21, intro, 2×2, секции */
 .project-page-wrap--case-study {
     /* Хедер fixed — даём место сверху, чтобы hero-обложка не уезжала под него. */
-    padding-top: calc(var(--header-figma-bar-min) + 0.75rem);
+    padding-top: calc(var(--header-figma-bar-min) + var(--space-12));
     padding-bottom: var(--space-64);
 }
 
 .project-page-wrap--layout-89 {
-    padding-top: calc(var(--header-figma-bar-min) + 0.75rem);
+    padding-top: calc(var(--header-figma-bar-min) + var(--space-12));
 }
 
 .main:has(.project-page-wrap--case-study) {
@@ -6739,12 +6905,12 @@ h3 {
 
 .case-study-rail__panel {
     position: relative;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     border: 0.0625rem solid var(--color-surface-border);
-    background: rgba(11, 11, 12, 0.82);
-    box-shadow: var(--shadow-nav-drawer);
-    backdrop-filter: blur(1.25rem) saturate(1.2);
-    -webkit-backdrop-filter: blur(1.25rem) saturate(1.2);
+    background: #000;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     padding: var(--space-16) var(--space-14) var(--space-16) var(--space-16);
     will-change: transform;
 }
@@ -7271,12 +7437,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-    border-radius: var(--radius-lg);
-    background: rgba(11, 11, 12, 0.78);
+    border-radius: 0;
+    background: #000;
     border: 0.0625rem solid var(--color-surface-border);
-    backdrop-filter: blur(1.25rem) saturate(1.2);
-    -webkit-backdrop-filter: blur(1.25rem) saturate(1.2);
-    box-shadow: var(--shadow-nav-drawer);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
 }
 
 .project-spy__link {
@@ -7450,65 +7616,70 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     aspect-ratio: var(--project-hero-aspect-w) / var(--project-hero-aspect-h);
 }
 
-/* Коллаж обложки — тот же каркас на всех кейсах */
-.project-case-study-mail .hero__media--mosaic {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    grid-auto-rows: minmax(9.5rem, 1fr);
-    gap: 0.75rem;
-    aspect-ratio: unset;
-    height: auto;
-    min-height: 0;
-    overflow: visible;
-    background: transparent;
-    border-radius: 0;
-}
-
-.project-case-study-mail .hero__media--mosaic img {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    height: 100%;
-    min-height: 10.5rem;
-    object-fit: cover;
-    border-radius: var(--project-hero-radius);
-}
-
-.project-case-study-mail .hero__media--mosaic[data-count='2'] {
-    grid-template-columns: 1fr 1fr;
-}
-
-.project-case-study-mail .hero__media--mosaic[data-count='2'] img {
-    min-height: 18rem;
-}
-
-.project-case-study-mail .hero__media--mosaic[data-count='3'] img:first-child,
-.project-case-study-mail .hero__media--mosaic[data-count='4'] img:first-child {
-    grid-row: span 2;
-    min-height: 22rem;
-}
-
 .project-case-study-mail .case-frame__card {
-    background: #1a1a1a;
-    border-radius: clamp(1.25rem, 3vw, 1.75rem);
-    padding: clamp(1.5rem, 4vw, 2.5rem);
+    background: var(--color-surface-solid);
+    border-radius: var(--space-32);
+    padding: var(--space-32);
     box-sizing: border-box;
 }
 
-.project-case-study-mail .case-frame__card h2,
-.project-case-study-mail .case-frame--approach > h2,
-.project-case-study-mail .case-frame--hypotheses > h2 {
+.project-case-study-mail .case-frame__card h2 {
     margin: 0 0 var(--space-16);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: var(--type-statement-line);
+    letter-spacing: var(--type-statement-tracking);
+    color: var(--color-text-label);
+}
+
+.project-case-study-mail .case-frame--approach > h2 {
+    margin: 0 0 var(--space-24);
+    max-width: none;
+    font-size: var(--type-section-title-size);
+    line-height: var(--type-section-title-line);
+    letter-spacing: var(--type-section-title-tracking);
+    color: #fff;
 }
 
 .project-case-study-mail .case-frame__card p {
     margin: 0;
     white-space: pre-line;
+    font-family: var(--font-body);
+    font-size: var(--type-body-lg-size);
+    font-weight: 400;
+    line-height: var(--type-body-lg-line);
+    letter-spacing: -0.01em;
+    text-transform: none;
+    color: #fafafa;
 }
 
 .project-case-study-mail .section ul.section__pills li,
 .project-case-study-mail .section ul.section__pills--approach li {
     border-radius: 0;
+}
+
+.project-case-study-mail .section ul.section__pills--approach {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-16);
+    max-width: none;
+    margin: 0;
+}
+
+.project-case-study-mail .section ul.section__pills--approach li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-8);
+    width: 100%;
+    max-width: none;
+    padding: var(--space-16);
+    background: #ddd;
+    color: #0a0a0a;
+}
+
+.project-case-study-mail .section ul.section__pills--approach li::before {
+    content: '→';
+    flex: 0 0 auto;
+    line-height: inherit;
 }
 /* Несколько обложек — колонка без горизонтального скролла */
 .project-case-study-mail .hero__media--stack {
@@ -7628,6 +7799,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     margin-top: 0;
 }
 .project-case-study-mail .project-info {
+    position: relative;
     display: flex;
     flex: 0 0 auto;
     width: 100%;
@@ -7636,8 +7808,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     flex-direction: column;
     align-items: flex-start;
     gap: var(--project-meta-card-gap);
-    border-radius: var(--project-meta-card-radius);
-    background: transparent;
+    border-radius: 0;
+    background: #000;
     border: 0;
     box-shadow: none;
     box-sizing: border-box;
@@ -8199,9 +8371,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding: 0 0.25rem;
     box-sizing: border-box;
     border-radius: 0.5rem;
-    background: rgba(255, 255, 255, 0.11);
-    -webkit-backdrop-filter: blur(27.5px);
-    backdrop-filter: blur(27.5px);
+    background: #1a1a1a;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 /* Desktop — лента на всю ширину экрана */
@@ -8397,13 +8569,14 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .project-case-study-mail .title-info-card {
+    position: relative;
     display: flex;
     flex: 1 1 auto;
     width: auto;
     min-width: 0;
     padding: var(--space-24);
-    border-radius: var(--case-feature-card-radius-sm);
-    background: transparent;
+    border-radius: 0;
+    background: #000;
     border: 0;
     box-shadow: none;
     min-height: 0;
@@ -8527,8 +8700,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     font-size: clamp(1.875rem, 2.8vw, 2.5rem);
     margin: 0 0 var(--space-20);
     font-weight: var(--font-weight-semibold);
-    line-height: 1.08;
-    letter-spacing: -0.02em;
+    line-height: var(--type-section-title-line);
+    letter-spacing: var(--type-section-title-tracking);
     text-transform: uppercase;
     color: var(--color-text);
     max-width: var(--case-prose-max);
@@ -8629,6 +8802,32 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     max-width: 100%;
     box-sizing: border-box;
 }
+
+.project-case-study-mail .section ul.section__pills--approach {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-16);
+    max-width: none;
+    margin: 0;
+}
+
+.project-case-study-mail .section ul.section__pills--approach li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-8);
+    width: 100%;
+    max-width: none;
+    padding: var(--space-16);
+    background: #ddd;
+    color: #0a0a0a;
+}
+
+.project-case-study-mail .section ul.section__pills--approach li::before {
+    content: '→';
+    flex: 0 0 auto;
+    line-height: inherit;
+}
+
 .project-case-study-mail .section__pills ~ .scroll-scrub-row--hypothesis,
 .project-case-study-mail .gallery--before-hypotheses ~ .scroll-scrub-row--hypothesis {
     margin-top: var(--space-56);
@@ -8798,12 +8997,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 /* Figma 337:24763 — Hypothesis accordion: равный inset; перебивает .section ul { margin; padding-left } */
 .project-case-study-mail .section ul.hyp-list,
 .project-case-study-mail .hyp-list {
-    --hyp-list-inset: var(--case-feature-card-padding);
+    --hyp-list-inset: 0;
     list-style: none;
     margin: 0;
-    padding: var(--hyp-list-inset);
+    padding: 0;
     background: transparent;
-    border-radius: var(--case-feature-card-radius);
+    border-radius: 0;
     border: 0;
     display: flex;
     flex-direction: column;
@@ -8865,7 +9064,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     line-height: 1.15;
     letter-spacing: var(--case-feature-card-title-tracking);
     text-transform: uppercase;
-    color: var(--case-feature-card-title-color);
+    color: #fff;
     flex: 1 1 auto;
     min-width: 0;
 }
@@ -8954,9 +9153,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     display: block;
     width: fit-content;
     max-width: 100%;
-    padding: 0.75rem 1.25rem;
-    border-radius: var(--radius-full);
-    background: var(--case-workflow-pill-bg);
+    padding: var(--space-16);
+    border-radius: 0;
+    background: #ddd;
     border: 0.0625rem solid rgba(0, 0, 0, 0.06);
     font-family: var(--font-body);
     font-size: clamp(0.8125rem, 1vw, 0.875rem);
@@ -8995,14 +9194,20 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         font-size: clamp(0.8125rem, 3.4vw, 0.9375rem);
     }
 
+    .project-case-study-mail .section ul.section__pills--approach {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+    }
+
     .project-case-study-mail .section ul.hyp-list,
     .project-case-study-mail .hyp-list {
-        --hyp-list-inset: var(--case-feature-card-padding-sm);
+        --hyp-list-inset: 0;
         --case-hyp-title-gap: var(--space-proximity-stack);
         --case-hyp-row-gap: var(--space-proximity-group);
         --case-hyp-body-gap: var(--space-proximity-pair);
-        border-radius: var(--case-feature-card-radius-sm);
-        padding: var(--hyp-list-inset);
+        border-radius: 0;
+        padding: 0;
+        background: transparent;
     }
 
     .project-case-study-mail .hyp-list__title {
@@ -9208,13 +9413,13 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     margin: 0;
     border: 0.0625rem solid rgba(255, 255, 255, 0.4);
     border-radius: var(--radius-full);
-    background: rgba(10, 10, 10, 0.55);
+    background: #000;
     color: var(--color-text-primary);
     font-size: 1.375rem;
     line-height: 1;
     cursor: pointer;
-    backdrop-filter: blur(0.75rem) saturate(1.15);
-    -webkit-backdrop-filter: blur(0.75rem) saturate(1.15);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     transition:
         opacity var(--dur-smart-nav) var(--ease-smart),
         border-color var(--dur-smart-nav) var(--ease-smart),
@@ -9484,8 +9689,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .project-case-study-mail .project-intro__heading h1 {
         margin-bottom: 0;
         font-size: var(--type-case-study-title);
-        line-height: 1.08;
-        letter-spacing: -0.03em;
+        line-height: var(--type-section-title-line);
+        letter-spacing: var(--type-section-title-tracking);
     }
 
     .project-case-study-mail .project-intro__lead {
@@ -9620,18 +9825,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin-top: clamp(1rem, 4vw, 1.25rem);
     }
 
-    .project-case-study-mail .hero__media--stack,
-    .project-case-study-mail .hero__media--mosaic {
+    .project-case-study-mail .hero__media--stack {
         aspect-ratio: auto;
         overflow: visible;
         border-radius: 0;
         background: transparent;
-    }
-
-    .project-case-study-mail .hero__media--mosaic {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
     }
 
     .project-case-study-mail .hero__media img,
@@ -9651,8 +9849,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         display: block;
     }
 
-    .project-case-study-mail .hero__media--stack img,
-    .project-case-study-mail .hero__media--mosaic img {
+    .project-case-study-mail .hero__media--stack img {
         position: relative;
         inset: auto;
         width: 100%;
@@ -9664,11 +9861,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin: 0;
         background: transparent;
         display: block;
-    }
-
-    .project-case-study-mail .hero__media--mosaic img {
-        min-height: 7.5rem;
-        aspect-ratio: 4 / 3;
     }
 
     .project-case-study-mail .title-info-card__media {
@@ -10393,9 +10585,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .about-page {
-    --about-skill-card-bg: #0f0f0f;
+    --about-skill-card-bg: var(--color-bg-elevated);
     --about-job-card-bg: #ffb800;
-    --about-edu-card-bg: #121212;
+    --about-edu-card-bg: var(--color-bg-elevated);
     --about-card-radius: var(--space-24);
     --about-card-gap: var(--space-12);
     --about-section-heading-gap: var(--space-proximity-stack);
@@ -11701,8 +11893,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .site-footer__surface {
     width: 100%;
-    background: #000;
-    padding: var(--space-fluid-stack) 0;
+    background: var(--color-bg);
+    padding: var(--space-32) 0 var(--space-16);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -11711,9 +11903,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 .site-footer__contain {
     width: 100%;
-    max-width: 84.875rem;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
     box-sizing: border-box;
     padding-left: var(--layout-edge-left);
     padding-right: var(--layout-edge-right);
@@ -11727,17 +11919,17 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     width: 100%;
     max-width: none;
     margin-top: 0;
-    margin-bottom: var(--space-fluid-group);
+    margin-bottom: var(--space-16);
     margin-left: 0;
     margin-right: 0;
     padding: 0;
     box-sizing: border-box;
-    color: #fff;
-    -webkit-text-fill-color: #fff;
+    color: var(--color-text);
+    -webkit-text-fill-color: var(--color-text);
     overflow: hidden;
 }
 
-/* Кегль подобран так, чтобы при scaleX(0.65) слово занимало ширину экрана и сидело по центру. */
+/* Кегль: при scaleX(0.65) слово = ширина экрана. JS уточняет --footer-word-size. */
 .site-footer__wordmark__track {
     --scale-x: var(--tc-scale-x);
     display: block;
@@ -11747,7 +11939,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding: 0;
     box-sizing: border-box;
     font-family: var(--font-body);
-    font-size: clamp(3.75rem, 38vw, 20rem);
+    font-size: var(--footer-word-size, calc(100vw / 2.65));
     font-style: normal;
     font-weight: 600;
     line-height: 0.92;
@@ -11774,31 +11966,32 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: flex-end;
-    gap: clamp(1rem, 2vw, 2.5rem);
+    width: 100%;
+    gap: clamp(var(--space-16), 2vw, var(--space-40));
 }
 
 .site-footer__left {
     flex: 0 1 auto;
-    max-width: min(42%, 20rem);
+    max-width: min(50%, 36rem);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     align-self: flex-start;
-    gap: clamp(0.75rem, 2vw, 1.25rem);
+    gap: clamp(var(--space-12), 2vw, var(--space-20));
     min-width: 0;
 }
 
 .site-footer__status {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-12);
     padding: 0;
     margin: 0;
     font-size: clamp(1.125rem, 2.2vw, 1.5rem);
     font-weight: 400;
     line-height: 1.2;
     letter-spacing: -0.02em;
-    color: #fff;
+    color: var(--color-text);
 }
 
 .site-footer__dot {
@@ -11823,7 +12016,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     flex-wrap: wrap;
     justify-content: flex-end;
     align-items: center;
-    row-gap: 0.5rem;
+    row-gap: var(--space-8);
     max-width: 100%;
 }
 
@@ -11848,7 +12041,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     line-height: 1.2;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #fff;
+    color: var(--color-text);
     text-decoration: none;
     transition:
         opacity var(--transition-base),
@@ -11871,9 +12064,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 .site-footer__note {
     font-size: clamp(0.875rem, 1.65vw, 1.125rem);
     font-weight: 400;
-    line-height: 1.45;
+    line-height: var(--type-body-lg-line);
     letter-spacing: 0;
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--color-text);
     margin: 0;
     max-width: 100%;
     box-sizing: border-box;
@@ -11889,7 +12082,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     text-decoration: underline;
 }
 
-/* Figma 863:18915 — мобильный футер: колонка по центру */
+/* Узкий экран: та же полная ширина, колонка вместо рядка */
 @media (max-width: 56.25rem) {
     .site-footer__surface {
         padding-top: var(--space-32);
@@ -11902,31 +12095,32 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .site-footer__main {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
+        align-items: stretch;
+        text-align: left;
         gap: var(--space-32);
     }
 
     .site-footer__left {
         flex: none;
-        align-self: center;
-        align-items: center;
-        max-width: min(100%, 20rem);
-        text-align: center;
+        align-self: stretch;
+        align-items: flex-start;
+        max-width: none;
+        width: 100%;
+        text-align: left;
         gap: var(--space-16);
     }
 
     .site-footer__status {
-        justify-content: center;
+        justify-content: flex-start;
         font-size: clamp(1.125rem, 4.6vw, 1.375rem);
     }
 
     .site-footer__note {
-        text-align: center;
-        max-width: 17.5rem;
+        text-align: left;
+        max-width: none;
         font-size: clamp(0.9375rem, 3.8vw, 1.0625rem);
-        line-height: 1.45;
-        color: rgba(255, 255, 255, 0.92);
+        line-height: var(--type-body-lg-line);
+        color: var(--color-text);
     }
 
     .site-footer__note a {
@@ -11941,7 +12135,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .site-footer__links.hero-links {
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .site-footer__item--extended {
@@ -11987,21 +12181,13 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .site-footer__wordmark {
-        margin-bottom: var(--space-fluid-group);
-        padding-left: max(env(safe-area-inset-left, 0), clamp(0.5rem, 2.4vw, 1rem));
-        padding-right: max(env(safe-area-inset-right, 0), clamp(0.5rem, 2.4vw, 1rem));
+        margin-bottom: var(--space-16);
+        padding-left: 0;
+        padding-right: 0;
     }
 
-    /* Wordmark на узких сохраняем огромным per Figma — это hero подвала. */
     .site-footer__wordmark__track {
-        font-size: clamp(3.75rem, calc(100cqw / 1.52), 18rem);
         letter-spacing: var(--tc-letter-spacing);
-    }
-
-    @supports (font-size: 1cqi) {
-        .site-footer__wordmark__track {
-            font-size: clamp(3.75rem, calc(100cqw / 1.52), 18rem);
-        }
     }
 
     /* Touch targets ≥ 48px, читаемость body ≥ 16px */
@@ -12091,8 +12277,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .header-mobile-menu__lang {
         display: none;
         width: 100%;
-        padding: 0.35rem 0 0;
-        margin-top: 0.35rem;
+        padding: var(--space-4) 0 0;
+        margin-top: var(--space-4);
         border: 0;
         border-top: none;
         box-shadow: none;
@@ -12112,7 +12298,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     .header-mobile-menu__lang .lang-switch__toggle-row {
         transform: none;
         --tc-scale-x: 1;
-        color: #ffffff !important;
+        color: var(--color-text) !important;
         font-size: inherit;
         line-height: inherit;
     }
@@ -12137,12 +12323,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .page-project .header:not(.header--menu-open) .logo > span,
     .page-project .header:not(.header--menu-open) .lang-switch .lang-switch__toggle-row {
-        color: #ffffff !important;
+        color: var(--color-text) !important;
         text-shadow: 0 0.0625rem 0.625rem rgba(0, 0, 0, 0.55);
     }
 
     .page-project .header:not(.header--menu-open) .nav-toggle span {
-        background: #ffffff;
+        background: var(--color-text);
         box-shadow: 0 0 0.0625rem rgba(0, 0, 0, 0.45);
     }
 
@@ -12192,11 +12378,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .header--menu-open {
         mix-blend-mode: normal;
-        background: var(--header-mobile-panel-bg);
-        backdrop-filter: blur(1.25rem) saturate(1.12);
-        -webkit-backdrop-filter: blur(1.25rem) saturate(1.12);
-        border-radius: 0 0 var(--header-mobile-panel-radius) var(--header-mobile-panel-radius);
-        box-shadow: 0 1.25rem 3.5rem rgba(0, 0, 0, 0.42);
+        background: #000;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     .header > .nav-scrim {
@@ -12205,9 +12391,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         z-index: 0;
         opacity: 0;
         pointer-events: none;
-        background: rgba(0, 0, 0, 0.38);
-        backdrop-filter: blur(0.125rem);
-        -webkit-backdrop-filter: blur(0.125rem);
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
         transition: opacity var(--dur-smart-base) var(--ease-smart);
     }
 
@@ -12248,7 +12434,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .header--menu-open .nav > .logo > span,
     .header--menu-open .lang-switch .lang-switch__toggle-row {
-        color: #ffffff !important;
+        color: var(--color-text) !important;
     }
 
     /* Закрытая полоса — condensed-логотип, кегль шапки, без scaleY */
@@ -12495,7 +12681,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         line-height: inherit;
         letter-spacing: -0.02em;
         text-transform: uppercase;
-        color: #ffffff !important;
+        color: var(--color-text) !important;
         white-space: nowrap;
         text-wrap: nowrap;
     }
@@ -12575,7 +12761,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .header .nav-list .nav-link.active > span {
-        color: #ffffff !important;
+        color: var(--color-text) !important;
         font-weight: 600;
         font-size: var(--header-mobile-menu-size-active);
         --tc-scale-x: 1;
@@ -12666,7 +12852,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .header .header-mobile-menu .nav-list--case-study .nav-link--case-title.active > span {
         font-weight: 600;
-        color: #ffffff !important;
+        color: var(--color-text) !important;
         --tc-scale-x: var(--tc-nav-active-scale-x);
     }
 
@@ -12737,7 +12923,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 @media (max-width: 48rem) {
-    .preview-grid {
+    .preview-grid,
+    .page-projects .preview-grid {
         grid-template-columns: 1fr;
         justify-content: stretch;
     }
@@ -13284,13 +13471,13 @@ p + p {
 .page-home__main {
     padding-top: 0;
     padding-bottom: 0;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: var(--layout-edge-left);
+    padding-right: var(--layout-edge-right);
 }
 
 .page-home .section-projects {
-    padding-left: var(--layout-edge-left);
-    padding-right: var(--layout-edge-right);
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .main--project {
@@ -13352,9 +13539,9 @@ p + p {
 }
 
 .hero__card .preview-card-block__overlay--blur {
-    background: var(--effect-preview-overlay);
-    backdrop-filter: blur(var(--blur-preview-card));
-    -webkit-backdrop-filter: blur(var(--blur-preview-card));
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .hero__card .preview-card-block__titlebar {
@@ -13656,9 +13843,12 @@ canvas {
         width: 100%;
     }
 
-    .header-item__icon-wrap {
-        width: clamp(4rem, 22vw, 6.1875rem);
-        height: clamp(3.625rem, 20vw, 5.625rem);
+    .header-item__icon-wrap,
+    .header-item__icon-wrap .icon-assemble-dots--folder,
+    .header-item__icon-wrap .icon-assemble-dots__media,
+    .header-item__icon-wrap img {
+        width: 72px;
+        height: 51px;
     }
 
     .header-item__label {
@@ -13906,68 +14096,15 @@ html:not(.snap-pages) body {
     .project-case-study-mail .title-info-card,
     .project-case-study-mail .section .hyp-list,
     .contact-item
-)::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    z-index: 0;
-    background:
-        radial-gradient(
-            ellipse 85% 70% at 18% 8%,
-            rgba(var(--ambient-glow-rgb), calc(0.08 + var(--ambient-emission) * 0.07)) 0%,
-            transparent 52%
-        ),
-        radial-gradient(
-            ellipse 95% 55% at 50% 108%,
-            rgba(var(--ambient-glow-rgb), calc(0.16 + var(--ambient-emission) * 0.12)) 0%,
-            transparent 58%
-        ),
-        linear-gradient(155deg, rgba(28, 28, 32, 0.94) 0%, rgba(10, 10, 12, 0.98) 52%, rgba(6, 6, 8, 1) 100%);
-    backdrop-filter: blur(0.875rem) saturate(120%);
-    -webkit-backdrop-filter: blur(0.875rem) saturate(120%);
-    box-shadow:
-        inset 0 -2.75rem 3.25rem -1.75rem rgba(var(--ambient-glow-rgb), calc(0.16 + var(--ambient-emission) * 0.14)),
-        inset 0 0.0625rem 0 rgba(var(--ambient-glow-rgb), calc(0.28 + var(--ambient-emission) * 0.16)),
-        inset 0.0625rem 0 0 rgba(var(--ambient-glow-rgb), calc(0.18 + var(--ambient-emission) * 0.1));
-}
-
+)::before,
 :is(
     .project-case-study-mail .project-info,
     .project-case-study-mail .title-info-card,
     .project-case-study-mail .section .hyp-list,
     .contact-item
 )::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    z-index: 1;
-    opacity: calc(0.7 + var(--ambient-emission) * 0.3);
-    background:
-        linear-gradient(
-            135deg,
-            rgba(var(--ambient-glow-rgb), 0.45) 0%,
-            rgba(var(--ambient-glow-rgb), 0.12) 14%,
-            transparent 32%
-        ),
-        linear-gradient(180deg, rgba(var(--ambient-glow-rgb), 0.18) 0%, transparent 18%),
-        linear-gradient(
-            0deg,
-            rgba(var(--ambient-glow-rgb), calc(0.22 + var(--ambient-emission) * 0.16)) 0%,
-            transparent 22%
-        );
-    -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    padding: 0.0625rem;
+    content: none;
+    display: none;
 }
 
 .project-case-study-mail .project-info > *,
@@ -14074,7 +14211,8 @@ html:not(.snap-pages) body {
     justify-content: flex-end;
     isolation: isolate;
     overflow: hidden;
-    border-radius: var(--about-card-radius, var(--radius-lg));
+    border-radius: 0;
+    background: #000;
 }
 
 .ambient-light-card__content {
@@ -14089,13 +14227,10 @@ html:not(.snap-pages) body {
     min-height: inherit;
 }
 
-.ambient-light-card__clip {
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    overflow: hidden;
-    z-index: 0;
-    pointer-events: none;
+.ambient-light-card__clip,
+.ambient-light-card__surface,
+.ambient-light-card__rim {
+    display: none;
 }
 
 .ambient-light-card__surface {
@@ -14183,4 +14318,36 @@ html:not(.snap-pages) body {
     )::after {
         transition: none;
     }
+}
+
+/* Нет стекла — плоские непрозрачные поверхности */
+.bg-liquid-glass,
+.preview-card-block__overlay--blur,
+.preview-card-block--mac-window .preview-card-block__titlebar,
+.case-study-rail__panel,
+.project-spy__list,
+.scroll-scrub-row__indicator-pill,
+.nav-scrim,
+.header--menu-open,
+.header > .nav-scrim,
+.ambient-light-card,
+.ambient-light-card__surface,
+.contact-item {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.ambient-light-card__clip,
+.ambient-light-card__surface,
+.ambient-light-card__rim,
+.preview-card-block__overlay--blur {
+    display: none !important;
+}
+
+.project-case-study-mail .project-info,
+.project-case-study-mail .title-info-card,
+.ambient-light-card,
+.contact-item {
+    background: #000;
+    box-shadow: none;
 }

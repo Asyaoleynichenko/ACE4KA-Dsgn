@@ -14,21 +14,10 @@ function hasSectionMedia(section) {
   );
 }
 
-/** До 4 уникальных кадров для коллажа обложки. */
-export function collectCaseHeroImages(project, max = 4) {
-  const out = [];
-  const add = (src) => {
-    if (typeof src === 'string' && src && !out.includes(src)) out.push(src);
-  };
-  add(project?.image);
-  for (const section of project?.caseSections ?? []) {
-    add(section.galleryAboveTitle);
-    add(section.galleryImage);
-    add(section.galleryBeforeHypotheses);
-    for (const src of section.galleryImages ?? []) add(src);
-    for (const slide of section.mvpSlides ?? []) add(slide.image);
-  }
-  return out.slice(0, max);
+/** Одна обложка кейса — только `project.image`, без кадров из галереи. */
+export function collectCaseHeroImages(project) {
+  const src = typeof project?.image === 'string' ? project.image : '';
+  return src ? [src] : [];
 }
 
 /** Проблема / подход / гипотезы — один каркас на все кейсы. */

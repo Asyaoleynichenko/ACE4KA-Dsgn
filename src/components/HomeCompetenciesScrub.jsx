@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useScrollTriggerCompetenciesScrub } from '../hooks/useScrollTriggerCompetenciesScrub.js';
+import { useCallback } from 'react';
 import { COMPETENCIES_HEADING_ORDER } from '../data/competenciesHeadingOrder.js';
 import { HOME_PROJECT_SLUGS, homeProjectsCatalog } from '../data/homeProjectsCatalog.js';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import { asArray } from '../utils/asArray.js';
-import { isMobileViewport, prefersReducedMotion } from '../motion/motionSystem.js';
 import ProjectCard from './ProjectCard.jsx';
 
 function chunkSlugsForLines(lineCount, homeSlugs) {
@@ -19,25 +17,9 @@ function chunkSlugsForLines(lineCount, homeSlugs) {
   return out;
 }
 
-/** Прогресс scrub t∈[0,1] → активная строка + «резина» (scaleX/scaleY инверсны по чётности). */
-function activeLineStretchFromScroll(n, t) {
-  if (n < 1) return { idx: 0, scaleX: 1, scaleY: 1 };
-  const clampedT = Math.min(1, Math.max(0, t));
-  const segment = 1 / n;
-  const idx = Math.min(n - 1, Math.floor(clampedT * n));
-  const localT = segment > 0 ? Math.min(1, Math.max(0, (clampedT - idx * segment) / segment)) : 0;
-  const wave = Math.sin(Math.PI * localT);
-  const stretchX = idx % 2 === 0;
-  return {
-    idx,
-    scaleX: stretchX ? 1 + 0.09 * wave : 1 - 0.065 * wave,
-    scaleY: stretchX ? 1 - 0.065 * wave : 1 + 0.09 * wave,
-  };
-}
-
 /**
- * Главная — блок компетенций (Figma 592:38775 / 592:38776): стопка из пяти строк,
- * плавающие карточки TL/BR; при скролле активная строка растягивается, карточки меняются.
+ * Главная — один блок компетенций (Figma 592:38775): две карточки, стопка строк, CTA.
+ * Без GSAP-pin: pin-spacer рисовал второй такой же блок на полном скрине.
  */
 export default function HomeCompetenciesScrub({
   lines: linesProp,
@@ -48,146 +30,64 @@ export default function HomeCompetenciesScrub({
 }) {
   const { t } = useI18n();
   const lines = asArray(linesProp);
-  const runwayRef = useRef(null);
-  const stickyRef = useRef(null);
-  const stageRef = useRef(null);
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(() => prefersReducedMotion());
-  const [isMobile, setIsMobile] = useState(() => isMobileViewport());
-
-  const n = lines.length;
   const slugRows =
-    Array.isArray(lineProjectSlugs) && lineProjectSlugs.length === n
+    Array.isArray(lineProjectSlugs) && lineProjectSlugs.length === lines.length
       ? lineProjectSlugs
-      : chunkSlugsForLines(n, homeProjectSlugs);
+      : chunkSlugsForLines(lines.length, homeProjectSlugs);
 
   const resolveProject = useCallback(
     (slug) => homeProjectsCatalog.find((p) => p.slug === slug) || null,
     [],
   );
 
-  useEffect(() => {
-    const mqReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const mqMobile = window.matchMedia('(max-width: 48rem)');
-    const sync = () => {
-      setReducedMotion(mqReduced.matches);
-      setIsMobile(mqMobile.matches);
-    };
-    sync();
-    mqReduced.addEventListener('change', sync);
-    mqMobile.addEventListener('change', sync);
-    return () => {
-      mqReduced.removeEventListener('change', sync);
-      mqMobile.removeEventListener('change', sync);
-    };
-  }, []);
-
-  const useNativeScroll = reducedMotion || isMobile;
-
-  const onScrub = useCallback(
-    (progress) => {
-      if (n < 1) return;
-      const { idx, scaleX, scaleY } = activeLineStretchFromScroll(n, progress);
-      setActiveIdx((prev) => (prev === idx ? prev : idx));
-      const stage = stageRef.current;
-      if (stage) {
-        stage.style.setProperty('--comp-active-scale-x', scaleX.toFixed(4));
-        stage.style.setProperty('--comp-active-scale-y', scaleY.toFixed(4));
-      }
-    },
-    [n],
-  );
-
-  useScrollTriggerCompetenciesScrub({
-    enabled: !useNativeScroll && n > 0,
-    runwayRef,
-    stickyRef,
-    lineCount: n,
-    onScrub,
-  });
-
-  const activeSlugs = slugRows[activeIdx] ?? [];
-  const activeProjects = activeSlugs.map(resolveProject).filter(Boolean);
-  const leftProject = activeProjects[0] ?? null;
-  const rightProject = activeProjects[1] ?? null;
-
-  const projectCard = (item) =>
-    item ? (
-      <div key={item.slug} className="home-competencies-scrub__card-wrap">
-        <ProjectCard
-          slug={item.slug}
-          title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
-          meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}
-          desc={tWithFallback(t, `projects.cards.${item.slug}.desc`, item.desc)}
-          image={item.image}
-          isDemo={false}
-          variant="overlay"
-        />
-      </div>
-    ) : null;
-
-  const floatCards = (
-    <div className="home-competencies-scrub__floats" aria-hidden={!leftProject && !rightProject}>
-      <div key={`tl-${activeIdx}`} className="home-competencies-scrub__float home-competencies-scrub__float--tl">
-        {leftProject ? projectCard(leftProject) : null}
-      </div>
-      <div key={`br-${activeIdx}`} className="home-competencies-scrub__float home-competencies-scrub__float--br">
-        {rightProject ? projectCard(rightProject) : null}
-      </div>
-    </div>
-  );
-
-  const linesStack = (activeIndex) => (
-    <div className="home-competencies-scrub__lines" aria-live={reducedMotion ? undefined : 'polite'}>
-      {lines.map((line, i) => (
-        <div
-          key={line}
-          className={`home-competencies-scrub__line-wrap${i === activeIndex ? ' is-active' : ''}`}
-          data-heading={COMPETENCIES_HEADING_ORDER[i] ?? 3}
-          aria-current={i === activeIndex ? 'true' : undefined}
-        >
-          <p className="home-competencies__line home-competencies-scrub__line">{line}</p>
-        </div>
-      ))}
-    </div>
-  );
-
-  if (useNativeScroll) {
-    return (
-      <div
-        className={`home-competencies-scrub${reducedMotion ? ' home-competencies-scrub--reduced-motion' : ' home-competencies-scrub--touch-scroll'}`.trim()}
-      >
-        <div className="home-competencies__panel">
-          <div className="home-competencies__inner home-competencies__inner--scrub">
-            <div className="home-competencies-scrub__content">
-              <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
-                <div className="home-competencies-scrub__stage">
-                  {floatCards}
-                  <div className="home-competencies-scrub__center">{linesStack(0)}</div>
-                </div>
-              </div>
-              {children}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const activeProjects = (slugRows[0] ?? []).map(resolveProject).filter(Boolean);
 
   return (
-    <div ref={runwayRef} className="home-competencies-scrub home-competencies-scrub__runway">
-      <div ref={stickyRef} className="home-competencies-scrub__sticky">
-        <div className="home-competencies__panel">
-          <div className="home-competencies__inner home-competencies__inner--scrub">
-            <div className="home-competencies-scrub__content">
-              <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
-                <div ref={stageRef} className="home-competencies-scrub__stage">
-                  {floatCards}
-                  <div className="home-competencies-scrub__center">{linesStack(activeIdx)}</div>
+    <div className="home-competencies-scrub home-competencies-scrub--static home-competencies-scrub--static-block">
+      <div className="home-competencies__panel">
+        <div className="home-competencies__inner home-competencies__inner--scrub">
+          <div className="home-competencies-scrub__content">
+            <div className="home-competencies-scrub__stack" role="region" aria-label={ariaLabel}>
+              <div className="home-competencies-scrub__stage">
+                <div
+                  className="home-competencies-scrub__floats"
+                  aria-hidden={activeProjects.length === 0}
+                >
+                  {activeProjects.map((item, idx) => (
+                    <div
+                      key={item.slug}
+                      className={`home-competencies-scrub__float${idx === 0 ? ' home-competencies-scrub__float--tl' : ' home-competencies-scrub__float--br'}`}
+                    >
+                      <div className="home-competencies-scrub__card-wrap">
+                        <ProjectCard
+                          slug={item.slug}
+                          title={tWithFallback(t, `projects.cards.${item.slug}.title`, item.title)}
+                          meta={tWithFallback(t, `projects.cards.${item.slug}.meta`, item.meta)}
+                          desc={tWithFallback(t, `projects.cards.${item.slug}.desc`, item.desc)}
+                          image={item.image}
+                          isDemo={false}
+                          variant="overlay"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="home-competencies-scrub__center">
+                  <div className="home-competencies-scrub__lines">
+                    {lines.map((line, i) => (
+                      <div
+                        key={line}
+                        className={`home-competencies-scrub__line-wrap${i === 0 ? ' is-active' : ''}`}
+                        data-heading={COMPETENCIES_HEADING_ORDER[i] ?? 3}
+                      >
+                        <p className="home-competencies__line home-competencies-scrub__line">{line}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              {children}
             </div>
+            {children}
           </div>
         </div>
       </div>

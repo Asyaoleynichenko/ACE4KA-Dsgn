@@ -51,7 +51,7 @@ const SHORT_HYPOTHESIS_TITLE = /^[HНh]\s*(\d+)(\s*\(.+\))?$/u;
 
 export function hypothesisCardHeading(hypothesis, index, locale, t) {
   const title = hypothesis?.title;
-  const fallback = t('common.caseStudy.hypothesis', { n: index + 1 });
+  const fallback = t('common.caseStudy.hypothesis', { n: String(index + 1).padStart(3, '0') });
   if (title == null || title === '') return fallback;
   const trimmed = String(title).trim();
   // Шаблонные «Гипотеза N» / «H1» / «H1 (suffix)» — всегда отображаем как локализованный «Гипотеза N (suffix)».

@@ -13,7 +13,7 @@ export default function CaseStudyEditorialFrame({
   t,
   locale,
 }) {
-  const { contextText, approachLabel, approachItems, hypotheses } = editorial;
+  const { contextText, approachItems, hypotheses } = editorial;
   const hypSkipped = skipped.find((s) => s.kind === 'hyp');
   const textSkipped = skipped.filter((s) => s.kind === 'text');
 
@@ -38,7 +38,7 @@ export default function CaseStudyEditorialFrame({
       {approachItems.length ? (
         <section className="section case-frame case-frame--approach" id={`case-${slug}-approach`}>
           <h2>
-            <span className="text-condensed">{approachLabel || ct('approach')}</span>
+            <span className="text-condensed">{ct('approach')}</span>
           </h2>
           <ul className="section__pills section__pills--approach" aria-label={ct('approach')}>
             {approachItems.map((line, j) => (
@@ -53,9 +53,6 @@ export default function CaseStudyEditorialFrame({
           className="section case-frame case-frame--hypotheses"
           id={hypSkipped ? `case-${slug}-body-${hypSkipped.index}-hyp` : `case-${slug}-hypotheses`}
         >
-          <h2>
-            <span className="text-condensed">{ct('hypotheses')}</span>
-          </h2>
           <ul className="hyp-list" aria-label={t('projectDetail.hypothesisStripAria')}>
             {hypotheses.map((h, j) => (
               <li key={j} className="hyp-list__item">

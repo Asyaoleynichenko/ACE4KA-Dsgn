@@ -322,15 +322,6 @@ export default function ProjectDetailPage() {
   const editorial = getCaseStudyEditorial(project);
   const heroImages = collectCaseHeroImages(project);
   const { kept: bodySections, skipped: skippedSections } = partitionCaseSections(project);
-  const showEditorial = Boolean(
-    editorial.contextText || editorial.approachItems.length || editorial.hypotheses.length,
-  );
-  const topCards = (project.topCards ?? [
-    { title: ct('task'), value: project.task },
-    { title: ct('solution'), value: project.solution },
-    { title: ct('influence'), value: project.influence },
-    { title: ct('metrics'), value: project.metrics },
-  ]).filter((item) => item.value);
   const caseImages = project.caseStudyImages || {};
   return (
       <div
@@ -399,38 +390,14 @@ export default function ProjectDetailPage() {
             </div>
           </section>
 
-          {showEditorial ? (
-            <CaseStudyEditorialFrame
-              slug={project.slug}
-              editorial={editorial}
-              skipped={skippedSections}
-              ct={ct}
-              t={t}
-              locale={locale}
-            />
-          ) : (
-            <section className="cards-section" id={`case-${project.slug}-overview`}>
-              <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
-                {topCards.map((item, cardIdx) => {
-                  const iconKind = caseStudyStripIconKind(item.title);
-                  const cardTitle = translateCaseCardTitle(item.title, t);
-                  return (
-                    <div
-                      key={`${cardIdx}-${item.title}`}
-                      className="card"
-                      data-strip-kind={iconKind ?? undefined}
-                    >
-                      <h3>
-                        <span className="text-condensed text-condensed--single-line">{cardTitle}</span>
-                      </h3>
-                      <p>{item.value}</p>
-                      {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
-                    </div>
-                  );
-                })}
-              </ScrollScrubRow>
-            </section>
-          )}
+          <CaseStudyEditorialFrame
+            slug={project.slug}
+            editorial={editorial}
+            skipped={skippedSections}
+            ct={ct}
+            t={t}
+            locale={locale}
+          />
 
           {project.showNarrative && (project.context || project.problem) ? (
             <section className="case-study-narrative" id={`case-${project.slug}-narrative`}>
