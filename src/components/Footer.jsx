@@ -88,11 +88,7 @@ export default function Footer({ snapScreen = false }) {
       <div className="site-footer__surface" data-node-id="16-172">
         <p className="site-footer__wordmark" data-node-id="16-171" aria-hidden="true">
           <span className="site-footer__wordmark__track" data-scale="footer-mega">
-            {'ACE4KA'.split('').map((ch, i) => (
-              <span key={`${ch}-${i}`} className="site-footer__wordmark__char">
-                {ch}
-              </span>
-            ))}
+            ACE4KA
           </span>
         </p>
 

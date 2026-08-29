@@ -41,13 +41,6 @@ export default function Layout() {
       appRoot?.classList.remove('snap-pages-root--home');
     };
   }, [snapScreens, isHome]);
-  const figmaPages = {
-    '/page-811': 'page-811',
-    '/page-772': 'page-772',
-    '/page-909': 'page-909',
-    '/page-915': 'page-915',
-    '/page-920': 'page-920',
-  };
   const knownPaths = new Set([
     '/',
     '/projects',
@@ -55,7 +48,6 @@ export default function Layout() {
     '/contact',
     '/resume',
     '/education',
-    ...Object.keys(figmaPages),
   ]);
   const isNotFound =
     !knownPaths.has(basePath) && !basePath.startsWith('/project/');
@@ -75,7 +67,7 @@ export default function Layout() {
                 ? 'page-resume'
                 : basePath === '/education'
                   ? 'page-education'
-                  : figmaPages[basePath] || '';
+                  : '';
   const isProjectDetail = basePath.startsWith('/project/');
   const mainClass = isProjectDetail ? 'main main--project' : 'main';
   const pageSnapClass = snapScreens ? 'page--snap' : '';

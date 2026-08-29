@@ -3,9 +3,9 @@ import { useLenisInstance } from '../context/LenisProvider.jsx';
 import { bindScroll } from '../utils/scrollRoot.js';
 
 /**
- * Effect-only: no DOM. Drives `--scale-y` on `[data-scale]` and
- * toggles `.is-revealed` on `[data-reveal]` via IntersectionObserver.
- * Skipped when native `animation-timeline: view()` is supported (CSS owns it).
+ * Effect-only: no DOM. Drives `--scale-x` on the footer wordmark
+ * and toggles `.is-revealed` on `[data-reveal]` via IntersectionObserver.
+ * Footer rubber always runs from JS — Lenis breaks view() timelines.
  */
 export default function ScrollPolish() {
   const { lenis } = useLenisInstance();
@@ -16,9 +16,6 @@ export default function ScrollPolish() {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) return undefined;
 
-    const supportsTimeline =
-      typeof CSS !== 'undefined' && CSS.supports?.('animation-timeline: view()');
-
     let rafId = 0;
     const onScroll = () => {
       if (rafId) return;
@@ -26,28 +23,15 @@ export default function ScrollPolish() {
         rafId = 0;
         const vh = window.innerHeight;
 
-        if (!supportsTimeline) {
-          const hero = document.querySelector('[data-scale="hero-name"]');
-          if (hero) {
-            const r = hero.getBoundingClientRect();
-            const progress = Math.max(0, Math.min(1, (vh - r.top) / vh));
-            hero.style.setProperty('--scale-y', (1 + progress * 0.15).toFixed(3));
-          }
-
-          const title = document.querySelector('[data-scale="section-title"]');
-          if (title) {
-            const r = title.getBoundingClientRect();
-            const distFromCenter = Math.abs(r.top + r.height / 2 - vh / 2);
-            const closeness = Math.max(0, 1 - distFromCenter / vh);
-            title.style.setProperty('--scale-y', (1 + closeness * 0.25).toFixed(3));
-          }
-
-          const footer = document.querySelector('[data-scale="footer-mega"]');
-          if (footer) {
-            const r = footer.getBoundingClientRect();
-            const progress = Math.max(0, Math.min(1, (vh - r.top) / (vh * 0.8)));
-            footer.style.setProperty('--scale-y', (0.85 + progress * 0.3).toFixed(3));
-          }
+        /* compressed → expanded as the wordmark enters, then back. Whole word, scaleX only. */
+        const footer = document.querySelector('[data-scale="footer-mega"]');
+        if (footer) {
+          const r = footer.getBoundingClientRect();
+          const travel = Math.max(vh * 0.72, r.height * 0.9);
+          const raw = Math.max(0, Math.min(1, (vh - r.top) / travel));
+          const wave = Math.sin(raw * Math.PI);
+          const compressed = 0.65;
+          footer.style.setProperty('--scale-x', (compressed + wave * (1 - compressed)).toFixed(4));
         }
       });
     };

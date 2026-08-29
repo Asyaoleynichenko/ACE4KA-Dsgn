@@ -1,44 +1,44 @@
 /**
- * Данные и изображения секции «Папки» на главной (Figma 416:12977 / 416:12981 …).
+ * Плашки первого экрана — Figma 416:12977 / 416:12981…13002.
  * Подписи — ключи `src/dictionaries/*.json` → `sectionNav.*`.
  */
-import folderIconFromFigma from '../assets/header/folder-1-210.png';
 import { publicUrl } from '../utils/publicUrl.js';
 
-/** Экспорты главной 89:347 / impl — миниатюры Image Well как в Figma (не плейсхолдеры SVG). */
-const FIGMA_HOME_IMPL = '/images/figma-impl-89-347';
+/** Экспорты иконок с макета 416:12975. */
+const FIGMA_HOME = '/images/figma-416-12975';
 
 /** Размеры фрейма First screen из макета (node 416:12977) */
 export const HEADER_FIRST_SCREEN = { w: 1275.452, h: 312.784 };
 
 export const SECTION_HEADER_IMAGES = {
-  folder: folderIconFromFigma,
-  /** В макете 1:224 — тот же instance Folder, что у 1-206 / 1-209 / 1-227 (не сетка projects.svg). */
-  contact: publicUrl(`${FIGMA_HOME_IMPL}/e621b7d38edf9d65d35f29d2ceb01c700a03de6f.webp`),
-  team: publicUrl(`${FIGMA_HOME_IMPL}/2d66314f5e7df877310ce98caf65e489dbc6b245.webp`),
-  /** Пока без отдельного лёгкого экспорта из Figma — `habitat.svg`; замените на PNG при экспорте ноды 1:222. */
-  habitat: publicUrl('/images/icons/habitat.svg'),
+  experience: publicUrl(`${FIGMA_HOME}/icon-experience.png`),
+  memes: publicUrl(`${FIGMA_HOME}/icon-memes.png`),
+  projects: publicUrl(`${FIGMA_HOME}/icon-projects.png`),
+  education: publicUrl(`${FIGMA_HOME}/icon-education.png`),
+  contact: publicUrl(`${FIGMA_HOME}/icon-contact.png`),
+  resume: publicUrl(`${FIGMA_HOME}/icon-resume.png`),
+  habitat: publicUrl(`${FIGMA_HOME}/icon-habitat.png`),
 };
 
 export const headerItemsFolder = [
-  { nodeId: '1-206', labelKey: 'sectionNav.experience', iconKey: 'folder', to: '/about#experience', placement: { x: 1097.67, y: 30.11 } },
-  { nodeId: '1-209', labelKey: 'sectionNav.memes', iconKey: 'folder', to: '/about#education', placement: { x: 46.91, y: 179.79 } },
-  { nodeId: '1-224', labelKey: 'sectionNav.projectsOverview', iconKey: 'folder', to: '/projects', placement: { x: 232.91, y: 4.11 } },
-  { nodeId: '1-227', labelKey: 'sectionNav.educationFolder', iconKey: 'folder', to: '/about#education', placement: { x: 938.73, y: 129.03 } },
+  { nodeId: '416-12981', labelKey: 'sectionNav.experience', iconKey: 'experience', to: '/about#experience', placement: { x: 1097.67, y: 30.11 } },
+  { nodeId: '416-12984', labelKey: 'sectionNav.memes', iconKey: 'memes', to: '/about#education', placement: { x: 46.91, y: 179.79 } },
+  { nodeId: '416-12999', labelKey: 'sectionNav.projectsOverview', iconKey: 'projects', to: '/projects', placement: { x: 232.91, y: 4.11 } },
+  { nodeId: '416-13002', labelKey: 'sectionNav.educationFolder', iconKey: 'education', to: '/about#education', placement: { x: 938.73, y: 129.03 } },
 ];
 
 /** Смещение папки от центра viewport при полном скролле hero (px). */
 /** Кольцо вокруг фото — боковые позиции, не под футером (контакты / «Больше обо мне»). */
 export const FOLDER_HERO_RING_PX = {
-  '1-224': { x: -92, y: -88 },
-  '1-206': { x: 92, y: -88 },
-  '1-227': { x: 108, y: 8 },
-  '1-209': { x: -108, y: 8 },
+  '416-12999': { x: -92, y: -88 },
+  '416-12981': { x: 92, y: -88 },
+  '416-13002': { x: 108, y: 8 },
+  '416-12984': { x: -108, y: 8 },
 };
 
 export const headerItemsWell = [
-  { nodeId: '1-212', labelKey: 'sectionNav.contact', iconKey: 'contact', to: '/contact', placement: { x: 290.76, y: 181.01 } },
-  { nodeId: '1-215', labelKey: 'sectionNav.contact', iconKey: 'contact', to: '/contact', placement: { x: 96.41, y: 30.13 } },
-  { nodeId: '1-218', labelKey: 'sectionNav.team', iconKey: 'team', to: '/about#experience', placement: { x: 891.76, y: 22.13 } },
-  { nodeId: '1-221', labelKey: 'sectionNav.habitat', iconKey: 'habitat', to: '/about#intro', placement: { x: 1101.2, y: 200.81 } },
+  { nodeId: '416-12987', labelKey: 'sectionNav.contact', iconKey: 'contact', to: '/contact', placement: { x: 290.76, y: 181.01 } },
+  { nodeId: '416-12990', labelKey: 'sectionNav.contact', iconKey: 'contact', to: '/contact', placement: { x: 96.41, y: 30.13 } },
+  { nodeId: '416-12993', labelKey: 'sectionNav.resume', iconKey: 'resume', to: '/resume', placement: { x: 891.76, y: 22.13 } },
+  { nodeId: '416-12996', labelKey: 'sectionNav.habitat', iconKey: 'habitat', to: '/about#intro', placement: { x: 1101.2, y: 200.81 } },
 ];

@@ -91,7 +91,7 @@ export default function AboutPage() {
           </div>
           <div className="about-page__hero-copy" data-node-id="883:16917">
             <h1 className="about-page__name" data-node-id="883:16919">
-              {t('about.intro.name')}
+              <span className="text-condensed">{t('about.intro.name')}</span>
             </h1>
             <p className="about-page__lead" data-node-id="883:16921">
               {t('about.intro.lead')}
@@ -107,7 +107,7 @@ export default function AboutPage() {
           data-node-id="883:16900"
         >
           <h2 className="about-page__section-heading" id="about-exp-heading" data-node-id="883:16902">
-            {t('about.experience.title')}
+            <span className="text-condensed">{t('about.experience.title')}</span>
           </h2>
           <ul className="about-page__job-list">
             {jobs.map((job) => (
@@ -133,12 +133,12 @@ export default function AboutPage() {
           id="about-skills-heading"
           data-node-id="883:16909"
         >
-          {t('about.skills.title')}
+          <span className="text-condensed">{t('about.skills.title')}</span>
         </h2>
         <ul className="about-page__skill-grid" data-node-id="883:16911">
           {skills.map((skill) => (
             <AmbientLightCard key={skill.title} className="about-page__skill-card">
-              <h3 className="about-page__skill-title">{skill.title}</h3>
+              <h3 className="about-page__skill-title"><span className="text-condensed">{skill.title}</span></h3>
               <p className="about-page__skill-text">{skill.description}</p>
             </AmbientLightCard>
           ))}
@@ -156,7 +156,7 @@ export default function AboutPage() {
           id="about-edu-heading"
           data-node-id="883:16869"
         >
-          {t('about.education.title')}
+          <span className="text-condensed">{t('about.education.title')}</span>
         </h2>
         <ul className="about-page__edu-bento">
           {eduItems.map((item) => {

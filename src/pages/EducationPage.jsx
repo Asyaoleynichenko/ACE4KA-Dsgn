@@ -6,7 +6,7 @@ export default function EducationPage() {
   return (
     <div className="page-89-788__wrap layout-89-788 snap-screen" data-node-id="89-788">
       <header className="page-header">
-        <h1>{t('education.title')}</h1>
+        <h1><span className="text-condensed">{t('education.title')}</span></h1>
         <p>{t('education.subtitle')}</p>
       </header>
 

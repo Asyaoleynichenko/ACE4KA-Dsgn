@@ -6,7 +6,7 @@ export default function ContactPage() {
   return (
     <div className="page-contact__wrap snap-screen" data-node-id="89-756">
       <header className="page-header">
-        <h1>{t('contact.title')}</h1>
+        <h1><span className="text-condensed">{t('contact.title')}</span></h1>
         <p>
           <a href="https://t.me/pnkprty" target="_blank" rel="noopener noreferrer">
             {t('contact.telegram')}

@@ -23,7 +23,7 @@ export default function ProjectsPage() {
           data-type-reveal-split="lines"
           data-type-reveal-stagger="0.08"
         >
-          {t('projectsPage.title')}
+          <span className="text-condensed">{t('projectsPage.title')}</span>
         </h1>
         <FilterPills />
       </div>

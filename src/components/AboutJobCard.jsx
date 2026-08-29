@@ -8,7 +8,7 @@ function AboutJobBody({ job }) {
           <span className="text-condensed">{job.period}</span>
         </p>
       ) : null}
-      <h3 className="about-job__org">{job.org}</h3>
+      <h3 className="about-job__org"><span className="text-condensed">{job.org}</span></h3>
       <p className="about-job__title">{job.title}</p>
       {job.text ? (
         <>

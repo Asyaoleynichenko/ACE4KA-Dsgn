@@ -19,11 +19,6 @@ const routeImports = {
   ContactPage: () => import('./pages/ContactPage'),
   ResumePage: () => import('./pages/ResumePage'),
   EducationPage: () => import('./pages/EducationPage'),
-  Page89_811: () => import('./pages/Page89_811'),
-  Page89_772: () => import('./pages/Page89_772'),
-  Page89_909: () => import('./pages/Page89_909'),
-  Page89_915: () => import('./pages/Page89_915'),
-  Page89_920: () => import('./pages/Page89_920'),
   ProjectDetailPage: () => import('./pages/ProjectDetailPage'),
   NotFoundPage: () => import('./pages/NotFoundPage'),
 };
@@ -34,11 +29,6 @@ const AboutPage = lazyWithRetry(routeImports.AboutPage);
 const ContactPage = lazyWithRetry(routeImports.ContactPage);
 const ResumePage = lazyWithRetry(routeImports.ResumePage);
 const EducationPage = lazyWithRetry(routeImports.EducationPage);
-const Page89_811 = lazyWithRetry(routeImports.Page89_811);
-const Page89_772 = lazyWithRetry(routeImports.Page89_772);
-const Page89_909 = lazyWithRetry(routeImports.Page89_909);
-const Page89_915 = lazyWithRetry(routeImports.Page89_915);
-const Page89_920 = lazyWithRetry(routeImports.Page89_920);
 const ProjectDetailPage = lazyWithRetry(routeImports.ProjectDetailPage);
 const NotFoundPage = lazyWithRetry(routeImports.NotFoundPage);
 
@@ -84,11 +74,6 @@ const LEGACY_TOP_PATHS = [
   '/contact',
   '/resume',
   '/education',
-  '/page-811',
-  '/page-772',
-  '/page-909',
-  '/page-915',
-  '/page-920',
 ];
 
 function PageFallback() {
@@ -118,11 +103,6 @@ export default function App() {
                   <Route path="contact" element={<ContactPage />} />
                   <Route path="resume" element={<ResumePage />} />
                   <Route path="education" element={<EducationPage />} />
-                  <Route path="page-811" element={<Page89_811 />} />
-                  <Route path="page-772" element={<Page89_772 />} />
-                  <Route path="page-909" element={<Page89_909 />} />
-                  <Route path="page-915" element={<Page89_915 />} />
-                  <Route path="page-920" element={<Page89_920 />} />
                   <Route path="project/:slug" element={<ProjectDetailPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Route>

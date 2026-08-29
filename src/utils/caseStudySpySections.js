@@ -13,6 +13,8 @@ export function resolveCaseSpyTargetId(slug, target) {
   if (target === 'hero') return `${prefix}-hero`;
   if (target === 'intro') return `${prefix}-intro`;
   if (target === 'overview') return `${prefix}-overview`;
+  if (target === 'approach') return `${prefix}-approach`;
+  if (target === 'hypotheses') return `${prefix}-hypotheses`;
   if (target === 'narrative') return `${prefix}-narrative`;
   if (target === 'compare') return `${prefix}-compare`;
   const hyp = /^body:(\d+):hyp$/.exec(target);

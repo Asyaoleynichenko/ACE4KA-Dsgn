@@ -11,6 +11,8 @@
       "result": "Outcome",
       "category": "Category",
       "hypothesis": "Hypothesis {{n}}",
+      "approach": "Approach",
+      "hypotheses": "Hypothesis",
       "problemFallback": "The main constraints are spelled out in the project brief"
     },
     "altBefore": "Before",
@@ -32,8 +34,8 @@
   },
   "hero": {
     "title": "Asya Oleynichenko",
-    "role": "Product Designer · Mail, Cloud & inbox",
-    "text": "Five years in product design. Now on upsell and offer personalization at VK: monetization for Mail Space, Cloud, and Mail. Previously ~1.5 years on Mail media (Mail Science, Hi-Tech, Cinema, Lady, Pets). Work spans research, hypotheses, A/B tests, design, and impact on LTV, conversion, retention, and ARPPU. DAFES AWARDS finalist & winner · HSE red diploma, GPA 8.82 (Design & Programming). Open to Senior Product Designer roles.",
+    "role": "Product designer, Mail Mail and Cloud",
+    "text": "I've spent 5\u00a0years launching and growing digital products. I know how processes come together, how the product works, and how to just do it well.",
     "moreAbout": "More about me",
     "sectionNavAria": "Sections",
     "projectsSectionTitle": "Projects",
@@ -46,13 +48,13 @@
       "focus": "Focus",
       "focusValue": "Monetization",
       "education": "Education",
-      "educationValue": "HSE Design & Programming",
+      "educationValue": "HSE Design\n& Programming",
       "contacts": "Contacts",
       "contactsValue": "@pnkprty"
     },
     "links": {
-      "resume": "Résumé",
-      "mail": "Mail"
+      "resume": "Resume",
+      "mail": "Email"
     },
     "competencies": {
       "aria": "Core focus areas",
@@ -79,6 +81,7 @@
     "educationFolder": "Education",
     "contact": "Contact",
     "team": "Team",
+    "resume": "Résumé",
     "habitat": "Me in my natural habitat"
   },
   "filters": {
@@ -169,64 +172,6 @@
     "coursesText": "Advanced training in product design and UX",
     "languagesTitle": "Languages",
     "languagesText": "Russian — native. English — working proficiency"
-  },
-  "draftPage": {
-    "title": "Page {{id}}",
-    "subtitle": "Content for Figma layout {{id}}",
-    "blockTitle": "Block {{n}}",
-    "blockText": "Placeholder copy for this layout"
-  },
-  "page89": {
-    "89_811": {
-      "title": "Process",
-      "subtitle": "How I work, from research to release",
-      "cards": [
-        { "title": "Research", "text": "Interviews, analytics, product and user context" },
-        { "title": "Hypotheses", "text": "Frame and prioritise hypotheses against goals" },
-        { "title": "Prototype", "text": "Quick mocks, validating flows and interactions" },
-        { "title": "Release", "text": "Handoff to engineering, QA and metrics" }
-      ]
-    },
-    "89_772": {
-      "title": "Approach",
-      "subtitle": "Principles and values in product design",
-      "cards": [
-        { "title": "Systemic", "text": "Design tokens, patterns and reusable components" },
-        { "title": "Accessible", "text": "Contrast, keyboard and screen readers from day one" },
-        { "title": "Clear", "text": "Clean hierarchy, plain copy, obvious actions" },
-        { "title": "Fast", "text": "Tight iterations, early prototypes, measure in production" }
-      ]
-    },
-    "89_909": {
-      "title": "Services",
-      "subtitle": "What you can bring me and how we work",
-      "cards": [
-        { "title": "Product design", "text": "Web and mobile: new products and redesigns" },
-        { "title": "Design systems", "text": "Building and maintaining component libraries" },
-        { "title": "Research", "text": "Usability tests, interviews, diary studies" },
-        { "title": "Consulting", "text": "UI audits, recommendations, design mentoring" }
-      ]
-    },
-    "89_915": {
-      "title": "Engagement",
-      "subtitle": "How we can collaborate",
-      "cards": [
-        { "title": "Project", "text": "Fixed scope with phases, deadlines and price" },
-        { "title": "Retainer", "text": "Ongoing hours per month for a product team" },
-        { "title": "Sprint", "text": "A focused 1–2 week sprint for a specific goal" },
-        { "title": "Embedded", "text": "Augmenting your team for the duration of a project" }
-      ]
-    },
-    "89_920": {
-      "title": "Context",
-      "subtitle": "Where I've worked and what I brought to product",
-      "cards": [
-        { "title": "Mail.ru", "text": "Special projects, monetisation and education services" },
-        { "title": "Startups", "text": "MVPs, product hypotheses and early UI" },
-        { "title": "Internal tools", "text": "Admin panels, dashboards, B2B interfaces" },
-        { "title": "Brand & graphics", "text": "Identity, illustration and project packaging" }
-      ]
-    }
   },
   "projectDetail": {
     "mvpHelp": "Use the side arrows, the dots below, or the left and right keys to change slides. On mobile, swipe left or right.",

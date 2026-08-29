@@ -62,7 +62,7 @@
   --font-display: 'Suisse Intl', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Figma 592:38776 — все строки 96px, gap 12px, pad-top 80px. */
-  --comp-line-size-uniform: clamp(2rem, 9.5vw, 6rem);
+  --comp-line-size-uniform: clamp(3.75rem, 12vw, 8rem);
   --comp-line-size-1: var(--comp-line-size-uniform);
   --comp-line-size-2: var(--comp-line-size-uniform);
   --comp-line-size-3: var(--comp-line-size-uniform);
@@ -99,17 +99,17 @@
   --page-project-sheet-duration: 680ms;
   --duration-micro: 220ms;
 
-  /* Condensed typography — крупнее, капс, сжатие по X + вытягивание по Y */
-  --tc-scale-x: 0.38;
-  --tc-scale-y: 1.16;
-  --tc-size-em: 1.38em;
-  --tc-display-size-em: 1.58em;
-  --tc-letter-spacing: 0.06em;
+  /* Condensed typography — scaleX: 0.65 сжато, 0.8 hover, 1 открыто */
+  --tc-scale-x: 0.65;
+  --tc-scale-y: 1;
+  --tc-size-em: 1em;
+  --tc-display-size-em: 1em;
+  --tc-letter-spacing: 0.02em;
   --tc-line-height: 1.1;
-  --tc-hover-scale-x: 0.46;
-  --tc-active-scale-x: 0.5;
-  --tc-nav-active-scale-x: 0.4;
-  --tc-logo-hover-scale-x: 0.62;
+  --tc-hover-scale-x: 0.8;
+  --tc-active-scale-x: 1;
+  --tc-nav-active-scale-x: 0.72;
+  --tc-logo-hover-scale-x: 0.8;
   --tc-logo-hover-scale-y: 1.08;
   --tc-logo-hover-letter-spacing: 0.12em;
 
@@ -312,7 +312,7 @@
   /* Editorial type ramp — desktop (hero / section / statement / body / label) */
   --type-hero-display-size: clamp(4.5rem, 6.5vw + 2rem, 7.5rem);
   --type-hero-display-line: 0.98;
-  --type-hero-display-tracking: -0.04em;
+  --type-hero-display-tracking: 0.06em;
   --type-section-title-size: clamp(3rem, 4vw + 1.5rem, 4.5rem);
   --type-section-title-line: 1;
   --type-section-title-tracking: -0.03em;
@@ -503,9 +503,9 @@
         --case-section-rhythm: clamp(var(--space-48), 8vw, var(--space-64));
         --preview-card-media-body-gap: var(--space-12);
         --layout-section-gap: var(--space-fluid-block);
-        --tc-scale-x: 0.4;
-        --tc-scale-y: 1.14;
-        --tc-size-em: 1.32em;
+        --tc-scale-x: 0.65;
+        --tc-scale-y: 1;
+        --tc-size-em: 1em;
         --hero-fs-card-top: clamp(5rem, 12svh, 6.75rem);
         --hero-fs-card-width: min(20rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - var(--space-24)));
         --hero-fs-intro-min: clamp(16rem, 48svh, 21rem);
@@ -547,9 +547,9 @@
     :root {
         /* --layout-page-pad-x наследуется из :root (16px) */
         --hero-section-gap: var(--space-48);
-        --tc-scale-x: 0.42;
-        --tc-scale-y: 1.12;
-        --tc-size-em: 1.28em;
+        --tc-scale-x: 0.65;
+        --tc-scale-y: 1;
+        --tc-size-em: 1em;
         --hero-fs-card-top: clamp(4.75rem, 11svh, 6rem);
         --hero-fs-card-width: min(18.75rem, calc(100vw - var(--layout-edge-left) - var(--layout-edge-right) - var(--space-16)));
         --hero-fs-intro-min: clamp(14.5rem, 45svh, 18.5rem);
@@ -716,9 +716,9 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
     will-change: transform, filter;
 }
 
-/* SVG displacement — только halftone CTA (не на карточках/изображениях) */
+/* Halftone stays a static edge texture — displacement filter warps the grid into noise. */
 .btn-show-all__halftone--liquid {
-    filter: url(#ace-halftone-liquid);
+    filter: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -793,7 +793,15 @@ html.lenis #root.snap-pages-root.snap-pages-root--home {
 
 .project-intro__heading h1.type-reveal .type-reveal__line,
 .project-intro__heading h1.type-reveal .type-reveal__mask {
+    display: block;
     overflow: hidden;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.project-intro__heading h1.type-reveal .type-reveal__inner {
+    margin-inline: 0;
+    text-align: left;
 }
 
 /* === Reveal-каскад: [data-reveal] / [data-reveal-group] > * (ScrollPolish IO) ===
@@ -1839,26 +1847,21 @@ body.nav-drawer-open {
     mix-blend-mode: normal;
 }
 
-/* Имитация condensed-варианта: scaleX + scaleY на текстовых нодах. Глобальная утилита — `.text-condensed`.
-   В JSX: оборачивай текстовый узел в <span className="text-condensed">.
-   Токены в :root — кегль, сжатие, капс; hover/active слегка «раскрывают» по X, но остаются condensed.
-   transform-origin: left → negative margin-inline-end компенсирует пустой зазор справа в inline-цепочках. */
+/* Condensed: только scaleX. Кегль = высота, origin задаёт ось (лево / центр). */
 .text-condensed,
 .btn-show-all__label {
     display: inline-block;
     width: fit-content;
     max-width: 100%;
-    vertical-align: middle;
-    font-size: var(--tc-size-em);
+    vertical-align: baseline;
+    font-size: inherit;
     text-transform: uppercase;
     letter-spacing: var(--tc-letter-spacing);
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
-    margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
-    line-height: var(--tc-line-height);
-    transition:
-        transform var(--transition-micro-expand),
-        margin-inline-end var(--transition-micro-expand);
+    margin-inline: 0;
+    line-height: inherit;
+    transition: transform var(--transition-micro-expand);
 }
 
 /* Логотип и lang-switcher — condensed только по X, без вытягивания по Y (читаемость шапки). */
@@ -1874,7 +1877,7 @@ body.nav-drawer-open {
     letter-spacing: var(--tc-letter-spacing);
     transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
-    margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+    margin-inline-end: 0;
     line-height: inherit;
     transition:
         transform var(--dur-smart-slow) var(--ease-exhibition),
@@ -1889,7 +1892,6 @@ body.nav-drawer-open {
 .header .logo:hover > span,
 .header .logo:focus-visible > span {
     --tc-scale-x: var(--tc-logo-hover-scale-x);
-    --tc-scale-y: var(--tc-logo-hover-scale-y);
     letter-spacing: var(--tc-logo-hover-letter-spacing);
 }
 
@@ -1898,47 +1900,98 @@ body.nav-drawer-open {
     --tc-scale-x: var(--tc-hover-scale-x);
 }
 
-/* Центрированные контексты: origin center + block/auto — компенсируем «фантомную» ширину до scale(). */
-:where(
-    .hero-role,
-    .hero-content,
-    .hero-more,
-    .hero-links,
-    .info-card,
-    .info-label,
-    .header-item__label,
-    .btn-show-all,
-    .filter-pill,
-    .page-header,
-    [style*="text-align:center"],
-    [style*="text-align: center"]
-) > .text-condensed,
-:where(
-    .hero-role,
-    .hero-content,
-    .hero-more,
-    .hero-links,
-    .info-card,
-    .info-label,
-    .header-item__label,
-    .btn-show-all,
-    .filter-pill,
-    .page-header,
-    [style*="text-align:center"],
-    [style*="text-align: center"]
-) .text-condensed {
+/* Центр: глифы сжимаются к середине бокса, бокс центрируется margin:auto. */
+.hero-role > .text-condensed,
+.hero-title .text-condensed,
+.hero-more .text-condensed,
+.info-label > .text-condensed,
+.header-item__label .text-condensed,
+.btn-show-all__label,
+.filter-pill__text,
+.page-header h1 > .text-condensed,
+.logo-section .text-condensed,
+.projects-title-main .text-condensed,
+.about-page__section-heading--center .text-condensed,
+.contact-item .text-condensed,
+.site-loader .text-condensed {
     display: block;
     width: fit-content;
     max-width: none;
-    margin-inline: 0;
+    margin-inline: auto;
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: center center;
-    margin-inline-end: 0;
 }
 
-/* Type-reveal в центрированных блоках: inner не left-aligned inline-block на полную ширину текста. */
+/* Display-заголовки: кегль остаётся на h1/h2/h3, scaleX только сжимает ширину. */
+.page-header h1 .text-condensed,
+.projects-title-main .text-condensed,
+.about-page__name .text-condensed,
+.about-page__section-heading .text-condensed,
+.about-page__skill-title .text-condensed,
+.about-job__org .text-condensed,
+.project-intro__heading h1 .text-condensed,
+.project-intro .title h1 .text-condensed,
+.dual-outcomes__title .text-condensed,
+.title-info-card h2 .text-condensed,
+.section > h2 .text-condensed,
+.preview-card__title .text-condensed,
+h1 > .text-condensed,
+h2 > .text-condensed,
+h3 > .text-condensed {
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+}
+
+/* Колонка «О себе» и кейс-стади — condensed от левого края, сетка не центрируется. */
+.about-page__hero-copy .text-condensed,
+.about-page__section-heading:not(.about-page__section-heading--center) .text-condensed,
+.about-page__skill-title .text-condensed,
+.about-job__org .text-condensed,
+.preview-card__title .text-condensed,
+.project-intro__heading h1 .text-condensed,
+.project-intro .title h1 .text-condensed,
+.project-info__label .text-condensed,
+.dual-outcomes__title .text-condensed,
+.section > h2 .text-condensed,
+.project-case-study-mail h1 .text-condensed,
+.project-case-study-mail h2 .text-condensed,
+.project-case-study-mail h3 .text-condensed,
+.project-case-study-mail .hyp-list__title .text-condensed,
+.project-case-study-mail .case-frame .text-condensed {
+    display: inline-block;
+    margin-inline: 0;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: left center;
+    vertical-align: baseline;
+}
+
+/* Ряд ссылок остаётся inline — не ломаем строку в колонку. */
+.hero-links .text-condensed,
+.site-footer__links .text-condensed {
+    display: inline-block;
+    margin-inline: 0;
+    transform-origin: center center;
+}
+
+/* Type-reveal в центрированных блоках: маска и inner по центру колонки. */
 :where(
+    .hero-about,
     .hero-role,
     .hero-content,
+    .hero-title,
+    .info-card,
+    .info-label,
+    .header-item__label,
+    .filter-pill,
+    .btn-show-all,
+    .page-header
+) .type-reveal__line,
+:where(
+    .hero-about,
+    .hero-role,
+    .hero-content,
+    .hero-title,
     .info-card,
     .info-label,
     .header-item__label,
@@ -1954,8 +2007,10 @@ body.nav-drawer-open {
 }
 
 :where(
+    .hero-about,
     .hero-role,
     .hero-content,
+    .hero-title,
     .info-card,
     .info-label,
     .header-item__label,
@@ -1966,7 +2021,7 @@ body.nav-drawer-open {
     display: block;
     width: fit-content;
     max-width: none;
-    margin-inline: 0;
+    margin-inline: auto;
 }
 
 /* Однострочные condensed-лейблы — без переноса в узком flex-контейнере. */
@@ -2701,7 +2756,7 @@ h3 {
 .home-page--seamless .home-scene--hero {
     display: flex;
     flex-direction: column;
-    overflow: clip;
+    overflow: visible;
     /* Во время pin (pinSpacing:false) hero фиксируется ПОВЕРХ компетенций (z 2):
        контент летит на зрителе, а следующий экран поднимается за прозрачным hero. */
     z-index: 6;
@@ -2861,7 +2916,7 @@ h3 {
 }
 
 .home-page--seamless .hero.snap-screen {
-    padding-bottom: calc(var(--layout-section-gap) - var(--scene-overlap));
+    padding-bottom: var(--space-24);
 }
 
 /* Градиентные маски-нахлёсты отключены: переход теперь — полёт hero вглубь
@@ -2885,7 +2940,7 @@ h3 {
 
 .home-page--seamless .home-scene--competencies {
     margin-top: 0;
-    padding-top: var(--layout-section-gap);
+    padding-top: var(--space-32);
     z-index: 2;
 }
 
@@ -3160,11 +3215,13 @@ h3 {
     font-size: var(--comp-line-size, clamp(2rem, 8.8vw, 5.25rem));
     font-weight: 600;
     line-height: 1;
-    letter-spacing: -0.03em;
+    letter-spacing: var(--tc-letter-spacing);
     text-transform: uppercase;
     text-align: center;
     color: #ffffff;
     white-space: nowrap;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: center center;
 }
 
 /* Унифицированный кегль для всех 5 строк competencies — крупный display, font-weight 600. */
@@ -3248,15 +3305,7 @@ h3 {
     background: #000000;
 }
 
-/* После scrub: контент снова в потоке внутри pin-spacer — скрываем, высоту spacer не трогаем (иначе сброс скролла). */
-.home-competencies-scrub__runway.is-scrub-complete .home-competencies-scrub__sticky,
-.home-competencies-scrub__runway.is-scrub-complete .home-competencies-scrub__floats,
-.home-competencies-scrub__runway.is-scrub-complete .home-competencies-scrub__line-wrap,
-.home-competencies-scrub__runway.is-scrub-complete .home-competencies-scrub__line {
-    visibility: hidden !important;
-    pointer-events: none !important;
-    opacity: 0 !important;
-}
+/* После pin контент остаётся в потоке — не прячем, иначе во viewport остаётся чёрная дыра. */
 
 /* GSAP pin держит сцену по центру экрана на время scrub */
 .home-competencies-scrub__sticky {
@@ -3606,7 +3655,7 @@ h3 {
 }
 
 .page-home .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line {
-    transform: none;
+    transform: scaleX(var(--tc-scale-x));
 }
 
 @media (max-width: 52rem) {
@@ -4029,11 +4078,11 @@ h3 {
 .page-home .hero {
     min-height: 0;
     padding-top: 0;
-    padding-bottom: var(--space-64);
+    padding-bottom: var(--space-24);
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: var(--hero-section-gap);
+    gap: var(--space-16);
 }
 
 .page-home .home-first-screen-section {
@@ -4084,6 +4133,16 @@ h3 {
     text-align: center;
 }
 
+.page-home .hero-about .hero-role,
+.page-home .hero-about .hero-title,
+.page-home .hero-about .hero-text,
+.page-home .hero-about .hero-more,
+.page-home .hero-about .info-label,
+.page-home .hero-about .info-value,
+.page-home .hero-about .hero-links {
+    text-align: center;
+}
+
 .page-home .hero-about .hero-content {
     gap: var(--space-12);
     /* Колонка = ширина lead (70 символов в строке), не shrink-to-fit по заголовку */
@@ -4101,14 +4160,31 @@ h3 {
 }
 
 .page-home .hero-about .hero-title {
-    /* hero-title — единственный элемент, который должен выйти за ширину readable-колонки .hero-content и центрироваться по viewport. */
-    width: 100vw;
-    max-width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
+    /* Ширина — из scaleX, кегль из токена макета, не раздуваем font-size. */
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     flex-wrap: nowrap;
     justify-content: center;
-    font-size: clamp(1.75rem, 6.5vw + 1.25rem, var(--type-hero-display-size));
+    overflow: visible;
+    font-size: var(--type-hero-display-size);
+}
+
+.page-home .hero-about .hero-title .text-condensed,
+.page-home .hero-about .hero-title .type-reveal__inner {
+    font-size: inherit;
+    white-space: nowrap;
+    letter-spacing: var(--tc-letter-spacing);
+}
+
+.page-home .hero-about .hero-title .text-condensed {
+    display: block;
+    width: fit-content;
+    margin-inline: 0;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: center center;
 }
 
 .page-home .hero-about .hero-title__line {
@@ -4152,45 +4228,32 @@ h3 {
     min-height: calc(var(--hero-card-width) * 280 / 369 + var(--space-24));
 }
 
-/* === Hero = один экран (416:12975): first screen + интро целиком в 100dvh ===
-   Desktop: пользователь видит всю сцену (иконки + окно + роль/имя/лид +
-   инфо-карточки + ссылки) без скролла. Вертикаль масштабируется dvh-aware
-   токенами, first screen — flex-резинка между шапкой и интро.
-   На мобиле (<64rem) поведение прежнее — там один экран физически не выходит. */
+/* === Hero (416:12975): коллаж = кадр 416:12977 (1275×313), интро сразу под ним.
+   Не растягиваем first-screen на остаток 100dvh — оттуда чёрная пустота. */
 @media (min-width: 64rem) {
     .page-home {
-        /* Кап по высоте вьюпорта; по ширине страхует vw-часть clamp() в .hero-about .hero-title */
         --type-hero-display-size: min(7.5rem, 9.5dvh);
-        /* −3.5rem компенсирует клиренс под хедер в min-height первого экрана,
-           чтобы интро не уехало за фолд на низких вьюпортах */
         --hero-card-width: min(27.5rem, calc(40dvh - 3.5rem));
         --type-body-lg-size: clamp(1.0625rem, 2.4dvh, 1.5rem);
-        /* Шире колонка лида → 5 строк вместо 6, интро компактнее по вертикали */
         --hero-text-max-ch: 78ch;
     }
 
     .page-home .hero {
         box-sizing: border-box;
-        /* min-height (не height): на нормальных экранах ровно 100dvh,
-           на низких узких (1024×768) контент честно отскролливается,
-           а не наезжает на секцию компетенций */
-        min-height: 100dvh;
-        padding-bottom: clamp(var(--space-8), 1.2dvh, var(--space-32));
-        gap: clamp(var(--space-16), 2.2dvh, var(--space-48));
-        /* Оптические отступы заголовка/лида сжимаются вместе с экраном */
+        min-height: 0;
+        padding-bottom: var(--space-24);
+        gap: var(--space-16);
         --type-optical-heading-after: clamp(var(--space-12), 1.6dvh, var(--space-24));
         --type-optical-body-after: clamp(var(--space-8), 1.2dvh, var(--space-16));
     }
 
     .page-home .hero-first-screen {
-        /* Резинка: basis 0 → высота = свободное место вьюпорта (а не aspect-ratio),
-           пол: не короче окна-превью + клиренс под фикс-хедер (nav ГЛАВНАЯ/ПРОЕКТЫ) */
-        flex: 1 1 0;
-        min-height: calc(
-            var(--hero-card-width) * 280 / 369 + var(--header-figma-bar-min) - var(--space-24)
-        );
+        flex: 0 0 auto;
+        width: 100%;
+        aspect-ratio: 1275.452 / 312.784;
+        min-height: calc(var(--hero-card-width) * 280 / 369);
+        margin-top: 0;
     }
-
 
     .page-home .hero-about.hero__intro {
         flex: 0 0 auto;
@@ -4226,11 +4289,8 @@ h3 {
     z-index: 4;
 }
 
-/* Desktop, hero = 100dvh: окно прижато к низу первого экрана — сверху чистый
-   клиренс под фикс-хедер (nav ПРОЕКТЫ/ГЛАВНАЯ/О СЕБЕ), см. min-height выше */
+/* Desktop: окно по центру кадра 416:12977, не прижато к низу растянутого экрана */
 @media (min-width: 64rem) {
-    /* Не height: 100% — Safari резолвит % от aspect-ratio-высоты first screen
-       (до flex-сжатия), и окно свешивалось на роль/имя. Absolute = точный бокс. */
     .page-home .hero-first-screen .hero__top {
         position: absolute;
         inset: 0;
@@ -4239,9 +4299,9 @@ h3 {
     }
 
     .page-home .hero__top .hero__card {
-        top: auto;
-        bottom: 0;
-        transform: translateX(-50%);
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
     }
 
 }
@@ -4290,11 +4350,11 @@ h3 {
     box-sizing: border-box;
 }
 
-/* Figma 1:235–236: role 0.875rem, 1.25rem line-height, 0.0625rem tracking, uppercase, opacity 60% */
+/* Figma 416:13010 — role 14px / 20px, tracking 1px, weight 500, uppercase */
 .hero-role {
-    font-size: 1.25rem;
-    font-weight: 400;
-    line-height: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
     letter-spacing: 0.0625rem;
     text-transform: uppercase;
     color: var(--color-text);
@@ -4312,6 +4372,8 @@ h3 {
 .hero-title {
     margin: 0;
     color: var(--color-text);
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     display: inline-flex;
     flex-direction: column;
@@ -4337,24 +4399,24 @@ h3 {
     }
 }
 
-/* Figma 1:239–240 — body large, editorial lead */
+/* Figma 416:13014 — lead 24px / 28.8, weight 500, ls −1, max 661px */
 .hero-text {
     font-size: var(--type-body-lg-size);
-    font-weight: 400;
+    font-weight: 500;
     line-height: var(--type-body-lg-line);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.0417em;
     color: var(--color-text);
     margin: 0;
     text-wrap: pretty;
     box-sizing: border-box;
 }
 
-/* Figma 416:13015 — «Больше обо мне» UPPERCASE + chevron справа. */
+/* Figma 416:13015 / 573:20911 — «Больше обо мне» 18px / 600, ls −1.08 */
 .hero-more {
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-size: 1.125rem;
+    font-weight: 600;
     line-height: 1;
-    letter-spacing: 0.0313rem;
+    letter-spacing: -0.06em;
     text-transform: uppercase;
     color: var(--color-text);
     margin: 0;
@@ -4443,12 +4505,13 @@ h3 {
 
 .info-card--wide .info-value {
     overflow-wrap: break-word;
+    white-space: pre-line;
 }
 
 /* Figma 89:347 / 1:247–248 — small labels */
 .info-label {
     font-size: var(--type-label-size);
-    font-weight: 400;
+    font-weight: 600;
     line-height: var(--type-label-line);
     letter-spacing: var(--type-label-tracking);
     text-transform: uppercase;
@@ -4606,6 +4669,7 @@ h3 {
     padding: 0;
     box-sizing: border-box;
     pointer-events: none;
+    overflow: visible;
 }
 
 .page-home .hero-first-screen .section-nav {
@@ -4632,6 +4696,7 @@ h3 {
     max-width: none;
     margin: 0;
     pointer-events: none;
+    overflow: visible;
 }
 
 .page-home .hero-first-screen .header-items--figma .header-item--folder,
@@ -4679,10 +4744,10 @@ h3 {
         position: relative;
         aspect-ratio: 1275.452 / 312.784;
         width: 100%;
-        margin-top: var(--space-32);
+        margin-top: var(--space-16);
         min-height: max(
             calc(100vw * 312.784 / 1275.452),
-            calc(var(--hero-fs-nav-zone-h) + var(--space-24))
+            calc(var(--hero-card-width) * 280 / 369)
         );
         display: block;
         overflow: visible;
@@ -4758,7 +4823,7 @@ h3 {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: var(--hero-fs-card-top) 0 var(--hero-fs-float-slack);
+        padding: var(--space-8) 0;
         margin: 0;
         pointer-events: none;
         box-sizing: border-box;
@@ -4801,7 +4866,7 @@ h3 {
         isolation: isolate;
         width: 100%;
         max-width: none;
-        margin: var(--hero-fs-intro-gap) 0 0;
+        margin: 0 auto;
         padding-inline: max(var(--layout-edge-left), env(safe-area-inset-left, 0))
             max(var(--layout-edge-right), env(safe-area-inset-right, 0));
         box-sizing: border-box;
@@ -4822,9 +4887,9 @@ h3 {
     }
 
     .page-home .hero-about .hero-title {
-        font-size: clamp(1.625rem, 10.5vw, var(--type-hero-display-size));
+        font-size: var(--type-hero-display-size);
         flex-direction: row;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         justify-content: center;
         column-gap: 0.2em;
         row-gap: 0.05em;
@@ -4872,9 +4937,8 @@ h3 {
 
     .page-home .hero-first-screen .hero__top {
         width: 100%;
-        min-height: calc(var(--hero-card-width) * 280 / 369 + var(--space-16) + var(--hero-fs-float-slack));
-        flex: 0 0 auto;
-        padding-bottom: var(--hero-fs-float-slack);
+        min-height: 0;
+        padding-bottom: 0;
         box-sizing: border-box;
     }
 
@@ -5042,6 +5106,19 @@ h3 {
     width: 6.1875rem;
     height: 5.625rem;
     flex-shrink: 0;
+    overflow: visible;
+}
+
+.header-item__icon-wrap,
+.header-item__icon-wrap .icon-assemble-dots,
+.header-item__icon-wrap .icon-assemble-dots__media {
+    overflow: visible;
+}
+
+.header-item__icon-wrap .icon-assemble-dots--folder,
+.header-item__icon-wrap .icon-assemble-dots__media {
+    width: 100%;
+    height: 100%;
 }
 
 .header-item__icon-wrap img {
@@ -5049,6 +5126,7 @@ h3 {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    object-position: center;
     filter: brightness(1.06);
     transition:
         transform var(--dur-smart-fast) var(--ease-smart-punch),
@@ -5056,21 +5134,21 @@ h3 {
         opacity var(--dur-smart-fast) var(--ease-smart);
 }
 
-/* Вариант «Image Well» — 44×2.75rem, рамка и внутренняя тень (Figma 1:212, 1:215, 1:218, 1:221) */
+/* Вариант «Image Well» — Figma 416:12987…12996: иконка 66×66 без рамки */
 .header-item--image-well {
     gap: 0.25rem;
 }
 
 .header-item__well {
     position: relative;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 4.125rem;
+    height: 4.125rem;
     flex-shrink: 0;
-    border-radius: var(--radius-xs);
-    border: 0.1375rem solid rgba(0, 0, 0, 0.05);
-    background: rgba(255, 255, 255, 0.02);
-    box-shadow: inset 0.0456rem 0 0 rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
 }
 
 .header-item__well .icon-assemble-dots__media img {
@@ -5114,8 +5192,8 @@ h3 {
     margin-inline: auto;
     text-align: center;
     text-wrap: balance;
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
-    transform-origin: center top;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: center center;
     line-height: var(--tc-line-height);
     box-sizing: border-box;
 }
@@ -5846,13 +5924,13 @@ h3 {
     white-space: nowrap;
     text-align: center;
     vertical-align: middle;
-    font-size: var(--tc-size-em);
+    font-size: inherit;
     text-transform: uppercase;
     letter-spacing: var(--tc-letter-spacing);
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: center center;
-    margin-inline: calc((1 - var(--tc-scale-x)) / 2 * -100%);
-    line-height: var(--tc-line-height);
+    margin-inline: auto;
+    line-height: inherit;
     transition: transform var(--transition-micro-expand);
 }
 
@@ -6111,6 +6189,23 @@ h3 {
         inset 0 -0.1875rem 0.625rem rgba(120, 0, 60, 0.45),
         inset 0 0 1.125rem rgba(255, 175, 220, 0.42),
         inset 0 0 0.375rem rgba(255, 210, 235, 0.35);
+    transition:
+        box-shadow var(--dur-smart-base) var(--ease-smart),
+        filter var(--dur-smart-base) var(--ease-smart);
+}
+
+.btn-show-all:hover,
+.btn-show-all:focus-visible {
+    filter: brightness(1.08);
+    box-shadow:
+        0 0 1.75rem rgba(255, 55, 160, 0.7),
+        0 0 3.5rem rgba(255, 30, 140, 0.38),
+        0 0.625rem 1.75rem rgba(0, 0, 0, 0.45),
+        inset 0 0.125rem 0.3125rem rgba(255, 255, 255, 0.85),
+        inset 0 0.0625rem 0 rgba(255, 255, 255, 1),
+        inset 0 -0.1875rem 0.625rem rgba(120, 0, 60, 0.4),
+        inset 0 0 1.125rem rgba(255, 175, 220, 0.5),
+        inset 0 0 0.375rem rgba(255, 210, 235, 0.4);
 }
 
 .btn-show-all::after {
@@ -6593,6 +6688,7 @@ h3 {
 /* Крупные блоки кейса: разделители + дополнительный «воздух» (сканирование без смены контента) */
 .project-case-study-mail .container--case-study > section.case-study-narrative,
 .project-case-study-mail .container--case-study > section.section[id*='body'],
+.project-case-study-mail .container--case-study > section.case-frame,
 .project-case-study-mail .container--case-study > section.images {
     padding-top: var(--case-section-rhythm);
     margin-top: 0;
@@ -7353,6 +7449,67 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     height: auto;
     aspect-ratio: var(--project-hero-aspect-w) / var(--project-hero-aspect-h);
 }
+
+/* Коллаж обложки — тот же каркас на всех кейсах */
+.project-case-study-mail .hero__media--mosaic {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    grid-auto-rows: minmax(9.5rem, 1fr);
+    gap: 0.75rem;
+    aspect-ratio: unset;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    background: transparent;
+    border-radius: 0;
+}
+
+.project-case-study-mail .hero__media--mosaic img {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 100%;
+    min-height: 10.5rem;
+    object-fit: cover;
+    border-radius: var(--project-hero-radius);
+}
+
+.project-case-study-mail .hero__media--mosaic[data-count='2'] {
+    grid-template-columns: 1fr 1fr;
+}
+
+.project-case-study-mail .hero__media--mosaic[data-count='2'] img {
+    min-height: 18rem;
+}
+
+.project-case-study-mail .hero__media--mosaic[data-count='3'] img:first-child,
+.project-case-study-mail .hero__media--mosaic[data-count='4'] img:first-child {
+    grid-row: span 2;
+    min-height: 22rem;
+}
+
+.project-case-study-mail .case-frame__card {
+    background: #1a1a1a;
+    border-radius: clamp(1.25rem, 3vw, 1.75rem);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    box-sizing: border-box;
+}
+
+.project-case-study-mail .case-frame__card h2,
+.project-case-study-mail .case-frame--approach > h2,
+.project-case-study-mail .case-frame--hypotheses > h2 {
+    margin: 0 0 var(--space-16);
+}
+
+.project-case-study-mail .case-frame__card p {
+    margin: 0;
+    white-space: pre-line;
+}
+
+.project-case-study-mail .section ul.section__pills li,
+.project-case-study-mail .section ul.section__pills--approach li {
+    border-radius: 0;
+}
 /* Несколько обложек — колонка без горизонтального скролла */
 .project-case-study-mail .hero__media--stack {
     position: relative;
@@ -7930,9 +8087,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 /* Figma — подпись карточки (ПРОБЛЕМА, КОНТЕКСТ…) condensed */
 .project-case-study-mail .scroll-scrub-row--cards .card h3 .text-condensed {
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
-    margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+    margin-inline-end: 0;
     letter-spacing: var(--tc-letter-spacing);
     line-height: var(--tc-line-height);
     color: inherit;
@@ -8211,7 +8368,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     text-transform: uppercase;
     /* Condensed — глобальные токены */
     display: inline-block;
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
 }
 
@@ -8394,7 +8551,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     white-space: pre-line;
     /* Condensed — глобальные токены */
     display: inline-block;
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
 }
 .project-case-study-mail .section .scroll-scrub-row__runway {
@@ -8457,7 +8614,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     list-style: none;
     margin: 0;
     padding: 0.75rem 1.25rem;
-    border-radius: var(--radius-full);
+    border-radius: 0;
     background: var(--case-workflow-pill-bg);
     border: 0.0625rem solid rgba(0, 0, 0, 0.06);
     font-family: var(--font-body);
@@ -8714,9 +8871,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .project-case-study-mail .hyp-list__title .text-condensed {
-    transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: left center;
-    margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+    margin-inline-end: 0;
     letter-spacing: var(--tc-letter-spacing);
     line-height: var(--tc-line-height);
     color: inherit;
@@ -9463,11 +9620,18 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin-top: clamp(1rem, 4vw, 1.25rem);
     }
 
-    .project-case-study-mail .hero__media--stack {
+    .project-case-study-mail .hero__media--stack,
+    .project-case-study-mail .hero__media--mosaic {
         aspect-ratio: auto;
-        overflow: hidden;
-        border-radius: var(--project-hero-radius);
+        overflow: visible;
+        border-radius: 0;
         background: transparent;
+    }
+
+    .project-case-study-mail .hero__media--mosaic {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
     }
 
     .project-case-study-mail .hero__media img,
@@ -9487,7 +9651,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         display: block;
     }
 
-    .project-case-study-mail .hero__media--stack img {
+    .project-case-study-mail .hero__media--stack img,
+    .project-case-study-mail .hero__media--mosaic img {
         position: relative;
         inset: auto;
         width: 100%;
@@ -9499,6 +9664,11 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         margin: 0;
         background: transparent;
         display: block;
+    }
+
+    .project-case-study-mail .hero__media--mosaic img {
+        min-height: 7.5rem;
+        aspect-ratio: 4 / 3;
     }
 
     .project-case-study-mail .title-info-card__media {
@@ -10075,6 +10245,10 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
    ========================= */
 /* Page header — Figma 89-756: стили текста из макета 89-756 */
 .page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     margin-bottom: var(--layout-89-756-header-margin-bottom, var(--space-64));
 }
 
@@ -10085,6 +10259,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     letter-spacing: var(--text-89-756-title-letter-spacing);
     margin-bottom: var(--space-8);
     color: var(--text-89-756-title-color);
+    text-align: center;
 }
 
 .page-header p {
@@ -10101,11 +10276,6 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 .page-contact,
 .page-resume,
 .page-education,
-.page-811,
-.page-772,
-.page-909,
-.page-915,
-.page-920,
 .page-not-found {
     --text-89-756-title-color: var(--color-text);
     --text-89-756-link-color: var(--color-text-muted);
@@ -11093,28 +11263,12 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     color: var(--color-text-primary);
 }
 
-/* Figma 89-811, 89-772, 89-909, 89-915, 89-920 — страницы по макетам (верстка 89-756) */
-.page-811 .main,
-.page-772 .main,
-.page-909 .main,
-.page-915 .main,
-.page-920 .main,
 .page-not-found .main {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
 }
-.page-811 .page-89-811__wrap,
-.page-811 .layout-89-811,
-.page-772 .page-89-772__wrap,
-.page-772 .layout-89-772,
-.page-909 .page-89-909__wrap,
-.page-909 .layout-89-909,
-.page-915 .page-89-915__wrap,
-.page-915 .layout-89-915,
-.page-920 .page-89-920__wrap,
-.page-920 .layout-89-920,
 .page-not-found .page-89-788__wrap,
 .page-not-found .layout-89-788 {
     width: 100%;
@@ -11123,81 +11277,13 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     align-items: center;
     text-align: center;
 }
-.page-811 .page-header,
-.page-772 .page-header,
-.page-909 .page-header,
-.page-915 .page-header,
-.page-920 .page-header,
 .page-not-found .page-header {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.page-811 .page-header p,
-.page-772 .page-header p,
-.page-909 .page-header p,
-.page-915 .page-header p,
-.page-920 .page-header p,
 .page-not-found .page-header p {
     max-width: var(--text-89-756-lead-max-width);
-}
-.page-811 .contact-grid,
-.page-772 .contact-grid,
-.page-909 .contact-grid,
-.page-915 .contact-grid,
-.page-920 .contact-grid {
-    margin-left: auto;
-    margin-right: auto;
-}
-.page-811 .contact-item,
-.page-772 .contact-item,
-.page-909 .contact-item,
-.page-915 .contact-item,
-.page-920 .contact-item {
-    flex-direction: column;
-    text-align: center;
-}
-.page-811 .contact-item > div,
-.page-772 .contact-item > div,
-.page-909 .contact-item > div,
-.page-915 .contact-item > div,
-.page-920 .contact-item > div {
-    align-items: center;
-}
-.page-811 .contact-item--text > div > p,
-.page-811 .contact-item > div > p,
-.page-772 .contact-item--text > div > p,
-.page-772 .contact-item > div > p,
-.page-909 .contact-item--text > div > p,
-.page-909 .contact-item > div > p,
-.page-915 .contact-item--text > div > p,
-.page-915 .contact-item > div > p,
-.page-920 .contact-item--text > div > p,
-.page-920 .contact-item > div > p {
-    font-size: var(--text-89-756-body-font-size);
-    line-height: var(--text-89-756-body-line-height);
-    letter-spacing: var(--text-89-756-body-letter-spacing);
-    color: var(--text-89-756-title-color);
-    opacity: var(--text-89-756-body-opacity);
-    margin: 0;
-    text-align: left;
-}
-.page-811 .contact-item > div > p a,
-.page-772 .contact-item > div > p a,
-.page-909 .contact-item > div > p a,
-.page-915 .contact-item > div > p a,
-.page-920 .contact-item > div > p a {
-    color: var(--text-89-756-link-color);
-    font-size: var(--text-89-756-link-font-size);
-    letter-spacing: var(--text-89-756-link-letter-spacing);
-    text-underline-offset: 0.1875rem;
-}
-.page-811 .contact-item > div > p a:hover,
-.page-772 .contact-item > div > p a:hover,
-.page-909 .contact-item > div > p a:hover,
-.page-915 .contact-item > div > p a:hover,
-.page-920 .contact-item > div > p a:hover {
-    color: var(--color-text-primary);
 }
 
 /* About page — секции под header-items (Figma 1-206), legacy */
@@ -11608,8 +11694,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     max-width: none;
     margin: 0;
     padding: 0;
-    /* вордмарк на 100vw — не обрезаем по горизонтали */
-    overflow-x: visible;
+    /* вордмарк на 100vw и scaleX-резинка — не обрезаем */
+    overflow: visible;
     box-sizing: border-box;
 }
 
@@ -11620,6 +11706,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    overflow: visible;
 }
 
 .site-footer__contain {
@@ -11632,58 +11719,54 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding-right: var(--layout-edge-right);
 }
 
-/* ACE4KA — вордмарк футера (Figma 16-171 / 863:18915), на всех страницах */
+/* ACE4KA — вордмарк: бокс = слово, flex центрирует даже при overflow. */
 .site-footer__wordmark {
-    container-name: foot-wm;
-    container-type: inline-size;
-    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     max-width: none;
     margin-top: 0;
     margin-bottom: var(--space-fluid-group);
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    padding: 0 max(env(safe-area-inset-right, 0), clamp(0.5rem, 2.4vw, 1.25rem)) 0
-        max(env(safe-area-inset-left, 0), clamp(0.5rem, 2.4vw, 1.25rem));
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
     box-sizing: border-box;
     color: #fff;
     -webkit-text-fill-color: #fff;
-    -webkit-text-stroke-width: 0;
-    paint-order: normal;
-    text-align: center;
+    overflow: hidden;
 }
 
-/* Figma 573:23146 — большой вордмарк на всю ширину экрана; 6 колонок по букве, scaleY-резинка.
-   Формула: viewport/3.72 даёт ~22.8125rem при ширине Figma-кадра 1358 (cap-height ≈ height 335.97 / line-height 0.92). */
+/* Кегль подобран так, чтобы при scaleX(0.65) слово занимало ширину экрана и сидело по центру. */
 .site-footer__wordmark__track {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    width: 100%;
+    --scale-x: var(--tc-scale-x);
+    display: block;
+    width: max-content;
     max-width: none;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    align-items: baseline;
     font-family: var(--font-body);
-    font-size: clamp(2.5rem, calc(100cqw / 3.72), 32rem);
+    font-size: clamp(3.75rem, 38vw, 20rem);
     font-style: normal;
     font-weight: 600;
     line-height: 0.92;
-    letter-spacing: 0;
+    letter-spacing: var(--tc-letter-spacing);
     text-transform: uppercase;
-    color: inherit;
-}
-
-@supports (font-size: 1cqi) {
-    .site-footer__wordmark__track {
-        font-size: clamp(2.5rem, calc(100cqw / 3.72), 32rem);
-    }
-}
-
-.site-footer__wordmark__char {
-    display: block;
-    width: 100%;
     text-align: center;
-    line-height: inherit;
+    white-space: nowrap;
+    color: inherit;
+    transform: scaleX(var(--scale-x));
+    transform-origin: center center;
+    will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-footer__wordmark__track {
+        --scale-x: var(--tc-scale-x);
+        transform: scaleX(var(--tc-scale-x));
+        will-change: auto;
+    }
 }
 
 .site-footer__main {
@@ -11736,8 +11819,18 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
 /* Figma 863:18915 — ряд ссылок как hero-links: sep + label в одной inline-flex группе */
 .site-footer__links.hero-links {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
-    row-gap: var(--space-8);
+    align-items: center;
+    row-gap: 0.5rem;
+    max-width: 100%;
+}
+
+@media (max-width: 90rem) {
+    .site-footer__item--extended {
+        display: none;
+    }
 }
 
 .site-footer__links.hero-links > a,
@@ -11901,13 +11994,13 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     /* Wordmark на узких сохраняем огромным per Figma — это hero подвала. */
     .site-footer__wordmark__track {
-        font-size: clamp(2.5rem, calc(100cqw / 3.72), 14rem);
-        letter-spacing: 0;
+        font-size: clamp(3.75rem, calc(100cqw / 1.52), 18rem);
+        letter-spacing: var(--tc-letter-spacing);
     }
 
     @supports (font-size: 1cqi) {
         .site-footer__wordmark__track {
-            font-size: clamp(2.5rem, calc(100cqw / 3.72), 14rem);
+            font-size: clamp(3.75rem, calc(100cqw / 1.52), 18rem);
         }
     }
 
@@ -12177,7 +12270,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         text-transform: uppercase;
         transform: scaleX(var(--tc-scale-x));
         transform-origin: left center;
-        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+        margin-inline-end: 0;
     }
 
     /* Открытое меню — полное имя, без ellipsis (scaleX уже сжимает текст) */
@@ -12202,7 +12295,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         text-transform: uppercase;
         transform: scaleX(var(--tc-scale-x));
         transform-origin: left center;
-        margin-inline-end: calc((var(--tc-scale-x, 0.38) - 1) * 1em);
+        margin-inline-end: 0;
     }
 
     .header .nav > .header-bar-actions {
@@ -12634,7 +12727,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         opacity: 1;
         visibility: visible;
         translate: 0 0;
-        transform: scale(var(--tc-scale-x), var(--tc-scale-y));
+        transform: scaleX(var(--tc-scale-x));
         transition: none;
     }
 
@@ -12766,7 +12859,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .page-home .hero-first-screen {
-        min-height: max(100dvh, calc(var(--hero-fs-nav-zone-h) + 3rem));
+        min-height: calc(var(--hero-fs-nav-zone-h) + 3rem);
     }
 
     .page-home .hero-about .hero-title {
@@ -12991,8 +13084,7 @@ p + p {
 .preview-card-block:not(.preview-card-block--mac-window),
 .project-card,
 .project-meta-card,
-.layout-89-756-item,
-.header-item__well {
+.layout-89-756-item {
     border-radius: var(--radius-lg);
 }
 
@@ -13191,6 +13283,7 @@ p + p {
 /* Project pages own their 1.5rem gutter inside .project-page-wrap / case-study containers. */
 .page-home__main {
     padding-top: 0;
+    padding-bottom: 0;
     padding-left: 0;
     padding-right: 0;
 }
@@ -13202,6 +13295,7 @@ p + p {
 
 .main--project {
     padding-top: 0;
+    padding-bottom: 0;
     padding-left: 0;
     padding-right: 0;
 }

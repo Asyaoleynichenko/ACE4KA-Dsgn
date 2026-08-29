@@ -7,12 +7,12 @@ export default function NotFoundPage() {
   return (
     <div className="page-89-788__wrap layout-89-788 snap-screen" data-route="not-found">
       <header className="page-header">
-        <h1>{t('errors.notFoundTitle')}</h1>
+        <h1><span className="text-condensed">{t('errors.notFoundTitle')}</span></h1>
         <p>{t('errors.notFoundBody')}</p>
       </header>
       <p>
         <SeamlessProjectsLink to={localizedPath('/')} className="nav-link">
-          {t('errors.notFoundHome')}
+          <span className="text-condensed">{t('errors.notFoundHome')}</span>
         </SeamlessProjectsLink>
       </p>
     </div>

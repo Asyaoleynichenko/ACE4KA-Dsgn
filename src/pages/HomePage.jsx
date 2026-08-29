@@ -40,11 +40,6 @@ function folderFloatProps(index) {
   return FOLDER_FLOAT_VARIATIONS[index % FOLDER_FLOAT_VARIATIONS.length];
 }
 
-function heroTitleLines(title) {
-  const parts = title.trim().split(/\s+/).filter(Boolean);
-  return parts.length > 0 ? parts : [title.trim()];
-}
-
 const heroLinks = [
   { href: 'https://t.me/pnkprty', label: 'Telegram' },
   { href: 'https://behance.net/', label: 'Behance' },
@@ -112,7 +107,7 @@ export default function HomePage() {
                             dotCount={20}
                             dotPx={3}
                           >
-                            <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={90} loading="lazy" />
+                            <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={70} loading="lazy" />
                           </IconAssembleFromDots>
                         </div>
                         <span className="header-item__label">
@@ -183,11 +178,7 @@ export default function HomePage() {
                 data-type-reveal-split="children"
                 data-type-reveal-delay="0.12"
               >
-                {heroTitleLines(t('hero.title')).map((part) => (
-                  <span key={part} className="hero-title__line">
-                    {part}
-                  </span>
-                ))}
+                <span className="text-condensed">{t('hero.title')}</span>
               </h1>
               <p
                 className="hero-text"
@@ -205,7 +196,7 @@ export default function HomePage() {
                 className="hero-more hero-more--with-icon"
                 data-reveal=""
               >
-                <span className="hero-more__text">{t('hero.moreAbout')}</span>
+                <span className="hero-more__text text-condensed">{t('hero.moreAbout')}</span>
                 <DotIcon name="dot-chevron-right" size={24} className="hero-more__chevron-icon" />
               </SeamlessProjectsLink>
               <div className="hero-about__meta">

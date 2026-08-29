@@ -8,7 +8,6 @@ import {
   translateCaseCardTitle,
   translateExtLinkLabel,
   translateMetaLabel,
-  translateToolLine,
 } from '../i18n/projectFieldTranslate.js';
 import { tWithFallback } from '../i18n/tWithFallback.js';
 import { projects } from '../data/projects';
@@ -17,7 +16,6 @@ import { CASE_STUDY_EN_OVERLAYS } from '../i18n/caseStudyEnOverlays/index.js';
 import { publicUrl } from '../utils/publicUrl.js';
 import { caseStudyStripIconKind } from '../utils/caseStudyStripIcons.js';
 import { buildCaseStudySpySections } from '../utils/caseStudySpySections.js';
-import { setProjectHeroVtName } from '../utils/projectHeroViewTransition.js';
 import { useScrollSpy } from '../hooks/useScrollSpy.js';
 import ProjectCaseStudySpyNav from '../components/ProjectCaseStudySpyNav.jsx';
 import CaseStudyCardCornerIcon from '../components/CaseStudyCardCornerIcon.jsx';
@@ -26,6 +24,13 @@ import DotIcon from '../components/DotIcon.jsx';
 import HalftoneButton from '../components/HalftoneButton.jsx';
 import ProjectsListNavigation from '../components/ProjectsListNavigation.jsx';
 import { pillArrowReplace } from '../utils/pillArrowKeywords.js';
+import {
+  collectCaseHeroImages,
+  getCaseStudyEditorial,
+  partitionCaseSections,
+} from '../utils/caseStudyFrame.js';
+import CaseStudyHeroMosaic from '../components/CaseStudyHeroMosaic.jsx';
+import CaseStudyEditorialFrame from '../components/CaseStudyEditorialFrame.jsx';
 
 /** MVP-блок: один слайд на экран, стрелки, точки, свайп, клавиатура (без горизонтального скролла) */
 function HorizontalMvpGallery({ slides }) {
@@ -297,8 +302,7 @@ export default function ProjectDetailPage() {
     [rawProject, locale],
   );
 
-  const spySections =
-    project?.layout === 'case-study' ? buildCaseStudySpySections(project, { t, locale, messages }) : [];
+  const spySections = project ? buildCaseStudySpySections(project, { t, locale, messages }) : [];
   const spySectionIds = spySections.map((s) => s.id).filter(Boolean);
   const activeSpyId = useScrollSpy(spySectionIds);
 
@@ -313,31 +317,22 @@ export default function ProjectDetailPage() {
   const displayTitle = tWithFallback(t, `projects.cards.${slug}.title`, project.title);
   const ct = (key) => t(`common.caseStudy.${key}`);
 
-  const lead = project.lead ?? project.desc;
   const caseStudyIntroParas = getLocalizedCaseStudyIntroParas(project, locale, messages);
   const metaItems = project.metaItems ?? [{ label: t('common.caseStudy.category'), value: project.meta }];
-  const isCaseStudy = project.layout === 'case-study';
-  const hasHero = Boolean(project.image);
-  const caseStudyTopCards = project.topCards ?? [
+  const editorial = getCaseStudyEditorial(project);
+  const heroImages = collectCaseHeroImages(project);
+  const { kept: bodySections, skipped: skippedSections } = partitionCaseSections(project);
+  const showEditorial = Boolean(
+    editorial.contextText || editorial.approachItems.length || editorial.hypotheses.length,
+  );
+  const topCards = (project.topCards ?? [
     { title: ct('task'), value: project.task },
     { title: ct('solution'), value: project.solution },
     { title: ct('influence'), value: project.influence },
     { title: ct('metrics'), value: project.metrics },
-  ];
-  const topCards = (isCaseStudy
-    ? caseStudyTopCards
-    : [
-        { title: ct('context'), value: project.context ?? lead },
-        { title: ct('problem'), value: project.problem ?? t('common.caseStudy.problemFallback') },
-        { title: ct('task'), value: project.task },
-        { title: ct('solution'), value: project.solution },
-        { title: ct('result'), value: project.influence },
-        { title: ct('metrics'), value: project.metrics },
-      ]).filter((item) => item.value);
-  if (isCaseStudy) {
-    const caseImages = project.caseStudyImages || {};
-    const heroImage = project.image ?? null;
-    return (
+  ]).filter((item) => item.value);
+  const caseImages = project.caseStudyImages || {};
+  return (
       <div
         className="project-page-wrap project-page-wrap--case-study project-case-study-mail"
         data-node-id={project.figmaNodeId}
@@ -346,20 +341,12 @@ export default function ProjectDetailPage() {
         <div className="container container--case-study">
           <ProjectCaseStudySpyNav sections={spySections} activeId={activeSpyId} />
           <section className="hero" id={`case-${project.slug}-hero`}>
-            {heroImage ? (
-              <div className="hero__media" aria-label={displayTitle}>
-                <img
-                  ref={(el) => setProjectHeroVtName(el, project.slug)}
-                  src={publicUrl(heroImage)}
-                  alt={displayTitle}
-                  decoding="async"
-                  loading="eager"
-                  fetchPriority="high"
-                />
-              </div>
-            ) : (
-              <div className="hero-placeholder">{t('projectDetail.heroPlaceholder')}</div>
-            )}
+            <CaseStudyHeroMosaic
+              images={heroImages}
+              slug={project.slug}
+              alt={displayTitle}
+              placeholder={t('projectDetail.heroPlaceholder')}
+            />
           </section>
 
           <section className="project-intro" id={`case-${project.slug}-intro`}>
@@ -372,7 +359,7 @@ export default function ProjectDetailPage() {
                   data-type-reveal-stagger="0.085"
                   data-type-reveal-delay="0.05"
                 >
-                  {displayTitle}
+                  <span className="text-condensed">{displayTitle}</span>
                 </h1>
               </div>
               <div className="project-intro__lead">
@@ -412,27 +399,38 @@ export default function ProjectDetailPage() {
             </div>
           </section>
 
-          <section className="cards-section" id={`case-${project.slug}-overview`}>
-            <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
-              {topCards.map((item, cardIdx) => {
-                const iconKind = caseStudyStripIconKind(item.title);
-                const cardTitle = translateCaseCardTitle(item.title, t);
-                return (
-                  <div
-                    key={`${cardIdx}-${item.title}`}
-                    className="card"
-                    data-strip-kind={iconKind ?? undefined}
-                  >
-                    <h3>
-                      <span className="text-condensed text-condensed--single-line">{cardTitle}</span>
-                    </h3>
-                    <p>{item.value}</p>
-                    {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
-                  </div>
-                );
-              })}
-            </ScrollScrubRow>
-          </section>
+          {showEditorial ? (
+            <CaseStudyEditorialFrame
+              slug={project.slug}
+              editorial={editorial}
+              skipped={skippedSections}
+              ct={ct}
+              t={t}
+              locale={locale}
+            />
+          ) : (
+            <section className="cards-section" id={`case-${project.slug}-overview`}>
+              <ScrollScrubRow variant="cards" ariaLabel={t('projectDetail.cardsStripAria')}>
+                {topCards.map((item, cardIdx) => {
+                  const iconKind = caseStudyStripIconKind(item.title);
+                  const cardTitle = translateCaseCardTitle(item.title, t);
+                  return (
+                    <div
+                      key={`${cardIdx}-${item.title}`}
+                      className="card"
+                      data-strip-kind={iconKind ?? undefined}
+                    >
+                      <h3>
+                        <span className="text-condensed text-condensed--single-line">{cardTitle}</span>
+                      </h3>
+                      <p>{item.value}</p>
+                      {iconKind ? <CaseStudyCardCornerIcon kind={iconKind} staggerIndex={cardIdx} /> : null}
+                    </div>
+                  );
+                })}
+              </ScrollScrubRow>
+            </section>
+          )}
 
           {project.showNarrative && (project.context || project.problem) ? (
             <section className="case-study-narrative" id={`case-${project.slug}-narrative`}>
@@ -441,7 +439,7 @@ export default function ProjectDetailPage() {
             </section>
           ) : null}
 
-          {project.caseSections?.map((section, i) => {
+          {bodySections.map(({ section, index: i }) => {
             const isTitleInfoSection = section.layout === 'title-info' && section.galleryImage;
             const isDualOutcomes = section.layout === 'dual-outcomes' && section.columns?.length;
             return (
@@ -457,7 +455,7 @@ export default function ProjectDetailPage() {
                         key={col.title ?? ci}
                         className={`dual-outcomes__col${col.titleSize === 'medium' ? ' dual-outcomes__col--title-md' : ''}`}
                       >
-                        <h2 className="dual-outcomes__title">{col.title}</h2>
+                        <h2 className="dual-outcomes__title"><span className="text-condensed">{col.title}</span></h2>
                         {col.tasks?.length ? (
                           <ul className="section__pills dual-outcomes__pills" aria-label={col.title}>
                             {col.tasks.map((line, j) => (
@@ -478,7 +476,7 @@ export default function ProjectDetailPage() {
                     <div className="title-info-card">
                       <div className="title-info-card__content" data-node-id="300:107827">
                         <div className="title-info-card__text-group" data-node-id="300:107828">
-                          <h2 data-node-id="300:107830">{section.title}</h2>
+                          <h2 data-node-id="300:107830"><span className="text-condensed">{section.title}</span></h2>
                           {section.description ? <p data-node-id="300:107832">{section.description}</p> : null}
                         </div>
                         {section.ctaLabel ? (
@@ -505,7 +503,7 @@ export default function ProjectDetailPage() {
                     <img src={publicUrl(section.galleryAboveTitle)} alt="" loading="lazy" decoding="async" />
                   </div>
                 ) : null}
-                {!section.hideTitle && section.title ? <h2>{section.title}</h2> : null}
+                {!section.hideTitle && section.title ? <h2><span className="text-condensed">{section.title}</span></h2> : null}
                 {section.description && (
                   <p className={section.hypotheses?.length ? 'section-desc' : ''}>
                     {section.description}
@@ -678,76 +676,4 @@ export default function ProjectDetailPage() {
         </div>
       </div>
     );
-  }
-
-  return (
-    <div className={`project-page-wrap project-page-wrap--layout-89${!hasHero ? ' project-page-wrap--no-hero' : ''}`}>
-      {hasHero && (
-        <div className="project-hero">
-          <img
-            ref={(el) => setProjectHeroVtName(el, project.slug)}
-            src={publicUrl(project.image)}
-            alt={displayTitle}
-            decoding="async"
-            fetchPriority="high"
-          />
-        </div>
-      )}
-      <div className="page-contact__wrap page-contact__wrap--project" data-node-id="89-756">
-        <header className="page-header">
-          <h1>{displayTitle}</h1>
-          <p>{lead}</p>
-        </header>
-        <ScrollScrubRow
-          variant="contact"
-          className="contact-grid-wrap"
-          ariaLabel={t('projectDetail.projectMetaStripAria')}
-        >
-          {metaItems.map((item) => (
-            <div key={item.label} className="contact-item">
-              <span className="contact-item__icon" aria-hidden="true">•</span>
-              <div>
-                <strong><span className="text-condensed">{translateMetaLabel(item.label, t)}</span></strong>
-                <span>{item.value}</span>
-              </div>
-            </div>
-          ))}
-          {topCards.map((item, idx) => (
-            <div key={`${idx}-${item.title}`} className="contact-item contact-item--text">
-              <span className="contact-item__icon" aria-hidden="true">•</span>
-              <div>
-                <strong><span className="text-condensed">{translateCaseCardTitle(item.title, t)}</span></strong>
-                <p>{item.value}</p>
-              </div>
-            </div>
-          ))}
-        </ScrollScrubRow>
-        {(project.tools?.length || project.extLink) ? (
-          <footer className="project-detail-footer project-detail-footer--centered">
-            {project.tools?.length ? (
-              <div>
-                <h3 className="project-detail-footer__label"><span className="text-condensed">{t('projectDetail.toolsHeading')}</span></h3>
-                <ul className="tools-list" aria-label={t('projectDetail.toolsListAria')}>
-                  {project.tools.map((tool) => (
-                    <li key={tool}>
-                      <span className="tools-list__pill"><span className="text-condensed">{translateToolLine(tool, locale, messages)}</span></span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-            {project.extLink ? (
-              <div>
-                <h3 className="project-detail-footer__label"><span className="text-condensed">{t('projectDetail.linksHeading')}</span></h3>
-                <HalftoneButton href={project.extLink.href}>
-                  {translateExtLinkLabel(project.extLink.label, t)}
-                </HalftoneButton>
-              </div>
-            ) : null}
-          </footer>
-        ) : null}
-        <ProjectsListNavigation currentSlug={project.slug} />
-      </div>
-    </div>
-  );
 }

@@ -6,7 +6,7 @@ export default function ResumePage() {
   return (
     <div className="page-89-766__wrap layout-89-766 snap-screen" data-node-id="89-766">
       <header className="page-header">
-        <h1>{t('resume.title')}</h1>
+        <h1><span className="text-condensed">{t('resume.title')}</span></h1>
         <p>{t('resume.subtitle')}</p>
       </header>
 
