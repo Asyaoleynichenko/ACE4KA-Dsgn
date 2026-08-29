@@ -11,6 +11,7 @@ import { asArray } from '../utils/asArray.js';
 import {
   SECTION_HEADER_IMAGES,
   HEADER_FIRST_SCREEN,
+  HEADER_FOLDER_ICON,
   headerItemsFolder,
   headerItemsWell,
 } from '../data/sectionHeaderItems';
@@ -85,15 +86,21 @@ export default function HomePage() {
             </div>
             <nav className="section-nav section-nav--home section-nav--overlay" aria-label={t('hero.sectionNavAria')}>
               <div className="header-items header-items--figma">
-                {headerItemsFolder.map(({ nodeId, labelKey, iconKey, to, placement }, fi) => {
+                {headerItemsFolder.map(({ nodeId, labelKey, iconKey, to, placement, iconSize, iconGap }, fi) => {
                   const { strength, range } = folderFloatProps(fi);
+                  const icon = iconSize || HEADER_FOLDER_ICON;
                   return (
                     <SeamlessProjectsLink
                       key={nodeId}
                       to={localizedPath(to)}
                       className="header-item header-item--folder"
                       data-node-id={nodeId}
-                      style={headerItemPlacementStyle(placement)}
+                      style={{
+                        ...headerItemPlacementStyle(placement),
+                        '--hi-icon-w': `${icon.w}px`,
+                        '--hi-icon-h': `${icon.h}px`,
+                        '--hi-gap': `${iconGap ?? 0}px`,
+                      }}
                     >
                       <div
                         className="header-item__float"
@@ -107,7 +114,7 @@ export default function HomePage() {
                             dotCount={20}
                             dotPx={3}
                           >
-                            <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={99} height={70} loading="lazy" />
+                            <img src={SECTION_HEADER_IMAGES[iconKey]} alt="" width={icon.w} height={icon.h} loading="lazy" />
                           </IconAssembleFromDots>
                         </div>
                         <span className="header-item__label">

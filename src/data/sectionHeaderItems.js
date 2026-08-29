@@ -20,10 +20,15 @@ export const SECTION_HEADER_IMAGES = {
   habitat: publicUrl(`${FIGMA_HOME}/icon-habitat.png`),
 };
 
+/** Размер иконки по умолчанию — папка 99×70. Особые ноды задают iconSize. */
+export const HEADER_FOLDER_ICON = { w: 99, h: 70 };
+
 export const headerItemsFolder = [
-  { nodeId: '416-12981', labelKey: 'sectionNav.experience', iconKey: 'experience', to: '/about#experience', placement: { x: 1097.67, y: 30.11 } },
+  /* 416:12981 «Опыт» — иконка 950:2741, 94×94 */
+  { nodeId: '416-12981', labelKey: 'sectionNav.experience', iconKey: 'experience', to: '/about#experience', placement: { x: 1097.67, y: 30.11 }, iconSize: { w: 94, h: 94 } },
   { nodeId: '416-12984', labelKey: 'sectionNav.memes', iconKey: 'memes', to: '/about#education', placement: { x: 46.91, y: 179.79 } },
-  { nodeId: '416-12999', labelKey: 'sectionNav.projectsOverview', iconKey: 'projects', to: '/projects', placement: { x: 232.91, y: 4.11 } },
+  /* 416:12999 «Краткий обзор на проекты» — папка + HOT, 94×100, gap 8 */
+  { nodeId: '416-12999', labelKey: 'sectionNav.projectsOverview', iconKey: 'projects', to: '/projects', placement: { x: 232.91, y: 4.11 }, iconSize: { w: 94, h: 100 }, iconGap: 8 },
   { nodeId: '416-13002', labelKey: 'sectionNav.educationFolder', iconKey: 'education', to: '/about#education', placement: { x: 938.73, y: 129.03 } },
 ];
 
