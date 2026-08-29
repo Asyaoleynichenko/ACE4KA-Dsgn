@@ -61,16 +61,16 @@
   --font-competencies-display: 'Suisse Intl', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Suisse Intl', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Figma 592:38775 — строки 67px в ряду 124px, gap 12px, холст 1358, тип 896. */
-  --comp-line-size-uniform: clamp(1.75rem, 4.93vw, 4.1875rem);
+  /* Display-акцент: крупный кегль + scaleX. Ряд = кегль + 16px, без наездов. */
+  --comp-line-size-uniform: clamp(3.25rem, 8.4vw, 7.5rem);
   --comp-line-size-1: var(--comp-line-size-uniform);
   --comp-line-size-2: var(--comp-line-size-uniform);
   --comp-line-size-3: var(--comp-line-size-uniform);
   --comp-line-size-4: var(--comp-line-size-uniform);
   --comp-line-size-5: var(--comp-line-size-uniform);
-  --comp-stack-gap: var(--space-12);
-  --comp-stack-pad-top: var(--space-80);
-  --comp-row-min-h: clamp(3rem, 9.1vw, 7.75rem);
+  --comp-stack-gap: var(--space-4);
+  --comp-stack-pad-top: var(--space-32);
+  --comp-row-min-h: var(--comp-line-size-uniform);
   --comp-canvas-w: 84.875rem;
   --comp-type-w: 56rem;
   --comp-card-w: 22.375rem;
@@ -104,18 +104,18 @@
   --page-project-sheet-duration: 680ms;
   --duration-micro: 220ms;
 
-  /* Condensed typography — scaleX: 0.65 сжато, 0.8 hover, 1 открыто */
-  --tc-scale-x: 0.65;
+  /* Condensed typography — только scaleX: покой 0.48, hover 0.68, открыто 1 */
+  --tc-scale-x: 0.48;
   --tc-scale-y: 1;
   --tc-size-em: 1em;
   --tc-display-size-em: 1em;
   --tc-letter-spacing: 0.02em;
   --tc-line-height: 1.1;
-  --tc-hover-scale-x: 0.8;
+  --tc-hover-scale-x: 0.68;
   --tc-active-scale-x: 1;
-  --tc-nav-active-scale-x: 0.72;
-  --tc-logo-hover-scale-x: 0.8;
-  --tc-logo-hover-scale-y: 1.08;
+  --tc-nav-active-scale-x: 0.56;
+  --tc-logo-hover-scale-x: 0.68;
+  --tc-logo-hover-scale-y: 1;
   --tc-logo-hover-letter-spacing: 0.12em;
 
   /* Ambient lighting — inset card glow only */
@@ -178,7 +178,7 @@
   --btn-show-all-height: clamp(3.25rem, 7.5vw, 5.5rem);
   --btn-show-all-width: min(22.5rem, 100%);
   --btn-show-all-padding-x: clamp(1.5rem, 5vw, 4rem);
-  --btn-show-all-font-size: clamp(1rem, 2.4vw, 1.5rem);
+  --btn-show-all-font-size: clamp(1.375rem, 3.2vw, 2.125rem);
   --preview-cta-border: 0.0625rem solid #f5f5f5;
   --preview-cta-radius: 0.375rem;
   --preview-cta-color: rgba(0, 0, 0, 0.5);
@@ -247,12 +247,12 @@
   --header-figma-pad-y: var(--space-24);
   --header-figma-bar-min: var(--space-96); /* 96px: pad 24+24 + line 48 */
   --header-figma-nav-gap: var(--space-96);
-  --header-figma-type-size: 1.25rem;
+  --header-figma-type-size: 1.375rem;
   --header-figma-type-line: var(--space-48);
 
   --hero-about-max: 80.625rem; /* Figma 416:13006 — 1290px */
   --hero-content-max: var(--hero-about-max);
-  --hero-card-width: 27.5rem; /* ~440px — mac-window preview в hero (Figma 369×280 + ~19%) */
+  --hero-card-width: 23.0625rem; /* Figma 416:13005 — 369×280 */
   --hero-row-gap: var(--space-24);
   --hero-lead-max: 47.9375rem; /* Figma 416:13013 — 767px */
   --hero-text-max-ch: 70ch; /* About lead — до ~70 символов в строке */
@@ -318,20 +318,20 @@
   --case-hyp-body-gap: var(--space-proximity-group);
   --hyp-list-inset: var(--case-feature-card-padding);
   /* Editorial type ramp — desktop (hero / section / statement / body / label) */
-  --type-hero-display-size: clamp(4.5rem, 6.5vw + 2rem, 7.5rem);
+  --type-hero-display-size: clamp(3.5rem, 8.4vw, 7.5rem);
   --type-hero-display-line: 0.98;
   --type-hero-display-tracking: 0.06em;
-  --type-section-title-size: clamp(3rem, 4vw + 1.5rem, 4.5rem);
+  --type-section-title-size: clamp(4rem, 6vw + 2rem, 7rem);
   --type-section-title-line: 1;
   --type-section-title-tracking: -0.03em;
-  --type-statement-size: clamp(2rem, 2.5vw + 1rem, 3rem);
+  --type-statement-size: clamp(2.75rem, 3.6vw + 1.25rem, 4.25rem);
   --type-statement-line: 1.1;
   --type-statement-tracking: -0.02em;
-  --type-body-lg-size: clamp(1.25rem, 1vw + 1rem, 1.5rem);
-  --type-body-lg-line: 1.5;
-  --type-body-size: clamp(1rem, 0.5vw + 0.9rem, 1.125rem);
-  --type-body-line: 1.6;
-  --type-label-size: clamp(0.75rem, 0.35vw + 0.65rem, 0.875rem);
+  --type-body-lg-size: clamp(1.5rem, 1.4vw + 1.15rem, 2rem);
+  --type-body-lg-line: 1.45;
+  --type-body-size: clamp(1.25rem, 0.7vw + 1.1rem, 1.5rem);
+  --type-body-line: 1.55;
+  --type-label-size: clamp(1rem, 0.45vw + 0.85rem, 1.125rem);
   --type-label-line: 1.4;
   --type-label-tracking: 0.04em;
   /* Semantic aliases (components + legacy hooks) */
@@ -477,12 +477,13 @@
     :root {
         --hero-row-gap: var(--space-24);
         --layout-section-gap: var(--space-fluid-section);
-        --type-hero-display-size: clamp(3rem, 9vw, 5.5rem);
-        --type-section-title-size: clamp(2.5rem, 6.5vw, 3.75rem);
-        --type-statement-size: clamp(1.625rem, 4.5vw, 2.375rem);
-        --type-body-lg-size: clamp(1.1875rem, 2.2vw + 0.95rem, 1.375rem);
-        --type-body-size: clamp(1.0625rem, 1.6vw + 0.9rem, 1.1875rem);
-        --type-label-size: clamp(0.75rem, 1.1vw + 0.65rem, 0.875rem);
+        --type-hero-display-size: clamp(3.75rem, 12vw, 6.75rem);
+        --type-section-title-size: clamp(3.25rem, 8.5vw, 5.25rem);
+        --type-statement-size: clamp(2.125rem, 5.8vw, 3.25rem);
+        --type-body-lg-size: clamp(1.5rem, 2.8vw + 1.05rem, 1.875rem);
+        --type-body-size: clamp(1.25rem, 2vw + 1.05rem, 1.5rem);
+        --type-label-size: clamp(1rem, 1.4vw + 0.75rem, 1.125rem);
+        --comp-line-size-uniform: clamp(4rem, 14vw, 6.5rem);
         --type-case-study-title: var(--type-section-title-size);
         --type-case-study-lead: var(--type-body-lg-size);
         --project-title-font-size: var(--type-section-title-size);
@@ -493,7 +494,7 @@
         --text-89-756-label-font-size: var(--type-label-size);
         --case-feature-card-title-size-sm: var(--type-label-size);
         --case-feature-card-body-size-sm: var(--type-statement-size);
-        --comp-line-size: clamp(2rem, 5.8vw, 4.25rem);
+        --comp-line-size: var(--comp-line-size-uniform);
     }
 }
 
@@ -511,7 +512,7 @@
         --case-section-rhythm: clamp(var(--space-48), 8vw, var(--space-64));
         --preview-card-media-body-gap: var(--space-12);
         --layout-section-gap: var(--space-fluid-block);
-        --tc-scale-x: 0.65;
+        --tc-scale-x: 0.48;
         --tc-scale-y: 1;
         --tc-size-em: 1em;
         --hero-fs-card-top: clamp(5rem, 12svh, 6.75rem);
@@ -521,17 +522,18 @@
         --hero-fs-well-size: clamp(3.5rem, 14vw, 5.25rem);
         --hero-fs-label-size: clamp(0.6875rem, 2.8vw, 0.8125rem);
         /* Mobile editorial ramp — крупнее body/заголовки на телефонах */
-        --type-hero-display-size: clamp(3.25rem, 13vw, 5rem);
+        --type-hero-display-size: clamp(3.25rem, 14vw, 5.5rem);
         --type-hero-display-line: 0.95;
-        --type-section-title-size: clamp(2.25rem, 9vw, 3.25rem);
+        --type-section-title-size: clamp(3rem, 12vw, 4.25rem);
         --type-section-title-line: 1.05;
-        --type-statement-size: clamp(1.625rem, 6.5vw, 2.25rem);
+        --type-statement-size: clamp(2rem, 8vw, 2.75rem);
         --type-statement-line: 1.15;
-        --type-body-lg-size: clamp(1.1875rem, 4.2vw, 1.3125rem);
-        --type-body-lg-line: 1.5;
-        --type-body-size: clamp(1.0625rem, 3.8vw, 1.125rem);
-        --type-body-line: 1.55;
-        --type-label-size: clamp(0.75rem, 2.9vw, 0.875rem);
+        --type-body-lg-size: clamp(1.5rem, 5.2vw, 1.75rem);
+        --type-body-lg-line: 1.45;
+        --type-body-size: clamp(1.25rem, 4.6vw, 1.5rem);
+        --type-body-line: 1.5;
+        --type-label-size: clamp(1rem, 3.4vw, 1.125rem);
+        --comp-line-size-uniform: clamp(3.75rem, 20vw, 5.5rem);
         --type-case-study-title: var(--type-section-title-size);
         --type-case-study-lead: var(--type-body-lg-size);
         --project-title-font-size: var(--type-section-title-size);
@@ -555,7 +557,7 @@
     :root {
         /* --layout-page-pad-x наследуется из :root (16px) */
         --hero-section-gap: var(--space-48);
-        --tc-scale-x: 0.65;
+        --tc-scale-x: 0.48;
         --tc-scale-y: 1;
         --tc-size-em: 1em;
         --hero-fs-card-top: clamp(4.75rem, 11svh, 6rem);
@@ -570,8 +572,8 @@
         --header-mobile-menu-size: clamp(1.875rem, 11vw, 3.25rem);
         --header-mobile-menu-size-active: clamp(1.875rem, 11vw, 3.25rem);
         --header-mobile-menu-lang-size: clamp(1.75rem, 10vw, 3rem);
-        --type-section-title-size: clamp(2rem, 10vw, 2.875rem);
-        --type-body-lg-size: clamp(1.0625rem, 4vw, 1.1875rem);
+        --type-section-title-size: clamp(2.5rem, 12vw, 3.5rem);
+        --type-body-lg-size: clamp(1.25rem, 4.6vw, 1.5rem);
     }
 }
 
@@ -584,11 +586,12 @@
         --hero-fs-folder-max-w: min(8rem, 20vw);
         --hero-fs-well-size: clamp(4rem, 11vw, 5.75rem);
         --hero-fs-label-size: clamp(0.6875rem, 1.9vw, 0.8125rem);
-        --type-hero-display-size: clamp(3.5rem, 8.5vw, 5.75rem);
-        --type-section-title-size: clamp(2.75rem, 7vw, 4rem);
-        --type-body-lg-size: clamp(1.25rem, 2.4vw + 0.95rem, 1.4375rem);
-        --type-body-size: clamp(1.125rem, 1.8vw + 0.9rem, 1.25rem);
-        --comp-line-size: clamp(2.125rem, 4.8vw, 3.75rem);
+        --type-hero-display-size: clamp(3.75rem, 9.5vw, 6.25rem);
+        --type-section-title-size: clamp(3.25rem, 8vw, 5rem);
+        --type-body-lg-size: clamp(1.5rem, 2.6vw + 1rem, 1.75rem);
+        --type-body-size: clamp(1.25rem, 2vw + 0.95rem, 1.4375rem);
+        --comp-line-size: var(--comp-line-size-uniform);
+        --comp-line-size-uniform: clamp(3rem, 8.5vw, 5.75rem);
     }
 
     .home-competencies-scrub--static .home-competencies__line-wrap {
@@ -1288,6 +1291,7 @@ html.snap-pages #root.snap-pages-root--home {
 
 body {
     font-family: var(--font-body);
+    font-size: var(--type-body-size);
     background: var(--color-bg);
     color: var(--color-text);
     line-height: 1.6;
@@ -1373,7 +1377,7 @@ select:focus-visible,
     left: 0;
     right: 0;
     z-index: 100;
-    background: var(--color-bg);
+    background: transparent;
     mix-blend-mode: normal;
     min-height: var(--header-figma-bar-min);
     transition: transform var(--transition-micro-expand);
@@ -1645,6 +1649,7 @@ body.nav-drawer-open {
     z-index: 1;
     width: 100%;
     min-height: var(--header-figma-bar-min);
+    background: transparent;
     margin: 0;
     padding:
         max(var(--header-figma-pad-y), env(safe-area-inset-top, 0))
@@ -1657,7 +1662,6 @@ body.nav-drawer-open {
     justify-content: space-between;
     flex-wrap: nowrap;
     gap: var(--space-16);
-    background: transparent;
 }
 
 /* Десктоп: 1fr | max-content | 1fr — nav-list строго по центру вьюпорта,
@@ -2241,6 +2245,13 @@ h3 {
     color: inherit;
 }
 
+/* Figma 89:346 / 1:400 — шапка страницы проектов: лого 24px, пилюля 332×46, пункты 14px */
+.header--projects {
+    --header-figma-type-size: 1.5rem;
+    --header-figma-type-line: 2rem;
+    --header-figma-bar-min: 5.5rem;
+}
+
 /* Figma 573:19068 Nav Links — gap 7.5rem (120px), плоский ряд */
 .header .nav-list {
     display: inline-flex;
@@ -2263,6 +2274,36 @@ h3 {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     mix-blend-mode: normal;
+}
+
+@media (min-width: 56.3125rem) {
+    .header.header--projects .nav-list {
+        gap: var(--space-8);
+        padding: var(--space-4);
+        min-height: 2.875rem;
+        height: 2.875rem;
+        border-radius: 999rem;
+        background: rgba(255, 255, 255, 0.11) !important;
+        box-shadow: none;
+    }
+
+    .header.header--projects .nav-list .nav-link {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 400;
+        padding: 0.5rem 0.75rem;
+        min-height: 2.25rem;
+        border-radius: 999rem;
+        opacity: 1;
+    }
+
+    .header.header--projects .nav-list .nav-link.active {
+        background: #000000 !important;
+        background-color: #000000 !important;
+        box-shadow: none !important;
+        font-weight: 400;
+        opacity: 1;
+    }
 }
 
 /* Полоска кейса: сетка 1fr | центр | 1fr + одинаковые внутренние поля и отступы у ссылок */
@@ -2404,6 +2445,23 @@ h3 {
 .header .nav-list .nav-link:hover:not(.active) {
     background: transparent;
     opacity: 0.78;
+}
+
+@media (min-width: 56.3125rem) {
+    .header.header--projects .nav-list .nav-link,
+    .header.header--projects .nav-list .nav-link:hover,
+    .header.header--projects .nav-list .nav-link:active {
+        background: transparent !important;
+        opacity: 1;
+    }
+
+    .header.header--projects .nav-list .nav-link.active,
+    .header.header--projects .nav-list .nav-link.active:hover {
+        background: #000000 !important;
+        background-color: #000000 !important;
+        font-weight: 400;
+        opacity: 1;
+    }
 }
 
 .header .nav-list .nav-link--case-with-chevron {
@@ -2772,14 +2830,14 @@ h3 {
 .home-page--seamless .home-scene--hero {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible;
     isolation: isolate;
     z-index: 1;
 }
 
 .home-page--seamless .home-scene--hero .hero-first-screen {
     position: relative;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
 }
 
 .home-page--seamless .hero-first-screen .section-nav--overlay {
@@ -3108,9 +3166,7 @@ h3 {
     max-width: 100%;
     margin-top: var(--space-fluid-group);
     margin-bottom: var(--space-fluid-stack);
-    isolation: isolate;
-    overflow-x: clip;
-    overflow-y: visible;
+    overflow: visible;
     padding-left: 0;
     padding-right: 0;
     box-sizing: border-box;
@@ -3268,13 +3324,9 @@ h3 {
 
 /* sm: компетенции — перенос строк, фиксированная H-рамп (без auto-scale по длине) */
 @media (max-width: 40rem) {
-    :root {
-        --comp-row-min-h: auto;
-    }
-
     .home-competencies-scrub.home-competencies-scrub--static .home-competencies__line-wrap {
-        min-height: auto;
-        padding-block: 0.35rem;
+        min-height: var(--comp-row-min-h);
+        padding-block: 0;
         padding-left: 1rem;
         padding-right: 1rem;
     }
@@ -3309,15 +3361,27 @@ h3 {
     }
 }
 
-/* Скролл-привязка: строки компетенций ↔ превью проектов (см. HomeCompetenciesScrub.jsx) */
+/* Скролл-привязка: высота runway = экран + ход; сцена sticky — один DOM-блок. */
 .home-competencies-scrub__runway {
     position: relative;
     width: 100%;
+    height: auto;
 }
 
 .page-home .home-competencies-scrub__runway {
     display: block;
     background: #000000;
+}
+
+.page-home .home-competencies-scrub__runway:has(> .home-competencies-scrub--pinned) {
+    height: auto;
+    min-height: 0;
+    padding-bottom: 0;
+}
+
+.page-home .home-competencies .pin-spacer,
+.page-home .home-competencies-scrub__runway > .pin-spacer {
+    display: contents;
 }
 
 /* Figma 592:38775 — стопка строк + две карточки поверх (TL / BR) */
@@ -3345,8 +3409,8 @@ h3 {
 .home-competencies-scrub--static-block .home-competencies-scrub__stage {
     width: 100%;
     max-width: 100%;
-    min-height: min(51.75rem, 88vw);
-    padding: var(--space-80) 0;
+    min-height: 0;
+    padding: var(--space-32) 0;
     margin: 0;
     overflow: visible;
 }
@@ -3364,7 +3428,7 @@ h3 {
     width: min(var(--comp-card-w), 36vw);
     max-width: var(--comp-card-w);
     pointer-events: auto;
-    animation: none;
+    animation: home-comp-preview-fade 0.42s var(--ease-smart, ease) both;
 }
 
 .home-competencies-scrub--static-block .home-competencies-scrub__lines {
@@ -3392,13 +3456,14 @@ h3 {
     text-align: center;
     white-space: nowrap;
     font-size: var(--comp-line-size-uniform);
+    font-weight: 600;
     line-height: 1;
+    letter-spacing: 0.06em;
 }
 
 .page-home .home-competencies {
     position: relative;
     z-index: 2;
-    isolation: isolate;
     background: var(--color-bg);
     overflow: visible;
     padding: var(--space-32) 0;
@@ -3417,27 +3482,6 @@ h3 {
         min-height: 0;
     }
 
-    .home-competencies-scrub--static-block .home-competencies-scrub__floats {
-        position: relative;
-        inset: auto;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: var(--space-16);
-        margin: 0 0 var(--space-16);
-    }
-
-    .home-competencies-scrub--static-block .home-competencies-scrub__float,
-    .home-competencies-scrub--static-block .home-competencies-scrub__float--tl,
-    .home-competencies-scrub--static-block .home-competencies-scrub__float--br {
-        position: relative;
-        left: auto;
-        right: auto;
-        top: auto;
-        transform: none;
-        width: min(20rem, calc(50% - var(--space-8)));
-    }
-
     .home-competencies-scrub--static-block .home-competencies-scrub__line-wrap {
         padding-inline: var(--space-16);
         min-height: auto;
@@ -3445,20 +3489,19 @@ h3 {
 
     .home-competencies-scrub--static-block .home-competencies-scrub__line,
     .home-competencies-scrub--static-block .home-competencies__line {
-        white-space: normal;
-        font-size: clamp(1.75rem, 8vw, 3rem);
+        white-space: nowrap;
+        font-size: var(--comp-line-size-uniform);
     }
 }
 
 /* После pin контент остаётся в потоке — не прячем, иначе во viewport остаётся чёрная дыра. */
 
-/* GSAP pin держит сцену по центру экрана на время scrub */
+/* Одна сцена: липнет к верху, пока скроллится пустой хвост runway. */
 .home-competencies-scrub__sticky {
     position: relative;
     z-index: 2;
     width: 100%;
     box-sizing: border-box;
-    min-height: min(100vh, 100dvh);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -3466,6 +3509,14 @@ h3 {
     background: #000000;
     padding-top: max(3.5rem, calc(env(safe-area-inset-top, 0) + 3rem));
     padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0));
+}
+
+.home-competencies-scrub--pinned.home-competencies-scrub__sticky {
+    position: sticky;
+    top: 0;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
 }
 
 /* Вордмарк футера не должен просвечивать под блоком компетенций при скролле */
@@ -3539,12 +3590,12 @@ h3 {
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
-    min-height: min(33rem, 92vw);
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: var(--comp-stack-pad-top) 0 0;
+    padding: var(--space-32) 0 0;
     box-sizing: border-box;
     overflow: visible;
     --comp-active-scale-x: 1;
@@ -3567,14 +3618,18 @@ h3 {
 }
 
 .home-competencies-scrub__float--tl {
-    left: 3.02%;
-    top: 28.5%;
+    left: 0;
+    top: 0;
+    right: auto;
+    bottom: auto;
     transform: none;
 }
 
 .home-competencies-scrub__float--br {
-    left: 64.14%;
-    top: 46.86%;
+    left: auto;
+    right: 0;
+    top: auto;
+    bottom: 0;
     transform: none;
 }
 
@@ -3584,7 +3639,7 @@ h3 {
 
 .home-competencies-scrub__center {
     position: relative;
-    z-index: 1;
+    z-index: auto;
     width: 100%;
     max-width: 100%;
     margin-left: auto;
@@ -3786,17 +3841,15 @@ h3 {
     pointer-events: auto;
     opacity: 0.38;
     visibility: visible;
-    transition:
-        opacity 0.28s var(--ease-smart),
-        transform 0.05s linear;
+    z-index: 5;
+    overflow: visible;
+    transition: opacity 0.28s var(--ease-smart);
 }
 
 .page-home .home-competencies-scrub__line-wrap.is-active {
     opacity: 1;
-    z-index: 2;
-    transform: scale(var(--comp-active-scale-x, 1), var(--comp-active-scale-y, 1));
-    transform-origin: center center;
-    will-change: transform;
+    z-index: 6;
+    transform: none;
 }
 
 .page-home .home-competencies-scrub__line-wrap.is-active .home-competencies-scrub__line {
@@ -3805,36 +3858,67 @@ h3 {
 
 @media (max-width: 52rem) {
     .home-competencies-scrub__float {
-        width: min(16.25rem, 38vw);
+        width: min(16.25rem, 42vw);
     }
 
     .home-competencies-scrub__float--tl {
         left: 0;
-        top: 6%;
-        transform: translate(-8%, 0);
-    }
-
-    .home-competencies-scrub__float--br {
-        left: auto;
-        right: -2%;
-        top: 32%;
-    }
-}
-
-@media (max-width: 40rem) {
-    .home-competencies-scrub__float {
-        width: min(11rem, 44vw);
-    }
-
-    .home-competencies-scrub__float--tl {
-        left: -2%;
-        top: 4%;
+        top: 0;
         transform: none;
     }
 
     .home-competencies-scrub__float--br {
-        right: -4%;
-        top: 38%;
+        left: auto;
+        right: 0;
+        top: auto;
+        bottom: 0;
+    }
+}
+
+@media (max-width: 40rem) {
+    .page-home .home-competencies-scrub--pinned .home-competencies-scrub__floats {
+        position: absolute;
+        inset: 0;
+        display: block;
+        margin: 0;
+        max-width: none;
+        pointer-events: none;
+    }
+
+    .page-home .home-competencies-scrub--pinned .home-competencies-scrub__float {
+        position: absolute;
+        width: min(13.5rem, 56vw);
+        max-width: 13.5rem;
+        pointer-events: auto;
+    }
+
+    .page-home .home-competencies-scrub--pinned .home-competencies-scrub__float--tl {
+        left: 0;
+        top: 0;
+        right: auto;
+        bottom: auto;
+        transform: none;
+    }
+
+    .page-home .home-competencies-scrub--pinned .home-competencies-scrub__float--br {
+        left: auto;
+        right: 0;
+        top: auto;
+        bottom: 0;
+        transform: none;
+    }
+
+    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__title,
+    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__title .text-condensed {
+        font-size: 1.125rem;
+        max-width: 13rem;
+    }
+
+    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__meta,
+    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__desc,
+    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__meta .text-condensed {
+        font-size: 0.75rem;
+        max-width: 13rem;
     }
 
     .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
@@ -3879,13 +3963,13 @@ h3 {
 .home-competencies-scrub__line-wrap[data-heading="4"] { --comp-line-size: var(--comp-line-size-4); }
 .home-competencies-scrub__line-wrap[data-heading="5"] { --comp-line-size: var(--comp-line-size-5); }
 
-/* Scrub: единый кегль 96px (Figma 592:38776). */
+/* Figma 416:12975 — 67px в ряду 124px, без увеличения кегля сверх ряда. */
 .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
     .home-competencies-scrub__line.home-competencies__line {
-    font-size: var(--comp-line-size-uniform, clamp(2rem, 9.5vw, 6rem));
+    font-size: var(--comp-line-size-uniform);
     font-weight: 600;
     line-height: 1;
-    letter-spacing: -0.0625em;
+    letter-spacing: 0.06em;
     white-space: nowrap;
     opacity: 1;
     filter: none;
@@ -3922,9 +4006,8 @@ h3 {
     }
 }
 
-/* Планшет / узкая колонка: карточки проектов в потоке над стопкой, не прячем */
+/* Reduced-motion: карточки в потоке. Pin — углы, чтобы не накрывать активную строку. */
 @media (max-width: 64rem) {
-    .page-home .home-competencies-scrub:not(.home-competencies-scrub--static) .home-competencies-scrub__floats,
     .page-home .home-competencies-scrub--touch-scroll .home-competencies-scrub__floats,
     .page-home .home-competencies-scrub--reduced-motion .home-competencies-scrub__floats {
         display: flex;
@@ -3941,7 +4024,6 @@ h3 {
         pointer-events: none;
     }
 
-    .page-home .home-competencies-scrub:not(.home-competencies-scrub--static) .home-competencies-scrub__float,
     .page-home .home-competencies-scrub--touch-scroll .home-competencies-scrub__float,
     .page-home .home-competencies-scrub--reduced-motion .home-competencies-scrub__float {
         position: relative;
@@ -3967,11 +4049,11 @@ h3 {
     }
 }
 
-/* ≤64rem: кегль поменьше, но всё ещё крупный display. */
+/* ≤64rem: тот же display-кегль, ряд растёт вместе с ним. */
 @media (max-width: 64rem) {
     .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
         .home-competencies-scrub__line.home-competencies__line {
-        font-size: clamp(2rem, 8.2vw, 4.75rem);
+        font-size: var(--comp-line-size-uniform);
     }
 
     .page-home .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
@@ -3994,13 +4076,10 @@ h3 {
     }
 }
 
-/* Планшет (641–1024): длинные строки переносим, чтобы не обрезались справа */
 @media (max-width: 64rem) and (min-width: 40.0625rem) {
     .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
         .home-competencies-scrub__line.home-competencies__line {
-        white-space: normal;
-        text-wrap: balance;
-        overflow-wrap: anywhere;
+        white-space: nowrap;
     }
 }
 
@@ -4009,10 +4088,8 @@ h3 {
 @media (max-width: 40rem) {
     .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
         .home-competencies-scrub__line.home-competencies__line {
-        white-space: normal;
-        text-wrap: balance;
-        overflow-wrap: anywhere;
-        font-size: clamp(1.875rem, 9vw, 3.25rem);
+        white-space: nowrap;
+        font-size: var(--comp-line-size-uniform);
     }
 }
 
@@ -4145,10 +4222,7 @@ h3 {
     @container comp-content (width < 30rem) {
         .home-competencies-scrub:not(.home-competencies-scrub--static):not(.home-competencies-scrub--reduced-motion)
             .home-competencies-scrub__line.home-competencies__line {
-            font-size: min(
-                var(--comp-line-size-uniform, clamp(2rem, 9.5vw, 6rem)),
-                12.5cqw
-            );
+            font-size: min(var(--comp-line-size-uniform), 12.5cqw);
         }
     }
 }
@@ -4259,7 +4333,7 @@ h3 {
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-16);
-    overflow: hidden;
+    overflow: visible;
     isolation: isolate;
 }
 
@@ -4304,6 +4378,8 @@ h3 {
 
 /* Figma 416:13006 — About Section: intro stack + info + footer links */
 .page-home .hero-about.hero__intro {
+    position: relative;
+    z-index: 3;
     box-sizing: border-box;
     width: 100%;
     max-width: var(--hero-about-max);
@@ -4338,7 +4414,7 @@ h3 {
 }
 
 .page-home .hero-about .hero-title {
-    /* Ширина — из scaleX, кегль из токена макета, не раздуваем font-size. */
+    /* Figma 416:12975 — 67px / 600 / ls 4.02, сжатие только scaleX */
     display: flex;
     width: 100%;
     max-width: 100%;
@@ -4348,6 +4424,8 @@ h3 {
     justify-content: center;
     overflow: visible;
     font-size: var(--type-hero-display-size);
+    font-weight: 600;
+    letter-spacing: 0.06em;
 }
 
 .page-home .hero-about .hero-title .text-condensed,
@@ -4400,9 +4478,10 @@ h3 {
     position: relative;
     width: 100%;
     max-width: none;
-    margin: 0;
+    margin: 0 0 var(--space-16);
     aspect-ratio: 1275.452 / 312.784;
-    min-height: 0;
+    height: auto;
+    min-height: calc(var(--hero-card-width) * 280 / 369);
     overflow: visible;
 }
 
@@ -4410,9 +4489,10 @@ h3 {
    Не растягиваем first-screen на остаток 100dvh — оттуда чёрная пустота. */
 @media (min-width: 64rem) {
     .page-home {
-        --type-hero-display-size: min(7.5rem, 9.5dvh);
+        --type-hero-display-size: clamp(4.5rem, 8.4vw, 7.5rem);
+        --comp-line-size-uniform: clamp(4.5rem, 8.4vw, 7.5rem);
         --hero-card-width: min(23rem, 32vw);
-        --type-body-lg-size: clamp(1.0625rem, 2.4dvh, 1.5rem);
+        --type-body-lg-size: clamp(1.5rem, 2.2vw, 2rem);
         --hero-text-max-ch: 78ch;
     }
 
@@ -4429,7 +4509,8 @@ h3 {
         flex: 0 0 auto;
         width: 100%;
         aspect-ratio: 1275.452 / 312.784;
-        min-height: 0;
+        height: auto;
+        min-height: calc(var(--hero-card-width) * 280 / 369);
         margin-top: 0;
         overflow: visible;
     }
@@ -4582,7 +4663,7 @@ h3 {
 .hero-text {
     font-size: var(--type-body-lg-size);
     font-weight: 500;
-    line-height: var(--type-body-lg-line);
+    line-height: 1.2;
     letter-spacing: -0.0417em;
     color: var(--color-text);
     margin: 0;
@@ -4592,7 +4673,7 @@ h3 {
 
 /* Figma 416:13015 / 573:20911 — «Больше обо мне» 18px / 600, ls −1.08 */
 .hero-more {
-    font-size: 1.125rem;
+    font-size: 1.375rem;
     font-weight: 600;
     line-height: 1;
     letter-spacing: -0.06em;
@@ -4710,6 +4791,16 @@ h3 {
     line-height: var(--type-body-line);
     letter-spacing: -0.01em;
     color: var(--color-text);
+}
+
+.page-home .info-label {
+    font-size: var(--type-label-size);
+}
+
+.page-home .info-value {
+    font-size: var(--type-body-size);
+    font-weight: 500;
+    line-height: 1.4;
 }
 
 @media (max-width: 64rem) {
@@ -4924,7 +5015,8 @@ h3 {
         aspect-ratio: auto;
         width: 100%;
         margin-top: var(--space-16);
-        min-height: calc(var(--hero-fs-card-width) * 280 / 369 + var(--space-64));
+        margin-bottom: var(--space-16);
+        min-height: calc(var(--hero-fs-card-width, var(--hero-card-width)) * 280 / 369);
         height: auto;
         display: block;
         overflow: visible;
@@ -4999,8 +5091,8 @@ h3 {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        padding: var(--space-32) 0;
+        justify-content: flex-start;
+        padding: 0;
         margin: 0;
         pointer-events: none;
         box-sizing: border-box;
@@ -5587,7 +5679,7 @@ h3 {
     max-width: none;
     z-index: auto;
     font-weight: 700;
-    font-size: 0.8125rem;
+    font-size: 0.8125rem; /* Figma 416:13005 — 13px */
     line-height: 1rem;
     color: rgba(0, 0, 0, 0.5);
 }
@@ -6377,8 +6469,11 @@ h3 {
     text-transform: uppercase;
     text-decoration: none;
     cursor: pointer;
-    overflow: hidden;
+    overflow: clip;
+    overflow-clip-margin: 0;
     isolation: isolate;
+    clip-path: inset(0 round var(--btn-show-all-radius));
+    -webkit-clip-path: inset(0 round var(--btn-show-all-radius));
     box-shadow:
         0 0 1.375rem rgba(255, 55, 160, 0.55),
         0 0 3rem rgba(255, 30, 140, 0.28),
@@ -6443,7 +6538,9 @@ h3 {
     z-index: 3;
     border-radius: inherit;
     pointer-events: none;
-    overflow: hidden;
+    overflow: clip;
+    clip-path: inset(0 round var(--btn-show-all-radius));
+    -webkit-clip-path: inset(0 round var(--btn-show-all-radius));
     mix-blend-mode: lighten;
     /* ellipse 246×100%: чистый центр на всю высоту кнопки, radial fade к halftone */
     -webkit-mask-image: radial-gradient(
@@ -6476,7 +6573,7 @@ h3 {
 .btn-show-all__halftone::before {
     content: '';
     position: absolute;
-    inset: -40%;
+    inset: 0;
     background-color: #ffffff;
     /* Тёмное ядро в центре карты → при росте size волна уходит к краям кнопки. */
     background-image:
@@ -7292,7 +7389,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     z-index: 1;
 }
 
-.projects-list-nav__title {
+.projects-list-nav__title,
+.projects-list-nav__title .text-condensed {
+    --tc-scale-x: 1;
     position: absolute;
     top: 50%;
     left: 0.75rem;
@@ -7302,7 +7401,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
     z-index: 2;
     transition: top 0.45s var(--ease-exhibition, cubic-bezier(0.22, 1, 0.36, 1)),
                 transform 0.45s var(--ease-exhibition, cubic-bezier(0.22, 1, 0.36, 1));
@@ -7323,7 +7422,9 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 }
 
 .projects-list-nav__row:hover .projects-list-nav__title,
-.projects-list-nav__row:focus-visible .projects-list-nav__title {
+.projects-list-nav__row:hover .projects-list-nav__title .text-condensed,
+.projects-list-nav__row:focus-visible .projects-list-nav__title,
+.projects-list-nav__row:focus-visible .projects-list-nav__title .text-condensed {
     top: auto;
     bottom: 0.75rem;
     transform: none;
@@ -11951,13 +12052,14 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     padding-right: var(--layout-edge-right);
 }
 
-/* ACE4KA — вордмарк: бокс = слово, flex центрирует даже при overflow. */
+/* ACE4KA на всю ширину экрана: кегль подгоняется по ширине, без scaleX. */
 .site-footer__wordmark {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     max-width: none;
+    height: auto;
     margin-top: 0;
     margin-bottom: var(--space-16);
     margin-left: 0;
@@ -11966,37 +12068,39 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     box-sizing: border-box;
     color: var(--color-text);
     -webkit-text-fill-color: var(--color-text);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
 }
 
-/* Кегль: при scaleX(0.65) слово = ширина экрана. JS уточняет --footer-word-size. */
 .site-footer__wordmark__track {
-    --scale-x: var(--tc-scale-x);
+    /* Figma 573:23147 — 300px, ls 18, ширина 1286 в холсте 1358 */
+    --footer-word-grow: 1;
+    --tc-scale-x: 0.48;
+    --footer-word-base: 18.75rem;
     display: block;
     width: max-content;
     max-width: none;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
     font-family: var(--font-body);
-    font-size: var(--footer-word-size, calc(100vw / 2.65));
+    font-size: calc(var(--footer-word-base) * var(--footer-word-grow, 1));
     font-style: normal;
     font-weight: 600;
-    line-height: 0.92;
-    letter-spacing: var(--tc-letter-spacing);
+    line-height: 1.158; /* 347.4 / 300 */
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     text-align: center;
     white-space: nowrap;
     color: inherit;
-    transform: scaleX(var(--scale-x));
+    transform: scaleX(var(--tc-scale-x));
     transform-origin: center center;
-    will-change: transform;
+    will-change: font-size, transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
     .site-footer__wordmark__track {
-        --scale-x: var(--tc-scale-x);
-        transform: scaleX(var(--tc-scale-x));
+        --footer-word-grow: 1;
         will-change: auto;
     }
 }
@@ -12227,7 +12331,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .site-footer__wordmark__track {
-        letter-spacing: var(--tc-letter-spacing);
+        letter-spacing: 0;
+        transform: none;
     }
 
     /* Touch targets ≥ 48px, читаемость body ≥ 16px */
@@ -12286,7 +12391,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     :root {
         --header-figma-bar-min: 3.75rem;
         --header-figma-pad-y: 1rem;
-        --header-figma-type-size: clamp(1.125rem, 4.8vw, 1.375rem);
+        --header-figma-type-size: clamp(1.25rem, 5.4vw, 1.5rem);
         --header-figma-type-line: 1.15;
         --header-mobile-panel-radius: 1.75rem;
         --header-mobile-panel-bg: rgba(14, 14, 16, 0.9);
@@ -12304,8 +12409,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .header:not(.header--menu-open) {
         min-height: 0;
-        background: transparent;
-        mix-blend-mode: difference;
+        background: #000000;
+        mix-blend-mode: normal;
     }
 
     /* Закрытая полоса — только имя слева и бургер справа */

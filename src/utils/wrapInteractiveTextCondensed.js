@@ -15,13 +15,14 @@ const SKIP_CLOSEST = [
   '.header .nav-list .nav-link',
   '.case-study-rail__dash-hit',
   '.lang-switch',
+  '.projects-list-nav',
 ].join(',');
 
 function shouldSkip(el) {
   if (!(el instanceof HTMLElement)) return true;
   if (el.dataset.noTextCondensed === 'true') return true;
   if (el.matches('.filter-pill, .btn-show-all, .case-study-rail__dash-hit')) return true;
-  if (el.closest('.header .nav-list .nav-link, .lang-switch, [data-no-text-condensed]')) {
+  if (el.closest('.header .nav-list .nav-link, .lang-switch, .projects-list-nav, [data-no-text-condensed]')) {
     return true;
   }
   if (el.closest('.text-condensed, .text-condensed--single-line')) return true;

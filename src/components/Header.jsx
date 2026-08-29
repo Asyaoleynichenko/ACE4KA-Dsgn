@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import SmartLink from './SeamlessProjectsLink.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
+import { stripLocaleFromPathname } from '../i18n/localePath.js';
 import LanguageSwitcher from './LanguageSwitcher.jsx';
 import { Navigation } from './Navigation';
 import { useLenisScroll } from '../hooks/useLenisScroll.js';
@@ -9,12 +10,13 @@ import { getScrollY } from '../utils/scrollRoot.js';
 import { fitScaledNavWidths } from '../utils/fitScaledNavWidths.js';
 
 /**
- * Шапка — Figma 573:18422: имя | навигация | язык.
- * Видна на верху; при скролле вниз — прячется, при скролле вверх / остановке — появляется.
+ * Главная — Figma 573:18422 (плоский текст).
+ * Проекты — Figma 1:400 / 89:346 (пилюля, лого 24px).
  */
 export default function Header() {
   const { localizedPath, t, locale } = useI18n();
   const { pathname } = useLocation();
+  const isProjectsListing = stripLocaleFromPathname(pathname) === '/projects';
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
@@ -83,10 +85,10 @@ export default function Header() {
 
   return (
     <header
-      className={`header${hidden ? ' header--hidden' : ''}${menuOpen ? ' header--menu-open' : ''}`}
+      className={`header${hidden ? ' header--hidden' : ''}${menuOpen ? ' header--menu-open' : ''}${isProjectsListing ? ' header--projects' : ''}`}
       data-name="Header"
-      data-node-id="573-18422"
-      data-figma-node="573-18422"
+      data-node-id={isProjectsListing ? '1-400' : '573-18422'}
+      data-figma-node={isProjectsListing ? '1-400' : '573-18422'}
     >
       <button
         type="button"

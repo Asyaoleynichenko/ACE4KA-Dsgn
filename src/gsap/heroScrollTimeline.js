@@ -51,7 +51,18 @@ export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
   /* Мобилка — нативный вертикальный скролл, без pin/сборки. */
   if (isMobileViewport()) return null;
 
+  ScrollTrigger.getById('home-camera-hero-exit')?.kill();
+  const leftoverPin = hero.parentElement;
+  if (leftoverPin?.classList.contains('pin-spacer')) {
+    const grand = leftoverPin.parentNode;
+    if (grand) {
+      grand.insertBefore(hero, leftoverPin);
+      leftoverPin.remove();
+    }
+  }
+
   const introCopy = hero.querySelectorAll('.hero-role, .hero-title, .hero-text');
+  gsap.set(introCopy, { autoAlpha: 1, y: 0, clearProps: 'opacity,visibility,transform' });
   const card = hero.querySelector('.hero__card');
   const folders = gsap.utils.toArray(hero.querySelectorAll('.header-item--folder'));
   const wells = gsap.utils.toArray(hero.querySelectorAll('.header-item--image-well'));
@@ -61,7 +72,7 @@ export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
   /* GSAP берёт горизонтальное центрирование на себя (CSS — translate(-50%,0)). */
   for (const el of folders) gsap.set(el, { xPercent: -50, yPercent: 0, transformOrigin: '50% 50%' });
   for (const el of wells) gsap.set(el, { xPercent: -50, yPercent: 0, transformOrigin: '50% 50%' });
-  if (card) gsap.set(card, { xPercent: -50, yPercent: isDesktop ? 0 : -50, transformOrigin: '50% 50%' });
+  if (card) gsap.set(card, { xPercent: -50, yPercent: -50, transformOrigin: '50% 50%' });
 
   const easeOut = MOTION.easeGsapPunch;
   const easeIn = MOTION.easeGsapIn;
@@ -101,14 +112,7 @@ export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
     return { x: c.x, y: c.y - lift };
   };
 
-  /* 1) Текст уходит первым — роль, имя, описание. */
-  if (introCopy.length) {
-    tl.to(
-      introCopy,
-      { autoAlpha: 0, y: -28, duration: beat(2.4), ease: easeIn, stagger: beat(0.3) },
-      0,
-    );
-  }
+  /* Имя / лид остаются в потоке — autoAlpha:0 оставлял невидимый блок и чёрную дыру. */
 
   /* 2) Фото — строго в центр вьюпорта + укрупнение (остаётся). */
   if (card) {
@@ -207,10 +211,9 @@ export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
   if (competencies) {
     gsap.fromTo(
       competencies,
-      { autoAlpha: 0.3, y: 40 },
+      { autoAlpha: 0.35 },
       {
         autoAlpha: 1,
-        y: 0,
         ease: MOTION.easeGsap,
         scrollTrigger: {
           trigger: competencies,
@@ -228,10 +231,10 @@ export function setupHeroScrollTimeline(hero, competencies, { scroller } = {}) {
     id: 'home-camera-hero-exit',
     trigger: hero,
     start: 'top top',
-    end: `+=${heroExitScrollTravelPx()}`,
-    pin: true,
-    pinSpacing: true,
-    anticipatePin: 1,
+    end: 'bottom top',
+    pin: false,
+    pinSpacing: false,
+    anticipatePin: 0,
     scrub: MOTION.scrubHero,
     scroller,
     animation: tl,

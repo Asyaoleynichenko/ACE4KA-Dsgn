@@ -1,42 +1,19 @@
 import { useEffect } from 'react';
-import { useLenisInstance } from '../context/LenisProvider.jsx';
-import { bindScroll } from '../utils/scrollRoot.js';
 import { fitFooterWordmark } from '../utils/fitFooterWordmark.js';
 
 /**
- * Effect-only: no DOM. Drives `--scale-x` on the footer wordmark
- * and toggles `.is-revealed` on `[data-reveal]` via IntersectionObserver.
- * Footer rubber always runs from JS — Lenis breaks view() timelines.
+ * Effect-only: no DOM. Fits footer ACE4KA to screen width
+ * and toggles `.is-revealed` on `[data-reveal]`.
  */
 export default function ScrollPolish() {
-  const { lenis } = useLenisInstance();
-
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const getFooter = () => document.querySelector('[data-scale="footer-mega"]');
-    const fit = () => fitFooterWordmark(getFooter());
-
-    let rafId = 0;
-    const onScroll = () => {
-      if (reduce) return;
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        rafId = 0;
-        const vh = window.innerHeight;
-
-        /* compressed → expanded as the wordmark enters, then back. Whole word, scaleX only. */
-        const footer = getFooter();
-        if (footer) {
-          const r = footer.getBoundingClientRect();
-          const travel = Math.max(vh * 0.72, r.height * 0.9);
-          const raw = Math.max(0, Math.min(1, (vh - r.top) / travel));
-          const wave = Math.sin(raw * Math.PI);
-          const compressed = 0.65;
-          footer.style.setProperty('--scale-x', (compressed + wave * (1 - compressed)).toFixed(4));
-        }
-      });
+    const fit = () => {
+      const footer = getFooter();
+      if (footer) footer.style.setProperty('--footer-word-grow', '1');
+      fitFooterWordmark(footer);
     };
 
     const io = new IntersectionObserver(
@@ -72,22 +49,17 @@ export default function ScrollPolish() {
     const mo = new MutationObserver(arm);
     mo.observe(document.body, { childList: true, subtree: true });
 
-    const unbind = reduce ? () => {} : bindScroll(onScroll, { lenis });
-    if (!reduce) onScroll();
-
     const fontsReady = document.fonts?.ready?.then(fit);
     window.addEventListener('resize', fit);
 
     return () => {
-      unbind();
       io.disconnect();
       mo.disconnect();
       ro.disconnect();
       window.removeEventListener('resize', fit);
-      if (rafId) cancelAnimationFrame(rafId);
       fontsReady?.catch?.(() => {});
     };
-  }, [lenis]);
+  }, []);
 
   return null;
 }

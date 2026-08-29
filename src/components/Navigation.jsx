@@ -39,6 +39,15 @@ export function Navigation({ menuOpen = false, onNavigate }) {
   const { t, localizedPath } = useI18n();
 
   const currentSlug = projectSlugFromPathname(pathname);
+  const isProjectsListing = stripLocaleFromPathname(pathname) === '/projects';
+  /* Figma 1:400 на «Все проекты»: Главная | Проекты | О себе */
+  const routeKeys = isProjectsListing
+    ? [
+        { path: '/', labelKey: 'header.nav.home' },
+        { path: '/projects', labelKey: 'header.nav.projects' },
+        { path: '/about', labelKey: 'header.about' },
+      ]
+    : NAV_ROUTE_KEYS;
 
   if (currentSlug) {
     const idx = HOME_PROJECT_SLUGS.indexOf(currentSlug);
@@ -83,7 +92,7 @@ export function Navigation({ menuOpen = false, onNavigate }) {
       className={`nav-list${menuOpen ? ' open' : ''}`}
       data-node-id="573-19068"
     >
-      {NAV_ROUTE_KEYS.map(({ path, labelKey }) => {
+      {routeKeys.map(({ path, labelKey }) => {
         const label = t(labelKey);
         const active = itemIsActive(pathname, path);
         const to = localizedPath(path);

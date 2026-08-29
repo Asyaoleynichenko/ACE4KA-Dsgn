@@ -67,6 +67,7 @@ export default function ProjectsListNavigation({ currentSlug }) {
               <SmartLink
                 to={localizedPath(`/project/${project.slug}`)}
                 className="projects-list-nav__row"
+                data-no-text-condensed=""
                 style={{ backgroundImage: `url(${publicUrl(project.image)})` }}
               >
                 <span className="projects-list-nav__row-overlay" aria-hidden="true" />
