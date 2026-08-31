@@ -62,7 +62,11 @@ export default function ProjectCard({ slug, title, meta, desc, image, video, isD
           <p className="preview-card__meta">
             <span className="text-condensed">{meta}</span>
           </p>
-          {desc && <p className="preview-card__desc">{desc}</p>}
+          {desc && (
+            <p className="preview-card__desc">
+              <span className="text-condensed">{desc}</span>
+            </p>
+          )}
         </div>
       </Link>
     </article>

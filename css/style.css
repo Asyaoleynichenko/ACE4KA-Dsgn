@@ -3914,10 +3914,13 @@ h3 {
         max-width: 13rem;
     }
 
-    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__meta,
+    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__meta {
+        font-size: 0.875rem;
+    }
+
     .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__desc,
-    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__meta .text-condensed {
-        font-size: 0.75rem;
+    .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__desc .text-condensed {
+        font-size: 1.125rem;
         max-width: 13rem;
     }
 
@@ -5332,12 +5335,26 @@ h3 {
 
 .preview-card__desc {
     font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.4219rem;
-    letter-spacing: -0.0094rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: var(--tc-letter-spacing);
+    text-transform: uppercase;
     color: var(--project-title-color);
     opacity: 0.6;
+}
+
+.preview-card__desc .text-condensed {
+    display: block;
+    width: fit-content;
+    max-width: none;
+    margin-inline: 0;
+    font-size: inherit;
+    line-height: 1;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: left center;
 }
 
 /* Neutralize global surface overrides for project preview cards */
@@ -6145,19 +6162,63 @@ h3 {
     transform: none;
 }
 
-.home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__meta,
-.home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__desc,
+.home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__meta {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    font-size: 0.875rem;
+    line-height: 1;
+    letter-spacing: var(--tc-letter-spacing);
+    text-transform: uppercase;
+    background: none;
+    padding: 0;
+    transform: none;
+}
+
 .home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__meta .text-condensed {
-    display: inline;
-    width: auto;
-    max-width: 15rem;
-    font-size: 0.5rem;
-    line-height: 1.3;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    font-size: inherit;
+    line-height: 1;
+    letter-spacing: inherit;
+    text-transform: inherit;
     background: #000000;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
-    padding: 0 2px;
+    padding: 0 var(--space-4);
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: left center;
+}
+
+.home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__desc {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    font-size: 1.125rem;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: var(--tc-letter-spacing);
+    text-transform: uppercase;
+    background: none;
+    padding: 0;
     transform: none;
+}
+
+.home-competencies-scrub__card-wrap .preview-card--overlay .preview-card__desc .text-condensed {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    font-size: inherit;
+    line-height: 1;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    background: #000000;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding: 0 var(--space-4);
+    transform: scaleX(var(--tc-scale-x));
+    transform-origin: left center;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6455,14 +6516,15 @@ h3 {
     overflow-wrap: break-word;
 }
 
-/* Figma 1:306 — desc: перенос, opacity 60% */
+/* Desc — condensed: кегль = высота, сжатие только scaleX */
 .preview-content .desc,
 .preview-card__desc {
-    font-size: 0.875rem;
+    font-size: 1.25rem;
     font-family: var(--font-body);
-    font-weight: 400;
-    line-height: 1.4219rem;
-    letter-spacing: -0.0094rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: var(--tc-letter-spacing);
+    text-transform: uppercase;
     color: var(--color-text);
     opacity: 0.6;
     margin: 0;
@@ -12427,7 +12489,8 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .preview-card__desc {
-        font-size: clamp(1rem, 3.2vw, 1.0625rem);
+        font-size: clamp(1.125rem, 3.6vw, 1.25rem);
+        line-height: 1;
     }
 }
 
@@ -13183,12 +13246,13 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
     }
 
     .preview-card__desc {
-        font-size: clamp(1.0625rem, 3.2vw, 1.125rem);
-        line-height: 1.45;
+        font-size: clamp(1.125rem, 3.6vw, 1.375rem);
+        line-height: 1;
     }
 
     .home-competencies-scrub__card-wrap .preview-card__meta {
-        font-size: clamp(0.8125rem, 2.8vw, 0.9375rem);
+        font-size: clamp(0.875rem, 3vw, 1rem);
+        line-height: 1;
     }
 }
 
