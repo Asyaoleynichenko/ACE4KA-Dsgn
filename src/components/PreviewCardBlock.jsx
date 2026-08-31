@@ -16,11 +16,10 @@ function MacTrafficLights({ t }) {
   );
 }
 
-/** Image Preview по макету Figma 416:13005: светофоры, заголовок, CTA, аватар, превью */
+/** Image Preview по макету Figma 416:13005: светофоры, заголовок, CTA, превью */
 export default function PreviewCardBlock() {
-  const { t, messages } = useI18n();
+  const { t } = useI18n();
   const previewImageSrc = publicUrl('/images/figma-416-12975/preview-photo.png');
-  const avatarSrc = publicUrl(messages.about?.profilePhoto ?? '/images/figma-743-16866/profile.webp');
 
   return (
     <a
@@ -46,9 +45,6 @@ export default function PreviewCardBlock() {
         <div className="preview-card-block__trailing" data-node-id="I861:16906;103:8929">
           <span className="preview-card-block__cta" data-node-id="I861:16906;153:9369">
             {t('previewCard.cta')}
-          </span>
-          <span className="preview-card-block__avatar" aria-hidden="true">
-            <img src={avatarSrc} alt="" decoding="async" />
           </span>
         </div>
       </div>

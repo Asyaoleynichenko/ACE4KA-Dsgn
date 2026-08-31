@@ -12457,7 +12457,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
 
     .header:not(.header--menu-open) {
         min-height: 0;
-        background: #000000;
+        background: transparent;
         mix-blend-mode: normal;
     }
 
@@ -12605,6 +12605,7 @@ body:has(.projects-list-nav.is-visible) .case-study-rail.case-study-rail--fixed 
         column-gap: 0.75rem;
         row-gap: 0;
         min-height: 0;
+        background: transparent;
         padding:
             max(var(--header-figma-pad-y), env(safe-area-inset-top, 0))
             max(var(--layout-edge-right), env(safe-area-inset-right, 0))
