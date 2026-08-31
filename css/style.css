@@ -4381,8 +4381,11 @@ h3 {
     position: relative;
     z-index: 3;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    max-width: var(--hero-about-max);
+    max-width: none;
     margin-inline: auto;
     text-align: center;
 }
@@ -4398,47 +4401,91 @@ h3 {
 }
 
 .page-home .hero-about .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: var(--space-12);
-    /* Колонка = ширина lead (70 символов в строке), не shrink-to-fit по заголовку */
-    width: min(100%, var(--hero-text-max-ch));
-    max-width: min(100%, var(--hero-text-max-ch));
+    width: 100%;
+    max-width: 100%;
     margin-inline: auto;
     box-sizing: border-box;
 }
 
 .page-home .hero-about .hero-text {
-    width: min(100%, var(--hero-text-max-ch));
-    max-width: var(--hero-text-max-ch);
+    width: min(100%, 41.3125rem);
+    max-width: 41.3125rem;
     margin-inline: auto;
+    text-align: center;
     box-sizing: border-box;
 }
 
-.page-home .hero-about .hero-title {
-    /* Figma 416:12975 — 67px / 600 / ls 4.02, сжатие только scaleX */
+/* Имя/роль: колонка на всю ширину, scaleX только на max-content.
+   Иначе немасштабированный бокс шире экрана и margin:auto прижимает глифы влево. */
+.page-home .hero-about .hero-title,
+.page-home .hero-about .hero-title.type-reveal,
+.page-home .hero-about .hero-role,
+.page-home .hero-about .hero-role.type-reveal {
     display: flex;
-    width: 100%;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
     overflow: visible;
+}
+
+.page-home .hero-about .hero-title {
     font-size: var(--type-hero-display-size);
     font-weight: 600;
     letter-spacing: 0.06em;
 }
 
+.page-home .hero-about .hero-more {
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+}
+
+.page-home .hero-about .hero-text.type-reveal,
+.page-home .hero-about .hero-text .type-reveal__line,
+.page-home .hero-about .hero-text .type-reveal__mask {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.page-home .hero-about .hero-title .type-reveal__mask,
+.page-home .hero-about .hero-role .type-reveal__mask {
+    display: block;
+    width: max-content;
+    max-width: none;
+    overflow: visible;
+}
+
+.page-home .hero-about .hero-title .text-condensed,
+.page-home .hero-about .hero-title .type-reveal__line,
+.page-home .hero-about .hero-title .type-reveal__inner,
+.page-home .hero-about .hero-role .text-condensed,
+.page-home .hero-about .hero-role .type-reveal__line,
+.page-home .hero-about .hero-role .type-reveal__inner {
+    display: block;
+    width: max-content;
+    max-width: none;
+    margin-inline: 0;
+    white-space: nowrap;
+}
+
 .page-home .hero-about .hero-title .text-condensed,
 .page-home .hero-about .hero-title .type-reveal__inner {
     font-size: inherit;
-    white-space: nowrap;
     letter-spacing: var(--tc-letter-spacing);
 }
 
-.page-home .hero-about .hero-title .text-condensed {
-    display: block;
-    width: fit-content;
-    margin-inline: 0;
+.page-home .hero-about .hero-title .text-condensed,
+.page-home .hero-about .hero-role .text-condensed {
     transform: scaleX(var(--tc-scale-x));
     transform-origin: center center;
 }
@@ -5167,9 +5214,10 @@ h3 {
     .page-home .hero-about .hero-text {
         font-size: var(--type-body-lg-size);
         line-height: var(--type-body-lg-line);
-        width: 100%;
-        max-width: 100%;
+        width: min(100%, 41.3125rem);
+        max-width: 41.3125rem;
         margin-inline: auto;
+        text-align: center;
     }
 
     .page-home .hero-about .hero-role {
@@ -13375,8 +13423,10 @@ p + p {
 }
 
 .page-home .hero-about .hero-text {
-    width: min(100%, var(--hero-text-max-ch));
-    max-width: var(--hero-text-max-ch);
+    width: min(100%, 41.3125rem);
+    max-width: 41.3125rem;
+    margin-inline: auto;
+    text-align: center;
     box-sizing: border-box;
 }
 
