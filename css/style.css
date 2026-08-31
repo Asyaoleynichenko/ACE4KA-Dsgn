@@ -1699,7 +1699,11 @@ body.nav-drawer-open {
         justify-self: end;
         display: inline-flex;
         align-items: center;
+        justify-content: flex-end;
         gap: 0;
+        min-width: 0;
+        max-width: 100%;
+        overflow: visible;
     }
 
     .header .nav > .lang-switch {
@@ -1902,8 +1906,10 @@ body.nav-drawer-open {
 }
 
 .header .lang-switch .lang-switch__toggle-row {
-    transform-origin: center center;
+    /* Сжатие к правому краю: визуал остаётся внутри паддинга, не уезжает за экран. */
+    transform-origin: right center;
     margin-inline-end: 0;
+    flex-shrink: 0;
 }
 
 .header .logo:hover > span,
@@ -2180,12 +2186,16 @@ h3 {
 .header .lang-switch {
     position: relative;
     z-index: 5;
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
     flex: 0 0 auto;
     width: auto;
-    max-width: none;
+    max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
     text-align: right;
+    overflow: visible;
 }
 
 .lang-switch__toggle-row {

@@ -50,10 +50,11 @@ export function fitScaledNavWidths(root = document) {
   const apply = (host) => {
     const span = getSpan(host);
     if (!span) return;
-    const natural = naturalByEl.get(host) ?? measureNatural(host);
-    const scaleRaw = getComputedStyle(span).getPropertyValue('--tc-scale-x').trim();
-    const scale = parseFloat(scaleRaw) || 1;
-    host.style.width = `${Math.ceil(natural * scale)}px`;
+    host.style.width = 'auto';
+    const visual = span.getBoundingClientRect().width;
+    if (visual > 0) {
+      host.style.width = `${Math.ceil(visual)}px`;
+    }
   };
 
   const applyAll = () => {
